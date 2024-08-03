@@ -1,0 +1,20 @@
+.INCLUDE "init.gbasm"
+
+Entrypoint:
+	CALL =Load_Tile
+	CALL =Initialize_Bunny
+	
+	EI
+	Wait_for_VRAM.loop:
+	HALT
+	JP =Wait_for_VRAM.loop
+
+VBLANK_Entrypoint:
+	CALL =Pad_Button_Check
+	CALL =Move_Bunny
+	CALL =Display_Bunny
+	RET
+
+.INCLUDE "tiles.gbasm"
+.INCLUDE "bunny.gbasm"
+.INCLUDE "buttons.gbasm"

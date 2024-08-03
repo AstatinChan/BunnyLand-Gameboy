@@ -1,0 +1,3 @@
+FF80 = Bunny Y position (in px)
+FF81 = Bunny X position (in px)
+FF82 = Current Direction (Up = 1, Right = 2, Down = 3, Left = 4)
