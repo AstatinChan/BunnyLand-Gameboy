@@ -1,0 +1,37 @@
+Pad_Button_Check:
+	PUSH AF
+	PUSH BC
+
+	LD A, $20
+	LD ($00), A
+	LD A, ($00)
+	LD C, A
+	LD A, $00
+	
+	Pad_Button_Check.Right:
+		BIT 0, C
+		JR NZ =Pad_Button_Check.Left
+		LD A, $02
+
+	Pad_Button_Check.Left:
+		BIT 1, C
+		JR NZ =Pad_Button_Check.Up
+		LD A, $01
+
+	Pad_Button_Check.Up:
+		BIT 2, C
+		JR NZ =Pad_Button_Check.Down
+		LD A, $03
+
+	Pad_Button_Check.Down:
+		BIT 3, C
+		JR NZ =Pad_Button_Check.End
+		LD A, $04
+
+	Pad_Button_Check.End:
+
+	LD ($82), A
+
+	POP BC
+	POP AF
+	RET

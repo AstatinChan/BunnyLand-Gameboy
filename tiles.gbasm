@@ -1,0 +1,22 @@
+
+Tile_Image_Data:
+	.DB $00, $00, $44, $44, $aa, $ee, $aa, $ee, $fe, $b2, $fc, $b4, $fc, $94, $75, $4d
+	.DB $7f, $42, $2f, $30, $1f, $10, $39, $26, $37, $2f, $48, $78, $50, $70, $60, $60
+	.DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $c0, $c0
+	.DB $34, $f4, $ce, $3a, $fe, $0a, $fc, $04, $bc, $c4, $5c, $64, $88, $f8, $f0, $f0
+
+Load_Tile:
+	LD HL, $8010
+	LD DE, =Tile_Image_Data
+	LD B, $40
+	Load_Tile.loop0:
+		LD A, (DE)
+		LD (HL+), A
+		INC DE
+		DEC B
+		XOR A
+		CP B
+		JR NZ =Load_Tile.loop0
+	RET
+
+
