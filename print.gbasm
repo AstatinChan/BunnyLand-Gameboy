@@ -1,0 +1,18 @@
+Print_8bit: ; Number in A, Memory Tilemap position in HL
+	PUSH AF
+	PUSH BC
+
+	LD C, A
+	SWAP A 				   ; We start by the highest nibble
+	AND $0f
+	OR $10
+	LD (HL+), A
+	
+	LD A, C
+	AND $0f 			   ; Then the lowest
+	OR $10
+	LD (HL+), A
+
+	POP BC
+	POP AF
+	RET

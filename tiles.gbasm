@@ -5,6 +5,24 @@ Tile_Image_Data:
 	.DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $c0, $c0
 	.DB $34, $f4, $ce, $3a, $fe, $0a, $fc, $04, $bc, $c4, $5c, $64, $88, $f8, $f0, $f0
 
+Number_Font_Data:
+	.DB $00, $38, $4c, $c6, $c6, $64, $38, $00 ; 0
+	.DB $00, $18, $38, $18, $18, $18, $7e, $00 ; 1
+	.DB $00, $7c, $c6, $0e, $7c, $e0, $fe, $00 ; 2
+	.DB $00, $7e, $0c, $38, $06, $c6, $7c, $00 ; 3
+	.DB $00, $1c, $3c, $6c, $cc, $fe, $0c, $00 ; 4
+	.DB $00, $fc, $80, $fc, $06, $c6, $7c, $00 ; 5
+	.DB $00, $7c, $c0, $fc, $c6, $c6, $7c, $00 ; 6
+	.DB $00, $fe, $c6, $0c, $18, $30, $30, $00 ; 7
+	.DB $00, $7c, $c6, $7c, $c6, $c6, $7c, $00 ; 8
+	.DB $00, $7c, $c6, $c6, $7e, $06, $7c, $00 ; 9
+	.DB $00, $3c, $46, $46, $7e, $46, $46, $00 ; A
+	.DB $00, $7c, $46, $7c, $46, $46, $7c, $00 ; B
+	.DB $00, $3c, $62, $60, $60, $62, $3c, $00 ; C
+	.DB $00, $7c, $62, $62, $62, $62, $7c, $00 ; D
+	.DB $00, $7e, $60, $7c, $60, $60, $7e, $00 ; D
+	.DB $00, $7e, $60, $7c, $60, $60, $60, $00 ; D
+
 Load_Tile:
 	LD HL, $8010
 	LD DE, =Tile_Image_Data
@@ -19,4 +37,15 @@ Load_Tile:
 		JR NZ =Load_Tile.loop0
 	RET
 
-
+Load_Number_Font: ; Load number font into the tilemap at tiles 0x10-0x19
+	LD HL, $8100
+	LD DE, =Number_Font_Data
+	LD B, $80
+	
+	Load_Number_Font.loop:
+		LD A, (DE)
+		LD (HL+), A
+		LD (HL+), A
+		INC DE
+		DEC B
+		JR NZ, =Load_Number_Font.loop
