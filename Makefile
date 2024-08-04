@@ -1,6 +1,8 @@
 all: run
 
-build/%.rom: %.gbasm
+.PHONY: build/main.rom clean
+
+build/main.rom: main.gbasm 
 	mkdir -p build
 	gbasm $< $@
 
