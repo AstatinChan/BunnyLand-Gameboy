@@ -1,7 +1,7 @@
 Initialize_Bunny:
-	LD A, $20
+	LD A, $50
 	LD ($80), A
-	LD A, $20
+	LD A, $50
 	LD ($81), A
 	RET
 
@@ -27,32 +27,77 @@ Move_Bunny:
 	Move_Bunny.check_direction_end:
 
 	BIT 1, A
-	JR NZ, =Move_Bunny.vertical_move
+	JR NZ, =Move_Bunny.vertical_px_move
 
-	Move_Bunny.horizontal_move:
+	Move_Bunny.horizontal_px_move:
 		LD A, ($81)
 		ADD B
+		CP $30
+		JR C, =Move_Bunny.horizontal_px_move.scrolling_fallback
+		CP $71
+		JR NC, =Move_Bunny.horizontal_px_move.scrolling_fallback
 		LD ($81), A
 		JP =Move_Bunny.check_end_of_movement
+		Move_Bunny.horizontal_px_move.scrolling_fallback:
+			LD A, ($43)
+			ADD B
+			LD ($43), A
+			JP =Move_Bunny.check_end_of_movement
 
-	Move_Bunny.vertical_move:
+
+	Move_Bunny.vertical_px_move:
 		LD A, ($80)
 		ADD B
+		CP $30
+		JR C, =Move_Bunny.vertical_px_move.scrolling_fallback
+		CP $71
+		JR NC, =Move_Bunny.vertical_px_move.scrolling_fallback
 		LD ($80), A
+		JP =Move_Bunny.check_end_of_movement
+		Move_Bunny.vertical_px_move.scrolling_fallback:
+			LD A, ($42)
+			ADD B
+			LD ($42), A
+			JP =Move_Bunny.check_end_of_movement
 
 	Move_Bunny.check_end_of_movement:
+		LD A, ($84)
+		INC A
 		AND $0f
 		LD ($84), A
 		JR NZ, =Move_Bunny.end
 		LD ($83), A
+		LD A, ($85)
+		DEC A
+
+		BIT 1, A
+		JR NZ, =Move_Bunny.vertical_tile_move
+
+		Move_Bunny.horizontal_tile_move:
+			LD A, ($86)
+			ADD B
+			LD ($86), A
+			JP =Move_Bunny.end
+
+		Move_Bunny.vertical_tile_move:
+			LD A, ($87)
+			ADD B
+			LD ($87), A
 
 	Move_Bunny.end:
 	RET
 
 Display_Bunny: ; X position in $81, Y position in $80
+	LD A, ($86)
+	LD HL, $9800
+	CALL =Print_8bit
+
+	LD A, ($87)
+	LD HL, $9820
+	CALL =Print_8bit
+
 	LD A, ($81)
 	LD B, A
-
 	LD A, ($80)
 	LD C, A
 	LD A, ($84)

@@ -2,6 +2,7 @@
 
 Entrypoint:
 	CALL =Load_Tile
+	CALL =Load_Number_Font
 	CALL =Initialize_Bunny
 	
 	EI
@@ -16,5 +17,6 @@ VBLANK_Entrypoint:
 	RET
 
 .INCLUDE "tiles.gbasm"
+.INCLUDE "print.gbasm"
 .INCLUDE "bunny.gbasm"
 .INCLUDE "buttons.gbasm"
