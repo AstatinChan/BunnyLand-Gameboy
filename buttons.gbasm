@@ -3,34 +3,34 @@ Pad_Button_Check:
 	PUSH BC
 
 	LD A, $20
-	LD ($00), A
-	LD A, ($00)
+	LD $reg_joypad, A
+	LD A, $reg_joypad
 	LD C, A
 	LD A, $00
 	
 	Pad_Button_Check.Right:
 		BIT 0, C
 		JR NZ =Pad_Button_Check.Left
-		LD A, $02
+		LD A, $enum_direction_right
 
 	Pad_Button_Check.Left:
 		BIT 1, C
 		JR NZ =Pad_Button_Check.Up
-		LD A, $01
+		LD A, $enum_direction_left
 
 	Pad_Button_Check.Up:
 		BIT 2, C
 		JR NZ =Pad_Button_Check.Down
-		LD A, $03
+		LD A, $enum_direction_up
 
 	Pad_Button_Check.Down:
 		BIT 3, C
 		JR NZ =Pad_Button_Check.End
-		LD A, $04
+		LD A, $enum_direction_down
 
 	Pad_Button_Check.End:
 
-	LD ($82), A
+	LD $mem_button_direction, A
 
 	POP BC
 	POP AF

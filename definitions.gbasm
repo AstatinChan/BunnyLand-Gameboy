@@ -1,0 +1,24 @@
+.DEFINE reg_joypad ($00)
+.DEFINE reg_lcd_controller ($40)
+.DEFINE reg_viewport_y ($42)
+.DEFINE reg_viewport_x ($43)
+.DEFINE reg_bg_palette ($47)
+.DEFINE reg_obj0_palette ($48)
+.DEFINE reg_interrupt_enable ($ff)
+
+.DEFINE VRAM_start $8000
+.DEFINE OAM_start $FE00
+
+.DEFINE mem_bunny_x_px ($80)
+.DEFINE mem_bunny_y_px ($81)
+.DEFINE mem_button_direction ($82)
+.DEFINE mem_moving_sprite_direction ($83)
+.DEFINE mem_moving_animation_step ($84)
+.DEFINE mem_sprite_direction ($85)
+.DEFINE mem_bunny_x ($86)
+.DEFINE mem_bunny_y ($87)
+
+.DEFINE enum_direction_left $01
+.DEFINE enum_direction_right $02
+.DEFINE enum_direction_up $03
+.DEFINE enum_direction_down $04

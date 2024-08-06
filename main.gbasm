@@ -1,8 +1,9 @@
+.INCLUDE "definitions.gbasm"
 .INCLUDE "init.gbasm"
 
 Entrypoint:
 	CALL =Load_Tile
-	CALL =Load_Number_Font
+	CALL =Load_Map
 	CALL =Initialize_Bunny
 	
 	EI
@@ -18,5 +19,6 @@ VBLANK_Entrypoint:
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "print.gbasm"
+.INCLUDE "map.gbasm"
 .INCLUDE "bunny.gbasm"
 .INCLUDE "buttons.gbasm"

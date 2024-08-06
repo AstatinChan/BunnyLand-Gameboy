@@ -1,0 +1,26 @@
+Load_Map:
+	LD DE, $9800
+	LD B, $40
+
+	Load_Map.loop:
+		LD A, E
+		AND $20
+		SRL A
+		SRL A
+		SRL A
+		SRL A
+		LD C, A
+		LD A, E
+		AND $01
+		OR C
+		OR $20
+
+		LD (DE), A
+		
+		INC DE
+		DEC B
+		LD A, $00
+		CP B
+		JR NZ =Load_Map.loop
+
+	RET

@@ -1,9 +1,28 @@
+BG_Tile_Image_Data:
+	; Leaf wall
+	.DB $ff, $b3, $4c, $ff, $28, $d7, $ba, $47, $e4, $ef, $41, $ff, $47, $b8, $cd, $3d
+	.DB $bd, $5a, $e7, $fd, $2a, $d7, $aa, $6d, $82, $fe, $83, $ff, $bc, $c7, $c3, $ee
+	.DB $70, $7f, $82, $ff, $2d, $d3, $58, $af, $6d, $1a, $fc, $bd, $e7, $e7, $00, $00
+	.DB $13, $ff, $76, $df, $35, $ba, $48, $fd, $69, $d7, $e7, $ef, $bc, $bc, $00, $00
 
-Tile_Image_Data:
+OBJ_Tile_Image_Data:
+	; Bunny Side 
 	.DB $00, $00, $44, $44, $aa, $ee, $aa, $ee, $fe, $b2, $fc, $b4, $fc, $94, $75, $4d
-	.DB $7f, $42, $2f, $30, $1f, $10, $39, $26, $37, $2f, $48, $78, $50, $70, $60, $60
+	.DB $ff, $82, $6f, $70, $3f, $20, $3f, $20, $31, $2e, $4e, $7f, $51, $71, $60, $60
 	.DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $c0, $c0
-	.DB $34, $f4, $ce, $3a, $fe, $0a, $fc, $04, $bc, $c4, $5c, $64, $88, $f8, $f0, $f0
+	.DB $34, $f4, $ce, $3a, $fe, $0a, $fc, $04, $bc, $44, $5c, $e4, $88, $f8, $f0, $f0
+
+	; Bunny Back
+	.DB $00, $00, $00, $00, $00, $00, $1c, $1c, $2e, $32, $2f, $3b, $1f, $19, $0e, $0f
+	.DB $13, $1c, $27, $38, $2f, $30, $2f, $30, $2f, $30, $13, $1c, $15, $1b, $0e, $0e
+	.DB $00, $00, $40, $40, $a0, $e0, $a0, $e0, $e0, $a0, $e0, $20, $c0, $40, $e0, $e0
+	.DB $d0, $30, $d0, $30, $e8, $18, $f8, $08, $f0, $10, $90, $70, $70, $90, $e0, $e0
+
+	; Bunny Front
+	.DB $00, $00, $04, $04, $0a, $0e, $0a, $0e, $0e, $0a, $0f, $09, $07, $05, $0f, $0e
+	.DB $17, $1c, $17, $1a, $2f, $30, $3f, $20, $1f, $10, $17, $1d, $0d, $0f, $06, $06
+	.DB $00, $00, $00, $00, $00, $00, $70, $70, $e8, $98, $e8, $b8, $f0, $30, $e0, $e0
+	.DB $d0, $70, $e8, $98, $e8, $18, $f8, $08, $f8, $08, $d0, $70, $60, $e0, $c0, $c0
 
 Number_Font_Data:
 	.DB $00, $38, $4c, $c6, $c6, $64, $38, $00 ; 0
@@ -20,24 +39,36 @@ Number_Font_Data:
 	.DB $00, $7c, $46, $7c, $46, $46, $7c, $00 ; B
 	.DB $00, $3c, $62, $60, $60, $62, $3c, $00 ; C
 	.DB $00, $7c, $62, $62, $62, $62, $7c, $00 ; D
-	.DB $00, $7e, $60, $7c, $60, $60, $7e, $00 ; D
-	.DB $00, $7e, $60, $7c, $60, $60, $60, $00 ; D
+	.DB $00, $7e, $60, $7c, $60, $60, $7e, $00 ; E
+	.DB $00, $7e, $60, $7c, $60, $60, $60, $00 ; F
 
-Load_Tile:
-	LD HL, $8010
-	LD DE, =Tile_Image_Data
-	LD B, $40
+memcpy: ; src = DE, dest = HL, n = BC
 	Load_Tile.loop0:
 		LD A, (DE)
 		LD (HL+), A
 		INC DE
-		DEC B
+		DEC BC
 		XOR A
 		CP B
 		JR NZ =Load_Tile.loop0
+		CP C
+		JR NZ =Load_Tile.loop0
 	RET
 
-Load_Number_Font: ; Load number font into the tilemap at tiles 0x10-0x19
+Load_Tile:
+	LD HL, $8010
+	LD DE, =OBJ_Tile_Image_Data
+	LD BC, $00c0
+	CALL =memcpy
+	CALL =Load_Number_Font
+	LD HL, $8200
+	LD DE, =BG_Tile_Image_Data
+	LD BC, $0040
+	CALL =memcpy
+	RET
+
+
+Load_Number_Font: ; Load number font into the tilemap at tiles 0x10-0x1f
 	LD HL, $8100
 	LD DE, =Number_Font_Data
 	LD B, $80
