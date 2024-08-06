@@ -1,22 +1,22 @@
 Initialize_Bunny:
 	LD A, $50
-	LD ($80), A
+	LD $mem_bunny_x_px, A
 	LD A, $50
-	LD ($81), A
+	LD $mem_bunny_y_px, A
 	RET
 
 Move_Bunny:
-	LD A, ($83)
+	LD A, $mem_moving_sprite_direction
 	CP $00
 	JR NZ, =Move_Bunny.check_direction
 
-	LD A, ($82)
-	LD ($83), A
+	LD A, $mem_button_direction
+	LD $mem_moving_sprite_direction, A
 	CP $00
 	JR Z, =Move_Bunny.end
 
 	Move_Bunny.check_direction:
-		LD ($85), A
+		LD $mem_sprite_direction, A
 
 		DEC A
 		LD B, $01
@@ -30,77 +30,77 @@ Move_Bunny:
 	JR NZ, =Move_Bunny.vertical_px_move
 
 	Move_Bunny.horizontal_px_move:
-		LD A, ($81)
+		LD A, $mem_bunny_x_px
 		ADD B
 		CP $30
 		JR C, =Move_Bunny.horizontal_px_move.scrolling_fallback
 		CP $71
 		JR NC, =Move_Bunny.horizontal_px_move.scrolling_fallback
-		LD ($81), A
+		LD $mem_bunny_x_px, A
 		JP =Move_Bunny.check_end_of_movement
 		Move_Bunny.horizontal_px_move.scrolling_fallback:
-			LD A, ($43)
+			LD A, $reg_viewport_x
 			ADD B
-			LD ($43), A
+			LD $reg_viewport_x, A
 			JP =Move_Bunny.check_end_of_movement
 
 
 	Move_Bunny.vertical_px_move:
-		LD A, ($80)
+		LD A, $mem_bunny_y_px
 		ADD B
 		CP $30
 		JR C, =Move_Bunny.vertical_px_move.scrolling_fallback
 		CP $71
 		JR NC, =Move_Bunny.vertical_px_move.scrolling_fallback
-		LD ($80), A
+		LD $mem_bunny_y_px, A
 		JP =Move_Bunny.check_end_of_movement
 		Move_Bunny.vertical_px_move.scrolling_fallback:
-			LD A, ($42)
+			LD A, $reg_viewport_y
 			ADD B
-			LD ($42), A
+			LD $reg_viewport_y, A
 			JP =Move_Bunny.check_end_of_movement
 
 	Move_Bunny.check_end_of_movement:
-		LD A, ($84)
+		LD A, $mem_moving_animation_step
 		INC A
 		AND $0f
-		LD ($84), A
+		LD $mem_moving_animation_step, A
 		JR NZ, =Move_Bunny.end
-		LD ($83), A
-		LD A, ($85)
+		LD $mem_moving_sprite_direction, A
+		LD A, $mem_sprite_direction
 		DEC A
 
 		BIT 1, A
 		JR NZ, =Move_Bunny.vertical_tile_move
 
 		Move_Bunny.horizontal_tile_move:
-			LD A, ($86)
+			LD A, $mem_bunny_x
 			ADD B
-			LD ($86), A
+			LD $mem_bunny_x, A
 			JP =Move_Bunny.end
 
 		Move_Bunny.vertical_tile_move:
-			LD A, ($87)
+			LD A, $mem_bunny_y
 			ADD B
-			LD ($87), A
+			LD $mem_bunny_y, A
 
 	Move_Bunny.end:
 	RET
 
 Display_Bunny: ; X position in $81, Y position in $80
-	LD A, ($86)
-	LD HL, $9800
+	LD A, $mem_bunny_x
+	LD HL, $9840
 	CALL =Print_8bit
 
-	LD A, ($87)
-	LD HL, $9820
+	LD A, $mem_bunny_y
+	LD HL, $9860
 	CALL =Print_8bit
 
-	LD A, ($81)
+	LD A, $mem_bunny_x_px
 	LD B, A
-	LD A, ($80)
+	LD A, $mem_bunny_y_px
 	LD C, A
-	LD A, ($84)
+	LD A, $mem_moving_animation_step
 
 	SUB $08
 	BIT 7, A
@@ -120,14 +120,34 @@ Display_Bunny: ; X position in $81, Y position in $80
 
 	LD C, A
 
-	; X flip
-	LD A, ($85)
-	CP $02
-	LD E, $01
-	LD D, $00
-	JR NZ, =Display_Bunny.Write_OBJ
-	LD D, $20
-	LD E, $03
+	LD A, $mem_sprite_direction
+	CP $enum_direction_left
+	JR Z, =Display_Bunny.Left_Direction_sprite
+	CP $enum_direction_right
+	JR Z, =Display_Bunny.Right_Direction_sprite
+	CP $enum_direction_up
+	JR Z, =Display_Bunny.Up_Direction_sprite
+	JP =Display_Bunny.Down_Direction_sprite
+
+	Display_Bunny.Left_Direction_sprite:
+		LD E, $01
+		LD D, $00
+		JP =Display_Bunny.Write_OBJ
+
+	Display_Bunny.Right_Direction_sprite:
+		LD E, $03
+		LD D, $20
+		JP =Display_Bunny.Write_OBJ
+
+	Display_Bunny.Up_Direction_sprite:
+		LD E, $05
+		LD D, $00
+		JP =Display_Bunny.Write_OBJ
+
+	Display_Bunny.Down_Direction_sprite:
+		LD E, $09
+		LD D, $00
+		JP =Display_Bunny.Write_OBJ
 
 	Display_Bunny.Write_OBJ:
 	; First OBJ (left)

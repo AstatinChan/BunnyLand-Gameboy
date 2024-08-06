@@ -19,7 +19,7 @@ Checksum: ; The bytes 0x134-0x14d need to add up to 0xe7 (= 0xff - 0x19)
 	.DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$e7
 
 Empty_VRAM: ; (Clear screen)
-	LD hl, $8000 ; We set the HL register to the start of VRAM
+	LD hl, $VRAM_start ; We set the HL register to the start of VRAM
 
 Empty_VRAM.loop:
 		XOR A
@@ -29,24 +29,20 @@ Empty_VRAM.loop:
 		JR NZ, =Empty_VRAM.loop
 
 	; BG Palette
-	LD DE, $ff47
 	LD A, $e4
-	LD (DE), A
+	LD $reg_bg_palette, A
 	
 	; OBJ0 Palette
-	LD DE, $ff48
 	LD A, $e4
-	LD (DE), A
+	LD $reg_obj0_palette, A
 	
 	; LCDC
-	LD DE, $ff40
-	LD A, (DE)
+	LD A, $reg_lcd_controller
 	OR $06
-	LD (DE), A
+	LD $reg_lcd_controller, A
 
 	; Interrupts
-	LD DE, $ffff
 	LD A, $01
-	LD (DE), A
+	LD $reg_interrupt_enable, A
 
 	JP =Entrypoint
