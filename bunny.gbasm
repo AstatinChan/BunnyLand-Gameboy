@@ -1,4 +1,10 @@
 Initialize_Bunny:
+	LD A, $05
+	LD $mem_bunny_x, A
+	LD A, $04
+	LD $mem_bunny_y, A
+	LD A, $08
+	LD $reg_viewport_x, A
 	LD A, $50
 	LD $mem_bunny_x_px, A
 	LD A, $50
@@ -6,6 +12,7 @@ Initialize_Bunny:
 	RET
 
 Move_Bunny:
+	LD C, $00 ; (bit 0 = has_scrolled)
 	LD A, $mem_moving_sprite_direction
 	CP $00
 	JR NZ, =Move_Bunny.check_direction
@@ -13,7 +20,7 @@ Move_Bunny:
 	LD A, $mem_button_direction
 	LD $mem_moving_sprite_direction, A
 	CP $00
-	JR Z, =Move_Bunny.end
+	JP Z, =Move_Bunny.end
 
 	Move_Bunny.check_direction:
 		LD $mem_sprite_direction, A
@@ -39,6 +46,7 @@ Move_Bunny:
 		LD $mem_bunny_x_px, A
 		JP =Move_Bunny.check_end_of_movement
 		Move_Bunny.horizontal_px_move.scrolling_fallback:
+			SET 0, C
 			LD A, $reg_viewport_x
 			ADD B
 			LD $reg_viewport_x, A
@@ -55,6 +63,7 @@ Move_Bunny:
 		LD $mem_bunny_y_px, A
 		JP =Move_Bunny.check_end_of_movement
 		Move_Bunny.vertical_px_move.scrolling_fallback:
+			SET 0, C
 			LD A, $reg_viewport_y
 			ADD B
 			LD $reg_viewport_y, A
@@ -74,12 +83,24 @@ Move_Bunny:
 		JR NZ, =Move_Bunny.vertical_tile_move
 
 		Move_Bunny.horizontal_tile_move:
+			BIT 0, C
+			JR Z, =Move_Bunny.horizontal_tile_move.move_viewport_end
+			LD A, $mem_viewport_x
+			ADD B
+			LD $mem_viewport_x, A
+			Move_Bunny.horizontal_tile_move.move_viewport_end:
 			LD A, $mem_bunny_x
 			ADD B
 			LD $mem_bunny_x, A
 			JP =Move_Bunny.end
 
 		Move_Bunny.vertical_tile_move:
+			BIT 0, C
+			JR Z, =Move_Bunny.vertical_tile_move.move_viewport_end
+			LD A, $mem_viewport_y
+			ADD B
+			LD $mem_viewport_y, A
+			Move_Bunny.vertical_tile_move.move_viewport_end:
 			LD A, $mem_bunny_y
 			ADD B
 			LD $mem_bunny_y, A
@@ -88,11 +109,11 @@ Move_Bunny:
 	RET
 
 Display_Bunny: ; X position in $81, Y position in $80
-	LD A, $mem_bunny_x
+	LD A, $mem_viewport_x
 	LD HL, $9840
 	CALL =Print_8bit
 
-	LD A, $mem_bunny_y
+	LD A, $mem_viewport_y
 	LD HL, $9860
 	CALL =Print_8bit
 

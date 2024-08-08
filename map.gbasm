@@ -1,8 +1,33 @@
 Load_Map:
 	LD DE, $9800
-	LD B, $40
 
 	Load_Map.loop:
+		LD C, E
+		LD A, D
+		AND 0x03
+		LD B, A
+		PUSH BC
+
+		SRA B
+		RR C
+		SRA B
+		RR C
+		SRA C
+		SRA C
+		SRA C
+		SRA C
+		LD A, C
+
+		POP BC
+		LD B, A
+		LD A, C
+		SRA A
+		AND $0f
+
+		CALL =Is_Solid
+		CP $00
+		JR Z, =Load_Map.loop.next
+
 		LD A, E
 		AND $20
 		SRL A
@@ -16,11 +41,55 @@ Load_Map:
 		OR $20
 
 		LD (DE), A
-		
+
+		Load_Map.loop.next:
+
 		INC DE
-		DEC B
-		LD A, $00
-		CP B
+		LD A, $9c
+		CP D
 		JR NZ =Load_Map.loop
 
+	LD DE, $9853
+	LD A, $24
+	LD (DE), A
+	LD DE, $9854
+	LD A, $25
+	LD (DE), A
+	LD DE, $9873
+	LD A, $26
+	LD (DE), A
+	LD DE, $9874
+	LD A, $27
+	LD (DE), A
+
+	RET
+
+Is_Solid: ; X in A, Y in B, Result A
+	PUSH BC
+	PUSH DE
+	
+	CP $10
+	JR NC, =Is_Solid.Not_Empty
+
+	CP $02
+	JR C, =Is_Solid.Not_Empty
+
+	LD A, B
+
+	CP $10
+	JR NC, =Is_Solid.Not_Empty
+
+	CP $02
+	JR C, =Is_Solid.Not_Empty
+
+	Is_Solid.Empty:
+	LD A, $00
+
+	JP =Is_Solid.End
+	Is_Solid.Not_Empty:
+	LD A, $01
+
+	Is_Solid.End:
+	POP DE
+	POP BC
 	RET
