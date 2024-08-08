@@ -1,9 +1,15 @@
 BG_Tile_Image_Data:
-	; Leaf wall
+	; Leaf wall front
 	.DB $ff, $b3, $4c, $ff, $28, $d7, $ba, $47, $e4, $ef, $41, $ff, $47, $b8, $cd, $3d
 	.DB $bd, $5a, $e7, $fd, $2a, $d7, $aa, $6d, $82, $fe, $83, $ff, $bc, $c7, $c3, $ee
 	.DB $70, $7f, $82, $ff, $2d, $d3, $58, $af, $6d, $1a, $fc, $bd, $e7, $e7, $00, $00
 	.DB $13, $ff, $76, $df, $35, $ba, $48, $fd, $69, $d7, $e7, $ef, $bc, $bc, $00, $00
+
+	; Leaf wall side
+	.DB $2d, $2d, $3b, $37, $7b, $7f, $75, $6e, $5d, $5e, $75, $6d, $3f, $3b, $73, $7f
+	.DB $8a, $b9, $e7, $1c, $d4, $af, $a4, $df, $f2, $ef, $d3, $ae, $09, $7c, $53, $be
+	.DB $6f, $7d, $5a, $5b, $6b, $7d, $3b, $37, $2f, $27, $77, $7f, $4c, $5d, $77, $6e
+	.DB $83, $ff, $ea, $ef, $d9, $b6, $1d, $7c, $61, $be, $99, $ef, $8e, $df, $d6, $6d
 
 OBJ_Tile_Image_Data:
 	; Bunny Side 
@@ -63,7 +69,7 @@ Load_Tile:
 	CALL =Load_Number_Font
 	LD HL, $8200
 	LD DE, =BG_Tile_Image_Data
-	LD BC, $0040
+	LD BC, $0080
 	CALL =memcpy
 	RET
 

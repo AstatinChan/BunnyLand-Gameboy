@@ -3,8 +3,8 @@
 
 Entrypoint:
 	CALL =Load_Tile
-	CALL =Load_Map
 	CALL =Initialize_Bunny
+	CALL =Load_Map
 	
 	EI
 	Wait_for_VRAM.loop:

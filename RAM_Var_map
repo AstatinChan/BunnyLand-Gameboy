@@ -1,8 +1,0 @@
-FF80 = Bunny X position (on the screen in px)
-FF81 = Bunny Y position (on the screen in px)
-FF82 = Current Button Direction (Up = 1, Right = 2, Down = 3, Left = 4)
-FF83 = Current Sprite Direction (Moving)
-FF84 = Px step inside of grid (0x00 to 0x0f)
-FF85 = Last Sprite Direction
-FF86 = Bunny X position (in tiles)
-FF87 = Bunny Y position (in tiles)
