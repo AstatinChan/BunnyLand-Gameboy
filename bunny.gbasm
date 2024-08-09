@@ -5,9 +5,11 @@ Initialize_Bunny:
 	LD $mem_bunny_y, A
 	LD A, $08
 	LD $reg_viewport_x, A
+	LD A, $08
+	LD $reg_viewport_y, A
 	LD A, $50
 	LD $mem_bunny_x_px, A
-	LD A, $48
+	LD A, $40
 	LD $mem_bunny_y_px, A
 	RET
 
