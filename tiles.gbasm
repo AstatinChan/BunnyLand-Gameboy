@@ -62,7 +62,7 @@ memcpy: ; src = DE, dest = HL, n = BC
 	RET
 
 Load_Tile:
-	LD HL, $8010
+	LD HL, $8020
 	LD DE, =OBJ_Tile_Image_Data
 	LD BC, $00c0
 	CALL =memcpy

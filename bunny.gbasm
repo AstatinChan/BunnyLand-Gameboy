@@ -7,7 +7,7 @@ Initialize_Bunny:
 	LD $reg_viewport_x, A
 	LD A, $50
 	LD $mem_bunny_x_px, A
-	LD A, $50
+	LD A, $48
 	LD $mem_bunny_y_px, A
 	RET
 
@@ -178,6 +178,7 @@ Display_Bunny: ; X position in $81, Y position in $80
 	LD A, B
 	LD (HL+), A
 	LD A, E
+	INC A
 	LD (HL+), A
 	LD A, D
 	LD (HL+), A
@@ -193,6 +194,7 @@ Display_Bunny: ; X position in $81, Y position in $80
 	LD (HL+), A
 	LD A, E
 	XOR $02
+	INC A
 	LD (HL+), A
 	LD A, D
 	LD (HL+), A

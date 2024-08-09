@@ -1,5 +1,6 @@
 .DEFINE reg_joypad ($00)
 .DEFINE reg_lcd_controller ($40)
+.DEFINE reg_lcd_status ($41)
 .DEFINE reg_viewport_y ($42)
 .DEFINE reg_viewport_x ($43)
 .DEFINE reg_bg_palette ($47)
