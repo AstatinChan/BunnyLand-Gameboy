@@ -3,9 +3,13 @@
 
 Entrypoint:
 	CALL =Load_Tile
-	CALL =Initialize_Bunny
 	CALL =Load_Map
-	
+	CALL =Initialize_Bunny
+
+	; LCDC
+	LD A, $97
+	LD $reg_lcd_controller, A
+
 	EI
 	Wait_for_VRAM.loop:
 	HALT

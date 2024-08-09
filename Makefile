@@ -9,5 +9,11 @@ build/main.rom: main.gbasm
 run: build/main.rom
 	gb $<
 
+sameboy: build/main.rom
+	sameboy build/main.rom
+
+gearboy: build/main.rom
+	gearboy build/main.rom
+
 clean:
 	rm -rf build

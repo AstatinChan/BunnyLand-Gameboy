@@ -5,7 +5,7 @@ VBlank:
 
 .PADTO 0x0100
 Start:
-	JP =Empty_VRAM
+	JP =Initialize_RAM
 
 .PADTO 0x0104
 Nintendo_Logo: ; The Nintendo logo must be stored in bytes 0x104-133
@@ -18,10 +18,29 @@ Checksum: ; The bytes 0x134-0x14d need to add up to 0xe7 (= 0xff - 0x19)
 	.DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$e7
 
+Initialize_RAM:
+Empty_WRAM:
+	LD HL, $C000
+	Empty_WRAM.loop:
+		XOR A
+		LD (HL+), a
+		LD a, $D0
+		CP h
+		JR NZ, =Empty_WRAM.loop
+
+Wait_VBlank:
+	LD A, $reg_lcd_status
+	AND $03
+	CP $01
+	JR NZ, =Wait_VBlank
+
+	; LCDC
+	XOR A
+	LD $reg_lcd_controller, A
+
 Empty_VRAM: ; (Clear screen)
 	LD hl, $VRAM_start ; We set the HL register to the start of VRAM
-
-Empty_VRAM.loop:
+	Empty_VRAM.loop:
 		XOR A
 		LD (HL+), a 						; We set the memory pointed to by HL to 0 and increase HL
 		LD a, $a0
@@ -36,11 +55,6 @@ Empty_VRAM.loop:
 	LD A, $e4
 	LD $reg_obj0_palette, A
 	
-	; LCDC
-	LD A, $reg_lcd_controller
-	OR $06
-	LD $reg_lcd_controller, A
-
 	; Interrupts
 	LD A, $01
 	LD $reg_interrupt_enable, A
