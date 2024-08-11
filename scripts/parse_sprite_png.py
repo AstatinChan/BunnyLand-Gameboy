@@ -7,8 +7,13 @@ file = Image.open(sys.argv[1]).convert("RGB")
 px_array = np.asarray(file)
 
 def getpx(sprite_nb, x, y):
-    sprite_line = int(sprite_nb / (file.width / 8))
-    sprite_column = int(sprite_nb % (file.width / 8))
+    double_sprite_nb = int(sprite_nb / 4)
+    sprite_double_line = int(double_sprite_nb / (file.width / 16))
+    sprite_double_column = int(double_sprite_nb % (file.width / 16))
+    sprite_tile_y = 1 if sprite_nb & 0b10 else 0
+    sprite_tile_x = 1 if sprite_nb & 0b01 else 0
+    sprite_line = sprite_double_line * 2 + sprite_tile_y
+    sprite_column = sprite_double_column * 2 + sprite_tile_x
 
     return [int(x) for x in px_array[int(sprite_line * 8 + y)][int(sprite_column * 8 + x)]]
 
@@ -36,6 +41,10 @@ for nb in range(0, sprite_nb):
             
             if abs(db) < min(abs(dw), abs(dlg), abs(ddg)):
                 print("#", end = '')
+            if abs(ddg) < min(abs(dw), abs(dlg), abs(db)):
+                print(";", end = '')
+            if abs(dlg) < min(abs(dw), abs(ddg), abs(db)):
+                print(".", end = '')
             else:
                 print(" ", end = '')
         print("\n", end = '')

@@ -129,25 +129,77 @@ Load_Block: ; X in A, Y in B (X and B being AND with 0x0f)
 	POP BC
 	POP AF
 
+	PUSH AF
+	PUSH DE
+
+	LD C, $00
+	LD D, A
+
+	; Checking down block
+	LD A, D
+	INC B
+	CALL =Is_Solid
+	OR C
+	LD C, A
+	DEC B
+	SLA C
+
+	; Checking up block
+	LD A, D
+	DEC B
+	CALL =Is_Solid
+	OR C
+	LD C, A
+	INC B
+	SLA C
+
+	; Checking right block
+	LD A, D
+	INC A
+	CALL =Is_Solid
+	OR C
+	LD C, A
+	SLA C
+
+	; Checking left block
+	LD A, D
+	DEC A
+	CALL =Is_Solid
+	OR C
+	LD C, A
+	SLA C
+
+	SLA C
+
+	LD A, C
+	ADD $20
+	LD C, A
+
+	POP DE
+	POP AF
+
 	CALL =Is_Solid
 
 	CP $00
 	JR Z, =Load_Block.Empty
 	Load_Block.Solid:
-		LD A, $20
+		LD A, C
 		LD (DE), A
 		LD A, E
 		OR $20
 		LD E, A
-		LD A, $22
+		LD A, C
+		OR $02
 		LD (DE), A
 		INC E
-		LD A, $23
+		LD A, C
+		OR $03
 		LD (DE), A
 		LD A, E
 		AND $DF
 		LD E, A
-		LD A, $21
+		LD A, C
+		OR $01
 		LD (DE), A
 
 		JR =Load_Block.End
