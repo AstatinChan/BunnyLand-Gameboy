@@ -7,7 +7,7 @@ Entrypoint:
 	CALL =Initialize_Bunny
 
 	; LCDC
-	LD A, $97
+	LD A, $87
 	LD $reg_lcd_controller, A
 
 	EI
