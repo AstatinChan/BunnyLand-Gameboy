@@ -25,6 +25,7 @@ Move_Bunny:
 	JP Z, =Move_Bunny.end
 
 	Move_Bunny.check_direction:
+		LD A, $mem_moving_sprite_direction
 		LD $mem_sprite_direction, A
 
 		DEC A
@@ -36,7 +37,23 @@ Move_Bunny:
 	Move_Bunny.check_direction_end:
 
 	BIT 1, A
-	JR NZ, =Move_Bunny.vertical_px_move
+	JR NZ, =Move_Bunny.vertical_move
+
+	Move_Bunny.horizontal_move:
+		Move_Bunny.horizontal_move.check_collision:
+		LD D, B
+		LD A, $mem_bunny_y
+		LD B, A
+		LD A, $mem_bunny_x
+
+		ADD D
+
+		CALL =Is_Solid
+
+		CP $00
+		JR NZ, =Move_Bunny.collision
+
+		LD B, D
 
 	Move_Bunny.horizontal_px_move:
 		LD A, $mem_bunny_x_px
@@ -54,6 +71,19 @@ Move_Bunny:
 			LD $reg_viewport_x, A
 			JP =Move_Bunny.check_end_of_movement
 
+	Move_Bunny.vertical_move:
+		LD D, B
+		LD A, $mem_bunny_y
+		ADD D
+		LD B, A
+		LD A, $mem_bunny_x
+
+		CALL =Is_Solid
+
+		CP $00
+		JR NZ, =Move_Bunny.collision
+
+		LD B, D
 
 	Move_Bunny.vertical_px_move:
 		LD A, $mem_bunny_y_px
@@ -70,6 +100,11 @@ Move_Bunny:
 			ADD B
 			LD $reg_viewport_y, A
 			JP =Move_Bunny.check_end_of_movement
+
+	Move_Bunny.collision:
+		LD A, $00
+		LD $mem_moving_sprite_direction, A
+		JP =Move_Bunny.end
 
 	Move_Bunny.check_end_of_movement:
 		LD A, $mem_moving_animation_step
