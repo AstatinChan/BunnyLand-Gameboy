@@ -1,74 +1,186 @@
 Load_Map:
-	LD DE, $9800
+	LD C, $fd
+	LD B, $fd
+	Load_Map.For_Y:
+		Load_Map.For_X:
+			LD A, C
+			CALL =Load_Block
 
-	Load_Map.loop:
-		LD C, E
+			INC C
+			LD A, C
+			CP $0d
+			JR NZ, =Load_Map.For_X
+
+		INC B
+		LD A, B
+		CP $0d
+		JR NZ, =Load_Map.For_Y
+
+	RET
+
+Load_Row: ; (+1/-1 direction in B)
+	PUSH AF
+	PUSH BC
+	PUSH DE
+	LD A, B
+	CP $01
+	JR NZ, =Load_Row.Up
+
+	LD A, $mem_viewport_y
+	ADD $0C
+	LD B, A
+	JR =Load_Row.Set_X_Limits
+
+	Load_Row.Up:
+	LD A, $mem_viewport_y
+	SUB $02
+	LD B, A
+
+	Load_Row.Set_X_Limits:
+	LD A, $mem_viewport_x
+	SUB $03
+	LD D, A
+	LD A, $mem_viewport_x
+	ADD $0D
+	LD E, A
+	Load_Row.For_X:
 		LD A, D
-		AND 0x03
-		LD B, A
-		PUSH BC
+		CALL =Load_Block
 
-		SRA B
-		RR C
-		SRA B
-		RR C
-		SRA C
-		SRA C
-		SRA C
-		SRA C
-		LD A, C
+		INC D
+		LD A, D
+		CP E
+		JR NZ, =Load_Row.For_X
 
-		POP BC
-		LD B, A
-		LD A, C
-		SRA A
-		AND $0f
+	POP DE
+	POP BC
+	POP AF
+	RET
 
-		CALL =Is_Solid
-		CP $00
-		JR Z, =Load_Map.loop.next
+Load_Column: ; (+1/-1 direction in B)
+	PUSH AF
+	PUSH BC
+	PUSH DE
+	LD A, B
+	CP $01
+	JR NZ, =Load_Column.Left
 
+	LD A, $mem_viewport_x
+	ADD $0C
+	LD D, A
+	JR =Load_Column.Set_Y_Limits
+
+	Load_Column.Left:
+	LD A, $mem_viewport_x
+	SUB $02
+	LD D, A
+
+	Load_Column.Set_Y_Limits:
+	LD A, $mem_viewport_y
+	SUB $03
+	LD B, A
+	LD A, $mem_viewport_y
+	ADD $0D
+	LD E, A
+	Load_Column.For_Y:
+		LD A, D
+		CALL =Load_Block
+
+		INC B
+		LD A, B
+		CP E
+		JR NZ, =Load_Column.For_Y
+
+	POP DE
+	POP BC
+	POP AF
+	RET
+
+Load_Block: ; X in A, Y in B (X and B being AND with 0x0f)
+	PUSH BC
+	PUSH AF
+	PUSH DE
+
+	; Construct Tile Map address from A and B in DE
+	PUSH AF
+	PUSH BC
+
+	AND $0f
+	LD C, A
+	LD A, B
+	AND $0f
+	LD B, A
+	LD A, C
+
+	LD D, $00
+	LD E, $00
+	LD E, B
+	SWAP E
+	SLA E
+	RL D
+	SLA E
+	RL D
+	SLA A
+	OR E
+	LD E, A
+ 	LD A, D
+	OR $98
+	LD D, A
+	POP BC
+	POP AF
+
+	CALL =Is_Solid
+
+	CP $00
+	JR Z, =Load_Block.Empty
+	Load_Block.Solid:
+		LD A, $20
+		LD (DE), A
 		LD A, E
-		AND $20
-		SRL A
-		SRL A
-		SRL A
-		SRL A
-		LD C, A
-		LD A, E
-		AND $01
-		OR C
 		OR $20
-
+		LD E, A
+		LD A, $22
+		LD (DE), A
+		INC E
+		LD A, $23
+		LD (DE), A
+		LD A, E
+		AND $DF
+		LD E, A
+		LD A, $21
 		LD (DE), A
 
-		Load_Map.loop.next:
+		JR =Load_Block.End
 
-		INC DE
-		LD A, $9c
-		CP D
-		JR NZ =Load_Map.loop
+	Load_Block.Empty:
+		LD A, $00
+		LD (DE), A
+		LD A, E
+		OR $20
+		LD E, A
+		LD A, $00
+		LD (DE), A
+		INC E
+		LD A, $00
+		LD (DE), A
+		LD A, E
+		AND $DF
+		LD E, A
+		LD A, $00
+		LD (DE), A
 
-	LD DE, $9853
-	LD A, $24
-	LD (DE), A
-	LD DE, $9854
-	LD A, $25
-	LD (DE), A
-	LD DE, $9873
-	LD A, $26
-	LD (DE), A
-	LD DE, $9874
-	LD A, $27
-	LD (DE), A
+	Load_Block.End:
 
+	POP DE
+	POP AF
+	POP BC
 	RET
 
 Is_Solid: ; X in A, Y in B, Result A
 	PUSH BC
 	PUSH DE
-	
-	CP $10
+
+	CP $15
 	JR NC, =Is_Solid.Not_Empty
 
 	CP $02
@@ -76,7 +188,7 @@ Is_Solid: ; X in A, Y in B, Result A
 
 	LD A, B
 
-	CP $10
+	CP $05
 	JR NC, =Is_Solid.Not_Empty
 
 	CP $02
