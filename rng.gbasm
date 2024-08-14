@@ -1,0 +1,70 @@
+Debug_RNG:
+	LD A, $mem_rng_state_1
+	LD HL, $9822
+	CALL =Print_8bit
+	LD A, $mem_rng_state_2
+	CALL =Print_8bit
+	RET
+
+Initialize_RNG:
+	LD A, $42
+	LD $mem_rng_state_1, A
+	LD A, $69
+	LD $mem_rng_state_2, A
+	RET
+
+RNG_Step:
+	PUSH BC
+	PUSH DE
+
+	LD A, $mem_rng_state_1
+	LD D, A
+	LD A, $mem_rng_state_2
+	LD E, A
+
+	; state << 7
+	SCF
+	CCF
+	LD A, $mem_rng_state_2
+	LD B, A
+	LD A, $mem_rng_state_1
+	LD C, A
+	SRA C
+	RR B
+	LD C, $00
+	RR C
+
+	; result XOR state
+	LD A, D
+	XOR B
+	LD D, A
+
+	LD A, E
+	XOR C
+	LD E, A
+
+	; state >> 9
+	LD C, D
+	SRA C
+
+	; result XOR state
+	LD A, E
+	XOR C
+	LD E, A
+
+	; (state << 8) XOR state
+	LD A, D
+	XOR E
+	LD D, A
+
+	LD A, D
+	LD $mem_rng_state_1, A
+
+	LD A, E
+	LD $mem_rng_state_2, A
+
+	POP DE
+	POP BC
+	RET
+
+

@@ -148,14 +148,6 @@ Move_Bunny:
 	RET
 
 Display_Bunny: ; X position in $81, Y position in $80
-	LD A, $mem_bunny_x
-	LD HL, $9840
-	CALL =Print_8bit
-
-	LD A, $mem_bunny_y
-	LD HL, $9860
-	CALL =Print_8bit
-
 	LD A, $mem_bunny_x_px
 	LD B, A
 	LD A, $mem_bunny_y_px

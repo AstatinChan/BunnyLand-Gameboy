@@ -7,7 +7,7 @@ build/main.rom: main.gbasm
 	gbasm $< $@
 
 run: build/main.rom
-	gb --thread-sleep $<
+	gb -s 200 $<
 
 sameboy: build/main.rom
 	sameboy build/main.rom
