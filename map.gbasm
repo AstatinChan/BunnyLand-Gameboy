@@ -228,32 +228,154 @@ Load_Block: ; X in A, Y in B (X and B being AND with 0x0f)
 	POP BC
 	RET
 
-Is_Solid: ; X in A, Y in B, Result A
-	PUSH BC
-	PUSH DE
+; Is_Solid: ; X in A, Y in B, Result A
+; 	PUSH BC
+; 	PUSH DE
+; 	PUSH HL
+; 	LD C, A
+; 
+; 	LD D, $00 ; Constructed room number
+; 	LD E, $00 ; Depth
+; 	PUSH DE
+; 
+; 	Is_Solid.Corridor.loop:
+; 		LD HL, $mem_corridors_array
+; 		POP DE
+; 		LD A, D
+; 		PUSH DE
+; 		SLA A
+; 		SLA A
+; 		SLA A
+; 		OR L
+; 		LD L, A
+; 		
+; 		LD A, (HL+)
+; 		CP $00 ; 0 is horizontal
+; 		JR Z, =Is_Solid.Corridor.horizontal
+; 
+; 		Is_Solid.Corridor.vertical:	
+; 			JR =Is_Solid.Corridor.next
+; 
+; 		Is_Solid.Corridor.horizontal:
+; 			LD A, (HL+)
+; 			LD D, A
+; 			LD A, (HL+)
+; 			LD E, A
+; 			LD A, (HL+)
+; 			CP B
+; 			JR NZ, =Is_Solid.Corridor.room_update
+; 			LD C, A
+; 			CP D
+; 			JR C, =Is_Solid.Corridor.room_update
+; 			CP E
+; 			JR C, =Is_Solid.NotSolid
+; 
+; 			Is_Solid.Corridor.room_update:
+; 			LD A, (HL+) 
+; 			CP C
+; 			LD A, $00
+; 			ADC $00
+; 			POP DE
+; 			SLA D
+; 			OR A
+; 			LD D, A
+; 			PUSH DE
+; 
+; 			JR =Is_Solid.Corridor.next
+; 
+; 		Is_Solid.Corridor.next:
+; 		POP DE
+; 		INC E
+; 		LD A, E
+; 		PUSH DE
+; 		CP $04
+; 		JR NZ =Is_Solid.Corridor.loop
+; 
+; 	POP DE
+; 	LD A, $01
+; 	JR =Is_Solid.End
+; 
+; 	Is_Solid.NotSolid:
+; 	POP DE
+; 	LD A, $00
+; 	Is_Solid.End:
+; 
+; 	POP BC
+; 	POP DE
+; 	POP HL
+; 	RET
 
-	CP $15
-	JR NC, =Is_Solid.Not_Empty
-
-	CP $02
-	JR C, =Is_Solid.Not_Empty
-
-	LD A, B
-
-	CP $05
-	JR NC, =Is_Solid.Not_Empty
-
-	CP $02
-	JR C, =Is_Solid.Not_Empty
-
-	Is_Solid.Empty:
+Initialize_Room:
+	LD HL, $mem_room_array
 	LD A, $00
-
-	JP =Is_Solid.End
-	Is_Solid.Not_Empty:
-	LD A, $01
-
-	Is_Solid.End:
-	POP DE
-	POP BC
+	LD (HL+), A 
+	LD A, $20
+	LD (HL+), A
+	LD A, $00
+	LD (HL+), A
+	LD A, $20
+	LD (HL+), A
 	RET
+
+Is_Solid: ; X in A, Y in B, Result A
+; 	AND $0f
+; 	JR Z, =Is_Solid.Solid
+; 	LD A, B
+; 	AND $07
+; 	JR Z, =Is_Solid.Solid
+; 
+; 
+; 	Is_Solid.NonSolid:
+; 		LD A, $00
+; 		JR =Is_Solid.End
+; 
+; 	Is_Solid.Solid:
+; 		LD A, $01
+; 
+; 	Is_Solid.End:
+; 	RET
+ 	PUSH BC
+ 	PUSH DE
+ 	PUSH HL
+ 
+ 	LD C, A
+ 	LD DE, $mem_room_array
+ 
+ 	Is_Solid.room_loop:
+ 		LD H, D
+ 		LD L, E
+ 
+ 		LD A, (HL+)
+ 		CP C
+ 		JR NC, =Is_Solid.room_loop.next
+ 
+ 		LD A, (HL+)
+ 		CP C
+ 		JR C, =Is_Solid.room_loop.next
+ 
+ 		LD A, (HL+)
+ 		CP B
+ 		JR NC, =Is_Solid.room_loop.next
+ 
+ 		LD A, (HL+)
+ 		CP B
+ 		JR NC, =Is_Solid.NonSolid
+ 
+ 	Is_Solid.room_loop.next:
+ 		LD A, $04
+ 		ADD E
+ 		LD E, A
+ 		CP $40
+ 		JR NZ, =Is_Solid.room_loop
+ 
+ 	LD A, $01
+ 	JR =Is_Solid.End
+ 
+ 	Is_Solid.NonSolid:
+ 	LD A, $00
+ 
+ 	Is_Solid.End:
+ 	POP HL
+ 	POP DE
+ 	POP BC
+ 	RET
