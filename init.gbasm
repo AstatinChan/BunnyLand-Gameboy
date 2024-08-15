@@ -41,12 +41,12 @@ Wait_VBlank:
 	LD $reg_lcd_controller, A
 
 Empty_VRAM: ; (Clear screen)
-	LD hl, $VRAM_start ; We set the HL register to the start of VRAM
+	LD HL, $VRAM_start ; We set the HL register to the start of VRAM
 	Empty_VRAM.loop:
 		XOR A
-		LD (HL+), a 						; We set the memory pointed to by HL to 0 and increase HL
-		LD a, $a0
-		CP h        						; Until h has reached $a0 ($a0000 is the end of VRAM)
+		LD (HL+), A 						; We set the memory pointed to by HL to 0 and increase HL
+		LD A, $a0
+		CP H        						; Until h has reached $a0 ($a0000 is the end of VRAM)
 		JR NZ, =Empty_VRAM.loop
 
 	; BG Palette
