@@ -1,6 +1,14 @@
 Load_Map:
-	LD C, $fd
-	LD B, $fd
+	LD A, $mem_viewport_x
+	SUB $02
+	LD C, A
+	ADD $10
+	LD E, A
+	LD A, $mem_viewport_y
+	SUB $02
+	LD B, A
+	ADD $10
+	LD D, A
 	Load_Map.For_Y:
 		Load_Map.For_X:
 			LD A, C
@@ -8,12 +16,12 @@ Load_Map:
 
 			INC C
 			LD A, C
-			CP $0d
+			CP E
 			JR NZ, =Load_Map.For_X
 
 		INC B
 		LD A, B
-		CP $0d
+		CP D
 		JR NZ, =Load_Map.For_Y
 
 	RET
@@ -96,7 +104,7 @@ Load_Column: ; (+1/-1 direction in B)
 	POP AF
 	RET
 
-Load_Block: ; X in A, Y in B (X and B being AND with 0x0f)
+Load_Block: ; X in A, Y in B
 	PUSH BC
 	PUSH AF
 	PUSH DE
@@ -228,154 +236,82 @@ Load_Block: ; X in A, Y in B (X and B being AND with 0x0f)
 	POP BC
 	RET
 
-; Is_Solid: ; X in A, Y in B, Result A
-; 	PUSH BC
-; 	PUSH DE
-; 	PUSH HL
-; 	LD C, A
-; 
-; 	LD D, $00 ; Constructed room number
-; 	LD E, $00 ; Depth
-; 	PUSH DE
-; 
-; 	Is_Solid.Corridor.loop:
-; 		LD HL, $mem_corridors_array
-; 		POP DE
-; 		LD A, D
-; 		PUSH DE
-; 		SLA A
-; 		SLA A
-; 		SLA A
-; 		OR L
-; 		LD L, A
-; 		
-; 		LD A, (HL+)
-; 		CP $00 ; 0 is horizontal
-; 		JR Z, =Is_Solid.Corridor.horizontal
-; 
-; 		Is_Solid.Corridor.vertical:	
-; 			JR =Is_Solid.Corridor.next
-; 
-; 		Is_Solid.Corridor.horizontal:
-; 			LD A, (HL+)
-; 			LD D, A
-; 			LD A, (HL+)
-; 			LD E, A
-; 			LD A, (HL+)
-; 			CP B
-; 			JR NZ, =Is_Solid.Corridor.room_update
-; 			LD C, A
-; 			CP D
-; 			JR C, =Is_Solid.Corridor.room_update
-; 			CP E
-; 			JR C, =Is_Solid.NotSolid
-; 
-; 			Is_Solid.Corridor.room_update:
-; 			LD A, (HL+) 
-; 			CP C
-; 			LD A, $00
-; 			ADC $00
-; 			POP DE
-; 			SLA D
-; 			OR A
-; 			LD D, A
-; 			PUSH DE
-; 
-; 			JR =Is_Solid.Corridor.next
-; 
-; 		Is_Solid.Corridor.next:
-; 		POP DE
-; 		INC E
-; 		LD A, E
-; 		PUSH DE
-; 		CP $04
-; 		JR NZ =Is_Solid.Corridor.loop
-; 
-; 	POP DE
-; 	LD A, $01
-; 	JR =Is_Solid.End
-; 
-; 	Is_Solid.NotSolid:
-; 	POP DE
-; 	LD A, $00
-; 	Is_Solid.End:
-; 
-; 	POP BC
-; 	POP DE
-; 	POP HL
-; 	RET
+Initial_dungeon:
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $03, $e0, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $0e, $20, $00, $00,
+	.DB $3f, $20, $00, $00,
+	.DB $3f, $20, $00, $00,
+	.DB $3f, $3f, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $ff, $80,
+	.DB $00, $01, $f8, $80,
+	.DB $00, $01, $f8, $80,
+	.DB $00, $00, $ff, $80,
+	.DB $00, $00, $00, $00,
 
-Initialize_Room:
-	LD HL, $mem_room_array
-	LD A, $00
-	LD (HL+), A 
-	LD A, $20
-	LD (HL+), A
-	LD A, $00
-	LD (HL+), A
-	LD A, $20
-	LD (HL+), A
-	RET
+Initialize_Dungeon:
+	LD HL, $mem_dungeon_map
+	LD DE, =Initial_dungeon
+	LD BC, $0100
+	JP =memcpy
+
 
 Is_Solid: ; X in A, Y in B, Result A
-; 	AND $0f
-; 	JR Z, =Is_Solid.Solid
-; 	LD A, B
-; 	AND $07
-; 	JR Z, =Is_Solid.Solid
-; 
-; 
-; 	Is_Solid.NonSolid:
-; 		LD A, $00
-; 		JR =Is_Solid.End
-; 
-; 	Is_Solid.Solid:
-; 		LD A, $01
-; 
-; 	Is_Solid.End:
-; 	RET
- 	PUSH BC
- 	PUSH DE
- 	PUSH HL
- 
- 	LD C, A
- 	LD DE, $mem_room_array
- 
- 	Is_Solid.room_loop:
- 		LD H, D
- 		LD L, E
- 
- 		LD A, (HL+)
- 		CP C
- 		JR NC, =Is_Solid.room_loop.next
- 
- 		LD A, (HL+)
- 		CP C
- 		JR C, =Is_Solid.room_loop.next
- 
- 		LD A, (HL+)
- 		CP B
- 		JR NC, =Is_Solid.room_loop.next
- 
- 		LD A, (HL+)
- 		CP B
- 		JR NC, =Is_Solid.NonSolid
- 
- 	Is_Solid.room_loop.next:
- 		LD A, $04
- 		ADD E
- 		LD E, A
- 		CP $40
- 		JR NZ, =Is_Solid.room_loop
- 
- 	LD A, $01
- 	JR =Is_Solid.End
- 
- 	Is_Solid.NonSolid:
- 	LD A, $00
- 
- 	Is_Solid.End:
- 	POP HL
- 	POP DE
- 	POP BC
+	PUSH BC
+
+	CP $20
+	JR NC, =Is_Solid.Solid
+
+	LD C, A
+	LD A, B
+	CP $20
+	JR NC, =Is_Solid.Solid
+	LD A, C
+
+	LD H, $00
+	CP $10
+	RL B
+	AND $0f
+	CP $08
+	RL B
+	AND $07
+	LD L, A
+
+	LD C, B
+	LD B, $c8
+	LD A, (BC)
+
+	AND (HL)
+	CP $01
+	LD A, $00
+	RL A
+
+	POP BC
  	RET
+
+	Is_Solid.Solid:
+	LD A, $01
+	POP BC
+
+	RET

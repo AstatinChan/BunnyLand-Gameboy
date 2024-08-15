@@ -1,3 +1,5 @@
+.DB $01, $02, $04, $08, $10, $20, $40, $80
+
 .PADTO 0x0040
 VBlank:
 	CALL =VBLANK_Entrypoint

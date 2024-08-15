@@ -23,23 +23,7 @@
 .DEFINE mem_rng_state_1 ($c00a) ; 2 bytes
 .DEFINE mem_rng_state_2 ($c00b) ; 2 bytes
 
-.DEFINE mem_room_number ($c7ff) ; AND 0xf0 >> 8 gives the number of rooms and AND 0xf gives the number of corridors
-.DEFINE mem_room_array $c800 ; Takes the memory from c800 to c840
-.DEFINE mem_corridors_array $c840 ; Takes the memory from c840 to c8a0
-; room = struct {
-; 	x1: u8
-;	x2: u8
-; 	y1: u8
-; 	y2: u8
-; } 4bytes
-; corridor = struct {
-; 	orientation: bool
-;   start u8
-;	end u8
-;	position u8
-;	cut: u8
-;   _padding: u24
-; } 8bytes
+.DEFINE mem_dungeon_map $c800 ; Takes the memory from c800 to c87f
 
 .DEFINE enum_direction_left $01
 .DEFINE enum_direction_right $02
