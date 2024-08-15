@@ -2,10 +2,10 @@
 .INCLUDE "init.gbasm"
 
 Entrypoint:
-	CALL =Initialize_Room
+	CALL =Initialize_Dungeon
+	CALL =Initialize_Bunny
 	CALL =Load_Tile
 	CALL =Load_Map
-	CALL =Initialize_Bunny
 	CALL =Initialize_RNG
 
 	; LCDC
@@ -25,8 +25,8 @@ VBLANK_Entrypoint:
 	RET
 
 .INCLUDE "tiles.gbasm"
-.INCLUDE "print.gbasm"
 .INCLUDE "map.gbasm"
 .INCLUDE "bunny.gbasm"
 .INCLUDE "buttons.gbasm"
 .INCLUDE "rng.gbasm"
+.INCLUDE "utils.gbasm"

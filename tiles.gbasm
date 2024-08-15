@@ -102,19 +102,6 @@ Number_Font_Data:
 	.DB $00, $7e, $60, $7c, $60, $60, $7e, $00 ; E
 	.DB $00, $7e, $60, $7c, $60, $60, $60, $00 ; F
 
-memcpy: ; src = DE, dest = HL, n = BC
-	Load_Tile.loop0:
-		LD A, (DE)
-		LD (HL+), A
-		INC DE
-		DEC BC
-		XOR A
-		CP B
-		JR NZ =Load_Tile.loop0
-		CP C
-		JR NZ =Load_Tile.loop0
-	RET
-
 Load_Tile:
 	LD HL, $8020
 	LD DE, =OBJ_Tile_Image_Data

@@ -1,12 +1,16 @@
 Initialize_Bunny:
-	LD A, $05
+	LD A, $10
 	LD $mem_bunny_x, A
-	LD A, $04
+	LD A, $10
 	LD $mem_bunny_y, A
-	LD A, $08
+	LD A, $b8
 	LD $reg_viewport_x, A
-	LD A, $08
+	LD A, $c8
 	LD $reg_viewport_y, A
+	LD A, $0b
+	LD $mem_viewport_x, A
+	LD A, $0c
+	LD $mem_viewport_y, A
 	LD A, $50
 	LD $mem_bunny_x_px, A
 	LD A, $40

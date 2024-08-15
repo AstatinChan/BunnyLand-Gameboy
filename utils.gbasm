@@ -1,3 +1,16 @@
+memcpy: ; src = DE, dest = HL, n = BC
+	Load_Tile.loop0:
+		LD A, (DE)
+		LD (HL+), A
+		INC DE
+		DEC BC
+		XOR A
+		CP B
+		JR NZ =Load_Tile.loop0
+		CP C
+		JR NZ =Load_Tile.loop0
+	RET
+
 Print_8bit: ; Number in A, Memory Tilemap position in HL
 	PUSH AF
 	PUSH BC
@@ -16,3 +29,4 @@ Print_8bit: ; Number in A, Memory Tilemap position in HL
 	POP BC
 	POP AF
 	RET
+
