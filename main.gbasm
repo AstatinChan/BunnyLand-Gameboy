@@ -2,11 +2,11 @@
 .INCLUDE "init.gbasm"
 
 Entrypoint:
-	CALL =Initialize_Dungeon
+	CALL =Initialize_RNG
+	CALL =Dungeon_Generation
 	CALL =Initialize_Bunny
 	CALL =Load_Tile
 	CALL =Load_Map
-	CALL =Initialize_RNG
 
 	; LCDC
 	LD A, $87
@@ -21,11 +21,11 @@ VBLANK_Entrypoint:
 	CALL =Pad_Button_Check
 	CALL =Move_Bunny
 	CALL =Display_Bunny
-	CALL =RNG_Step
 	RET
 
 .INCLUDE "tiles.gbasm"
-.INCLUDE "map.gbasm"
+.INCLUDE "map/loading.gbasm"
+.INCLUDE "map/generation.gbasm"
 .INCLUDE "bunny.gbasm"
 .INCLUDE "buttons.gbasm"
 .INCLUDE "rng.gbasm"

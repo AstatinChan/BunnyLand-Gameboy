@@ -1,0 +1,168 @@
+Initial_dungeon:
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $00, $00, $00, $00,
+	.DB $03, $e0, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $02, $20, $00, $00,
+	.DB $0e, $20, $00, $00,
+	.DB $3f, $20, $00, $00,
+	.DB $3f, $20, $00, $00,
+	.DB $3f, $3f, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $3f, $00, $80, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $f8, $00,
+	.DB $00, $01, $ff, $80,
+	.DB $00, $01, $f8, $80,
+	.DB $00, $01, $f8, $80,
+	.DB $00, $00, $ff, $80,
+	.DB $00, $00, $00, $00,
+
+Initialize_Dungeon:
+	LD HL, $mem_dungeon_map
+	LD DE, =Initial_dungeon
+	LD BC, $0100
+	JP =memcpy
+
+Carve_Tunnel: ; X in A, Y in B
+	PUSH BC
+	PUSH HL
+	LD A, C
+
+	LD H, $00
+	CP $10
+	RL B
+	AND $0f
+	CP $08
+	RL B
+	AND $07
+	LD L, A
+
+	LD C, B
+	LD B, $c8
+	LD A, (BC)
+
+	OR (HL)
+	LD (BC), A
+
+	POP HL
+	POP BC
+ 	RET
+
+Dungeon_Generation:
+	; Head initialization
+	LD HL, $mem_dungeon_generation_heads
+	CALL =RNG_Step
+	AND $03
+	ADD $01
+	LD (HL+), A
+	LD A, $10
+	LD (HL+), A
+	LD (HL+), A
+
+	LD A, $20
+	PUSH AF
+
+	Dungeon_Generation.Step:
+		LD HL, $mem_dungeon_generation_heads
+
+		Dungeon_Generation.Head_loop:
+			LD B, (HL)
+			LD A, B
+
+			CP $00
+			JR Z, =Dungeon_Generation.Head_loop.end
+
+			CALL =RNG_Step
+			AND $07
+			JR NZ, =Dungeon_Generation.Direction_Change.end
+			Dungeon_Generation.Direction_Change:
+				DEC B
+				CALL =RNG_Step
+				AND $01
+				XOR B
+				XOR $02
+				INC A
+				LD B, A
+				LD (HL), B
+			Dungeon_Generation.Direction_Change.end:
+
+			INC HL
+
+			LD C, (HL)
+			LD A, B
+
+			CP $01
+			JR NZ =Dungeon_Generation.Left.end
+			Dungeon_Generation.Left:
+				DEC C
+			Dungeon_Generation.Left.end:
+
+			CP $02
+			JR NZ =Dungeon_Generation.Right.end
+			Dungeon_Generation.Right:
+				INC C
+			Dungeon_Generation.Right.end:
+			
+			AND $e0
+
+			JR NZ, =Dungeon_Generation.DonT_Update_X
+			LD (HL), C
+			Dungeon_Generation.DonT_Update_X:
+
+			INC HL
+
+			LD C, (HL)
+			LD A, B
+
+			CP $03
+			JR NZ =Dungeon_Generation.Up.end
+			Dungeon_Generation.Up:
+				DEC C
+			Dungeon_Generation.Up.end:
+
+			CP $04
+			JR NZ =Dungeon_Generation.Down.end
+			Dungeon_Generation.Down:
+				INC C
+			Dungeon_Generation.Down.end:
+			
+			AND $e0
+
+			JR NZ, =Dungeon_Generation.DonT_Update_Y
+			LD (HL), C
+			Dungeon_Generation.DonT_Update_Y:
+
+			DEC HL 
+			LD A, (HL+)
+			LD C, A
+			LD A, (HL+)
+			LD B, A
+			LD A, C
+			CALL =Carve_Tunnel
+			JP =Dungeon_Generation.Head_loop
+
+		Dungeon_Generation.Head_loop.end:
+
+		POP AF
+		DEC A
+		PUSH AF
+		CP $00
+		JR NZ, =Dungeon_Generation.Step
+
+	POP AF
+	RET
