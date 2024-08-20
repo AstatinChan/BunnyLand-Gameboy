@@ -11,7 +11,7 @@
 .DEFINE OAM_start $FE00
 
 .DEFINE dungeon_generation_step $20
-.DEFINE intial_duplication_probablity $2
+.DEFINE intial_duplication_probablity $02
 
 .DEFINE mem_bunny_x_px ($c000)
 .DEFINE mem_bunny_y_px ($c001)
@@ -26,6 +26,8 @@
 .DEFINE mem_rng_state_1 ($c00a) ; 2 bytes
 .DEFINE mem_rng_state_2 ($c00b) ; 2 bytes
 
+.DEFINE next_free_head_higher_bytes $c7
+.DEFINE mem_next_free_head_lower_bytes ($c6ff)
 .DEFINE mem_dungeon_generation_heads $c700 ; Takes the memory from c700 to c717
 ; struct head {
 ; 	direction: u8 (really u3 but padding),

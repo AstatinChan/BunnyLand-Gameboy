@@ -1,46 +1,15 @@
-Initial_dungeon:
-	.DB $00, $00, $00, $00,
-	.DB $00, $00, $00, $00,
-	.DB $00, $00, $00, $00,
-	.DB $00, $00, $00, $00,
-	.DB $00, $00, $00, $00,
-	.DB $00, $00, $00, $00,
-	.DB $00, $00, $00, $00,
-	.DB $03, $e0, $00, $00,
-	.DB $02, $20, $00, $00,
-	.DB $02, $20, $00, $00,
-	.DB $02, $20, $00, $00,
-	.DB $02, $20, $00, $00,
-	.DB $02, $20, $00, $00,
-	.DB $0e, $20, $00, $00,
-	.DB $3f, $20, $00, $00,
-	.DB $3f, $20, $00, $00,
-	.DB $3f, $3f, $80, $00,
-	.DB $3f, $00, $80, $00,
-	.DB $3f, $00, $80, $00,
-	.DB $3f, $00, $80, $00,
-	.DB $3f, $00, $80, $00,
-	.DB $3f, $00, $80, $00,
-	.DB $00, $01, $f8, $00,
-	.DB $00, $01, $f8, $00,
-	.DB $00, $01, $f8, $00,
-	.DB $00, $01, $f8, $00,
-	.DB $00, $01, $f8, $00,
-	.DB $00, $01, $ff, $80,
-	.DB $00, $01, $f8, $80,
-	.DB $00, $01, $f8, $80,
-	.DB $00, $00, $ff, $80,
-	.DB $00, $00, $00, $00,
-
-Initialize_Dungeon:
-	LD HL, $mem_dungeon_map
-	LD DE, =Initial_dungeon
-	LD BC, $0100
-	JP =memcpy
-
-Carve_Tunnel: ; X in A, Y in B
+Carve_Map: ; X in C, Y in B
 	PUSH BC
 	PUSH HL
+
+	LD A, C
+	AND $e0
+	JR NZ, =Carve_Map.end
+
+	LD A, B
+	AND $e0
+	JR NZ, =Carve_Map.end
+
 	LD A, C
 
 	LD H, $00
@@ -59,22 +28,124 @@ Carve_Tunnel: ; X in A, Y in B
 	OR (HL)
 	LD (BC), A
 
+	Carve_Map.end:
+
 	POP HL
 	POP BC
  	RET
+
+Generation_Head_Mitosis:
+	PUSH HL
+	PUSH BC
+
+	LD A, $mem_next_free_head_lower_bytes
+	LD C, A
+
+	LD A, (HL+)
+
+	DEC A
+	XOR $02
+	LD B, A
+	CALL =RNG_Step
+	AND $01
+	XOR B
+	INC A
+
+	LD B, $next_free_head_higher_bytes
+
+	LD (BC), A
+	INC BC
+
+	LD A, (HL+)
+	LD (BC), A
+	INC BC
+
+	LD A, (HL+)
+	LD (BC), A
+	INC BC
+
+	LD A, C
+	LD $mem_next_free_head_lower_bytes, A
+
+	SLA E
+	SLA E
+
+	POP BC
+	POP HL
+	RET
+
+Generation_Head_Explosion:
+	PUSH HL
+
+	INC HL
+	LD A, (HL+)
+	LD E, A
+
+	LD A, (HL+)
+	LD D, A
+
+	CALL =RNG_Step
+	AND $03
+	ADD $06
+	LD B, A
+	SRA A
+	XOR $ff
+	INC A
+	ADD E
+	LD E, A
+
+	CALL =RNG_Step
+	AND $03
+	ADD $06
+	LD C, A
+	SRA A
+	XOR $ff
+	INC A
+	ADD D
+	LD D, A
+
+	LD L, C
+	Room_Generation.X_loop:
+		LD H, B
+		Room_Generation.Y_loop:
+			PUSH BC
+			LD A, D
+			ADD H
+			LD B, A
+			LD A, E
+			ADD L
+			LD C, A
+			CALL =Carve_Map
+			POP BC
+
+			DEC H
+			LD A, H
+			CP $00
+			JR NZ, =Room_Generation.Y_loop
+		DEC L
+		LD A, L
+		CP $00
+		JR NZ, =Room_Generation.X_loop
+
+	POP HL
+	RET
 
 Dungeon_Generation:
 	; Head initialization
 	LD HL, $mem_dungeon_generation_heads
 	CALL =RNG_Step
 	AND $03
-	ADD $01
+	INC A
 	LD (HL+), A
 	LD A, $10
 	LD (HL+), A
 	LD (HL+), A
 
-	LD A, $20
+	LD E, $intial_duplication_probablity
+	LD A, L
+	LD $mem_next_free_head_lower_bytes, A
+
+	LD A, $40
 	PUSH AF
 
 	Dungeon_Generation.Step:
@@ -86,6 +157,19 @@ Dungeon_Generation:
 
 			CP $00
 			JR Z, =Dungeon_Generation.Head_loop.end
+
+			LD A, E
+			CP $00
+			JR Z, =Dungeon_Generation.Head_Mitosis.end
+
+			DEC A
+			LD C, A
+			CALL =RNG_Step
+			AND C
+			CP $00
+			CALL Z, =Generation_Head_Mitosis
+
+			Dungeon_Generation.Head_Mitosis.end:
 
 			CALL =RNG_Step
 			AND $07
@@ -106,18 +190,19 @@ Dungeon_Generation:
 			LD C, (HL)
 			LD A, B
 
-			CP $01
+			CP $enum_direction_left
 			JR NZ =Dungeon_Generation.Left.end
 			Dungeon_Generation.Left:
 				DEC C
 			Dungeon_Generation.Left.end:
 
-			CP $02
+			CP $enum_direction_right
 			JR NZ =Dungeon_Generation.Right.end
 			Dungeon_Generation.Right:
 				INC C
 			Dungeon_Generation.Right.end:
 			
+			LD A, C
 			AND $e0
 
 			JR NZ, =Dungeon_Generation.DonT_Update_X
@@ -129,18 +214,19 @@ Dungeon_Generation:
 			LD C, (HL)
 			LD A, B
 
-			CP $03
+			CP $enum_direction_up
 			JR NZ =Dungeon_Generation.Up.end
 			Dungeon_Generation.Up:
 				DEC C
 			Dungeon_Generation.Up.end:
 
-			CP $04
+			CP $enum_direction_down
 			JR NZ =Dungeon_Generation.Down.end
 			Dungeon_Generation.Down:
 				INC C
 			Dungeon_Generation.Down.end:
 			
+			LD A, C
 			AND $e0
 
 			JR NZ, =Dungeon_Generation.DonT_Update_Y
@@ -153,7 +239,7 @@ Dungeon_Generation:
 			LD A, (HL+)
 			LD B, A
 			LD A, C
-			CALL =Carve_Tunnel
+			CALL =Carve_Map
 			JP =Dungeon_Generation.Head_loop
 
 		Dungeon_Generation.Head_loop.end:
@@ -165,4 +251,22 @@ Dungeon_Generation:
 		JR NZ, =Dungeon_Generation.Step
 
 	POP AF
+
+	LD HL, $mem_dungeon_generation_heads
+
+	Dungeon_Generation.Head_explosion_loop:
+		LD B, (HL)
+		LD A, B
+
+		CP $00
+		JR Z, =Dungeon_Generation.Head_explosion_loop.end
+
+		CALL =Generation_Head_Explosion
+		INC HL
+		INC HL
+		INC HL
+		JR =Dungeon_Generation.Head_explosion_loop
+
+	Dungeon_Generation.Head_explosion_loop.end:
+
 	RET
