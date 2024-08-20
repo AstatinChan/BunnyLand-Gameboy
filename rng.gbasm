@@ -7,7 +7,7 @@ Debug_RNG:
 	RET
 
 Initialize_RNG:
-	LD A, $42
+	LD A, $43
 	LD $mem_rng_state_1, A
 	LD A, $15
 	LD $mem_rng_state_2, A

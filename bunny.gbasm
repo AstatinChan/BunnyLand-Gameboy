@@ -55,7 +55,7 @@ Move_Bunny:
 		CALL =Is_Solid
 
 		CP $00
-		JR NZ, =Move_Bunny.collision
+		; JR NZ, =Move_Bunny.collision
 
 		LD B, D
 
@@ -85,7 +85,7 @@ Move_Bunny:
 		CALL =Is_Solid
 
 		CP $00
-		JR NZ, =Move_Bunny.collision
+		; JR NZ, =Move_Bunny.collision
 
 		LD B, D
 
