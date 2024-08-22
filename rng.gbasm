@@ -7,7 +7,7 @@ Debug_RNG:
 	RET
 
 Initialize_RNG:
-	LD A, $43
+	LD A, $0c
 	LD $mem_rng_state_1, A
 	LD A, $15
 	LD $mem_rng_state_2, A
@@ -67,4 +67,17 @@ RNG_Step:
 	POP BC
 	RET
 
+RNG_Bound: ; generate a number where 0 < new_A <= Old A
+	PUSH BC
+	PUSH DE
 
+	LD B, A
+	CALL =RNG_Step
+	LD C, A
+
+	CALL =MUL
+	LD A, E
+
+	POP DE
+	POP BC
+	RET

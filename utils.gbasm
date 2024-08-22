@@ -30,3 +30,68 @@ Print_8bit: ; Number in A, Memory Tilemap position in HL
 	POP AF
 	RET
 
+MUL: ; B x C => EA
+	XOR A
+	LD E, $00
+
+	BIT 7, B
+	JR Z, =MUL.bit7
+		ADD C
+	MUL.bit7:
+
+	SLA A
+	RL E
+
+	BIT 6, B
+	JR Z, =MUL.bit6
+		ADD C
+	MUL.bit6:
+
+	SLA A
+	RL E
+
+	BIT 5, B
+	JR Z, =MUL.bit5
+		ADD C
+	MUL.bit5:
+
+	SLA A
+	RL E
+
+	BIT 4, B
+	JR Z, =MUL.bit4
+		ADD C
+	MUL.bit4:
+
+	SLA A
+	RL E
+
+	BIT 3, B
+	JR Z, =MUL.bit3
+		ADD C
+	MUL.bit3:
+
+	SLA A
+	RL E
+
+	BIT 2, B
+	JR Z, =MUL.bit2
+		ADD C
+	MUL.bit2:
+
+	SLA A
+	RL E
+
+	BIT 1, B
+	JR Z, =MUL.bit1
+		ADD C
+	MUL.bit1:
+
+	SLA A
+	RL E
+
+	BIT 0, B
+	JR Z, =MUL.bit0
+		ADD C
+	MUL.bit0:
+	RET

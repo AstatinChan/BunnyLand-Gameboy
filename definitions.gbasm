@@ -11,7 +11,7 @@
 .DEFINE OAM_start $FE00
 
 .DEFINE dungeon_generation_step $20
-.DEFINE intial_duplication_probablity $02
+.DEFINE intial_duplication_probablity $01
 
 .DEFINE mem_bunny_x_px ($c000)
 .DEFINE mem_bunny_y_px ($c001)
@@ -36,6 +36,14 @@
 ; }
 
 .DEFINE mem_dungeon_map $c800 ; Takes the memory from c800 to c87f
+.DEFINE mem_room_list $c880 ; Takes the memory from c880 to c89f
+.DEFINE mem_number_of_rooms ($c8a0)
+; struct room {
+;   x: u8,
+;   sizex: u8,
+;   y: u8,
+;   sizey: u8,
+; }
 
 .DEFINE enum_direction_left $01
 .DEFINE enum_direction_right $02
