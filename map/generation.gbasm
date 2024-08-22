@@ -41,7 +41,7 @@ Generation_Head_Mitosis:
 	LD A, $mem_next_free_head_lower_bytes
 	LD C, A
 
-	LD A, (HL+)
+	LD A, (HL)
 
 	DEC A
 	XOR $02
@@ -54,6 +54,11 @@ Generation_Head_Mitosis:
 	LD B, $next_free_head_higher_bytes
 
 	LD (BC), A
+	DEC A
+	XOR $01
+	INC A
+	LD (HL), A
+	INC HL
 	INC BC
 
 	LD A, (HL+)
@@ -69,9 +74,28 @@ Generation_Head_Mitosis:
 
 	SLA E
 	SLA E
+	SLA E
 
 	POP BC
 	POP HL
+	RET
+
+Enforce_Map_Bounds: ; X OR Y in A
+	CP $80
+	JR NC, =Enforce_Map_Bounds.Zero
+
+	CP $1f
+	JR NC, =Enforce_Map_Bounds.Thirty_one
+
+	RET
+
+	Enforce_Map_Bounds.Zero:
+	LD A, $00
+	RET
+
+	Enforce_Map_Bounds.Thirty_one:
+	LD A, $1f
+
 	RET
 
 Generation_Head_Explosion:
@@ -79,11 +103,19 @@ Generation_Head_Explosion:
 
 	INC HL
 	LD A, (HL+)
-	LD E, A
+	LD E, A ; X
 
 	LD A, (HL+)
-	LD D, A
+	LD D, A ; Y
 
+	LD H, $c8
+	LD A, $mem_number_of_rooms
+	SLA A
+	SLA A
+	ADD $80
+	LD L, A
+
+	LD A, E
 	CALL =RNG_Step
 	AND $03
 	ADD $06
@@ -92,8 +124,20 @@ Generation_Head_Explosion:
 	XOR $ff
 	INC A
 	ADD E
-	LD E, A
+	CALL =Enforce_Map_Bounds
+	LD E, A ; X
 
+	ADD B
+	CALL =Enforce_Map_Bounds
+	SUB E
+	LD B, A
+
+	LD A, E
+	LD (HL+), A
+	LD A, B ; X size
+	LD (HL+), A
+
+	LD A, D
 	CALL =RNG_Step
 	AND $03
 	ADD $06
@@ -102,7 +146,18 @@ Generation_Head_Explosion:
 	XOR $ff
 	INC A
 	ADD D
-	LD D, A
+	CALL =Enforce_Map_Bounds
+	LD D, A ; Y
+
+	ADD C
+	CALL =Enforce_Map_Bounds
+	SUB D
+	LD C, A
+
+	LD A, D
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
 
 	LD L, C
 	Room_Generation.X_loop:
@@ -172,7 +227,7 @@ Dungeon_Generation:
 			Dungeon_Generation.Head_Mitosis.end:
 
 			CALL =RNG_Step
-			AND $07
+			AND $0f
 			JR NZ, =Dungeon_Generation.Direction_Change.end
 			Dungeon_Generation.Direction_Change:
 				DEC B
@@ -262,6 +317,11 @@ Dungeon_Generation:
 		JR Z, =Dungeon_Generation.Head_explosion_loop.end
 
 		CALL =Generation_Head_Explosion
+
+		LD A, $mem_number_of_rooms
+		INC A
+		LD $mem_number_of_rooms, A
+
 		INC HL
 		INC HL
 		INC HL
