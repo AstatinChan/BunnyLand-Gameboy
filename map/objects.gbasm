@@ -1,0 +1,120 @@
+Initialize_Objects:
+	LD A, $mem_map_loading_flags
+	OR $01
+	LD $mem_map_loading_flags, A
+	LD HL, $mem_object_list
+	LD A, $60
+	LD (HL+), A
+	
+	LD A, $mem_number_of_rooms
+	CALL =RNG_Bound
+	SLA A
+	SLA A
+	ADD $80
+	LD C, A
+
+	LD B, $c8
+
+	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
+
+	LD (HL+), A
+
+	INC BC
+
+	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
+	LD (HL+), A
+
+
+	LD BC, =Stairs_action
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	RET
+
+Stairs_action:
+	LD A, $00
+	LD $mem_bunny_x, A
+	LD A, $00
+	LD $mem_bunny_y, A
+	CALL =Fix_Bunny_screen
+	RET
+
+Display_Objects:
+	LD A, $mem_map_loading_flags
+	BIT 0, A
+	JR Z, =Display_Objects.End
+	LD HL, $mem_object_list
+	Display_Objects.loop:
+		LD A, (HL+)
+		CP $00
+		JR Z, =Display_Objects.next
+		LD C, A
+		LD A, (HL+)
+		LD D, A
+		LD A, $mem_viewport_x
+		SUB $03
+		CP D
+		JR NC, =Display_Objects.next
+		ADD $10
+		CP D
+		JR C, =Display_Objects.next
+
+		LD A, (HL+)
+		LD B, A
+		LD A, $mem_viewport_y
+		SUB $03
+		CP B
+		JR NC, =Display_Objects.next
+		ADD $10
+		CP B
+		JR C, =Display_Objects.next
+
+		LD A, D
+		CALL =Construct_Tile_Address
+
+		LD A, C
+		LD (DE), A
+
+		INC E
+		INC C
+
+		LD A, C
+		LD (DE), A
+
+		INC C
+
+		LD A, E
+		XOR $21
+		LD E, A
+
+		LD A, C
+		LD (DE), A
+
+		INC C
+		INC E
+
+		LD A, C
+		LD (DE), A
+
+		Display_Objects.next:
+		LD A, L
+		AND $f8
+		ADD $08
+		LD L, A
+		CP $80
+		JR NZ, =Display_Objects.loop
+	Display_Objects.End:
+	RET

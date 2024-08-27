@@ -159,9 +159,9 @@ Generation_Head_Explosion:
 	LD A, C
 	LD (HL+), A
 
-	LD L, C
+	LD L, B
 	Room_Generation.X_loop:
-		LD H, B
+		LD H, C
 		Room_Generation.Y_loop:
 			PUSH BC
 			LD A, D
@@ -175,11 +175,11 @@ Generation_Head_Explosion:
 
 			DEC H
 			LD A, H
-			CP $00
+			CP $ff
 			JR NZ, =Room_Generation.Y_loop
 		DEC L
 		LD A, L
-		CP $00
+		CP $ff
 		JR NZ, =Room_Generation.X_loop
 
 	POP HL

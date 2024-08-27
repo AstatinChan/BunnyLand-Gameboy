@@ -5,6 +5,7 @@ Entrypoint:
 	CALL =Initialize_RNG
 	CALL =Dungeon_Generation
 	CALL =Initialize_Bunny
+	CALL =Initialize_Objects
 	CALL =Load_Tile
 	CALL =Load_Map
 
@@ -18,14 +19,18 @@ Entrypoint:
 	JP =Wait_for_VRAM.loop
 
 VBLANK_Entrypoint:
+	CALL =Display_Bunny
+	CALL =Display_Objects
+
 	CALL =Pad_Button_Check
 	CALL =Move_Bunny
-	CALL =Display_Bunny
+
 	RET
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "map/loading.gbasm"
 .INCLUDE "map/generation.gbasm"
+.INCLUDE "map/objects.gbasm"
 .INCLUDE "bunny.gbasm"
 .INCLUDE "buttons.gbasm"
 .INCLUDE "rng.gbasm"
