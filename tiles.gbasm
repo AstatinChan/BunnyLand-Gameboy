@@ -1,4 +1,5 @@
 BG_Tile_Image_Data:
+	; Trees tileset
 	.DB $07, $07, $1c, $1f, $38, $37, $3a, $27, $64, $6f, $41, $7f, $47, $78, $4d, $7d
 	.DB $f0, $f0, $b0, $d0, $38, $f8, $8c, $7c, $86, $fe, $be, $c6, $c2, $ee, $c2, $ee
 	.DB $70, $7f, $22, $3f, $6d, $73, $58, $6f, $6d, $5a, $6d, $7d, $3f, $3f, $00, $00
@@ -64,6 +65,11 @@ BG_Tile_Image_Data:
 	.DB $70, $7f, $82, $ff, $2d, $d3, $58, $af, $6d, $1a, $cc, $bd, $a2, $ff, $37, $e3
 	.DB $13, $ff, $76, $df, $35, $ba, $48, $fd, $69, $d7, $c1, $ef, $1c, $fb, $f0, $27
 
+	; Stairs
+	.DB $ff, $ff, $d5, $ff, $aa, $ff, $d5, $ff, $ab, $ff, $df, $ff, $b1, $f1, $f1, $f1
+	.DB $ff, $ff, $5f, $ff, $b1, $f1, $f1, $f1, $11, $11, $17, $11, $3f, $11, $ff, $11
+	.DB $9f, $91, $ff, $91, $ff, $91, $ff, $91, $ff, $91, $fd, $93, $f1, $9f, $ff, $ff
+	.DB $ff, $11, $ff, $11, $ff, $11, $f1, $1f, $91, $7f, $11, $ff, $11, $ff, $ff, $ff
 
 OBJ_Tile_Image_Data:
 	; Bunny Side 
@@ -110,7 +116,7 @@ Load_Tile:
 	CALL =Load_Number_Font
 	LD HL, $9200
 	LD DE, =BG_Tile_Image_Data
-	LD BC, $0400
+	LD BC, $0440
 	CALL =memcpy
 	RET
 

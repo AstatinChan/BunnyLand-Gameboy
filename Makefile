@@ -7,7 +7,7 @@ build/main.rom: main.gbasm
 	gbasm $< $@
 
 run: build/main.rom
-	gb -s 200 $<
+	gb $<
 
 sameboy: build/main.rom
 	sameboy build/main.rom

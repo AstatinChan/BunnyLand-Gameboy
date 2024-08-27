@@ -104,12 +104,7 @@ Load_Column: ; (+1/-1 direction in B)
 	POP AF
 	RET
 
-Load_Block: ; X in A, Y in B
-	PUSH BC
-	PUSH AF
-	PUSH DE
-
-	; Construct Tile Map address from A and B in DE
+Construct_Tile_Address: ; Construct Tile Map address from A and B in DE
 	PUSH AF
 	PUSH BC
 
@@ -134,8 +129,18 @@ Load_Block: ; X in A, Y in B
  	LD A, D
 	OR $98
 	LD D, A
+
 	POP BC
 	POP AF
+
+	RET
+
+Load_Block: ; X in A, Y in B
+	PUSH BC
+	PUSH AF
+	PUSH DE
+
+	CALL =Construct_Tile_Address
 
 	PUSH AF
 	PUSH DE

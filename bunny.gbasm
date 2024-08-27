@@ -9,14 +9,27 @@ Initialize_Bunny:
 	LD B, $c8
 
 	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
+
 	LD $mem_bunny_x, A
 
 	INC BC
-	INC BC
 
 	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
 	LD $mem_bunny_y, A
 
+Fix_Bunny_screen:
 	LD A, $mem_bunny_x
 	SUB $05
 	LD $mem_viewport_x, A
@@ -175,9 +188,11 @@ Move_Bunny:
 			LD $mem_bunny_y, A
 
 	Move_Bunny.end:
+	LD A, C
+	LD $mem_map_loading_flags, A
 	RET
 
-Display_Bunny: ; X position in $81, Y position in $80
+Display_Bunny:
 	LD A, $mem_bunny_x_px
 	LD B, A
 	LD A, $mem_bunny_y_px
