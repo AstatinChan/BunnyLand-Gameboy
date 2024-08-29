@@ -45,17 +45,25 @@ Initialize_Objects:
 	RET
 
 Stairs_action:
-	LD A, $00
-	LD $mem_bunny_x, A
-	LD A, $00
-	LD $mem_bunny_y, A
-	CALL =Fix_Bunny_screen
-	RET
+	Stairs_action.Wait_VBlank:
+		LD A, $reg_lcd_status
+		AND $03
+		CP $01
+		JR NZ, =Stairs_action.Wait_VBlank
+
+	; LCDC
+	XOR A
+	LD $reg_lcd_controller, A
+
+	JP =New_Dungeon
 
 Display_Objects:
 	LD A, $mem_map_loading_flags
 	BIT 0, A
 	JR Z, =Display_Objects.End
+	LD A, $mem_moving_animation_step
+	CP $00
+	JR NZ, =Display_Objects.End
 	LD HL, $mem_object_list
 	Display_Objects.loop:
 		LD A, (HL+)
@@ -63,34 +71,44 @@ Display_Objects:
 		JR Z, =Display_Objects.next
 		LD C, A
 		LD A, (HL+)
+		ADD $80
 		LD D, A
 		LD A, $mem_viewport_x
-		SUB $03
+		SUB $83
 		CP D
 		JR NC, =Display_Objects.next
 		ADD $10
 		CP D
 		JR C, =Display_Objects.next
+		LD A, D
+		SUB $80
+		LD D, A
 
 		LD A, (HL+)
+		ADD $80
 		LD B, A
 		LD A, $mem_viewport_y
-		SUB $03
+		SUB $83
 		CP B
 		JR NC, =Display_Objects.next
 		ADD $10
 		CP B
 		JR C, =Display_Objects.next
+		LD A, B
+		SUB $80
+		LD B, A
 
 		LD A, D
 		CALL =Construct_Tile_Address
 
+		CALL =VBlank_Wait
 		LD A, C
 		LD (DE), A
 
 		INC E
 		INC C
 
+		CALL =VBlank_Wait
 		LD A, C
 		LD (DE), A
 
@@ -100,12 +118,14 @@ Display_Objects:
 		XOR $21
 		LD E, A
 
+		CALL =VBlank_Wait
 		LD A, C
 		LD (DE), A
 
 		INC C
 		INC E
 
+		CALL =VBlank_Wait
 		LD A, C
 		LD (DE), A
 
@@ -117,4 +137,45 @@ Display_Objects:
 		CP $80
 		JR NZ, =Display_Objects.loop
 	Display_Objects.End:
+	RET
+
+Object_Interactions_Check:
+	LD A, $mem_map_loading_flags
+	BIT 1, A
+	JR Z, =Object_Interactions_Check.End
+	LD HL, $mem_object_list
+	LD A, $mem_bunny_x
+	LD C, A
+	LD A, $mem_bunny_y
+	LD B, A
+	Object_Interactions_Check.loop:
+		LD A, (HL+)
+		CP $00
+		JR Z, =Object_Interactions_Check.next
+
+		LD A, (HL+)
+		CP C
+		JR NZ, =Object_Interactions_Check.next
+
+		LD A, (HL+)
+		CP B
+		JR NZ, =Object_Interactions_Check.next
+
+		LD A, (HL+)
+		LD D, A
+		LD A, (HL+)
+		LD E, A
+
+		PUSH DE
+		RET
+
+		Object_Interactions_Check.next:
+		LD A, L
+		AND $f8
+		ADD $08
+		LD L, A
+		CP $80
+		JR NZ, =Object_Interactions_Check.loop
+
+	Object_Interactions_Check.End:
 	RET

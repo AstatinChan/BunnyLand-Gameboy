@@ -21,6 +21,9 @@ Checksum: ; The bytes 0x134-0x14d need to add up to 0xe7 (= 0xff - 0x19)
 	.DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$e7
 
 Initialize_RAM:
+; Disable Interrupts
+LD A, $00
+LD $reg_interrupt_enable, A
 Empty_WRAM:
 	LD HL, $C000
 	Empty_WRAM.loop:
@@ -30,11 +33,7 @@ Empty_WRAM:
 		CP h
 		JR NZ, =Empty_WRAM.loop
 
-Wait_VBlank:
-	LD A, $reg_lcd_status
-	AND $03
-	CP $01
-	JR NZ, =Wait_VBlank
+	CALL =VBlank_Wait
 
 	; LCDC
 	XOR A

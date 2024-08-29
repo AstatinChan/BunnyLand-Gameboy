@@ -3,6 +3,8 @@
 
 Entrypoint:
 	CALL =Initialize_RNG
+New_Dungeon:
+	LD SP, $fffe
 	CALL =Dungeon_Generation
 	CALL =Initialize_Bunny
 	CALL =Initialize_Objects
@@ -20,7 +22,10 @@ Entrypoint:
 
 VBLANK_Entrypoint:
 	CALL =Display_Bunny
+	CALL =Display_Scrolling_Map
 	CALL =Display_Objects
+
+	CALL =Object_Interactions_Check
 
 	CALL =Pad_Button_Check
 	CALL =Move_Bunny
