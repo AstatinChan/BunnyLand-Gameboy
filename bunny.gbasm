@@ -57,7 +57,7 @@ Fix_Bunny_screen:
 	RET
 
 Move_Bunny:
-	LD C, $00 ; (bit 0 = has_scrolled)
+	LD C, $00 ; (bit 0 = has_scrolled, bit 1 = has ended movement)
 	LD A, $mem_moving_sprite_direction
 	CP $00
 	JR NZ, =Move_Bunny.check_direction
@@ -155,6 +155,7 @@ Move_Bunny:
 		AND $0f
 		LD $mem_moving_animation_step, A
 		JR NZ, =Move_Bunny.end
+		SET 1, C
 		LD $mem_moving_sprite_direction, A
 		LD A, $mem_sprite_direction
 		DEC A
@@ -168,7 +169,6 @@ Move_Bunny:
 			LD A, $mem_viewport_x
 			ADD B
 			LD $mem_viewport_x, A
-			CALL =Load_Column
 			Move_Bunny.horizontal_tile_move.move_viewport_end:
 			LD A, $mem_bunny_x
 			ADD B
@@ -181,7 +181,6 @@ Move_Bunny:
 			LD A, $mem_viewport_y
 			ADD B
 			LD $mem_viewport_y, A
-			CALL =Load_Row
 			Move_Bunny.vertical_tile_move.move_viewport_end:
 			LD A, $mem_bunny_y
 			ADD B
@@ -250,6 +249,7 @@ Display_Bunny:
 	; First OBJ (left)
 	LD HL, $FE00
 	LD A, C
+	CALL =VBlank_Wait
 	LD (HL+), A
 	LD A, B
 	LD (HL+), A

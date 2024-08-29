@@ -28,6 +28,7 @@
 
 .DEFINE mem_map_loading_flags ($c00c)
 ; bit 0: if the object should be reloaded (scroll or first load)
+; bit 1: if the interactions should be checked (at the end of a movement)
 
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
