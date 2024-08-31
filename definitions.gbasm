@@ -58,6 +58,14 @@
 ; 	_padding: u24
 ; }
 
+.DEFINE mem_entites_list $c9800 ; Until IDK WHERE
+; struct entity {
+;	sprite: u8,
+;	x: u8,
+;	y: u8,
+;	direction: u3,
+; }
+
 .DEFINE enum_direction_left $01
 .DEFINE enum_direction_right $02
 .DEFINE enum_direction_up $03

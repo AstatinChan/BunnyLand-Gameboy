@@ -53,7 +53,7 @@ Empty_VRAM: ; (Clear screen)
 	LD $reg_bg_palette, A
 	
 	; OBJ0 Palette
-	LD A, $e4
+	LD A, $d3 ; $e4
 	LD $reg_obj0_palette, A
 	
 	; Interrupts

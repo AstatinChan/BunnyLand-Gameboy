@@ -2,6 +2,11 @@ from PIL import Image
 import numpy as np
 import sys
 
+sprite_8x16 = False
+
+if len(sys.argv) >= 3 and sys.argv[2] == "--8x16":
+    sprite_8x16 = True
+
 file = Image.open(sys.argv[1]).convert("RGB")
 
 px_array = np.asarray(file)
@@ -12,6 +17,12 @@ def getpx(sprite_nb, x, y):
     sprite_double_column = int(double_sprite_nb % (file.width / 16))
     sprite_tile_y = 1 if sprite_nb & 0b10 else 0
     sprite_tile_x = 1 if sprite_nb & 0b01 else 0
+
+    if sprite_8x16:
+        sprite_tile_x ^= sprite_tile_y
+        sprite_tile_y ^= sprite_tile_x
+        sprite_tile_x ^= sprite_tile_y
+
     sprite_line = sprite_double_line * 2 + sprite_tile_y
     sprite_column = sprite_double_column * 2 + sprite_tile_x
 
