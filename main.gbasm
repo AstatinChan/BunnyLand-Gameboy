@@ -40,3 +40,4 @@ VBLANK_Entrypoint:
 .INCLUDE "buttons.gbasm"
 .INCLUDE "rng.gbasm"
 .INCLUDE "utils.gbasm"
+.INCLUDE "tileset.gbasm"

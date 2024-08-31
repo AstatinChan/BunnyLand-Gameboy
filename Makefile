@@ -2,7 +2,10 @@ all: run
 
 .PHONY: build/main.rom clean
 
-build/main.rom: main.gbasm 
+tileset.gbasm: ./scripts/generate-tiledata.py $(wildcard ./sprites/**/*)
+	python ./scripts/generate-tiledata.py > tileset.gbasm
+
+build/main.rom: main.gbasm tileset.gbasm
 	mkdir -p build
 	gbasm $< $@
 
