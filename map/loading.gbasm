@@ -103,13 +103,15 @@ Display_Scrolling_Map:
 	BIT 0, A
 	JR Z, =Display_Scrolling_Map.End
 
-	LD A, $mem_moving_sprite_direction
+	LD A, $mem_bunny_direction
+	AND $07
 	DEC A
 	AND $01
 	SLA A
 	DEC A
 	LD B, A
-	LD A, $mem_moving_sprite_direction
+	LD A, $mem_bunny_direction
+	AND $07
 	DEC A
 
 	BIT 1, A
