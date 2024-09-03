@@ -21,9 +21,9 @@ New_Dungeon:
 	JP =Wait_for_VRAM.loop
 
 VBLANK_Entrypoint:
-	CALL =Display_Bunny
 	CALL =Display_Scrolling_Map
 	CALL =Display_Objects
+	CALL =Display_Entities
 
 	CALL =Object_Interactions_Check
 
@@ -40,4 +40,5 @@ VBLANK_Entrypoint:
 .INCLUDE "buttons.gbasm"
 .INCLUDE "rng.gbasm"
 .INCLUDE "utils.gbasm"
+.INCLUDE "entities.gbasm"
 .INCLUDE "tileset.gbasm"

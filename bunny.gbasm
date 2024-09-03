@@ -1,4 +1,8 @@
 Initialize_Bunny:
+	LD HL, $mem_entites_list
+	LD A, $01
+	LD (HL+), A
+
 	LD A, $mem_number_of_rooms
 	CALL =RNG_Bound
 	SLA A
@@ -16,7 +20,7 @@ Initialize_Bunny:
 	CALL =RNG_Bound
 	ADD D
 
-	LD $mem_bunny_x, A
+	LD (HL+), A
 
 	INC BC
 
@@ -27,7 +31,17 @@ Initialize_Bunny:
 	INC A
 	CALL =RNG_Bound
 	ADD D
-	LD $mem_bunny_y, A
+	LD (HL+), A
+	INC HL
+	LD A, $0d
+	LD (HL+), A
+	LD A, $10
+	LD (HL+), A
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+
+
 
 Fix_Bunny_screen:
 	LD A, $mem_bunny_x
@@ -50,26 +64,22 @@ Fix_Bunny_screen:
 	OR $08
 	LD $reg_viewport_y, A
 
-	LD A, $50
-	LD $mem_bunny_x_px, A
-	LD A, $40
-	LD $mem_bunny_y_px, A
 	RET
 
 Move_Bunny:
 	LD C, $00 ; (bit 0 = has_scrolled, bit 1 = has ended movement)
-	LD A, $mem_moving_sprite_direction
-	CP $00
+	LD A, $mem_bunny_direction
+	BIT 3, A
 	JR NZ, =Move_Bunny.check_direction
 
 	LD A, $mem_button_direction
-	LD $mem_moving_sprite_direction, A
 	CP $00
 	JP Z, =Move_Bunny.end
+	SET 3, A
+	LD $mem_bunny_direction, A
 
 	Move_Bunny.check_direction:
-		LD A, $mem_moving_sprite_direction
-		LD $mem_sprite_direction, A
+		LD A, $mem_bunny_direction
 
 		DEC A
 		LD B, $01
@@ -99,20 +109,11 @@ Move_Bunny:
 		LD B, D
 
 	Move_Bunny.horizontal_px_move:
-		LD A, $mem_bunny_x_px
+		SET 0, C
+		LD A, $reg_viewport_x
 		ADD B
-		CP $30
-		JR C, =Move_Bunny.horizontal_px_move.scrolling_fallback
-		CP $71
-		JR NC, =Move_Bunny.horizontal_px_move.scrolling_fallback
-		LD $mem_bunny_x_px, A
+		LD $reg_viewport_x, A
 		JP =Move_Bunny.check_end_of_movement
-		Move_Bunny.horizontal_px_move.scrolling_fallback:
-			SET 0, C
-			LD A, $reg_viewport_x
-			ADD B
-			LD $reg_viewport_x, A
-			JP =Move_Bunny.check_end_of_movement
 
 	Move_Bunny.vertical_move:
 		LD D, B
@@ -129,24 +130,16 @@ Move_Bunny:
 		LD B, D
 
 	Move_Bunny.vertical_px_move:
-		LD A, $mem_bunny_y_px
+		SET 0, C
+		LD A, $reg_viewport_y
 		ADD B
-		CP $30
-		JR C, =Move_Bunny.vertical_px_move.scrolling_fallback
-		CP $71
-		JR NC, =Move_Bunny.vertical_px_move.scrolling_fallback
-		LD $mem_bunny_y_px, A
+		LD $reg_viewport_y, A
 		JP =Move_Bunny.check_end_of_movement
-		Move_Bunny.vertical_px_move.scrolling_fallback:
-			SET 0, C
-			LD A, $reg_viewport_y
-			ADD B
-			LD $reg_viewport_y, A
-			JP =Move_Bunny.check_end_of_movement
 
 	Move_Bunny.collision:
-		LD A, $00
-		LD $mem_moving_sprite_direction, A
+		LD A, $mem_bunny_direction
+		RES 3, A
+		LD $mem_bunny_direction, A
 		JP =Move_Bunny.end
 
 	Move_Bunny.check_end_of_movement:
@@ -156,8 +149,10 @@ Move_Bunny:
 		LD $mem_moving_animation_step, A
 		JR NZ, =Move_Bunny.end
 		SET 1, C
-		LD $mem_moving_sprite_direction, A
-		LD A, $mem_sprite_direction
+		LD A, $mem_bunny_direction
+		RES 3, A
+		LD $mem_bunny_direction, A
+		AND $07
 		DEC A
 
 		BIT 1, A
@@ -189,89 +184,4 @@ Move_Bunny:
 	Move_Bunny.end:
 	LD A, C
 	LD $mem_map_loading_flags, A
-	RET
-
-Display_Bunny:
-	LD A, $mem_bunny_x_px
-	LD B, A
-	LD A, $mem_bunny_y_px
-	LD C, A
-	LD A, $mem_moving_animation_step
-
-	SUB $08
-	BIT 7, A
-	JR Z, =Display_Bunny.Hop_ABS1_end
-
-	; Adding hop animation to Y
-	XOR $ff
-	INC A
-	Display_Bunny.Hop_ABS1_end:
-	SUB $04
-	BIT 7, A
-	JR Z, =Display_Bunny.Hop_ABS2_end
-	XOR $ff
-	INC A
-	Display_Bunny.Hop_ABS2_end:
-	ADD C
-
-	LD C, A
-
-	LD A, $mem_sprite_direction
-	CP $enum_direction_left
-	JR Z, =Display_Bunny.Left_Direction_sprite
-	CP $enum_direction_right
-	JR Z, =Display_Bunny.Right_Direction_sprite
-	CP $enum_direction_up
-	JR Z, =Display_Bunny.Up_Direction_sprite
-	JP =Display_Bunny.Down_Direction_sprite
-
-	Display_Bunny.Left_Direction_sprite:
-		LD E, $01
-		LD D, $00
-		JP =Display_Bunny.Write_OBJ
-
-	Display_Bunny.Right_Direction_sprite:
-		LD E, $03
-		LD D, $20
-		JP =Display_Bunny.Write_OBJ
-
-	Display_Bunny.Up_Direction_sprite:
-		LD E, $05
-		LD D, $00
-		JP =Display_Bunny.Write_OBJ
-
-	Display_Bunny.Down_Direction_sprite:
-		LD E, $09
-		LD D, $00
-		JP =Display_Bunny.Write_OBJ
-
-	Display_Bunny.Write_OBJ:
-	; First OBJ (left)
-	LD HL, $FE00
-	LD A, C
-	CALL =VBlank_Wait
-	LD (HL+), A
-	LD A, B
-	LD (HL+), A
-	LD A, E
-	INC A
-	LD (HL+), A
-	LD A, D
-	LD (HL+), A
-	
-	; Second OBJ
-	LD A, B
-	ADD $08
-	LD B, A
-
-	LD A, C
-	LD (HL+), A
-	LD A, B
-	LD (HL+), A
-	LD A, E
-	XOR $02
-	INC A
-	LD (HL+), A
-	LD A, D
-	LD (HL+), A
 	RET

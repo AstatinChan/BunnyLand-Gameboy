@@ -13,14 +13,12 @@
 .DEFINE dungeon_generation_step $20
 .DEFINE intial_duplication_probablity $01
 
-.DEFINE mem_bunny_x_px ($c000)
-.DEFINE mem_bunny_y_px ($c001)
 .DEFINE mem_button_direction ($c002)
-.DEFINE mem_moving_sprite_direction ($c003)
 .DEFINE mem_moving_animation_step ($c004)
-.DEFINE mem_sprite_direction ($c005)
-.DEFINE mem_bunny_x ($c006)
-.DEFINE mem_bunny_y ($c007)
+.DEFINE mem_bunny_sprite ($c980)
+.DEFINE mem_bunny_x ($c981)
+.DEFINE mem_bunny_y ($c982)
+.DEFINE mem_bunny_direction ($c983)
 .DEFINE mem_viewport_x ($c008)
 .DEFINE mem_viewport_y ($c009)
 .DEFINE mem_rng_state_1 ($c00a) ; 2 bytes
@@ -58,12 +56,12 @@
 ; 	_padding: u24
 ; }
 
-.DEFINE mem_entites_list $c9800 ; Until IDK WHERE
+.DEFINE mem_entites_list $c980 ; Until IDK WHERE
 ; struct entity {
 ;	sprite: u8,
 ;	x: u8,
 ;	y: u8,
-;	direction: u3,
+;	direction: u8 (bit 3 = is_moving, bit 2-0: direction),
 ; }
 
 .DEFINE enum_direction_left $01
