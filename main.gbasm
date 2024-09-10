@@ -10,6 +10,7 @@ New_Dungeon:
 	CALL =Initialize_Objects
 	CALL =Load_Tile
 	CALL =Load_Map
+	CALL =Load_Objects
 
 	; LCDC
 	LD A, $87
@@ -21,8 +22,8 @@ New_Dungeon:
 	JP =Wait_for_VRAM.loop
 
 VBLANK_Entrypoint:
-	CALL =Display_Scrolling_Map
-	CALL =Display_Objects
+	CALL =Display_Prepared_Block
+	CALL =Display_Object
 	CALL =Display_Entities
 
 	CALL =Object_Interactions_Check
@@ -30,6 +31,7 @@ VBLANK_Entrypoint:
 	CALL =Pad_Button_Check
 	CALL =Move_Bunny
 
+	CALL =Prepare_Scrolling_Map
 	RET
 
 .INCLUDE "tiles.gbasm"

@@ -27,6 +27,13 @@
 .DEFINE mem_map_loading_flags ($c00c)
 ; bit 0: if the object should be reloaded (scroll or first load)
 ; bit 1: if the interactions should be checked (at the end of a movement)
+; bit 2: if the prepared block should be updated at the next frame
+
+.DEFINE mem_prepared_block_tile ($c00d)
+.DEFINE mem_prepared_block_position_1 ($c00e)
+.DEFINE mem_prepared_block_position_2 ($c00f)
+
+.DEFINE mem_object_load_counter ($c010)
 
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)

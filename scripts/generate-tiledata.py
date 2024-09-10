@@ -16,6 +16,8 @@ print("\n\t; Trees")
 get_sprite_png_parse_output("./sprites/bg/tree-tileset.png")
 print("\n\t; Stairs")
 get_sprite_png_parse_output("./sprites/bg/stairs.png")
+print("\n\t; Carrot")
+get_sprite_png_parse_output("./sprites/bg/carrot.png")
 
 sprite_idx = 0x02
 print("\nOBJ_Tile_Image_Data:")

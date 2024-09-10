@@ -13,6 +13,7 @@ Load_Map:
 		Load_Map.For_X:
 			LD A, C
 			CALL =Load_Block
+			CALL =Display_Prepared_Block
 
 			INC C
 			LD A, C
@@ -98,7 +99,7 @@ Load_Column: ; (+1/-1 direction in B)
 	POP AF
 	RET
 
-Display_Scrolling_Map:
+Prepare_Scrolling_Map:
 	LD A, $mem_map_loading_flags
 	BIT 0, A
 	JR Z, =Display_Scrolling_Map.End
@@ -211,65 +212,86 @@ Load_Block: ; X in A, Y in B
 	ADD $20
 	LD C, A
 
+	LD A, $mem_map_loading_flags
+	SET 2, A
+	LD $mem_map_loading_flags, A
+
+
 	POP DE
+
+	LD A, D
+	LD $mem_prepared_block_position_1, A
+	LD A, E
+	LD $mem_prepared_block_position_2, A
+
 	POP AF
 
 	CALL =Is_Solid
-
 	CP $00
+
 	JR Z, =Load_Block.Empty
 	Load_Block.Solid:
 		LD A, C
-	CALL =VBlank_Wait
-		LD (DE), A
-		LD A, E
-		OR $20
-		LD E, A
-		LD A, C
-		OR $02
-	CALL =VBlank_Wait
-		LD (DE), A
-		INC E
-		LD A, C
-		OR $03
-	CALL =VBlank_Wait
-		LD (DE), A
-		LD A, E
-		AND $DF
-		LD E, A
-		LD A, C
-		OR $01
-	CALL =VBlank_Wait
-		LD (DE), A
+		LD $mem_prepared_block_tile, A
 
 		JR =Load_Block.End
 
 	Load_Block.Empty:
 		LD A, $00
-	CALL =VBlank_Wait
-		LD (DE), A
-		LD A, E
-		OR $20
-		LD E, A
-		LD A, $00
-	CALL =VBlank_Wait
-		LD (DE), A
-		INC E
-		LD A, $00
-	CALL =VBlank_Wait
-		LD (DE), A
-		LD A, E
-		AND $DF
-		LD E, A
-		LD A, $00
-	CALL =VBlank_Wait
-		LD (DE), A
+		LD $mem_prepared_block_tile, A
 
 	Load_Block.End:
 
 	POP DE
 	POP AF
 	POP BC
+	RET
+
+Display_Prepared_Block:
+	PUSH AF
+	PUSH BC
+	PUSH DE
+
+	LD A, $mem_map_loading_flags
+	BIT 2, A
+	JR Z, =Display_Prepared_Block.End
+
+	LD A, $mem_map_loading_flags
+	RES 2, A
+	LD $mem_map_loading_flags, A
+
+	LD A, $mem_prepared_block_position_1
+	LD D, A
+
+	LD A, $mem_prepared_block_position_2
+	LD E, A
+
+	LD A, $mem_prepared_block_tile
+	LD C, A
+
+	LD (DE), A
+	LD A, E
+	OR $20
+	LD E, A
+	LD A, C
+	OR $02
+	LD (DE), A
+	INC E
+	LD A, C
+	OR $03
+	LD (DE), A
+	LD A, E
+	AND $DF
+	LD E, A
+	LD A, C
+	OR $01
+	LD (DE), A
+
+	Display_Prepared_Block.End:
+
+	POP DE
+	POP BC
+	POP AF
 	RET
 
 Is_Solid: ; X in A, Y in B, Result A
