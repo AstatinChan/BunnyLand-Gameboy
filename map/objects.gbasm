@@ -3,6 +3,10 @@ Initialize_Objects:
 	OR $01
 	LD $mem_map_loading_flags, A
 	LD HL, $mem_object_list
+	CALL =Spawn_stairs
+	RET
+
+Spawn_stairs:
 	LD A, $60
 	LD (HL+), A
 	
@@ -42,6 +46,9 @@ Initialize_Objects:
 	LD (HL+), A
 	LD A, C
 	LD (HL+), A
+	INC HL
+	INC HL
+	INC HL
 	RET
 
 Stairs_action:
@@ -57,86 +64,107 @@ Stairs_action:
 
 	JP =New_Dungeon
 
-Display_Objects:
-	LD A, $mem_map_loading_flags
-	BIT 0, A
-	JR Z, =Display_Objects.End
-	LD A, $mem_moving_animation_step
-	CP $00
-	JR NZ, =Display_Objects.End
+Display_Object:
 	LD HL, $mem_object_list
 	Display_Objects.loop:
-		LD A, (HL+)
-		CP $00
-		JR Z, =Display_Objects.next
-		LD C, A
-		LD A, (HL+)
-		ADD $80
-		LD D, A
-		LD A, $mem_viewport_x
-		SUB $83
-		CP D
-		JR NC, =Display_Objects.next
-		ADD $10
-		CP D
-		JR C, =Display_Objects.next
-		LD A, D
-		SUB $80
-		LD D, A
+	LD A, $mem_object_load_counter
+	INC A
+	AND $0f
+	LD $mem_object_load_counter, A
+	SLA A
+	SLA A
+	SLA A
+	AND $f8
+	LD L, A
 
-		LD A, (HL+)
-		ADD $80
-		LD B, A
-		LD A, $mem_viewport_y
-		SUB $83
-		CP B
-		JR NC, =Display_Objects.next
-		ADD $10
-		CP B
-		JR C, =Display_Objects.next
-		LD A, B
-		SUB $80
-		LD B, A
+	LD A, (HL+)
+	LD C, A
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_x
+	SUB $83
+	CP D
+	JR NC, =Display_Objects.End
+	ADD $10
+	CP D
+	JR C, =Display_Objects.End
+	LD A, D
+	SUB $80
+	LD D, A
 
-		LD A, D
-		CALL =Construct_Tile_Address
+	LD A, (HL+)
+	ADD $80
+	LD B, A
+	LD A, $mem_viewport_y
+	SUB $83
+	CP B
+	JR NC, =Display_Objects.End
+	ADD $10
+	CP B
+	JR C, =Display_Objects.End
+	LD A, B
+	SUB $80
+	LD B, A
 
-		CALL =VBlank_Wait
-		LD A, C
-		LD (DE), A
+	LD A, C
+	CP $00
 
-		INC E
-		INC C
+	JR Z, =Display_Objects.Nothing
 
-		CALL =VBlank_Wait
-		LD A, C
-		LD (DE), A
+	LD A, D
+	CALL =Construct_Tile_Address
 
-		INC C
+	LD A, C
+	LD (DE), A
 
-		LD A, E
-		XOR $21
-		LD E, A
+	INC E
+	INC C
 
-		CALL =VBlank_Wait
-		LD A, C
-		LD (DE), A
+	LD A, C
+	LD (DE), A
 
-		INC C
-		INC E
+	INC C
 
-		CALL =VBlank_Wait
-		LD A, C
-		LD (DE), A
+	LD A, E
+	XOR $21
+	LD E, A
 
-		Display_Objects.next:
-		LD A, L
-		AND $f8
-		ADD $08
-		LD L, A
-		CP $80
-		JR NZ, =Display_Objects.loop
+	LD A, C
+	LD (DE), A
+
+	INC C
+	INC E
+
+	LD A, C
+	LD (DE), A
+
 	Display_Objects.End:
+	RET
+
+	Display_Objects.Nothing:
+	LD A, D
+	CALL =Load_Block
+	CALL =Display_Prepared_Block
+	RET
+
+Load_Objects:
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
+	CALL =Display_Object
 	RET
 
 Object_Interactions_Check:
@@ -166,8 +194,21 @@ Object_Interactions_Check:
 		LD A, (HL+)
 		LD E, A
 
+		PUSH BC
+
+		; So we have HL set to the object pointer
+		LD A, L
+		AND $f8
+		LD L, A
+
+		; This is confusing but this thing is actually CALL DE
+		LD BC, =Object_Interactions_Check.interaction_end
+		PUSH BC
 		PUSH DE
 		RET
+		Object_Interactions_Check.interaction_end:
+
+		POP BC
 
 		Object_Interactions_Check.next:
 		LD A, L
