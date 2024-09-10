@@ -37,6 +37,7 @@
 
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
+
 .DEFINE mem_dungeon_generation_heads $c700 ; Takes the memory from c700 to c717
 ; struct head {
 ; 	direction: u8 (really u3 but padding),
@@ -63,15 +64,36 @@
 ; 	_padding: u24
 ; }
 
-.DEFINE mem_entites_list $c980 ; Until IDK WHERE
+.DEFINE mem_entites_list $c980 ; Until c9ff
 ; struct entity {
 ;	sprite: u8,
 ;	x: u8,
 ;	y: u8,
 ;	direction: u8 (bit 3 = is_moving, bit 2-0: direction),
+;	ai_function_pointer: 16
+;	_padding: u16
 ; }
+
+.DEFINE mem_oam_buffer $ca00 ; Until $ca9f
+.DEFINE mem_oam_buffer_high $ca
 
 .DEFINE enum_direction_left $01
 .DEFINE enum_direction_right $02
 .DEFINE enum_direction_up $03
 .DEFINE enum_direction_down $04
+
+
+; HIGH_RAM:
+;
+; 80-85 ; Free to use as temporary variables
+.DEFINE tmp_var_1 ($80)
+.DEFINE tmp_var_2 ($81)
+.DEFINE tmp_var_3 ($82)
+.DEFINE tmp_var_4 ($83)
+.DEFINE tmp_var_5 ($84)
+.DEFINE tmp_var_6 ($85)
+
+; 86-90 ; OAM_DMA_Transfer_routine
+.DEFINE OAM_DMA_Transfer_routine $ff86
+
+; 90-fe ; Stack

@@ -24,7 +24,7 @@ New_Dungeon:
 VBLANK_Entrypoint:
 	CALL =Display_Prepared_Block
 	CALL =Display_Object
-	CALL =Display_Entities
+	CALL $OAM_DMA_Transfer_routine
 
 	CALL =Object_Interactions_Check
 
@@ -32,6 +32,7 @@ VBLANK_Entrypoint:
 	CALL =Move_Bunny
 
 	CALL =Prepare_Scrolling_Map
+	CALL =Prepare_Entities
 	RET
 
 .INCLUDE "tiles.gbasm"
