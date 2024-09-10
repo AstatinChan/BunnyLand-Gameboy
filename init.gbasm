@@ -60,4 +60,20 @@ Empty_VRAM: ; (Clear screen)
 	LD A, $01
 	LD $reg_interrupt_enable, A
 
+Copy_OAM_DMA_Transfer_Routine_To_HRAM:
+	LD HL, $OAM_DMA_Transfer_routine
+	LD DE, =OAM_DMA_Transfer_routine_src
+	LD BC, $000a
+	CALL =memcpy
+
 	JP =Entrypoint
+
+OAM_DMA_Transfer_routine_src:
+	LD A, $mem_oam_buffer_high
+	LD ($46), A
+	LD A, $28        ; delay for a total of 4×40 = 160 M-cycles
+	OAM_DMA_Transfer_routine_src.wait:
+	    DEC A						             ; 1 M-cycle
+	    JR NZ, =OAM_DMA_Transfer_routine_src.wait    ; 3 M-cycles
+	    RET
+	OAM_DMA_Transfer_routine_src.end:
