@@ -33,6 +33,13 @@ Initialize_Bunny:
 	ADD D
 	LD (HL+), A
 	INC HL
+	LD BC, =Move_Bunny
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
 	LD A, $0d
 	LD (HL+), A
 	LD A, $10
@@ -40,8 +47,11 @@ Initialize_Bunny:
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
-
-
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
 
 Fix_Bunny_screen:
 	LD A, $mem_bunny_x
@@ -67,6 +77,7 @@ Fix_Bunny_screen:
 	RET
 
 Move_Bunny:
+	; IF HL IS EVER USED, IT SHOULD BE PUSHED HERE
 	LD C, $00 ; (bit 0 = has_scrolled, bit 1 = has ended movement)
 	LD A, $mem_bunny_direction
 	BIT 3, A

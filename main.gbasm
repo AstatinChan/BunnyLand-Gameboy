@@ -29,7 +29,7 @@ VBLANK_Entrypoint:
 	CALL =Object_Interactions_Check
 
 	CALL =Pad_Button_Check
-	CALL =Move_Bunny
+	CALL =Entities_Behaviours
 
 	CALL =Prepare_Scrolling_Map
 	CALL =Prepare_Entities

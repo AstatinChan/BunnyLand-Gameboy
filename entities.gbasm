@@ -4,11 +4,28 @@ Prepare_Entities:
 	LD HL, $mem_entites_list
 	CALL =Prepare_Entity
 	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
 	RET
 
 Prepare_Entity:
 	LD A, (HL+)
 	LD E, A
+
+	CP $00
+	JP Z, =Prepare_Entity.skip
 
 	LD A, (HL+)
 	ADD $80
@@ -245,5 +262,139 @@ Prepare_Entity:
 	LD $tmp_var_1, A
 	POP HL
 
+	INC HL
+	INC HL
+	INC HL
+	INC HL
+
 	Prepare_Entity.skip:
+	RET
+
+Entities_Behaviours:
+	LD HL, $mem_entites_list
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	CALL =Entity_Behaviour
+	RET
+
+Entity_Behaviour:
+	LD A, (HL+)
+	CP $00
+	JR Z, =Entity_Behaviour.skip
+
+	INC HL
+	INC HL
+	INC HL
+
+	LD A, (HL+)
+	LD D, A
+	LD A, (HL+)
+	LD E, A
+
+	PUSH HL
+
+	LD A, L
+	AND $f8
+	LD L, A
+
+	; This is confusing but this thing is actually CALL DE
+	LD BC, =Entity_Behaviour.interaction_end
+	PUSH BC
+	PUSH DE
+	RET
+	Entity_Behaviour.interaction_end:
+
+	POP HL
+
+	INC HL
+	INC HL
+	Entity_Behaviour.skip:
+	RET
+
+Fox_AI:
+	PUSH HL
+
+	INC HL
+	INC HL
+	INC HL
+
+	LD A, $mem_map_loading_flags
+	BIT 1, A
+	JR Z, =Fox_AI.Update_Position.end
+
+	LD A, (HL)
+	BIT 3, A
+	JR Z, =Fox_AI.Update_Position.end
+
+	RES 3, A
+	DEC A
+
+	LD C, A
+	AND $01
+	SLA A
+	AND $02
+	DEC A
+	LD B, A
+
+	LD A, L
+	AND $f8
+	INC A
+	LD L, A
+
+	BIT 1, C
+	JR NZ, =Fox_AI.vertical_tile_move
+
+	Fox_AI.horizontal_tile_move:
+		LD A, (HL)
+		ADD B
+		LD (HL), A
+		JP =Fox_AI.Update_Position.end
+
+	Fox_AI.vertical_tile_move:
+		INC HL
+		LD A, (HL)
+		ADD B
+		LD (HL), A
+
+	Fox_AI.Update_Position.end:
+
+	LD A, L
+	AND $f8
+	ADD $03
+	LD L, A
+
+	LD A, $mem_moving_animation_step
+	CP $01
+	JR NZ, =Fox_AI.end
+
+	LD A, $mem_bunny_direction
+	BIT 3, A
+	JR Z, =Fox_AI.end
+
+	CALL =RNG_Step
+	AND $08
+	LD B, A
+
+	LD A, $04
+	CALL =RNG_Bound
+	INC A
+	OR B
+	LD (HL), A
+
+	Fox_AI.end:
+
+	POP HL
 	RET
