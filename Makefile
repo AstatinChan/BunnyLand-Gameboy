@@ -10,7 +10,7 @@ build/main.rom: main.gbasm tileset.gbasm
 	gbasm $< $@
 
 run: build/main.rom
-	gb $<
+	gb -s 200 $<
 
 sameboy: build/main.rom
 	sameboy build/main.rom

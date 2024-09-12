@@ -52,6 +52,22 @@ Initialize_Bunny:
 	LD (HL+), A
 	LD A, C
 	LD (HL+), A
+	INC HL
+	INC HL
+	LD A, $0d
+	LD (HL+), A
+	LD A, $10
+	LD (HL+), A
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
 
 Fix_Bunny_screen:
 	LD A, $mem_bunny_x
