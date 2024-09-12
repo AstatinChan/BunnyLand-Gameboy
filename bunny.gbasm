@@ -40,10 +40,12 @@ Initialize_Bunny:
 	LD (HL+), A
 	INC HL
 	INC HL
+
 	LD A, $0d
 	LD (HL+), A
-	LD A, $10
+	LD A, $mem_bunny_x
 	LD (HL+), A
+	LD A, $mem_bunny_y
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
@@ -54,10 +56,12 @@ Initialize_Bunny:
 	LD (HL+), A
 	INC HL
 	INC HL
+
 	LD A, $0d
 	LD (HL+), A
-	LD A, $10
+	LD A, $mem_bunny_x
 	LD (HL+), A
+	LD A, $mem_bunny_y
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
@@ -68,6 +72,103 @@ Initialize_Bunny:
 	LD (HL+), A
 	INC HL
 	INC HL
+
+	LD A, $0d
+	LD (HL+), A
+	LD A, $mem_bunny_x
+	LD (HL+), A
+	LD A, $mem_bunny_y
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
+
+	LD A, $0d
+	LD (HL+), A
+	LD A, $mem_bunny_x
+	LD (HL+), A
+	LD A, $mem_bunny_y
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
+
+	LD A, $0d
+	LD (HL+), A
+	LD A, $mem_bunny_x
+	LD (HL+), A
+	LD A, $mem_bunny_y
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
+
+	LD A, $0d
+	LD (HL+), A
+	LD A, $mem_bunny_x
+	LD (HL+), A
+	LD A, $mem_bunny_y
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
+
+	LD A, $0d
+	LD (HL+), A
+	LD A, $mem_bunny_x
+	LD (HL+), A
+	LD A, $mem_bunny_y
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
+
+	LD A, $0d
+	LD (HL+), A
+	LD A, $mem_bunny_x
+	LD (HL+), A
+	LD A, $mem_bunny_y
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
+
 
 Fix_Bunny_screen:
 	LD A, $mem_bunny_x
@@ -109,10 +210,10 @@ Move_Bunny:
 		LD A, $mem_bunny_direction
 
 		DEC A
-		LD B, $01
+		LD B, $01 ; Direction of the movement (+1)
 		BIT 0, A
 		JR NZ, =Move_Bunny.check_direction_end
-		LD B, $FF
+		LD B, $FF ; Direction of the movement (-1)
 
 	Move_Bunny.check_direction_end:
 
@@ -143,6 +244,7 @@ Move_Bunny:
 		JP =Move_Bunny.check_end_of_movement
 
 	Move_Bunny.vertical_move:
+		Move_Bunny.vertical_move.check_collision:
 		LD D, B
 		LD A, $mem_bunny_y
 		ADD D
