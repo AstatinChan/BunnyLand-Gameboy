@@ -51,7 +51,7 @@ Prepare_Entity:
 	SUB $82
 	CP D
 	JP NC, =Prepare_Entity.skip
-	ADD $0c
+	ADD $0e
 	CP D
 	JP C, =Prepare_Entity.skip
 	LD A, D
@@ -69,7 +69,7 @@ Prepare_Entity:
 	SUB $82
 	CP D
 	JP NC, =Prepare_Entity.skip
-	ADD $0b
+	ADD $0d
 	CP D
 	JP C, =Prepare_Entity.skip
 	LD A, D
