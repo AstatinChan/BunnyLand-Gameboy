@@ -1,28 +1,32 @@
 Prepare_Entities:
+	LD HL, $mem_oam_buffer
+	LD BC, $00a0
+	CALL =bzero
 	LD A, $00
 	LD $tmp_var_1, A
 	LD HL, $mem_entites_list
 	CALL =Prepare_Entity
 	CALL =Prepare_Entity
 	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
-	CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
+	; CALL =Prepare_Entity
 	RET
 
 Prepare_Entity:
 	LD A, (HL+)
 	LD E, A
+
 
 	CP $00
 	JP Z, =Prepare_Entity.skip
@@ -32,10 +36,10 @@ Prepare_Entity:
 	LD D, A
 	LD A, $mem_viewport_x
 	LD B, A
-	SUB $83
+	SUB $82
 	CP D
 	JP NC, =Prepare_Entity.skip
-	ADD $10
+	ADD $0c
 	CP D
 	JP C, =Prepare_Entity.skip
 	LD A, D
@@ -50,10 +54,10 @@ Prepare_Entity:
 	LD D, A
 	LD A, $mem_viewport_y
 	LD C, A
-	SUB $83
+	SUB $82
 	CP D
 	JP NC, =Prepare_Entity.skip
-	ADD $10
+	ADD $0b
 	CP D
 	JP C, =Prepare_Entity.skip
 	LD A, D
@@ -63,7 +67,6 @@ Prepare_Entity:
 	SWAP A
 	ADD $02
 	LD C, A
-
 
 	LD A, $mem_bunny_direction
 	BIT 3, A
@@ -228,46 +231,45 @@ Prepare_Entity:
 		JP =Prepare_Entity.Write_OBJ
 
 	Prepare_Entity.Write_OBJ:
-	PUSH HL
-	; First OBJ (left)
-	LD HL, $mem_oam_buffer
-	LD A, $tmp_var_1
-	LD L, A
-	LD A, C
-	LD (HL+), A
-	LD A, B
-	LD (HL+), A
-	LD A, E
-	INC A
-	LD (HL+), A
-	LD A, D
-	LD (HL+), A
-	
-	; Second OBJ
-	LD A, B
-	ADD $08
-	LD B, A
+		PUSH HL
+		; First OBJ (left)
+		LD HL, $mem_oam_buffer
+		LD A, $tmp_var_1
+		LD L, A
+		LD A, C
+		LD (HL+), A
+		LD A, B
+		LD (HL+), A
+		LD A, E
+		INC A
+		LD (HL+), A
+		LD A, D
+		LD (HL+), A
+		
+		; Second OBJ
+		LD A, B
+		ADD $08
+		LD B, A
 
-	LD A, C
-	LD (HL+), A
-	LD A, B
-	LD (HL+), A
-	LD A, E
-	XOR $02
-	INC A
-	LD (HL+), A
-	LD A, D
-	LD (HL+), A
-	LD A, L
-	LD $tmp_var_1, A
-	POP HL
-
-	INC HL
-	INC HL
-	INC HL
-	INC HL
+		LD A, C
+		LD (HL+), A
+		LD A, B
+		LD (HL+), A
+		LD A, E
+		XOR $02
+		INC A
+		LD (HL+), A
+		LD A, D
+		LD (HL+), A
+		LD A, L
+		LD $tmp_var_1, A
+		POP HL
 
 	Prepare_Entity.skip:
+	LD A, L
+	AND $f8
+	ADD $08
+	LD L, A
 	RET
 
 Entities_Behaviours:

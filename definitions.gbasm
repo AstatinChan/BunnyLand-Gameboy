@@ -82,7 +82,6 @@
 .DEFINE enum_direction_up $03
 .DEFINE enum_direction_down $04
 
-
 ; HIGH_RAM:
 ;
 ; 80-85 ; Free to use as temporary variables
