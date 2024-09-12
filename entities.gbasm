@@ -1,26 +1,38 @@
 Prepare_Entities:
-	LD HL, $mem_oam_buffer
-	LD BC, $00a0
-	CALL =bzero
 	LD A, $00
 	LD $tmp_var_1, A
 	LD HL, $mem_entites_list
 	CALL =Prepare_Entity
 	CALL =Prepare_Entity
 	CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
-	; CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	CALL =Prepare_Entity
+	LD BC, $00a0
+	LD HL, $mem_oam_buffer
+
+	LD A, $tmp_var_1
+	ADD L
+	LD L, A
+
+	LD A, $tmp_var_1
+	XOR $ff
+	INC A
+	ADD C
+	LD C, A
+
+	CALL =bzero
+
 	RET
 
 Prepare_Entity:
@@ -321,9 +333,59 @@ Entity_Behaviour:
 
 	POP HL
 
-	INC HL
-	INC HL
 	Entity_Behaviour.skip:
+	LD A, L
+	AND $f8
+	ADD $08
+	LD L, A
+	RET
+
+Entity_collision: ; entity (whatever alignement) in HL, direction to test in A, Result in A
+	PUSH HL
+	PUSH BC
+	PUSH AF
+
+	LD A, L
+	AND $f8
+	LD L, A
+
+	INC HL
+
+	LD A, (HL+)
+	LD C, A
+	LD A, (HL+)
+	LD B, A
+
+	POP AF
+	PUSH BC
+
+	DEC A
+	LD B, A
+
+	SLA A
+	AND $02
+	DEC A
+
+	BIT 1, B
+	JR NZ, =Entity_collision.vertical
+
+	Entity_collision.horizontal:
+		POP BC
+		ADD C
+		LD C, A
+		JR =Entity_collision.direction_end
+
+	Entity_collision.vertical:
+		POP BC
+		ADD B
+		LD B, A
+
+	Entity_collision.direction_end:
+		LD A, C
+		CALL =Is_Solid
+
+	POP BC
+	POP HL
 	RET
 
 Fox_AI:
@@ -393,8 +455,17 @@ Fox_AI:
 	LD A, $04
 	CALL =RNG_Bound
 	INC A
-	OR B
-	LD (HL), A
+	OR $08
+	LD B, A
+
+	CALL =Entity_collision
+	CP $00
+	JR Z, =Fox_AI.change_direction
+
+	RES 3, B
+
+	Fox_AI.change_direction:
+	LD (HL), B
 
 	Fox_AI.end:
 
