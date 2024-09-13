@@ -62,6 +62,7 @@ Stairs_action:
 	XOR A
 	LD $reg_lcd_controller, A
 
+	CALL =Reset_Map
 	JP =New_Dungeon
 
 Display_Object:

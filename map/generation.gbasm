@@ -330,3 +330,8 @@ Dungeon_Generation:
 	Dungeon_Generation.Head_explosion_loop.end:
 
 	RET
+
+Reset_Map:
+	LD HL, $c6ff
+	LD BC, $0281
+	JP =bzero
