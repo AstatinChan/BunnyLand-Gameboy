@@ -195,6 +195,9 @@ Dungeon_Generation:
 	LD A, $10
 	LD (HL+), A
 	LD (HL+), A
+	LD C, A
+	LD B, A
+	CALL =Carve_Map
 
 	LD E, $intial_duplication_probablity
 	LD A, L
