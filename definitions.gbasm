@@ -45,7 +45,13 @@
 ;	y: u8,
 ; }
 
+; a bit of 1 is equivalent to an entity being on the tile
+.DEFINE mem_entities_collisions $c780 ; Takes the memory from c780 to c7ff
+
+; a bit of 1 is equivalent to the tile being free
 .DEFINE mem_dungeon_map $c800 ; Takes the memory from c800 to c87f
+.DEFINE mem_dungeon_map_high $c8
+
 .DEFINE mem_room_list $c880 ; Takes the memory from c880 to c89f
 .DEFINE mem_number_of_rooms ($c8a0)
 ; struct room {
@@ -64,7 +70,7 @@
 ; 	_padding: u24
 ; }
 
-.DEFINE mem_entites_list $c980 ; Until c9ff
+.DEFINE mem_entities_list $c980 ; Until c9ff
 ; struct entity {
 ;	sprite: u8,
 ;	x: u8,

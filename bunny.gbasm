@@ -1,5 +1,5 @@
 Initialize_Bunny:
-	LD HL, $mem_entites_list
+	LD HL, $mem_entities_list
 	LD A, $01
 	LD (HL+), A
 
@@ -194,17 +194,51 @@ Fix_Bunny_screen:
 	RET
 
 Move_Bunny:
-	; IF HL IS EVER USED, IT SHOULD BE PUSHED HERE
+	PUSH HL
 	LD C, $00 ; (bit 0 = has_scrolled, bit 1 = has ended movement)
 	LD A, $mem_bunny_direction
 	BIT 3, A
-	JR NZ, =Move_Bunny.check_direction
+	JR NZ, =Move_Bunny.check_collision
 
 	LD A, $mem_button_direction
 	CP $00
 	JP Z, =Move_Bunny.end
 	SET 3, A
 	LD $mem_bunny_direction, A
+
+	Move_Bunny.check_collision:
+		LD A, $mem_moving_animation_step
+		CP $00
+		JR NZ, =Move_Bunny.check_collision.end
+
+		; THIS ASSUMES THAT THE BUNNY IS ALWAYS THE FIRST ENTITY IN THE LIST
+		LD HL, $mem_entities_list
+		LD A, $mem_bunny_direction
+
+		PUSH BC
+		CALL =Get_Position_After_Move
+		LD A, C
+		CALL =Is_Collisionable
+
+		PUSH AF
+		PUSH HL
+		LD HL, $9ba0
+		CALL =Print_8bit
+		POP HL
+
+		CALL =Carve_Entity_Collision_Map
+		POP AF
+		POP BC
+		CP $00
+		JR Z, =Move_Bunny.check_collision.end
+
+		Move_Bunny.check_collision.collision:
+		LD A, $mem_bunny_direction
+		RES 3, A
+		LD $mem_bunny_direction, A
+		JP =Move_Bunny.end
+
+		Move_Bunny.check_collision.end:
 
 	Move_Bunny.check_direction:
 		LD A, $mem_bunny_direction
@@ -218,58 +252,20 @@ Move_Bunny:
 	Move_Bunny.check_direction_end:
 
 	BIT 1, A
-	JR NZ, =Move_Bunny.vertical_move
+	JR NZ, =Move_Bunny.vertical_viewport_move
 
-	Move_Bunny.horizontal_move:
-		Move_Bunny.horizontal_move.check_collision:
-		LD D, B
-		LD A, $mem_bunny_y
-		LD B, A
-		LD A, $mem_bunny_x
-
-		ADD D
-
-		CALL =Is_Solid
-
-		CP $00
-		JR NZ, =Move_Bunny.collision
-
-		LD B, D
-
-	Move_Bunny.horizontal_px_move:
+	Move_Bunny.horizontal_viewport_move:
 		SET 0, C
 		LD A, $reg_viewport_x
 		ADD B
 		LD $reg_viewport_x, A
 		JP =Move_Bunny.check_end_of_movement
 
-	Move_Bunny.vertical_move:
-		Move_Bunny.vertical_move.check_collision:
-		LD D, B
-		LD A, $mem_bunny_y
-		ADD D
-		LD B, A
-		LD A, $mem_bunny_x
-
-		CALL =Is_Solid
-
-		CP $00
-		JR NZ, =Move_Bunny.collision
-
-		LD B, D
-
-	Move_Bunny.vertical_px_move:
+	Move_Bunny.vertical_viewport_move:
 		SET 0, C
 		LD A, $reg_viewport_y
 		ADD B
 		LD $reg_viewport_y, A
-		JP =Move_Bunny.check_end_of_movement
-
-	Move_Bunny.collision:
-		LD A, $mem_bunny_direction
-		RES 3, A
-		LD $mem_bunny_direction, A
-		JP =Move_Bunny.end
 
 	Move_Bunny.check_end_of_movement:
 		LD A, $mem_moving_animation_step
@@ -313,4 +309,5 @@ Move_Bunny:
 	Move_Bunny.end:
 	LD A, C
 	LD $mem_map_loading_flags, A
+	POP HL
 	RET

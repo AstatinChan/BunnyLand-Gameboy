@@ -316,7 +316,7 @@ Is_Solid: ; X in A, Y in B, Result A
 	LD L, A
 
 	LD C, B
-	LD B, $c8
+	LD B, $mem_dungeon_map_high
 	LD A, (BC)
 
 	AND (HL)
