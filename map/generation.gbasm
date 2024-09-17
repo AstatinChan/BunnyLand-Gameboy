@@ -22,7 +22,7 @@ Carve_Map: ; X in C, Y in B
 	LD L, A
 
 	LD C, B
-	LD B, $c8
+	LD B, $mem_dungeon_map_high
 	LD A, (BC)
 
 	OR (HL)
