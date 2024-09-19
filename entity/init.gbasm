@@ -1,0 +1,100 @@
+Initialize_Entities:
+	LD HL, $mem_entities_list
+	LD A, $01
+	LD (HL+), A
+
+	LD A, $mem_number_of_rooms
+	CALL =RNG_Bound
+	SLA A
+	SLA A
+	ADD $80
+	LD C, A
+
+	LD B, $c8
+
+	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
+
+	LD (HL+), A
+
+	INC BC
+
+	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
+	LD (HL+), A
+	INC HL
+	LD BC, =Move_Bunny
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
+
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+
+Fix_Bunny_screen:
+	LD A, $mem_bunny_x
+	SUB $05
+	LD $mem_viewport_x, A
+
+	LD A, $mem_bunny_y
+	SUB $04
+	LD $mem_viewport_y, A
+
+	LD A, $mem_viewport_x
+	SWAP A
+	AND $f0
+	OR $08
+	LD $reg_viewport_x, A
+
+	LD A, $mem_viewport_y
+	SWAP A
+	AND $f0
+	OR $08
+	LD $reg_viewport_y, A
+
+	RET
+
+Initialize_Fox:
+	LD A, $0d
+	LD (HL+), A
+	LD A, $mem_bunny_x
+	LD (HL+), A
+	LD A, $mem_bunny_y
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD BC, =Fox_AI
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	INC HL
+	INC HL
+
+	RET

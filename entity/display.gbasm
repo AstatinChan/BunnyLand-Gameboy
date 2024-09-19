@@ -1,0 +1,284 @@
+Display_Entities:
+	LD A, $00
+	LD $tmp_var_1, A
+	LD HL, $mem_entities_list
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	CALL =Display_Entity
+	LD BC, $00a0
+	LD HL, $mem_oam_buffer
+
+	LD A, $tmp_var_1
+	ADD L
+	LD L, A
+
+	LD A, $tmp_var_1
+	XOR $ff
+	INC A
+	ADD C
+	LD C, A
+
+	CALL =bzero
+
+	RET
+
+Display_Entity:
+	LD A, (HL+)
+	LD E, A
+
+	CP $00
+	JP Z, =Display_Entity.skip
+
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_x
+	LD B, A
+	SUB $82
+	CP D
+	JP NC, =Display_Entity.skip
+	ADD $0e
+	CP D
+	JP C, =Display_Entity.skip
+	LD A, D
+	SUB $80
+	SUB B
+	AND $0f
+	SWAP A
+	LD B, A
+
+
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_y
+	LD C, A
+	SUB $82
+	CP D
+	JP NC, =Display_Entity.skip
+	ADD $0d
+	CP D
+	JP C, =Display_Entity.skip
+	LD A, D
+	SUB $80
+	SUB C
+	AND $0f
+	SWAP A
+	ADD $02
+	LD C, A
+
+	LD A, $mem_bunny_direction
+	BIT 3, A
+	JR Z, =Display_Entity.Viewport_offset_end
+	AND $07
+	CP $enum_direction_down
+	JR Z, =Display_Entity.Viewport_offset_down
+	CP $enum_direction_right
+	JR Z, =Display_Entity.Viewport_offset_right
+	CP $enum_direction_up
+	JR Z, =Display_Entity.Viewport_offset_up
+
+	Display_Entity.Viewport_offset_left:
+		LD A, $reg_viewport_x
+		SUB $08
+		AND $0f
+		XOR $ff
+		ADD $12
+		ADD B
+
+		LD B, A
+		JR =Display_Entity.Viewport_offset_end
+
+	Display_Entity.Viewport_offset_right:
+		LD A, $reg_viewport_x
+		SUB $08
+		AND $0f
+		XOR $ff
+		ADD B
+
+		LD B, A
+
+		JR =Display_Entity.Viewport_offset_end
+
+	Display_Entity.Viewport_offset_up:
+		LD A, $reg_viewport_y
+		SUB $08
+		AND $0f
+		XOR $ff
+		ADD $12
+		ADD C
+
+		LD C, A
+
+		JR =Display_Entity.Viewport_offset_end
+
+	Display_Entity.Viewport_offset_down:
+		LD A, $reg_viewport_y
+		SUB $08
+		AND $0f
+		XOR $ff
+		ADD C
+
+		LD C, A
+
+	Display_Entity.Viewport_offset_end:
+
+	LD A, (HL+)
+	BIT 3, A
+	LD D, A
+	LD A, $00
+	JR Z, =Display_Entity.Not_Moving_Animation
+
+	LD A, D
+	AND $07
+
+	CP $enum_direction_down
+	JR Z, =Display_Entity.moving_offset_down
+	CP $enum_direction_right
+	JR Z, =Display_Entity.moving_offset_right
+	CP $enum_direction_up
+	JR Z, =Display_Entity.moving_offset_up
+
+	Display_Entity.moving_offset_left:
+		LD A, $mem_moving_animation_step
+		XOR $ff
+		ADD B
+		LD B, A
+
+		JR =Display_Entity.moving_offset_end
+
+	Display_Entity.moving_offset_right:
+		LD A, $mem_moving_animation_step
+		INC A
+		ADD B
+		LD B, A
+
+		JR =Display_Entity.moving_offset_end
+
+	Display_Entity.moving_offset_up:
+		LD A, $mem_moving_animation_step
+		XOR $ff
+		ADD C
+		LD C, A
+
+		JR =Display_Entity.moving_offset_end
+
+	Display_Entity.moving_offset_down:
+		LD A, $mem_moving_animation_step
+		INC A
+		ADD C
+		LD C, A
+
+	Display_Entity.moving_offset_end:
+
+
+	LD A, $mem_moving_animation_step
+	Display_Entity.Not_Moving_Animation:
+
+	SUB $08
+	BIT 7, A
+	JR Z, =Display_Entity.Hop_ABS1_end
+
+	; Adding hop animation to Y
+	XOR $ff
+	INC A
+	Display_Entity.Hop_ABS1_end:
+	SUB $04
+	BIT 7, A
+	JR Z, =Display_Entity.Hop_ABS2_end
+	XOR $ff
+	INC A
+	Display_Entity.Hop_ABS2_end:
+	ADD C
+	LD C, A
+
+	LD A, D
+	AND $07
+
+	CP $enum_direction_left
+	JR Z, =Display_Entity.Left_Direction_sprite
+	CP $enum_direction_right
+	JR Z, =Display_Entity.Right_Direction_sprite
+	CP $enum_direction_up
+	JR Z, =Display_Entity.Up_Direction_sprite
+	JP =Display_Entity.Down_Direction_sprite
+
+	Display_Entity.Left_Direction_sprite:
+		LD D, $00
+		JP =Display_Entity.Write_OBJ
+
+	Display_Entity.Right_Direction_sprite:
+		LD A, $02
+		ADD E
+		LD E, A
+		LD D, $20
+		JP =Display_Entity.Write_OBJ
+
+	Display_Entity.Up_Direction_sprite:
+		LD A, $04
+		ADD E
+		LD E, A
+		LD D, $00
+		JP =Display_Entity.Write_OBJ
+
+	Display_Entity.Down_Direction_sprite:
+		LD A, $08
+		ADD E
+		LD E, A
+		LD D, $00
+		JP =Display_Entity.Write_OBJ
+
+	Display_Entity.Write_OBJ:
+		PUSH HL
+		; First OBJ (left)
+		LD HL, $mem_oam_buffer
+		LD A, $tmp_var_1
+		LD L, A
+		LD A, C
+		LD (HL+), A
+		LD A, B
+		LD (HL+), A
+		LD A, E
+		INC A
+		LD (HL+), A
+		LD A, D
+		LD (HL+), A
+		
+		; Second OBJ
+		LD A, B
+		ADD $08
+		LD B, A
+
+		LD A, C
+		LD (HL+), A
+		LD A, B
+		LD (HL+), A
+		LD A, E
+		XOR $02
+		INC A
+		LD (HL+), A
+		LD A, D
+		LD (HL+), A
+		LD A, L
+		LD $tmp_var_1, A
+		POP HL
+
+	Display_Entity.skip:
+	LD A, L
+	AND $f8
+	ADD $08
+	LD L, A
+	RET

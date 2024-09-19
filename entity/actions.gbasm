@@ -1,0 +1,148 @@
+Entities_Actions:
+	CALL =Reset_Entities_Collision_Map
+
+	LD HL, $mem_entities_list
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	CALL =Entity_Action
+	RET
+
+Entity_Action:
+	LD A, (HL+)
+	CP $00
+	JR Z, =Entity_Action.skip
+
+	INC HL
+	INC HL
+	INC HL
+
+	LD A, (HL+)
+	LD D, A
+	LD A, (HL+)
+	LD E, A
+
+	PUSH HL
+
+	LD A, L
+	AND $f8
+	LD L, A
+
+	; This is confusing but this thing is actually CALL DE
+	LD BC, =Entity_Action.interaction_end
+	PUSH BC
+	PUSH DE
+	RET
+	Entity_Action.interaction_end:
+
+	POP HL
+
+	Entity_Action.skip:
+	LD A, L
+	AND $f8
+	ADD $08
+	LD L, A
+	RET
+
+Fox_AI:
+	PUSH HL
+
+	INC HL
+	INC HL
+	INC HL
+
+	LD A, $mem_map_loading_flags
+	BIT 1, A
+	JR Z, =Fox_AI.Update_Position.end
+
+	LD A, (HL)
+	BIT 3, A
+	JR Z, =Fox_AI.Update_Position.end
+
+	RES 3, A
+	DEC A
+
+	LD C, A
+	AND $01
+	SLA A
+	AND $02
+	DEC A
+	LD B, A
+
+	LD A, L
+	AND $f8
+	INC A
+	LD L, A
+
+	BIT 1, C
+	JR NZ, =Fox_AI.vertical_tile_move
+
+	Fox_AI.horizontal_tile_move:
+		LD A, (HL)
+		ADD B
+		LD (HL), A
+		JP =Fox_AI.Update_Position.end
+
+	Fox_AI.vertical_tile_move:
+		INC HL
+		LD A, (HL)
+		ADD B
+		LD (HL), A
+
+	Fox_AI.Update_Position.end:
+
+	LD A, L
+	AND $f8
+	ADD $03
+	LD L, A
+
+	LD A, $mem_moving_animation_step
+	CP $01
+	JR NZ, =Fox_AI.end
+
+	LD A, $mem_bunny_direction
+	BIT 3, A
+	JR Z, =Fox_AI.end
+
+	CALL =RNG_Step
+	AND $08
+	LD B, A
+
+	LD A, $04
+	CALL =RNG_Bound
+	INC A
+	OR $08
+	LD B, A
+
+	PUSH BC
+	CALL =Get_Position_After_Move
+	LD A, C
+	CALL =Is_Collisionable
+	CALL =Carve_Entity_Collision_Map
+	POP BC
+	CP $00
+	JR Z, =Fox_AI.change_direction
+
+	RES 3, B
+
+	Fox_AI.change_direction:
+	LD (HL), B
+
+	Fox_AI.end:
+
+	POP HL
+	RET
+
+
