@@ -5,6 +5,14 @@ Pad_Button_Check:
 	LD A, $20
 	LD $reg_joypad, A
 	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
 	LD C, A
 	LD A, $00
 	
@@ -29,8 +37,22 @@ Pad_Button_Check:
 		LD A, $enum_direction_down
 
 	Pad_Button_Check.End:
+		LD $mem_button_direction, A
 
-	LD $mem_button_direction, A
+	LD A, $10
+	LD $reg_joypad, A
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	LD A, $reg_joypad
+	XOR $0f
+	AND $0f
+	LD $mem_button_action, A
 
 	POP BC
 	POP AF

@@ -1,0 +1,48 @@
+Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test in A, X Result in C, Y result in B
+	PUSH HL
+	PUSH AF
+
+	LD A, L
+	AND $f8
+	LD L, A
+
+	INC HL
+
+	LD A, (HL+)
+	LD C, A
+	LD A, (HL+)
+	LD B, A
+
+	POP AF
+	BIT 3, A
+	JR Z, =Get_Position_After_Move.direction_end
+
+	PUSH BC
+
+	DEC A
+	LD B, A
+
+	SLA A
+	AND $02
+	DEC A
+
+	BIT 1, B
+	JR NZ, =Get_Position_After_Move.vertical
+
+	Get_Position_After_Move.horizontal:
+		POP BC
+		ADD C
+		LD C, A
+		JR =Get_Position_After_Move.direction_end
+
+	Get_Position_After_Move.vertical:
+		POP BC
+		ADD B
+		LD B, A
+
+	Get_Position_After_Move.direction_end:
+
+	POP HL
+	RET
+
+

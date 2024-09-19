@@ -14,6 +14,7 @@
 .DEFINE intial_duplication_probablity $01
 
 .DEFINE mem_button_direction ($c002)
+.DEFINE mem_button_action ($c003)
 .DEFINE mem_moving_animation_step ($c004)
 .DEFINE mem_bunny_sprite ($c980)
 .DEFINE mem_bunny_x ($c981)
@@ -75,7 +76,7 @@
 ;	sprite: u8,
 ;	x: u8,
 ;	y: u8,
-;	direction: u8 (bit 3 = is_moving, bit 2-0: direction),
+;	direction: u8 (animation = bit 7-4, bit 3 = is_moving, bit 2-0: direction),
 ;	ai_function_pointer: 16
 ;	_padding: u16
 ; }

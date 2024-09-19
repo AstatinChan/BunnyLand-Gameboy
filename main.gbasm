@@ -6,7 +6,7 @@ Entrypoint:
 New_Dungeon:
 	LD SP, $fffe
 	CALL =Dungeon_Generation
-	CALL =Initialize_Bunny
+	CALL =Initialize_Entities
 	CALL =Initialize_Objects
 	CALL =Load_Tile
 	CALL =Load_Map
@@ -25,23 +25,30 @@ VBLANK_Entrypoint:
 	CALL =Display_Prepared_Block
 	CALL =Display_Object
 	CALL $OAM_DMA_Transfer_routine
+	LD HL, $9800
+	LD A, $mem_bunny_direction
+	CALL =Print_8bit
 
 	CALL =Object_Interactions_Check
 
 	CALL =Pad_Button_Check
-	CALL =Entities_Behaviours
+	CALL =Entities_Actions
 
 	CALL =Prepare_Scrolling_Map
-	CALL =Prepare_Entities
+	CALL =Display_Entities
 	RET
 
 .INCLUDE "tiles.gbasm"
+.INCLUDE "rng.gbasm"
+.INCLUDE "utils.gbasm"
+.INCLUDE "buttons.gbasm"
 .INCLUDE "map/loading.gbasm"
 .INCLUDE "map/generation.gbasm"
 .INCLUDE "map/objects.gbasm"
-.INCLUDE "bunny.gbasm"
-.INCLUDE "buttons.gbasm"
-.INCLUDE "rng.gbasm"
-.INCLUDE "utils.gbasm"
-.INCLUDE "entities.gbasm"
+.INCLUDE "entity/init.gbasm"
+.INCLUDE "entity/bunny.gbasm"
+.INCLUDE "entity/actions.gbasm"
+.INCLUDE "entity/collisions.gbasm"
+.INCLUDE "entity/display.gbasm"
+.INCLUDE "entity/utils.gbasm"
 .INCLUDE "tileset.gbasm"
