@@ -28,9 +28,9 @@ Empty_WRAM:
 	LD HL, $C000
 	Empty_WRAM.loop:
 		XOR A
-		LD (HL+), a
-		LD a, $D0
-		CP h
+		LD (HL+), A
+		LD A, $D0
+		CP H
 		JR NZ, =Empty_WRAM.loop
 
 	CALL =VBlank_Wait
