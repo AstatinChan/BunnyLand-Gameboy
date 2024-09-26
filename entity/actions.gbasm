@@ -56,6 +56,27 @@ Entity_Action:
 	LD L, A
 	RET
 
+Update_Animation_Steps:
+	LD A, $mem_map_loading_flags
+	BIT 3, A
+	JR Z, =Update_Animation_Steps.end:
+
+	LD A, $mem_moving_animation_step
+	INC A
+	AND $0f
+	LD $mem_moving_animation_step, A
+
+	CP $00
+	JR NZ, =Update_Animation_Steps.end
+
+	LD A, $mem_map_loading_flags
+	RES 3, A
+	SET 1, A
+	LD $mem_map_loading_flags, A
+
+	Update_Animation_Steps.end:
+	RET
+
 Fox_AI:
 	PUSH HL
 
@@ -120,10 +141,10 @@ Fox_AI:
 	AND $08
 	LD B, A
 
-	LD A, $04
-	CALL =RNG_Bound
+	CALL =RNG_Step
+	AND $03
 	INC A
-	OR $08
+	OR B
 	LD B, A
 
 	PUSH BC
@@ -144,5 +165,3 @@ Fox_AI:
 
 	POP HL
 	RET
-
-

@@ -29,6 +29,7 @@
 ; bit 0: if the object should be reloaded (scroll or first load)
 ; bit 1: has a movement ended (objects interaction should be checked, entities should update their positions)
 ; bit 2: if the prepared block should be updated at the next frame
+; bit 3: animation step is going up (?)
 
 .DEFINE mem_prepared_block_tile ($c00d)
 .DEFINE mem_prepared_block_position_1 ($c00e)

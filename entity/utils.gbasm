@@ -45,4 +45,47 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 	POP HL
 	RET
 
+.MACRODEF ADD_A_TO_DIRECTION_BC ; Direction in D, XY in BC (muted), offset in A
+	PUSH AF
+	LD A, D
+	AND $07
 
+	CP $enum_direction_down
+	JR Z, =$down
+	CP $enum_direction_right
+	JR Z, =$right
+	CP $enum_direction_up
+	JR Z, =$up
+
+	$left:
+		POP AF
+		XOR $ff
+		ADD B
+		LD B, A
+
+		JR =$end
+
+	$right:
+		POP AF
+		INC A
+		ADD B
+		LD B, A
+
+		JR =$end
+
+	$up:
+		POP AF
+		XOR $ff
+		ADD C
+		LD C, A
+
+		JR =$end
+
+	$down:
+		POP AF
+		INC A
+		ADD C
+		LD C, A
+
+	$end:
+.END

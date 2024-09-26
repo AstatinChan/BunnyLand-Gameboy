@@ -83,6 +83,7 @@ Display_Entity:
 	LD A, $mem_bunny_direction
 	BIT 3, A
 	JR Z, =Display_Entity.Viewport_offset_end
+	LD A, $mem_bunny_direction
 	AND $07
 	CP $enum_direction_down
 	JR Z, =Display_Entity.Viewport_offset_down
@@ -139,71 +140,43 @@ Display_Entity:
 	LD A, (HL+)
 	BIT 3, A
 	LD D, A
-	LD A, $00
-	JR Z, =Display_Entity.Not_Moving_Animation
+	Display_Entity.Moving_Animation:
+		JR Z, =Display_Entity.Moving_Animation.end
 
-	LD A, D
-	AND $07
-
-	CP $enum_direction_down
-	JR Z, =Display_Entity.moving_offset_down
-	CP $enum_direction_right
-	JR Z, =Display_Entity.moving_offset_right
-	CP $enum_direction_up
-	JR Z, =Display_Entity.moving_offset_up
-
-	Display_Entity.moving_offset_left:
 		LD A, $mem_moving_animation_step
+		.ADD_A_TO_DIRECTION_BC
+	Display_Entity.Moving_Animation.end:
+
+	Display_Entity.Action_Animation:
+		LD A, D
+		AND $f0
+		CP $10
+		JR NZ, =Display_Entity.Action_Animation.end
+
+		LD A, $mem_moving_animation_step
+		SUB $08
+		.ABS
 		XOR $ff
-		ADD B
-		LD B, A
-
-		JR =Display_Entity.moving_offset_end
-
-	Display_Entity.moving_offset_right:
-		LD A, $mem_moving_animation_step
 		INC A
-		ADD B
-		LD B, A
+		ADD $08
+		.ADD_A_TO_DIRECTION_BC
+	Display_Entity.Action_Animation.end:
 
-		JR =Display_Entity.moving_offset_end
+	Display_Entity.Moving_Hops:
+		LD A, D
+		BIT 3, A
+		LD A, $00
+		JR Z, =Display_Entity.Moving_Hops.not_moving
 
-	Display_Entity.moving_offset_up:
 		LD A, $mem_moving_animation_step
-		XOR $ff
+		Display_Entity.Moving_Hops.not_moving:
+		SUB $08
+		.ABS
+		SUB $04
+		.ABS
 		ADD C
 		LD C, A
-
-		JR =Display_Entity.moving_offset_end
-
-	Display_Entity.moving_offset_down:
-		LD A, $mem_moving_animation_step
-		INC A
-		ADD C
-		LD C, A
-
-	Display_Entity.moving_offset_end:
-
-
-	LD A, $mem_moving_animation_step
-	Display_Entity.Not_Moving_Animation:
-
-	SUB $08
-	BIT 7, A
-	JR Z, =Display_Entity.Hop_ABS1_end
-
-	; Adding hop animation to Y
-	XOR $ff
-	INC A
-	Display_Entity.Hop_ABS1_end:
-	SUB $04
-	BIT 7, A
-	JR Z, =Display_Entity.Hop_ABS2_end
-	XOR $ff
-	INC A
-	Display_Entity.Hop_ABS2_end:
-	ADD C
-	LD C, A
+	Display_Entity.Moving_Hops.end:
 
 	LD A, D
 	AND $07
