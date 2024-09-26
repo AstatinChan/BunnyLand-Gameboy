@@ -23,6 +23,14 @@ bzero: ; dest = HL, n = BC
 		JR NZ =bzero.loop
 	RET
 
+.MACRODEF ABS
+	BIT 7, A
+	JR Z, =$end
+	XOR $ff
+	INC A
+	$end:
+.END
+
 Print_8bit: ; Number in A, Memory Tilemap position in HL
 	PUSH AF
 	PUSH BC

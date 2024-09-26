@@ -26,13 +26,14 @@ VBLANK_Entrypoint:
 	CALL =Display_Object
 	CALL $OAM_DMA_Transfer_routine
 	LD HL, $9800
-	LD A, $mem_bunny_direction
+	LD A, $mem_bunny_x
 	CALL =Print_8bit
 
 	CALL =Object_Interactions_Check
 
 	CALL =Pad_Button_Check
 	CALL =Entities_Actions
+	CALL =Update_Animation_Steps
 
 	CALL =Prepare_Scrolling_Map
 	CALL =Display_Entities
@@ -45,10 +46,10 @@ VBLANK_Entrypoint:
 .INCLUDE "map/loading.gbasm"
 .INCLUDE "map/generation.gbasm"
 .INCLUDE "map/objects.gbasm"
+.INCLUDE "entity/utils.gbasm"
 .INCLUDE "entity/init.gbasm"
 .INCLUDE "entity/bunny.gbasm"
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"
 .INCLUDE "entity/display.gbasm"
-.INCLUDE "entity/utils.gbasm"
 .INCLUDE "tileset.gbasm"
