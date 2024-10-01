@@ -80,6 +80,9 @@ Display_Entity:
 	ADD $02
 	LD C, A
 
+	LD A, $mem_map_loading_flags
+	BIT 3, A
+	JR Z, =Display_Entity.Viewport_offset_end
 	LD A, $mem_bunny_direction
 	BIT 3, A
 	JR Z, =Display_Entity.Viewport_offset_end
@@ -97,7 +100,8 @@ Display_Entity:
 		SUB $08
 		AND $0f
 		XOR $ff
-		ADD $12
+		INC A
+		ADD $10
 		ADD B
 
 		LD B, A
@@ -108,6 +112,7 @@ Display_Entity:
 		SUB $08
 		AND $0f
 		XOR $ff
+		INC A
 		ADD B
 
 		LD B, A
@@ -119,7 +124,8 @@ Display_Entity:
 		SUB $08
 		AND $0f
 		XOR $ff
-		ADD $12
+		INC A
+		ADD $10
 		ADD C
 
 		LD C, A
@@ -131,6 +137,7 @@ Display_Entity:
 		SUB $08
 		AND $0f
 		XOR $ff
+		INC A
 		ADD C
 
 		LD C, A
@@ -154,12 +161,26 @@ Display_Entity:
 		JR NZ, =Display_Entity.Action_Animation.end
 
 		LD A, $mem_moving_animation_step
-		SUB $08
-		.ABS
-		XOR $ff
-		INC A
-		ADD $08
-		.ADD_A_TO_DIRECTION_BC
+		CP $04
+		JR C, =Display_Entity.Action_Animation.Step1
+		CP $0c
+		JR C, =Display_Entity.Action_Animation.Step2
+		JR =Display_Entity.Action_Animation.end
+
+		Display_Entity.Action_Animation.Step1:
+			SLA A
+			SLA A
+			JR =Display_Entity.Action_Animation.Apply
+
+		Display_Entity.Action_Animation.Step2:
+			SUB $04
+			SLA A
+			XOR $ff
+			INC A
+			ADD $10
+
+		Display_Entity.Action_Animation.Apply:
+			.ADD_A_TO_DIRECTION_BC
 	Display_Entity.Action_Animation.end:
 
 	Display_Entity.Moving_Hops:

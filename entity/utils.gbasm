@@ -60,6 +60,7 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 	$left:
 		POP AF
 		XOR $ff
+		INC A
 		ADD B
 		LD B, A
 
@@ -67,7 +68,6 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 
 	$right:
 		POP AF
-		INC A
 		ADD B
 		LD B, A
 
@@ -76,6 +76,7 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 	$up:
 		POP AF
 		XOR $ff
+		INC A
 		ADD C
 		LD C, A
 
@@ -83,7 +84,6 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 
 	$down:
 		POP AF
-		INC A
 		ADD C
 		LD C, A
 
