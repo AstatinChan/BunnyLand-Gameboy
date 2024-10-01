@@ -59,7 +59,7 @@ Entity_Action:
 Update_Animation_Steps:
 	LD A, $mem_map_loading_flags
 	BIT 3, A
-	JR Z, =Update_Animation_Steps.end:
+	JR Z, =Update_Animation_Steps.end
 
 	LD A, $mem_moving_animation_step
 	INC A

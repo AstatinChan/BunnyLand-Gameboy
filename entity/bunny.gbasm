@@ -1,33 +1,84 @@
 Move_Bunny:
-
 	Start_action_or_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
 		JR NZ, =Start_action_or_movement.end
+
+		Start_action_or_movement.test_movement:
+
 		LD A, $mem_button_direction
 		CP $00
-		JP Z, =Start_action_or_movement.end
+		JP Z, =Start_action_or_movement.test_action
 		SET 3, A
+		LD D, A
+
+		PUSH BC
+		CALL =Get_Position_After_Move
+		LD A, C
+		CALL =Is_Collisionable
+		CALL =Carve_Entity_Collision_Map
+		POP BC
+		CP $00
+		JR Z, =Start_action_or_movement.not_collision
+		RES 3, D
+		Start_action_or_movement.not_collision:
+		LD A, D
+
 		LD $mem_bunny_direction, A
+		JR =Start_action_or_movement.test_end
+
+
+		Start_action_or_movement.test_action:
+		LD A, $mem_button_action
+		BIT 0, A
+		JR Z, =Start_action_or_movement.end
+		LD A, $mem_bunny_direction
+		AND $0f
+		OR $10
+		LD $mem_bunny_direction, A
+
+		Start_action_or_movement.test_end:
 
 		LD A, $mem_map_loading_flags
 		SET 3, A
 		LD $mem_map_loading_flags, A
 	Start_action_or_movement.end:
 
+	Scroll_viewport:
+		LD A, $mem_map_loading_flags
+		BIT 3, A
+		JR Z, =Scroll_viewport.end
+		LD A, $mem_bunny_direction
+		BIT 3, A
+		JR Z, =Scroll_viewport.end
+
+		LD A, $mem_bunny_direction
+		LD D, A
+		LD A, $reg_viewport_x
+		LD B, A
+		LD A, $reg_viewport_y
+		LD C, A
+		LD A, $01
+		.ADD_A_TO_DIRECTION_BC
+		LD A, B
+		LD $reg_viewport_x, A
+		LD A, C
+		LD $reg_viewport_y, A
+	Scroll_viewport.end:
 
 	End_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JR Z, =End_movement.end
+		JP Z, =End_movement.end
 		LD A, $mem_moving_animation_step
 		CP $0f
-		JR NZ, =End_movement.end
+		JP NZ, =End_movement.end
 		LD A, $mem_bunny_direction
-		RES 3, A
+		BIT 3, A
+		JR Z, =End_movement.end
+		AND $07
 		LD $mem_bunny_direction, A
 
-		AND $07
 		LD D, A
 		LD A, $mem_bunny_x
 		LD B, A
@@ -39,172 +90,17 @@ Move_Bunny:
 		LD $mem_bunny_x, A
 		LD A, C
 		LD $mem_bunny_y, A
+
+		LD A, $mem_viewport_x
+		LD B, A
+		LD A, $mem_viewport_y
+		LD C, A
+		LD A, $01
+		.ADD_A_TO_DIRECTION_BC
+		LD A, B
+		LD $mem_viewport_x, A
+		LD A, C
+		LD $mem_viewport_y, A
 	End_movement.end:
 
-
-	Scroll_viewport:
-		LD A, $mem_map_loading_flags
-		BIT 3, A
-		JR Z, =Scroll_viewport.end
-		LD A, $mem_bunny_direction
-		BIT 3, A
-		JR Z, =Scroll_viewport.end
-
-		Move_Bunny.check_direction:
-			LD A, $mem_bunny_direction
-
-			DEC A
-			LD B, $01 ; Direction of the movement (+1)
-			BIT 0, A
-			JR NZ, =Move_Bunny.check_direction_end
-			LD B, $FF ; Direction of the movement (-1)
-
-		Move_Bunny.check_direction_end:
-
-		BIT 1, A
-		JR NZ, =Move_Bunny.vertical_viewport_move
-
-		Move_Bunny.horizontal_viewport_move:
-			SET 0, C
-			LD A, $reg_viewport_x
-			ADD B
-			LD $reg_viewport_x, A
-			JP =Scroll_viewport.end
-
-		Move_Bunny.vertical_viewport_move:
-			SET 0, C
-			LD A, $reg_viewport_y
-			ADD B
-			LD $reg_viewport_y, A
-
-	Scroll_viewport.end:
-
 	RET
-
-; 	LD C, $00 ; (bit 0 = has_scrolled, bit 1 = has ended movement)
-; 	LD A, $mem_bunny_direction
-; 	BIT 3, A
-; 	JR NZ, =Move_Bunny.check_direction
-; 
-; 	LD B, $00
-; 	Move_Bunny.check_start_action:
-; 		LD A, $mem_button_action
-; 		BIT 0, A
-; 		JR Z, =Move_Bunny.check_start_action.end
-; 		LD B, $10
-; 		Move_Bunny.check_start_action.end:
-; 		LD A, $mem_bunny_direction
-; 		AND $0f
-; 		OR B
-; 		LD $mem_bunny_direction, A
-; 		LD A, $mem_map_loading_flags
-; 		SET 3, A
-; 		LD $mem_map_loading_flags, A
-; 
-; 	LD A, $mem_bunny_direction
-; 	AND $f0
-; 	LD B, A
-; 	LD A, $mem_button_direction
-; 	CP $00
-; 	JP Z, =Move_Bunny.end
-; 	SET 3, A
-; 	OR B
-; 	LD $mem_bunny_direction, A
-; 	LD A, $mem_map_loading_flags
-; 	SET 3, A
-; 	LD $mem_map_loading_flags, A
-; 
-; 	Move_Bunny.check_collision:
-; 		LD A, $mem_moving_animation_step
-; 		CP $00
-; 		JR NZ, =Move_Bunny.check_collision.end
-; 
-; 		; THIS ASSUMES THAT THE BUNNY IS ALWAYS THE FIRST ENTITY IN THE LIST
-; 		PUSH HL
-; 		LD HL, $mem_entities_list
-; 		LD A, $mem_bunny_direction
-; 
-; 		PUSH BC
-; 		CALL =Get_Position_After_Move
-; 		LD A, C
-; 		CALL =Is_Collisionable
-; 		CALL =Carve_Entity_Collision_Map
-; 		POP BC
-; 		POP HL
-; 		CP $00
-; 		JR Z, =Move_Bunny.check_collision.end
-; 
-; 		Move_Bunny.check_collision.collision:
-; 		LD A, $mem_bunny_direction
-; 		RES 3, A
-; 		LD $mem_bunny_direction, A
-; 		JP =Move_Bunny.end
-; 
-; 		Move_Bunny.check_collision.end:
-; 
-; 	Move_Bunny.check_direction:
-; 		LD A, $mem_bunny_direction
-; 
-; 		DEC A
-; 		LD B, $01 ; Direction of the movement (+1)
-; 		BIT 0, A
-; 		JR NZ, =Move_Bunny.check_direction_end
-; 		LD B, $FF ; Direction of the movement (-1)
-; 
-; 	Move_Bunny.check_direction_end:
-; 
-; 	BIT 1, A
-; 	JR NZ, =Move_Bunny.vertical_viewport_move
-; 
-; 	Move_Bunny.horizontal_viewport_move:
-; 		SET 0, C
-; 		LD A, $reg_viewport_x
-; 		ADD B
-; 		LD $reg_viewport_x, A
-; 		JP =Move_Bunny.check_end_of_movement
-; 
-; 	Move_Bunny.vertical_viewport_move:
-; 		SET 0, C
-; 		LD A, $reg_viewport_y
-; 		ADD B
-; 		LD $reg_viewport_y, A
-; 
-; 	Move_Bunny.check_end_of_movement:
-; 		LD A, $mem_moving_animation_step
-; 		CP $0f
-; 		JR NZ, =Move_Bunny.end
-; 		SET 1, C
-; 		LD A, $mem_bunny_direction
-; 		AND $07
-; 		LD $mem_bunny_direction, A
-; 		DEC A
-; 
-; 		BIT 1, A
-; 		JR NZ, =Move_Bunny.vertical_tile_move
-; 
-; 		Move_Bunny.horizontal_tile_move:
-; 			BIT 0, C
-; 			JR Z, =Move_Bunny.horizontal_tile_move.move_viewport_end
-; 			LD A, $mem_viewport_x
-; 			ADD B
-; 			LD $mem_viewport_x, A
-; 			Move_Bunny.horizontal_tile_move.move_viewport_end:
-; 			LD A, $mem_bunny_x
-; 			ADD B
-; 			LD $mem_bunny_x, A
-; 			JP =Move_Bunny.end
-; 
-; 		Move_Bunny.vertical_tile_move:
-; 			BIT 0, C
-; 			LD A, $mem_viewport_y
-; 			ADD B
-; 			LD $mem_viewport_y, A
-; 			Move_Bunny.vertical_tile_move.move_viewport_end:
-; 			LD A, $mem_bunny_y
-; 			ADD B
-; 			LD $mem_bunny_y, A
-; 
-; 	Move_Bunny.end:
-; 	LD A, C
-; 	LD $mem_map_loading_flags, A
-; 	RET
