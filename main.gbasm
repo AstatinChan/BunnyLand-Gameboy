@@ -26,6 +26,10 @@ VBLANK_Entrypoint:
 	CALL =Display_Object
 	CALL $OAM_DMA_Transfer_routine
 
+	LD HL, $9800
+	LD A, ($c98b)
+	CALL =Print_8bit
+
 	CALL =Object_Interactions_Check
 
 	CALL =Pad_Button_Check
