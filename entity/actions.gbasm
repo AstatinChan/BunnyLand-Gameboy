@@ -79,89 +79,68 @@ Update_Animation_Steps:
 
 Fox_AI:
 	PUSH HL
-
-	INC HL
-	INC HL
-	INC HL
-
-	LD A, $mem_map_loading_flags
-	BIT 1, A
-	JR Z, =Fox_AI.Update_Position.end
-
-	LD A, (HL)
-	BIT 3, A
-	JR Z, =Fox_AI.Update_Position.end
-
-	RES 3, A
-	DEC A
-
-	LD C, A
-	AND $01
-	SLA A
-	AND $02
-	DEC A
-	LD B, A
-
-	LD A, L
-	AND $f8
-	INC A
-	LD L, A
-
-	BIT 1, C
-	JR NZ, =Fox_AI.vertical_tile_move
-
-	Fox_AI.horizontal_tile_move:
-		LD A, (HL)
-		ADD B
-		LD (HL), A
-		JP =Fox_AI.Update_Position.end
-
-	Fox_AI.vertical_tile_move:
-		INC HL
-		LD A, (HL)
-		ADD B
-		LD (HL), A
-
-	Fox_AI.Update_Position.end:
-
-	LD A, L
-	AND $f8
-	ADD $03
-	LD L, A
-
-	LD A, $mem_moving_animation_step
-	CP $01
-	JR NZ, =Fox_AI.end
-
-	LD A, $mem_bunny_direction
-	BIT 3, A
-	JR Z, =Fox_AI.end
-
-	CALL =RNG_Step
-	AND $08
-	LD B, A
-
-	CALL =RNG_Step
-	AND $03
-	INC A
-	OR B
-	LD B, A
-
 	PUSH BC
-	CALL =Get_Position_After_Move
+	PUSH DE
+	INC HL
+	LD A, (HL+)
+	LD B, A
+	LD A, (HL+)
+	LD C, A
+	LD A, (HL+)
+	LD D, A
+
+	Fox_AI.Start_action_or_movement:
+		LD A, $mem_map_loading_flags
+		BIT 3, A
+		JR Z, =Fox_AI.Start_action_or_movement.end
+		LD A, $mem_moving_animation_step
+		CP $00
+		JR NZ, =Fox_AI.Start_action_or_movement.end
+		CALL =RNG_Step
+		AND $03
+		INC A
+		LD E, A
+		CALL =RNG_Step
+		AND $08
+		OR E
+		LD D, A
+
+		PUSH BC
+		CALL =Get_Position_After_Move
+		LD A, C
+		CALL =Is_Collisionable
+		CALL =Carve_Entity_Collision_Map
+		POP BC
+		CP $00
+		JR Z, =Fox_AI.Start_action_or_movement.not_collision
+		RES 3, D
+		Fox_AI.Start_action_or_movement.not_collision:
+	Fox_AI.Start_action_or_movement.end:
+
+	Fox_AI.End_movement:
+		LD A, $mem_map_loading_flags
+		BIT 3, A
+		JP Z, =Fox_AI.End_movement.end
+		LD A, $mem_moving_animation_step
+		CP $0f
+		JP NZ, =Fox_AI.End_movement.end
+		BIT 3, D
+		JR Z, =Fox_AI.End_movement.end
+		LD A, $01
+		.ADD_A_TO_DIRECTION_BC
+	Fox_AI.End_movement.end:
+
+	LD A, L
+	AND $f8
+	LD L, A
+	INC HL
+	LD A, B
+	LD (HL+), A
 	LD A, C
-	CALL =Is_Collisionable
-	CALL =Carve_Entity_Collision_Map
+	LD (HL+), A
+	LD A, D
+	LD (HL+), A
+	POP DE
 	POP BC
-	CP $00
-	JR Z, =Fox_AI.change_direction
-
-	RES 3, B
-
-	Fox_AI.change_direction:
-	LD (HL), B
-
-	Fox_AI.end:
-
 	POP HL
 	RET
