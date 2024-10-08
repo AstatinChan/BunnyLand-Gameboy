@@ -80,6 +80,10 @@
 ;	direction: u8 (animation = bit 7-4, bit 3 = is_moving, bit 2-0: direction),
 ;	ai_function_pointer: 16
 ;	_padding: u16
+;
+;	# SANTA CHRISTMAS LIST PLEASE #
+;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)
+;
 ; }
 
 .DEFINE mem_oam_buffer $ca00 ; Until $ca9f

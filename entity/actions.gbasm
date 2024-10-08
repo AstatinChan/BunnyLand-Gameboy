@@ -96,15 +96,57 @@ Fox_AI:
 		LD A, $mem_moving_animation_step
 		CP $00
 		JR NZ, =Fox_AI.Start_action_or_movement.end
-		CALL =RNG_Step
-		AND $03
-		INC A
+
+		; Choose direction
+
+		LD A, B
+		ADD $80
 		LD E, A
-		CALL =RNG_Step
-		AND $08
-		OR E
+		LD A, $mem_bunny_x
+		ADD $80
+		CP E
+		JR Z =Fox_AI.Vertical
+		JR NC =Fox_AI.Go_Left
+
+		Fox_AI.Go_Right:
+		LD A, $enum_direction_left
+		JR =Fox_AI.Direction_check_end
+		Fox_AI.Go_Left:
+		LD A, $enum_direction_right
+		JR Z =Fox_AI.Direction_check_end
+
+		Fox_AI.Vertical:
+		LD A, C
+		ADD $80
+		LD E, A
+		LD A, $mem_bunny_y
+		ADD $80
+		CP E
+		PUSH AF
+		PUSH HL
+		LD HL, $9800
+		LD A, $00
+		RL A
+		CALL =Print_8bit
+		POP HL
+		POP AF
+
+		JR Z =Fox_AI.Start_action_or_movement.end
+		JR C =Fox_AI.Go_Up
+		Fox_AI.Go_Down:
+		LD A, $enum_direction_down
+		JR =Fox_AI.Direction_check_end
+		Fox_AI.Go_Up:
+		LD A, $enum_direction_up
+
+		Fox_AI.Direction_check_end:
+
+		OR $08
 		LD D, A
 
+		; Check collision
+
+		Check_Collision:
 		PUSH BC
 		CALL =Get_Position_After_Move
 		LD A, C
@@ -115,6 +157,7 @@ Fox_AI:
 		JR Z, =Fox_AI.Start_action_or_movement.not_collision
 		RES 3, D
 		Fox_AI.Start_action_or_movement.not_collision:
+
 	Fox_AI.Start_action_or_movement.end:
 
 	Fox_AI.End_movement:
