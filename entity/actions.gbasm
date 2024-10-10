@@ -97,7 +97,7 @@ Fox_AI:
 		JP Z, =Fox_AI.Start_action_or_movement.end
 		LD A, $mem_moving_animation_step
 		CP $00
-		JR NZ, =Fox_AI.Start_action_or_movement.end
+		JP NZ, =Fox_AI.Start_action_or_movement.end
 
 		LD A, $mem_bunny_x
 		LD $tmp_var_1, A
@@ -136,10 +136,26 @@ Fox_AI:
 
 		Fox_AI.Go_Right:
 		LD A, $enum_direction_right
-		JR =Fox_AI.Direction_check_end
+		JR =Fox_AI.Check_Horizontal_Collision
 		Fox_AI.Go_Left:
 		LD A, $enum_direction_left
-		JR =Fox_AI.Direction_check_end
+
+		Fox_AI.Check_Horizontal_Collision:
+		LD E, A
+		DEC E
+		LD A, $tmp_var_3
+		XOR E
+		INC E
+		INC A
+		OR $08
+		PUSH BC
+		CALL =Get_Position_After_Move
+		LD A, C
+		CALL =Is_Collisionable
+		POP BC
+		CP $00
+		LD A, E
+		JR Z, =Fox_AI.Direction_check_end
 
 		Fox_AI.Vertical:
 		LD A, C

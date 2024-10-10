@@ -42,6 +42,9 @@ Initialize_Entities:
 	INC HL
 
 	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
 
 Fix_Bunny_screen:
 	LD A, $mem_bunny_x
