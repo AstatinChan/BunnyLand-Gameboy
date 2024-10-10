@@ -72,9 +72,34 @@ Fix_Bunny_screen:
 Initialize_Fox:
 	LD A, $0d
 	LD (HL+), A
-	LD A, $mem_bunny_x
+	LD A, $mem_number_of_rooms
+	CALL =RNG_Bound
+	SLA A
+	SLA A
+	ADD $80
+	LD C, A
+
+	LD B, $c8
+
+	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
+
 	LD (HL+), A
-	LD A, $mem_bunny_y
+
+	INC BC
+
+	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
