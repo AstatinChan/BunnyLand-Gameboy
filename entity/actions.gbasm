@@ -99,6 +99,34 @@ Fox_AI:
 		CP $00
 		JP NZ, =Fox_AI.Start_action_or_movement.end
 
+		; Is Bunny close enough to follow
+		LD A, $mem_bunny_x
+		SUB B
+		.ABS
+		CP $08
+		JR NC, =Fox_AI.Random_walker
+
+		LD A, $mem_bunny_y
+		SUB C
+		.ABS
+		CP $08
+		JR NC, =Fox_AI.Random_walker
+
+		JR =Fox_AI.Follow_bunny
+
+		Fox_AI.Random_walker:
+		CALL =RNG_Step
+		LD E, $00
+		RR A
+		RR E
+		SWAP E
+		AND $03
+		INC A
+		OR E
+		LD D, A
+		JP =Fox_AI.Check_Collision
+
+		Fox_AI.Follow_bunny:
 		LD A, $mem_bunny_x
 		LD $tmp_var_1, A
 
@@ -202,7 +230,7 @@ Fox_AI:
 		LD C, E
 		Fox_AI.skip_invert_axis2:
 
-		Check_Collision:
+		Fox_AI.Check_Collision:
 		LD A, D
 		PUSH BC
 		CALL =Get_Position_After_Move
