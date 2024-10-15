@@ -3,7 +3,7 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 	PUSH AF
 
 	LD A, L
-	AND $f8
+	AND $f0
 	LD L, A
 
 	INC HL

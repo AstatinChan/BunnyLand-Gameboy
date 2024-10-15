@@ -38,9 +38,21 @@ Initialize_Entities:
 	LD (HL+), A
 	LD A, C
 	LD (HL+), A
-	INC HL
-	INC HL
+	LD A, L
+	ADD $0a
+	LD L, A
 
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
+	CALL =Initialize_Fox
 	CALL =Initialize_Fox
 	CALL =Initialize_Fox
 	CALL =Initialize_Fox
@@ -108,7 +120,8 @@ Initialize_Fox:
 	LD (HL+), A
 	LD A, C
 	LD (HL+), A
-	INC HL
-	INC HL
+	LD A, L
+	ADD $0a
+	LD L, A
 
 	RET

@@ -109,4 +109,12 @@ Move_Bunny:
 		LD $mem_viewport_y, A
 	End_movement.end:
 
+	Check_End_Action:
+		LD A, $mem_bunny_direction
+		AND $f0
+		CP $10
+		JR NZ, =Check_End_Action.end
+
+	Check_End_Action.end:
+
 	RET

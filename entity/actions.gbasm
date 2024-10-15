@@ -37,7 +37,7 @@ Entity_Action:
 	PUSH HL
 
 	LD A, L
-	AND $f8
+	AND $f0
 	LD L, A
 
 	; This is confusing but this thing is actually CALL DE
@@ -51,8 +51,8 @@ Entity_Action:
 
 	Entity_Action.skip:
 	LD A, L
-	AND $f8
-	ADD $08
+	AND $f0
+	ADD $10
 	LD L, A
 	RET
 
@@ -259,7 +259,7 @@ Fox_AI:
 	Fox_AI.End_movement.end:
 
 	LD A, L
-	AND $f8
+	AND $f0
 	LD L, A
 	INC HL
 	LD A, B

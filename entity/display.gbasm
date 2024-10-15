@@ -272,7 +272,7 @@ Display_Entity:
 
 	Display_Entity.skip:
 	LD A, L
-	AND $f8
-	ADD $08
+	AND $f0
+	ADD $10
 	LD L, A
 	RET

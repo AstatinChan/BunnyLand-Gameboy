@@ -110,8 +110,8 @@ Reset_Entities_Collision_Map:
 		CALL =Carve_Entity_Collision_Map
 
 		LD A, L
-		AND $f8
-		ADD $08
+		AND $f0
+		ADD $10
 		LD L, A
 		CP $00
 		JR NZ, =Reset_Entities_Collision_Map.loop
