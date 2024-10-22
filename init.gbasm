@@ -2,8 +2,11 @@
 
 .PADTO 0x0040
 VBlank:
-	CALL =VBLANK_Entrypoint
-	RETI
+	JP =VBLANK_Entrypoint
+
+.PADTO 0x0048
+STAT:
+	JP =STAT_Entrypoint
 
 .PADTO 0x0100
 Start:
@@ -57,8 +60,16 @@ Empty_VRAM: ; (Clear screen)
 	LD $reg_obj0_palette, A
 	
 	; Interrupts
-	LD A, $01
+	LD A, $03
 	LD $reg_interrupt_enable, A
+
+	; LYC
+	LD A, $0a
+	LD $reg_lyc, A
+
+	; Set STAT interrupt to LYC = LY
+	LD A, $40
+	LD $reg_lcd_status, A
 
 Copy_OAM_DMA_Transfer_Routine_To_HRAM:
 	LD HL, $OAM_DMA_Transfer_routine

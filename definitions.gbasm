@@ -1,6 +1,7 @@
 .DEFINE reg_joypad ($00)
 .DEFINE reg_lcd_controller ($40)
 .DEFINE reg_lcd_status ($41)
+.DEFINE reg_lyc ($45)
 .DEFINE reg_viewport_y ($42)
 .DEFINE reg_viewport_x ($43)
 .DEFINE reg_bg_palette ($47)
@@ -20,6 +21,7 @@
 .DEFINE mem_bunny_x ($cb01)
 .DEFINE mem_bunny_y ($cb02)
 .DEFINE mem_bunny_direction ($cb03)
+.DEFINE mem_bunny_health ($cb06)
 .DEFINE mem_viewport_x ($c008)
 .DEFINE mem_viewport_y ($c009)
 .DEFINE mem_rng_state_1 ($c00a) ; 2 bytes
@@ -36,6 +38,8 @@
 .DEFINE mem_prepared_block_position_2 ($c00f)
 
 .DEFINE mem_object_load_counter ($c010)
+.DEFINE mem_prepared_viewport_x ($c011)
+.DEFINE mem_prepared_viewport_y ($c012)
 
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)

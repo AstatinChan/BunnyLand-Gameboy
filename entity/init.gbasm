@@ -71,13 +71,13 @@ Fix_Bunny_screen:
 	SWAP A
 	AND $f0
 	OR $08
-	LD $reg_viewport_x, A
+	LD $mem_prepared_viewport_x, A
 
 	LD A, $mem_viewport_y
 	SWAP A
 	AND $f0
 	OR $08
-	LD $reg_viewport_y, A
+	LD $mem_prepared_viewport_y, A
 
 	RET
 

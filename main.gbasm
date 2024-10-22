@@ -22,9 +22,36 @@ New_Dungeon:
 	JP =Wait_for_VRAM.loop
 
 VBLANK_Entrypoint:
+	; Window enable
+	LD A, $reg_lcd_controller
+	OR $60
+	AND $fd
+	LD $reg_lcd_controller, A
+
+	LD A, $00
+	LD $reg_viewport_y, A
+	LD $reg_viewport_x, A
+
+	LD HL, $9c00
+	LD A, $99
+	CALL =Print_8bit
+
 	CALL =Display_Prepared_Block
 	CALL =Display_Object
 	CALL $OAM_DMA_Transfer_routine
+	RETI
+
+STAT_Entrypoint:
+	LD A, $reg_lcd_controller
+	AND $9f
+	OR $02
+	LD $reg_lcd_controller, A
+
+	LD A, $mem_prepared_viewport_x
+	LD $reg_viewport_x, A
+
+	LD A, $mem_prepared_viewport_y
+	LD $reg_viewport_y, A
 
 	CALL =Object_Interactions_Check
 
@@ -34,7 +61,7 @@ VBLANK_Entrypoint:
 
 	CALL =Prepare_Scrolling_Map
 	CALL =Display_Entities
-	RET
+	RETI
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"

@@ -96,7 +96,7 @@ Display_Entity:
 	JR Z, =Display_Entity.Viewport_offset_up
 
 	Display_Entity.Viewport_offset_left:
-		LD A, $reg_viewport_x
+		LD A, $mem_prepared_viewport_x
 		SUB $08
 		AND $0f
 		XOR $ff
@@ -108,7 +108,7 @@ Display_Entity:
 		JR =Display_Entity.Viewport_offset_end
 
 	Display_Entity.Viewport_offset_right:
-		LD A, $reg_viewport_x
+		LD A, $mem_prepared_viewport_x
 		SUB $08
 		AND $0f
 		XOR $ff
@@ -120,7 +120,7 @@ Display_Entity:
 		JR =Display_Entity.Viewport_offset_end
 
 	Display_Entity.Viewport_offset_up:
-		LD A, $reg_viewport_y
+		LD A, $mem_prepared_viewport_y
 		SUB $08
 		AND $0f
 		XOR $ff
@@ -133,7 +133,7 @@ Display_Entity:
 		JR =Display_Entity.Viewport_offset_end
 
 	Display_Entity.Viewport_offset_down:
-		LD A, $reg_viewport_y
+		LD A, $mem_prepared_viewport_y
 		SUB $08
 		AND $0f
 		XOR $ff
