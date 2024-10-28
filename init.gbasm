@@ -64,7 +64,7 @@ Empty_VRAM: ; (Clear screen)
 	LD $reg_interrupt_enable, A
 
 	; LYC
-	LD A, $0a
+	LD A, $09
 	LD $reg_lyc, A
 
 	; Set STAT interrupt to LYC = LY

@@ -32,25 +32,33 @@ VBLANK_Entrypoint:
 	LD $reg_viewport_y, A
 	LD $reg_viewport_x, A
 
-	LD HL, $9c00
-	LD A, $99
+	LD HL, $9c01
+	LD A, $mem_bunny_health
 	CALL =Print_8bit
+
+	LD A, $68
+	LD (HL), A
 
 	CALL =Display_Prepared_Block
 	CALL =Display_Object
 	CALL $OAM_DMA_Transfer_routine
-	RETI
 
-STAT_Entrypoint:
+	LD A, $mem_prepared_viewport_x
+	LD B, A
+	LD A, $mem_prepared_viewport_y
+	LD C, A
 	LD A, $reg_lcd_controller
 	AND $9f
 	OR $02
+	EI
+	HALT
+	RETI
+
+STAT_Entrypoint:
 	LD $reg_lcd_controller, A
-
-	LD A, $mem_prepared_viewport_x
+	LD A, B
 	LD $reg_viewport_x, A
-
-	LD A, $mem_prepared_viewport_y
+	LD A, C
 	LD $reg_viewport_y, A
 
 	CALL =Object_Interactions_Check
@@ -61,7 +69,7 @@ STAT_Entrypoint:
 
 	CALL =Prepare_Scrolling_Map
 	CALL =Display_Entities
-	RETI
+	RET
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"

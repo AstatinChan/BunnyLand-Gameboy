@@ -24,7 +24,7 @@ Load_Tile:
 	CALL =Load_Number_Font
 	LD HL, $9200
 	LD DE, =BG_Tile_Image_Data
-	LD BC, $0480
+	LD BC, $0490
 	CALL =memcpy
 	RET
 

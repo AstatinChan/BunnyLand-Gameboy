@@ -19,6 +19,10 @@ get_sprite_png_parse_output("./sprites/bg/stairs.png")
 print("\n\t; Carrot")
 get_sprite_png_parse_output("./sprites/bg/carrot.png")
 
+print("Small_sprites:")
+print("\n\t; Heart")
+get_sprite_png_parse_output("./sprites/bg/heart.png")
+
 sprite_idx = 0x02
 print("\nOBJ_Tile_Image_Data:")
 print("\n\t; Bunny side")
