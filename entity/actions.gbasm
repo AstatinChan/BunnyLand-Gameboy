@@ -97,6 +97,61 @@ Fox_AI:
 		CP $00
 		JP NZ, =Fox_AI.Start_action_or_movement.end
 
+		; Is bunny right next to fox
+		Fox_AI.Check_next_to_vertical:
+
+		LD A, $mem_bunny_x
+		CP B
+		JR NZ, =Fox_AI.Check_next_to_horizontal
+
+		; up
+		LD E, $14
+		LD A, $mem_bunny_y
+		SUB $01
+		CP C
+		JR Z, =Fox_AI.Start_Attack
+
+		; down
+		LD E, $13
+		ADD $02
+		CP C
+		JR Z, =Fox_AI.Start_Attack
+
+		JR =Fox_AI.Check_next_to.end
+
+		Fox_AI.Check_next_to_horizontal:
+
+		LD A, $mem_bunny_y
+		CP C
+		JR NZ, =Fox_AI.Check_next_to.end
+
+		; left
+		LD E, $12
+		LD A, $mem_bunny_x
+		SUB $01
+		CP B
+		JR Z, =Fox_AI.Start_Attack
+
+		; right
+		LD E, $11
+		ADD $02
+		CP B
+		JR Z, =Fox_AI.Start_Attack
+
+		JR NZ, =Fox_AI.Check_next_to.end
+
+		Fox_AI.Start_Attack:
+		LD D, E
+
+		LD A, $mem_bunny_health
+		DEC A
+		DAA
+		LD $mem_bunny_health, A
+
+		JP =Fox_AI.Check_Collision
+
+		Fox_AI.Check_next_to.end:
+
 		; Is Bunny close enough to follow
 		LD A, $mem_bunny_x
 		SUB B

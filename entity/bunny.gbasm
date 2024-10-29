@@ -1,4 +1,14 @@
 Move_Bunny:
+	LD A, $mem_bunny_health
+	CP $00
+	JR NZ, =Move_Bunny.not_dead
+
+	LD A, $20
+	LD $mem_bunny_direction, A
+	RET
+
+	Move_Bunny.not_dead:
+
 	Start_action_or_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A

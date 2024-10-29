@@ -28,7 +28,7 @@
 .DEFINE mem_bunny_y ($cb02)
 .DEFINE mem_bunny_direction ($cb03)
 ; aaaamddd: a = animation, m = is_moving, d = direction
-.DEFINE mem_bunny_health ($cb16)
+.DEFINE mem_bunny_health ($cb06)
 .DEFINE mem_viewport_x ($c008)
 .DEFINE mem_viewport_y ($c009)
 .DEFINE mem_rng_state_1 ($c00a) ; 2 bytes

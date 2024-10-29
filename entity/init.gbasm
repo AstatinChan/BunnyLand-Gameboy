@@ -38,6 +38,10 @@ Initialize_Entities:
 	LD (HL+), A
 	LD A, C
 	LD (HL+), A
+
+	LD A, $20
+	LD (HL), A
+
 	LD A, L
 	ADD $0a
 	LD L, A

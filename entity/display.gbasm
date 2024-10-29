@@ -211,28 +211,33 @@ Display_Entity:
 	JP =Display_Entity.Down_Direction_sprite
 
 	Display_Entity.Left_Direction_sprite:
-		LD D, $00
+		CALL =Flags_From_Animation
+		LD D, A
 		JP =Display_Entity.Write_OBJ
 
 	Display_Entity.Right_Direction_sprite:
 		LD A, $02
 		ADD E
 		LD E, A
-		LD D, $20
+		CALL =Flags_From_Animation
+		OR $20
+		LD D, A
 		JP =Display_Entity.Write_OBJ
 
 	Display_Entity.Up_Direction_sprite:
 		LD A, $04
 		ADD E
 		LD E, A
-		LD D, $00
+		CALL =Flags_From_Animation
+		LD D, A
 		JP =Display_Entity.Write_OBJ
 
 	Display_Entity.Down_Direction_sprite:
 		LD A, $08
 		ADD E
 		LD E, A
-		LD D, $00
+		CALL =Flags_From_Animation
+		LD D, A
 		JP =Display_Entity.Write_OBJ
 
 	Display_Entity.Write_OBJ:
@@ -275,4 +280,13 @@ Display_Entity:
 	AND $f0
 	ADD $10
 	LD L, A
+	RET
+
+Flags_From_Animation:
+	LD A, D
+	AND $f0
+	CP $20
+	LD A, $00
+	RET NZ
+	LD A, $40
 	RET
