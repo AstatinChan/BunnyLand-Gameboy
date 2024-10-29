@@ -77,8 +77,6 @@ Update_Animation_Steps:
 	Update_Animation_Steps.end:
 	RET
 
-
-
 Fox_AI:
 	PUSH HL
 	PUSH BC
@@ -257,6 +255,31 @@ Fox_AI:
 		LD A, $01
 		.ADD_A_TO_DIRECTION_BC
 	Fox_AI.End_movement.end:
+
+	Fox_AI.Health_check:
+		LD A, $mem_map_loading_flags
+		BIT 3, A
+		JP Z, =Fox_AI.Health_check.end
+
+		LD A, $mem_moving_animation_step
+		CP $03
+		JR NZ, =Fox_AI.Health_check.end
+
+		LD A, L
+		AND $f0
+		ADD $06
+		LD L, A
+
+		LD A, (HL)
+		CP $00
+		JR NZ, =Fox_AI.Health_check.end
+
+		LD A, L
+		AND $f0
+		LD L, A
+
+		LD (HL), $00
+	Fox_AI.Health_check.end:
 
 	LD A, L
 	AND $f0

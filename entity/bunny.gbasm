@@ -109,6 +109,64 @@ Move_Bunny:
 		LD $mem_viewport_y, A
 	End_movement.end:
 
+	Attack:
+		LD A, $mem_map_loading_flags
+		BIT 3, A
+		JP Z, =Attack.end
+		LD A, $mem_moving_animation_step
+		CP $02
+		JP NZ, =Attack.end
+
+		LD A, $mem_bunny_direction
+		AND $f8
+		CP $10
+		JR NZ, =Attack.end
+
+		LD A, $mem_bunny_x
+		LD B, A
+		LD A, $mem_bunny_y
+		LD C, A
+		LD A, $mem_bunny_direction
+		OR $08
+		AND $0f
+		LD D, A
+		LD A, $01
+		.ADD_A_TO_DIRECTION_BC
+
+		LD HL, $mem_entities_list
+		Attack.entities_loop:
+			LD A, L
+			AND $f0
+			ADD $10
+			LD L, A
+			CP $00
+			JR Z, =Attack.end
+
+			LD A, (HL+)
+			CP $00
+			JR Z, =Attack.entities_loop.next
+
+			LD A, (HL+)
+			CP B
+			JR NZ, =Attack.entities_loop.next
+
+			LD A, (HL+)
+			CP C
+			JR NZ, =Attack.entities_loop.next
+
+			INC HL
+			INC HL
+			INC HL
+
+			LD A, (HL)
+			DEC A
+			DAA
+			LD (HL), A
+
+			Attack.entities_loop.next:
+			JR =Attack.entities_loop
+	Attack.end:
+
 	Check_End_Action:
 		LD A, $mem_bunny_direction
 		AND $f0
