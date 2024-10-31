@@ -10,6 +10,10 @@ def get_sprite_png_parse_output(png, tallmode=False, sprite_1bpp_mode=False):
             print("\t{} ; 0x{:02x}".format(r, sprite_idx))
             sprite_idx += 1
 
+sprite_idx = 0x10
+print("GUI_Border_Data:")
+get_sprite_png_parse_output("./sprites/gui/borders.png")
+
 sprite_idx = 0x20
 print("BG_Tile_Image_Data:")
 print("\n\t; Trees")
@@ -25,7 +29,7 @@ get_sprite_png_parse_output("./sprites/bg/heart.png")
 
 sprite_idx = 0x80
 print("\nFont_Data:")
-get_sprite_png_parse_output("./sprites/font.png", sprite_1bpp_mode=True)
+get_sprite_png_parse_output("./sprites/font.png")
 
 sprite_idx = 0x02
 print("\nOBJ_Tile_Image_Data:")

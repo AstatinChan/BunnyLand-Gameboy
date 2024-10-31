@@ -37,16 +37,17 @@ VBLANK_Entrypoint:
 	CALL =Print_8bit
 
 	LD A, $68
-	LD (HL+), A
-
-	INC HL
-
-	LD BC, =Astatin_Text
-	CALL =Print_str
+	LD (HL), A
 
 	CALL =Display_Prepared_Block
 	CALL =Display_Object
 	CALL $OAM_DMA_Transfer_routine
+
+	; BOLD FONT
+	LD A, $f4
+	; SLIM FONT
+	; LD A, $c4
+	LD $reg_bg_palette, A
 
 	LD A, $mem_prepared_viewport_x
 	LD B, A
@@ -65,6 +66,8 @@ STAT_Entrypoint:
 	LD $reg_viewport_x, A
 	LD A, C
 	LD $reg_viewport_y, A
+	LD A, $e4
+	LD $reg_bg_palette, A
 
 	CALL =Object_Interactions_Check
 

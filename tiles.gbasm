@@ -3,27 +3,18 @@ Load_Tile:
 	LD DE, =OBJ_Tile_Image_Data
 	LD BC, $0280
 	CALL =memcpy
-	CALL =Load_Number_Font
+	LD HL, $8800
+	LD DE, =Font_Data
+	LD BC, $2b0
+	CALL =memcpy
+
+	LD HL, $9100
+	LD DE, =GUI_Border_Data
+	LD BC, $0090
+	CALL =memcpy
+
 	LD HL, $9200
 	LD DE, =BG_Tile_Image_Data
 	LD BC, $0490
 	CALL =memcpy
-	RET
-
-Load_Number_Font: ; Load number font into the tilemap at tiles 0x10-0x1f
-	LD HL, $8800
-	LD DE, =Font_Data
-	LD BC, $0158
-	
-	Load_Number_Font.loop:
-		LD A, (DE)
-		LD (HL+), A
-		LD (HL+), A
-		INC DE
-		DEC BC
-		XOR A
-		CP B
-		JR NZ, =Load_Number_Font.loop
-		CP C
-		JR NZ, =Load_Number_Font.loop
 	RET

@@ -4,6 +4,8 @@
 .DEFINE reg_lyc ($45)
 .DEFINE reg_viewport_y ($42)
 .DEFINE reg_viewport_x ($43)
+.DEFINE reg_window_pos_y ($4a)
+.DEFINE reg_window_pos_x ($4b)
 .DEFINE reg_bg_palette ($47)
 .DEFINE reg_obj0_palette ($48)
 .DEFINE reg_interrupt_enable ($ff)
