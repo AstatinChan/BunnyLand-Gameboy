@@ -245,14 +245,6 @@ Fox_AI:
 		LD A, $tmp_var_2
 		ADD $80
 		CP E
-		PUSH AF
-		PUSH HL
-		LD HL, $9800
-		LD A, $00
-		RL A
-		CALL =Print_8bit
-		POP HL
-		POP AF
 
 		JR Z =Fox_AI.No_movement
 		JR C =Fox_AI.Go_Up

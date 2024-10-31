@@ -21,6 +21,9 @@ New_Dungeon:
 	HALT
 	JP =Wait_for_VRAM.loop
 
+Text_Astatin:
+	.DB 0x8a, 0x9c, 0x9d, 0x8a, 0x9d, 0x92, 0x97, 0xff
+
 VBLANK_Entrypoint:
 	; Window enable
 	LD A, $reg_lcd_controller
@@ -37,7 +40,12 @@ VBLANK_Entrypoint:
 	CALL =Print_8bit
 
 	LD A, $68
-	LD (HL), A
+	LD (HL+), A
+
+	INC HL
+
+	LD BC, =Text_Astatin
+	CALL =Print_str
 
 	CALL =Display_Prepared_Block
 	CALL =Display_Object

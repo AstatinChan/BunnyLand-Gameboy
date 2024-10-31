@@ -2,10 +2,9 @@ from PIL import Image
 import numpy as np
 import sys
 
-sprite_8x16 = False
+sprite_8x16 = "--8x16" in sys.argv
 
-if len(sys.argv) >= 3 and sys.argv[2] == "--8x16":
-    sprite_8x16 = True
+sprite_1bpp = "--1bpp" in sys.argv
 
 file = Image.open(sys.argv[1]).convert("RGB")
 
@@ -18,13 +17,17 @@ def getpx(sprite_nb, x, y):
     sprite_tile_y = 1 if sprite_nb & 0b10 else 0
     sprite_tile_x = 1 if sprite_nb & 0b01 else 0
 
-    if sprite_8x16:
+    if sprite_8x16 or file.width < 16:
         sprite_tile_x ^= sprite_tile_y
         sprite_tile_y ^= sprite_tile_x
         sprite_tile_x ^= sprite_tile_y
 
     sprite_line = sprite_double_line * 2 + sprite_tile_y
     sprite_column = sprite_double_column * 2 + sprite_tile_x
+
+    if file.width < 16:
+        sprite_line = sprite_column * 2 + sprite_line
+        sprite_column = 0
 
     return [int(x) for x in px_array[int(sprite_line * 8 + y)][int(sprite_column * 8 + x)]]
 
@@ -52,17 +55,23 @@ for nb in range(0, sprite_nb):
             
             if abs(db) < min(abs(dw), abs(dlg), abs(ddg)):
                 print("#", end = '')
-            if abs(ddg) < min(abs(dw), abs(dlg), abs(db)):
+            elif abs(ddg) < min(abs(dw), abs(dlg), abs(db)):
                 print(";", end = '')
-            if abs(dlg) < min(abs(dw), abs(ddg), abs(db)):
+            elif abs(dlg) < min(abs(dw), abs(ddg), abs(db)):
                 print(".", end = '')
             else:
                 print(" ", end = '')
         print("\n", end = '')
     print("\n")
     for i in range(0, 8):
-        if i == 0:
-            print(".DB $%02x, $%02x" % (result1[i], result2[i]), end='')
+        if sprite_1bpp:
+            if i == 0:
+                print(".DB $%02x" % (result1[i]), end='')
+            else:
+                print(", $%02x" % (result1[i]), end='')
         else:
-            print(", $%02x, $%02x" % (result1[i], result2[i]), end='')
+            if i == 0:
+                print(".DB $%02x, $%02x" % (result1[i], result2[i]), end='')
+            else:
+                print(", $%02x, $%02x" % (result1[i], result2[i]), end='')
     print("\n")

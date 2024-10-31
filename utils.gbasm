@@ -38,14 +38,32 @@ Print_8bit: ; Number in A, Memory Tilemap position in HL
 	LD C, A
 	SWAP A 				   ; We start by the highest nibble
 	AND $0f
-	OR $10
+	OR $80
 	LD (HL+), A
 	
 	LD A, C
 	AND $0f 			   ; Then the lowest
-	OR $10
+	OR $80
 	LD (HL+), A
 
+	POP BC
+	POP AF
+	RET
+
+Print_str: ; Memory Tilemap position in HL, Text address in BC, FF ended
+	PUSH AF
+	PUSH BC
+
+	Print_str.loop:
+		LD A, (BC)
+		CP $ff
+		JR Z, =Print_str.end
+
+		LD (HL+), A
+		INC BC
+		JR =Print_str.loop
+
+	Print_str.end:
 	POP BC
 	POP AF
 	RET
