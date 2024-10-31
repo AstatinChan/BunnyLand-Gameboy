@@ -5,7 +5,10 @@ all: run
 tileset.gbasm: ./scripts/generate-tiledata.py $(wildcard ./sprites/**/*)
 	python ./scripts/generate-tiledata.py > tileset.gbasm
 
-build/main.rom: main.gbasm tileset.gbasm
+dialogues.gbasm: ./dialogues.gbtxt ./scripts/generate_from_gbtxt.py
+	python ./scripts/generate_from_gbtxt.py dialogues.gbtxt > dialogues.gbasm
+
+build/main.rom: main.gbasm tileset.gbasm dialogues.gbasm
 	mkdir -p build
 	gbasm $< $@
 

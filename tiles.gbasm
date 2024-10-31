@@ -10,7 +10,6 @@ Load_Tile:
 	CALL =memcpy
 	RET
 
-
 Load_Number_Font: ; Load number font into the tilemap at tiles 0x10-0x1f
 	LD HL, $8800
 	LD DE, =Font_Data
