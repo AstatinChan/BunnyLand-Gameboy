@@ -1,6 +1,74 @@
 .INCLUDE "definitions.gbasm"
 .INCLUDE "init.gbasm"
 
+.MACRODEF HBLANK_WAIT
+	LD A, $reg_lcd_controller
+	BIT 7, A
+	JR Z, =$HBlank_Wait.End
+	$HBlank_Wait.loop:
+	LD A, $reg_lcd_status
+	AND $03
+	CP $00
+	JR NZ, =$HBlank_Wait.loop
+	$HBlank_Wait.End:
+.END
+
+.MACRODEF ENABLE_WINDOW
+	.HBLANK_WAIT
+	XOR A
+	LD $reg_viewport_x, A
+	LD $reg_viewport_y, A
+
+	LD A, $palette_bold_font
+	LD $reg_bg_palette, A
+
+	LD A, $lcdc_window_enabled
+	LD $reg_lcd_controller, A
+.END
+
+.MACRODEF DISABLE_WINDOW
+	PUSH BC
+	LD A, $mem_prepared_viewport_x
+	LD B, A
+	LD A, $mem_prepared_viewport_y
+	LD C, A
+	.HBLANK_WAIT
+	LD A, B
+	LD $reg_viewport_x, A
+	LD A, C
+	LD $reg_viewport_y, A
+	LD A, $palette_normal
+	LD $reg_bg_palette, A
+	LD A, $lcdc_window_disabled
+	LD $reg_lcd_controller, A
+	POP BC
+.END
+
+.MACRODEF ENABLE_VBLANK_INTERRUPTS
+	LD A, $03
+	LD $reg_interrupt_enable, A
+.END
+
+.MACRODEF RESET_STAT_INTERRUPT
+	LD A, $reg_interrupt_flags
+	RES 1, A
+	LD $reg_interrupt_flags, A
+.END
+
+.MACRODEF ENABLE_LYC_INTERRUPT
+	.RESET_STAT_INTERRUPT
+	LD A, $02
+	LD $reg_interrupt_enable, A
+	LD A, $40
+	LD $reg_lcd_status, A
+.END
+
+.MACRODEF DISABLE_LYC_INTERRUPT
+	LD A, $reg_interrupt_enable
+	RES 1, A
+	LD $reg_interrupt_enable, A
+.END
+
 Entrypoint:
 	CALL =Initialize_RNG
 New_Dungeon:
@@ -12,27 +80,15 @@ New_Dungeon:
 	CALL =Load_Map
 	CALL =Load_Objects
 
-	; LCDC
-	LD A, $87
-	LD $reg_lcd_controller, A
-
+	.ENABLE_VBLANK_INTERRUPTS
 	EI
 	Wait_for_VRAM.loop:
 	HALT
+	EI
 	JP =Wait_for_VRAM.loop
 
 VBLANK_Entrypoint:
-	; Window enable
-	LD A, $reg_lcd_controller
-	OR $60
-	AND $fd
-	LD $reg_lcd_controller, A
-
-	LD A, $00
-	LD $reg_viewport_y, A
-	LD $reg_viewport_x, A
-
-	LD HL, $9c01
+	LD HL, $9c00
 	LD A, $mem_bunny_health
 	CALL =Print_8bit
 
@@ -43,31 +99,12 @@ VBLANK_Entrypoint:
 	CALL =Display_Object
 	CALL $OAM_DMA_Transfer_routine
 
-	; BOLD FONT
-	LD A, $f4
-	; SLIM FONT
-	; LD A, $c4
-	LD $reg_bg_palette, A
-
-	LD A, $mem_prepared_viewport_x
-	LD B, A
-	LD A, $mem_prepared_viewport_y
-	LD C, A
-	LD A, $reg_lcd_controller
-	AND $9f
-	OR $02
+	.ENABLE_WINDOW
+	; LYC
+	LD A, $09
+	LD $reg_lyc, A
+	.ENABLE_LYC_INTERRUPT
 	EI
-	HALT
-	RETI
-
-STAT_Entrypoint:
-	LD $reg_lcd_controller, A
-	LD A, B
-	LD $reg_viewport_x, A
-	LD A, C
-	LD $reg_viewport_y, A
-	LD A, $e4
-	LD $reg_bg_palette, A
 
 	CALL =Object_Interactions_Check
 
@@ -77,7 +114,30 @@ STAT_Entrypoint:
 
 	CALL =Prepare_Scrolling_Map
 	CALL =Display_Entities
+	.ENABLE_VBLANK_INTERRUPTS
 	RET
+
+STAT_Entrypoint:
+	PUSH AF
+	LD A, $reg_lyc
+	CP $09
+	JR Z, =STAT_Entrypoint.End_Top_Bar
+	LD A, $mem_display_flag
+	BIT 0, A
+	JR Z, =STAT_Entrypoint.skip_dialogue
+	.ENABLE_WINDOW
+	STAT_Entrypoint.skip_dialogue:
+	.DISABLE_LYC_INTERRUPT
+	POP AF
+	RET
+
+	STAT_Entrypoint.End_Top_Bar:
+	.DISABLE_WINDOW
+	LD A, $67
+	LD $reg_lyc, A
+	.RESET_STAT_INTERRUPT
+	POP AF
+	RETI
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"

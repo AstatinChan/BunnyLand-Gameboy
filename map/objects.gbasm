@@ -169,6 +169,9 @@ Load_Objects:
 	RET
 
 Object_Interactions_Check:
+	LD A, $mem_moving_animation_step
+	CP $0d
+	JR NZ, =Object_Interactions_Check.End
 	LD A, $mem_map_loading_flags
 	BIT 1, A
 	JR Z, =Object_Interactions_Check.End

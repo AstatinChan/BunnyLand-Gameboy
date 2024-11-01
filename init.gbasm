@@ -59,31 +59,21 @@ Empty_VRAM: ; (Clear screen)
 	LD A, $d3 ; $e4
 	LD $reg_obj0_palette, A
 	
-	; Interrupts
-	LD A, $03
-	LD $reg_interrupt_enable, A
-
-	; LYC
-	LD A, $09
-	LD $reg_lyc, A
-
-	; Set STAT interrupt to LYC = LY
-	LD A, $40
-	LD $reg_lcd_status, A
-
-	; Window position
-	LD A, $ff
-	LD $reg_window_pos_x, A
-
 Initialize_Window_GUI:
 	LD HL, $9c20
-	Initialize_Window_GUI.loop:
+	Initialize_Window_GUI.top_bar_loop:
 		LD A, $10
 		LD (HL+), A
 
 		LD A, L
 		CP $40
-		JR NZ, =Initialize_Window_GUI.loop
+	LD $reg_lcd_status, A
+		JR NZ, =Initialize_Window_GUI.top_bar_loop
+
+	LD HL, $9da0
+	LD BC, $00a0
+	LD DE, =Dialogue_Box_Tilemap_data
+	CALL =memcpy
 
 Copy_OAM_DMA_Transfer_Routine_To_HRAM:
 	LD HL, $OAM_DMA_Transfer_routine
