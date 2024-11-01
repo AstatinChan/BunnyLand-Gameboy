@@ -13,8 +13,7 @@
 	$HBlank_Wait.End:
 .END
 
-.MACRODEF ENABLE_WINDOW
-	.HBLANK_WAIT
+.MACRODEF ENABLE_WINDOW_NO_WAIT_HBLANK
 	XOR A
 	LD $reg_viewport_x, A
 	LD $reg_viewport_y, A
@@ -24,6 +23,11 @@
 
 	LD A, $lcdc_window_enabled
 	LD $reg_lcd_controller, A
+.END
+
+.MACRODEF ENABLE_WINDOW
+	.HBLANK_WAIT
+	.ENABLE_WINDOW_NO_WAIT_HBLANK
 .END
 
 .MACRODEF DISABLE_WINDOW
@@ -80,6 +84,9 @@ New_Dungeon:
 	CALL =Load_Map
 	CALL =Load_Objects
 
+	LD A, $00
+	LD $mem_display_flag, A
+	.ENABLE_WINDOW_NO_WAIT_HBLANK
 	.ENABLE_VBLANK_INTERRUPTS
 	EI
 	Wait_for_VRAM.loop:
@@ -88,6 +95,7 @@ New_Dungeon:
 	JP =Wait_for_VRAM.loop
 
 VBLANK_Entrypoint:
+	.ENABLE_WINDOW_NO_WAIT_HBLANK
 	LD HL, $9c00
 	LD A, $mem_bunny_health
 	CALL =Print_8bit
@@ -99,11 +107,11 @@ VBLANK_Entrypoint:
 	CALL =Display_Object
 	CALL $OAM_DMA_Transfer_routine
 
-	.ENABLE_WINDOW
 	; LYC
 	LD A, $09
 	LD $reg_lyc, A
 	.ENABLE_LYC_INTERRUPT
+	.RESET_STAT_INTERRUPT
 	EI
 
 	CALL =Object_Interactions_Check
