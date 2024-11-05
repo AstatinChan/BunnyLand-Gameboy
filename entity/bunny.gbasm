@@ -119,18 +119,18 @@ Move_Bunny:
 		LD $mem_viewport_y, A
 	End_movement.end:
 
-	Attack:
+	Interaction:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JP Z, =Attack.end
+		JP Z, =Interaction.end
 		LD A, $mem_moving_animation_step
 		CP $02
-		JP NZ, =Attack.end
+		JP NZ, =Interaction.end
 
 		LD A, $mem_bunny_direction
 		AND $f8
 		CP $10
-		JR NZ, =Attack.end
+		JR NZ, =Interaction.end
 
 		LD A, $mem_bunny_x
 		LD B, A
@@ -144,38 +144,59 @@ Move_Bunny:
 		.ADD_A_TO_DIRECTION_BC
 
 		LD HL, $mem_entities_list
-		Attack.entities_loop:
+		Interaction.entities_loop:
 			LD A, L
 			AND $f0
 			ADD $10
 			LD L, A
 			CP $00
-			JR Z, =Attack.end
+			JR Z, =Interaction.end
 
 			LD A, (HL+)
 			CP $00
-			JR Z, =Attack.entities_loop.next
+			JR Z, =Interaction.entities_loop.next
 
 			LD A, (HL+)
 			CP B
-			JR NZ, =Attack.entities_loop.next
+			JR NZ, =Interaction.entities_loop.next
 
 			LD A, (HL+)
 			CP C
-			JR NZ, =Attack.entities_loop.next
+			JR NZ, =Interaction.entities_loop.next
 
 			INC HL
 			INC HL
-			INC HL
+			PUSH HL
+			PUSH BC
 
-			LD A, (HL)
-			DEC A
-			DAA
-			LD (HL), A
+			LD E, (HL)
+			LD D, $00
 
-			Attack.entities_loop.next:
-			JR =Attack.entities_loop
-	Attack.end:
+			SLA E
+			RL D
+			SLA E
+			RL D
+
+			LD BC, =Interaction_Jump_table
+			LD A, E
+			ADD C
+			LD E, A
+			LD A, D
+			ADC B
+			LD D, A
+
+			LD BC, =Interaction.interaction_end
+			PUSH BC
+			PUSH DE
+			RET
+
+			Interaction.interaction_end:
+			POP BC
+			POP HL
+
+			Interaction.entities_loop.next:
+			JR =Interaction.entities_loop
+	Interaction.end:
 
 	Check_End_Action:
 		LD A, $mem_bunny_direction

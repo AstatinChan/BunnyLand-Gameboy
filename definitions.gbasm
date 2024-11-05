@@ -96,7 +96,8 @@
 ;	x: u8,
 ;	y: u8,
 ;	direction: u8 (animation = bit 7-4, bit 3 = is_moving, bit 2-0: direction),
-;	ai_function_pointer: u16
+;	turn_function_jump_table_index: u8
+;	action_function_jump_table_index: u8
 ;	health: u8 (DAA decimal !!)
 ;	_padding: u72
 ;

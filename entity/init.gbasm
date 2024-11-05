@@ -33,10 +33,13 @@ Initialize_Entities:
 	ADD D
 	LD (HL+), A
 	INC HL
-	LD BC, =Move_Bunny
-	LD A, B
+
+	; Turn
+	LD A, $01
 	LD (HL+), A
-	LD A, C
+
+	; Action
+	LD A, $00
 	LD (HL+), A
 
 	LD A, $20
@@ -113,10 +116,13 @@ Initialize_Fox:
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
-	LD BC, =Fox_AI
-	LD A, B
+
+	; Turn
+	LD A, $02
 	LD (HL+), A
-	LD A, C
+
+	; Action
+	LD A, $01
 	LD (HL+), A
 
 	LD A, $04

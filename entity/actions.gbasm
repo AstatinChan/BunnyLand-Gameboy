@@ -29,16 +29,27 @@ Entity_Action:
 	INC HL
 	INC HL
 
-	LD A, (HL+)
-	LD D, A
-	LD A, (HL+)
-	LD E, A
+	LD E, (HL)
+	LD D, $00
+
+	SLA E
+	RL D
+	SLA E
+	RL D
 
 	PUSH HL
 
 	LD A, L
 	AND $f0
 	LD L, A
+
+	LD BC, =Turn_Jump_table
+	LD A, E
+	ADD C
+	LD E, A
+	LD A, D
+	ADC B
+	LD D, A
 
 	; This is confusing but this thing is actually CALL DE
 	LD BC, =Entity_Action.interaction_end
@@ -77,7 +88,65 @@ Update_Animation_Steps:
 	Update_Animation_Steps.end:
 	RET
 
-Fox_AI:
+Turn_Jump_table:
+	; 00
+	RET
+	NOP
+	NOP
+	NOP
+
+	; 01
+	JP =Move_Bunny
+	NOP
+
+	; 02
+	JP =Fox_Turn
+	NOP
+
+Interaction_Jump_table:
+	; 00
+	RET
+	NOP
+	NOP
+	NOP
+
+	; 01
+	JP =Fox_Interaction
+	NOP
+
+	; 02
+	JP =Open_Dialogue
+	NOP
+
+Fox_Interaction:
+	LD A, L
+	AND $f0
+	ADD $06
+	LD L, A
+	LD A, (HL)
+	DEC A
+	DAA
+	LD (HL), A
+	RET
+
+Open_Dialogue:
+	LD HL, $9dc1
+	LD BC, =Bunny_Prefix
+	CALL =Print_str
+
+	LD HL, $9e01
+	LD BC, =Text_1
+	CALL =Print_str
+
+	LD A, $03
+	LD $mem_display_flag, A
+
+	LD A, $mem_bunny_direction
+	AND $0f
+	LD $mem_bunny_direction, A
+	RET
+
+Fox_Turn:
 	PUSH HL
 	PUSH BC
 	PUSH DE
@@ -89,85 +158,89 @@ Fox_AI:
 	LD A, (HL+)
 	LD D, A
 
-	Fox_AI.Start_action_or_movement:
+	Fox_Turn.Start_action_or_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JP Z, =Fox_AI.Start_action_or_movement.end
+		JP Z, =Fox_Turn.Start_action_or_movement.end
 		LD A, $mem_moving_animation_step
 		CP $00
-		JP NZ, =Fox_AI.Start_action_or_movement.end
+		JP NZ, =Fox_Turn.Start_action_or_movement.end
 
 		; Is bunny right next to fox
-		Fox_AI.Check_next_to_vertical:
+		Fox_Turn.Check_next_to_vertical:
 
 		LD A, $mem_bunny_x
 		CP B
-		JR NZ, =Fox_AI.Check_next_to_horizontal
+		JR NZ, =Fox_Turn.Check_next_to_horizontal
 
 		; up
 		LD E, $14
 		LD A, $mem_bunny_y
 		SUB $01
 		CP C
-		JR Z, =Fox_AI.Start_Attack
+		JR Z, =Fox_Turn.Start_Attack
 
 		; down
 		LD E, $13
 		ADD $02
 		CP C
-		JR Z, =Fox_AI.Start_Attack
+		JR Z, =Fox_Turn.Start_Attack
 
-		JR =Fox_AI.Check_next_to.end
+		JR =Fox_Turn.Check_next_to.end
 
-		Fox_AI.Check_next_to_horizontal:
+		Fox_Turn.Check_next_to_horizontal:
 
 		LD A, $mem_bunny_y
 		CP C
-		JR NZ, =Fox_AI.Check_next_to.end
+		JR NZ, =Fox_Turn.Check_next_to.end
 
 		; left
 		LD E, $12
 		LD A, $mem_bunny_x
 		SUB $01
 		CP B
-		JR Z, =Fox_AI.Start_Attack
+		JR Z, =Fox_Turn.Start_Attack
 
 		; right
 		LD E, $11
 		ADD $02
 		CP B
-		JR Z, =Fox_AI.Start_Attack
+		JR Z, =Fox_Turn.Start_Attack
 
-		JR NZ, =Fox_AI.Check_next_to.end
+		JR NZ, =Fox_Turn.Check_next_to.end
 
-		Fox_AI.Start_Attack:
+		Fox_Turn.Start_Attack:
 		LD D, E
 
 		LD A, $mem_bunny_health
 		DEC A
 		DAA
+		JR NC, =Fox_Turn.Skip_health_underflow_fix
+
+		LD A, $00
+		Fox_Turn.Skip_health_underflow_fix:
 		LD $mem_bunny_health, A
 
-		JP =Fox_AI.Check_Collision
+		JP =Fox_Turn.Check_Collision
 
-		Fox_AI.Check_next_to.end:
+		Fox_Turn.Check_next_to.end:
 
 		; Is Bunny close enough to follow
 		LD A, $mem_bunny_x
 		SUB B
 		.ABS
 		CP $08
-		JR NC, =Fox_AI.Random_walker
+		JR NC, =Fox_Turn.Random_walker
 
 		LD A, $mem_bunny_y
 		SUB C
 		.ABS
 		CP $08
-		JR NC, =Fox_AI.Random_walker
+		JR NC, =Fox_Turn.Random_walker
 
-		JR =Fox_AI.Follow_bunny
+		JR =Fox_Turn.Follow_bunny
 
-		Fox_AI.Random_walker:
+		Fox_Turn.Random_walker:
 		CALL =RNG_Step
 		LD E, $00
 		RR A
@@ -177,9 +250,9 @@ Fox_AI:
 		INC A
 		OR E
 		LD D, A
-		JP =Fox_AI.Check_Collision
+		JP =Fox_Turn.Check_Collision
 
-		Fox_AI.Follow_bunny:
+		Fox_Turn.Follow_bunny:
 		LD A, $mem_bunny_x
 		LD $tmp_var_1, A
 
@@ -191,7 +264,7 @@ Fox_AI:
 		LD $tmp_var_3, A
 
 		CP $00
-		JR Z, =Fox_AI.skip_invert_axis
+		JR Z, =Fox_Turn.skip_invert_axis
 
 		LD A, $mem_bunny_y
 		LD $tmp_var_1, A
@@ -203,7 +276,7 @@ Fox_AI:
 		LD B, C
 		LD C, E
 
-		Fox_AI.skip_invert_axis:
+		Fox_Turn.skip_invert_axis:
 
 		; Choose direction
 		LD A, B
@@ -212,16 +285,16 @@ Fox_AI:
 		LD A, $tmp_var_1
 		ADD $80
 		CP E
-		JR Z =Fox_AI.Vertical
-		JR C =Fox_AI.Go_Left
+		JR Z =Fox_Turn.Vertical
+		JR C =Fox_Turn.Go_Left
 
-		Fox_AI.Go_Right:
+		Fox_Turn.Go_Right:
 		LD A, $enum_direction_right
-		JR =Fox_AI.Check_Horizontal_Collision
-		Fox_AI.Go_Left:
+		JR =Fox_Turn.Check_Horizontal_Collision
+		Fox_Turn.Go_Left:
 		LD A, $enum_direction_left
 
-		Fox_AI.Check_Horizontal_Collision:
+		Fox_Turn.Check_Horizontal_Collision:
 		LD E, A
 		DEC E
 		LD A, $tmp_var_3
@@ -236,9 +309,9 @@ Fox_AI:
 		POP BC
 		CP $00
 		LD A, E
-		JR Z, =Fox_AI.Direction_check_end
+		JR Z, =Fox_Turn.Direction_check_end
 
-		Fox_AI.Vertical:
+		Fox_Turn.Vertical:
 		LD A, C
 		ADD $80
 		LD E, A
@@ -246,15 +319,15 @@ Fox_AI:
 		ADD $80
 		CP E
 
-		JR Z =Fox_AI.No_movement
-		JR C =Fox_AI.Go_Up
-		Fox_AI.Go_Down:
+		JR Z =Fox_Turn.No_movement
+		JR C =Fox_Turn.Go_Up
+		Fox_Turn.Go_Down:
 		LD A, $enum_direction_down
-		JR =Fox_AI.Direction_check_end
-		Fox_AI.Go_Up:
+		JR =Fox_Turn.Direction_check_end
+		Fox_Turn.Go_Up:
 		LD A, $enum_direction_up
 
-		Fox_AI.Direction_check_end:
+		Fox_Turn.Direction_check_end:
 
 		DEC A
 		LD E, A
@@ -266,16 +339,16 @@ Fox_AI:
 
 		; Check collision
 
-		Fox_AI.No_movement:
+		Fox_Turn.No_movement:
 		LD A, $tmp_var_3
 		CP $00
-		JR Z, =Fox_AI.skip_invert_axis2
+		JR Z, =Fox_Turn.skip_invert_axis2
 		LD E, B
 		LD B, C
 		LD C, E
-		Fox_AI.skip_invert_axis2:
+		Fox_Turn.skip_invert_axis2:
 
-		Fox_AI.Check_Collision:
+		Fox_Turn.Check_Collision:
 		LD A, D
 		PUSH BC
 		CALL =Get_Position_After_Move
@@ -284,33 +357,33 @@ Fox_AI:
 		CALL =Carve_Entity_Collision_Map
 		POP BC
 		CP $00
-		JR Z, =Fox_AI.Start_action_or_movement.not_collision
+		JR Z, =Fox_Turn.Start_action_or_movement.not_collision
 		RES 3, D
-		Fox_AI.Start_action_or_movement.not_collision:
+		Fox_Turn.Start_action_or_movement.not_collision:
 
-	Fox_AI.Start_action_or_movement.end:
+	Fox_Turn.Start_action_or_movement.end:
 
-	Fox_AI.End_movement:
+	Fox_Turn.End_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JP Z, =Fox_AI.End_movement.end
+		JP Z, =Fox_Turn.End_movement.end
 		LD A, $mem_moving_animation_step
 		CP $0f
-		JP NZ, =Fox_AI.End_movement.end
+		JP NZ, =Fox_Turn.End_movement.end
 		BIT 3, D
-		JR Z, =Fox_AI.End_movement.end
+		JR Z, =Fox_Turn.End_movement.end
 		LD A, $01
 		.ADD_A_TO_DIRECTION_BC
-	Fox_AI.End_movement.end:
+	Fox_Turn.End_movement.end:
 
-	Fox_AI.Health_check:
+	Fox_Turn.Health_check:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JP Z, =Fox_AI.Health_check.end
+		JP Z, =Fox_Turn.Health_check.end
 
 		LD A, $mem_moving_animation_step
 		CP $03
-		JR NZ, =Fox_AI.Health_check.end
+		JR NZ, =Fox_Turn.Health_check.end
 
 		LD A, L
 		AND $f0
@@ -319,14 +392,14 @@ Fox_AI:
 
 		LD A, (HL)
 		CP $00
-		JR NZ, =Fox_AI.Health_check.end
+		JR NZ, =Fox_Turn.Health_check.end
 
 		LD A, L
 		AND $f0
 		LD L, A
 
 		LD (HL), $00
-	Fox_AI.Health_check.end:
+	Fox_Turn.Health_check.end:
 
 	LD A, L
 	AND $f0
