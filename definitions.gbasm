@@ -83,8 +83,8 @@
 ;	sprite: u8,
 ; 	x: u8,
 ;	y: u8,
-;	interaction: u16
-; 	_padding: u24
+;	interaction_jump_table_index: u8
+; 	_padding: u32
 ; }
 
 .DEFINE mem_oam_buffer $ca00 ; Until $ca9f

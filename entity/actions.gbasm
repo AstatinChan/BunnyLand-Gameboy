@@ -30,13 +30,6 @@ Entity_Action:
 	INC HL
 
 	LD E, (HL)
-	LD D, $00
-
-	SLA E
-	RL D
-	SLA E
-	RL D
-
 	PUSH HL
 
 	LD A, L
@@ -45,18 +38,8 @@ Entity_Action:
 
 	LD BC, =Turn_Jump_table
 	LD A, E
-	ADD C
-	LD E, A
-	LD A, D
-	ADC B
-	LD D, A
 
-	; This is confusing but this thing is actually CALL DE
-	LD BC, =Entity_Action.interaction_end
-	PUSH BC
-	PUSH DE
-	RET
-	Entity_Action.interaction_end:
+	.JUMP_TABLE
 
 	POP HL
 

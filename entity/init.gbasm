@@ -122,7 +122,7 @@ Initialize_Fox:
 	LD (HL+), A
 
 	; Action
-	LD A, $01
+	LD A, $02
 	LD (HL+), A
 
 	LD A, $04

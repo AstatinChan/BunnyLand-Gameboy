@@ -169,28 +169,11 @@ Move_Bunny:
 			PUSH HL
 			PUSH BC
 
-			LD E, (HL)
-			LD D, $00
-
-			SLA E
-			RL D
-			SLA E
-			RL D
-
 			LD BC, =Interaction_Jump_table
-			LD A, E
-			ADD C
-			LD E, A
-			LD A, D
-			ADC B
-			LD D, A
+			LD A, (HL)
 
-			LD BC, =Interaction.interaction_end
-			PUSH BC
-			PUSH DE
-			RET
+			.JUMP_TABLE
 
-			Interaction.interaction_end:
 			POP BC
 			POP HL
 

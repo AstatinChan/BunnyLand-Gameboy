@@ -41,15 +41,24 @@ Spawn_stairs:
 	LD (HL+), A
 
 
-	LD BC, =Stairs_action
-	LD A, B
+	LD A, $01
 	LD (HL+), A
-	LD A, C
-	LD (HL+), A
+	INC HL
 	INC HL
 	INC HL
 	INC HL
 	RET
+
+Object_Interaction_Jump_table:
+	; 00
+	RET
+	NOP
+	NOP
+	NOP
+
+	; 01
+	JP =Stairs_action
+	NOP
 
 Stairs_action:
 	DI
@@ -196,10 +205,7 @@ Object_Interactions_Check:
 		CP B
 		JR NZ, =Object_Interactions_Check.next
 
-		LD A, (HL+)
-		LD D, A
-		LD A, (HL+)
-		LD E, A
+		LD E, (HL)
 
 		PUSH BC
 
@@ -208,12 +214,10 @@ Object_Interactions_Check:
 		AND $f8
 		LD L, A
 
-		; This is confusing but this thing is actually CALL DE
-		LD BC, =Object_Interactions_Check.interaction_end
-		PUSH BC
-		PUSH DE
-		RET
-		Object_Interactions_Check.interaction_end:
+		LD BC, =Object_Interaction_Jump_table
+		LD A, E
+
+		.JUMP_TABLE
 
 		POP BC
 
