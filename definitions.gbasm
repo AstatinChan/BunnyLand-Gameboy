@@ -53,8 +53,11 @@
 ; bit 0: if dialogue box is displayed
 
 .DEFINE mem_current_mode ($c014)
+.DEFINE mem_requested_mode ($c015)
 .DEFINE enum_dungeon_mode $00
 .DEFINE enum_dungeon_menu_mode $01
+
+.DEFINE mem_menu_cursor_position ($c016)
 
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)

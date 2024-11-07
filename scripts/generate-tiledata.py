@@ -25,7 +25,9 @@ get_sprite_png_parse_output("./sprites/bg/carrot.png")
 
 print("Small_sprites:")
 print("\n\t; Heart")
-get_sprite_png_parse_output("./sprites/bg/heart.png")
+get_sprite_png_parse_output("./sprites/gui/heart.png")
+print("\n\t; Cursor")
+get_sprite_png_parse_output("./sprites/gui/cursor.png")
 
 sprite_idx = 0x80
 print("\nFont_Data:")

@@ -68,6 +68,9 @@ Update_Animation_Steps:
 	SET 1, A
 	LD $mem_map_loading_flags, A
 
+	LD A, $mem_requested_mode
+	LD $mem_current_mode, A
+
 	Update_Animation_Steps.end:
 	RET
 
@@ -129,7 +132,7 @@ Open_Dialogue:
 	LD $mem_bunny_direction, A
 
 	LD A, $enum_dungeon_menu_mode
-	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
 	RET
 
 Fox_Turn:
