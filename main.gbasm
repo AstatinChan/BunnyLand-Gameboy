@@ -107,6 +107,7 @@ VBLANK_Entrypoint:
 
 	CALL =Display_Prepared_Block
 	CALL =Display_Object
+	CALL =Copy_Dialogue_Buffer
 	CALL $OAM_DMA_Transfer_routine
 
 	; LYC
@@ -116,14 +117,21 @@ VBLANK_Entrypoint:
 	.RESET_STAT_INTERRUPT
 	EI
 
-	CALL =Object_Interactions_Check
-
 	CALL =Pad_Button_Check
-	CALL =Entities_Actions
-	CALL =Update_Animation_Steps
 
+	LD A, $mem_current_mode
+	CP $enum_dungeon_mode
+	JR NZ, =Skip_Dungeon_Update
+
+	CALL =Object_Interactions_Check
+	CALL =Entities_Actions
 	CALL =Prepare_Scrolling_Map
+
+	Skip_Dungeon_Update:
+
+	CALL =Update_Animation_Steps
 	CALL =Display_Entities
+
 	.ENABLE_VBLANK_INTERRUPTS
 	RET
 
@@ -181,5 +189,6 @@ STAT_Entrypoint:
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"
 .INCLUDE "entity/display.gbasm"
+.INCLUDE "gui.gbasm"
 .INCLUDE "tileset.gbasm"
 .INCLUDE "dialogues.gbasm"

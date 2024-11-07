@@ -52,6 +52,10 @@
 .DEFINE mem_display_flag ($c013)
 ; bit 0: if dialogue box is displayed
 
+.DEFINE mem_current_mode ($c014)
+.DEFINE enum_dungeon_mode $00
+.DEFINE enum_dungeon_menu_mode $01
+
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 
@@ -89,6 +93,11 @@
 
 .DEFINE mem_oam_buffer $ca00 ; Until $ca9f
 .DEFINE mem_oam_buffer_high $ca
+
+.DEFINE dialogue_buffer $caa0 ; Until $cad6
+.DEFINE dialogue_first_line $caa0
+.DEFINE dialogue_second_line $cab2
+.DEFINE dialogue_third_line $cac4
 
 .DEFINE mem_entities_list $cb00 ; Until cbff
 ; struct entity {

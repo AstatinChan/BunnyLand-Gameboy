@@ -113,11 +113,11 @@ Fox_Interaction:
 	RET
 
 Open_Dialogue:
-	LD HL, $9dc1
+	LD HL, $dialogue_first_line
 	LD BC, =Bunny_Prefix
 	CALL =Print_str
 
-	LD HL, $9e01
+	LD HL, $dialogue_third_line
 	LD BC, =Text_1
 	CALL =Print_str
 
@@ -127,6 +127,9 @@ Open_Dialogue:
 	LD A, $mem_bunny_direction
 	AND $0f
 	LD $mem_bunny_direction, A
+
+	LD A, $enum_dungeon_menu_mode
+	LD $mem_current_mode, A
 	RET
 
 Fox_Turn:
@@ -196,13 +199,16 @@ Fox_Turn:
 		LD D, E
 
 		LD A, $mem_bunny_health
-		DEC A
+		SUB $01
+		JR C, =Fox_Turn.health_underflow_fix
 		DAA
-		JR NC, =Fox_Turn.Skip_health_underflow_fix
-
-		LD A, $00
-		Fox_Turn.Skip_health_underflow_fix:
 		LD $mem_bunny_health, A
+		JR =Fox_Turn.Skip_health_underflow_fix
+
+		Fox_Turn.health_underflow_fix:
+		LD A, $00
+		LD $mem_bunny_health, A
+		Fox_Turn.Skip_health_underflow_fix:
 
 		JP =Fox_Turn.Check_Collision
 
