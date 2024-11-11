@@ -31,6 +31,14 @@ bzero: ; dest = HL, n = BC
 	$end:
 .END
 
+.MACRODEF CALL_DE
+	LD BC, =$end
+	PUSH BC
+	PUSH DE
+	RET
+	$end:
+.END
+
 .MACRODEF JUMP_TABLE ; Jump table pointer in BC, index in A, also overwrites DE
 	LD E, A
 	LD D, $00
@@ -47,12 +55,7 @@ bzero: ; dest = HL, n = BC
 	ADC B
 	LD D, A
 
-	; CALL DE
-	LD BC, =$end
-	PUSH BC
-	PUSH DE
-	RET
-	$end:
+	.CALL_DE
 .END
 
 Print_8bit: ; Number in A, Memory Tilemap position in HL

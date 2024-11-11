@@ -56,8 +56,17 @@
 .DEFINE mem_requested_mode ($c015)
 .DEFINE enum_dungeon_mode $00
 .DEFINE enum_dungeon_menu_mode $01
+.DEFINE enum_dungeon_dialogue_mode $02
 
 .DEFINE mem_menu_cursor_position ($c016)
+.DEFINE mem_last_button_direction ($c017)
+
+.DEFINE dialogue_menu_choice1_routine $c018 ; Takes also $c019
+.DEFINE dialogue_menu_choice2_routine $c01a ; Takes also $c01b
+.DEFINE dialogue_menu_choice3_routine $c01c ; Takes also $c01d
+.DEFINE dialogue_menu_choice3_routine $c01e ; Takes also $c01f
+
+.DEFINE mem_last_button_action ($c020)
 
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
@@ -101,6 +110,16 @@
 .DEFINE dialogue_first_line $caa0
 .DEFINE dialogue_second_line $cab2
 .DEFINE dialogue_third_line $cac4
+
+.DEFINE dialogue_menu_choice1 $caa1
+.DEFINE dialogue_menu_choice2 $caaa
+.DEFINE dialogue_menu_choice3 $cac5
+.DEFINE dialogue_menu_choice4 $cace
+
+.DEFINE dialogue_menu_choice1_cursor ($caa0)
+.DEFINE dialogue_menu_choice2_cursor ($caa9)
+.DEFINE dialogue_menu_choice3_cursor ($cac4)
+.DEFINE dialogue_menu_choice4_cursor ($cacd)
 
 .DEFINE mem_entities_list $cb00 ; Until cbff
 ; struct entity {

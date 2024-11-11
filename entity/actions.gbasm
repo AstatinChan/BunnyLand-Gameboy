@@ -53,7 +53,7 @@ Entity_Action:
 Update_Animation_Steps:
 	LD A, $mem_map_loading_flags
 	BIT 3, A
-	JR Z, =Update_Animation_Steps.end
+	JR Z, =Update_Animation_Steps.update_mode
 
 	LD A, $mem_moving_animation_step
 	INC A
@@ -67,6 +67,8 @@ Update_Animation_Steps:
 	RES 3, A
 	SET 1, A
 	LD $mem_map_loading_flags, A
+
+	Update_Animation_Steps.update_mode:
 
 	LD A, $mem_requested_mode
 	LD $mem_current_mode, A
@@ -116,15 +118,16 @@ Fox_Interaction:
 	RET
 
 Open_Dialogue:
-	LD HL, $dialogue_first_line
-	LD BC, =Bunny_Prefix
-	CALL =Print_str
+	CALL =Init_Menu
+	; LD HL, $dialogue_first_line
+	; LD BC, =Bunny_Prefix
+	; CALL =Print_str
 
-	LD HL, $dialogue_third_line
-	LD BC, =Text_1
-	CALL =Print_str
+	; LD HL, $dialogue_third_line
+	; LD BC, =Text_1
+	; CALL =Print_str
 
-	LD A, $03
+	LD A, $01
 	LD $mem_display_flag, A
 
 	LD A, $mem_bunny_direction

@@ -67,7 +67,7 @@ Initialize_Window_GUI:
 
 		LD A, L
 		CP $40
-	LD $reg_lcd_status, A
+		LD $reg_lcd_status, A
 		JR NZ, =Initialize_Window_GUI.top_bar_loop
 
 	LD HL, $9da0

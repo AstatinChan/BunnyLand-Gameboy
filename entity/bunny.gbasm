@@ -26,13 +26,11 @@ Move_Bunny:
 		SET 3, A
 		LD $mem_map_loading_flags, A
 
-		PUSH BC
 		LD A, D
 		CALL =Get_Position_After_Move
 		LD A, C
 		CALL =Is_Collisionable
 		CALL =Carve_Entity_Collision_Map
-		POP BC
 		CP $00
 		JR Z, =Start_action_or_movement.not_collision
 		RES 3, D
@@ -48,7 +46,11 @@ Move_Bunny:
 		JR =Start_action_or_movement.end
 
 		Start_action_or_movement.test_action:
+		LD A, $mem_last_button_action
+		LD B, A
 		LD A, $mem_button_action
+		CP B
+		JR Z, =Start_action_or_movement.end
 		BIT 0, A
 		JR Z, =Start_action_or_movement.end
 		LD A, $mem_bunny_direction

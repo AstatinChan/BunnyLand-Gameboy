@@ -16,3 +16,151 @@ Copy_Dialogue_Buffer:
 	LD DE, $dialogue_third_line
 	LD BC, $12
 	JP =memcpy
+
+Init_Menu:
+	LD HL, $dialogue_menu_choice1
+	LD BC, =Menu_Choice_1
+	CALL =Print_str
+
+	LD HL, $dialogue_menu_choice2
+	LD BC, =Menu_Choice_2
+	CALL =Print_str
+
+	LD HL, $dialogue_menu_choice3
+	LD BC, =Menu_Choice_3
+	CALL =Print_str
+
+	LD HL, $dialogue_menu_choice4
+	LD BC, =Menu_Choice_4
+	CALL =Print_str
+
+	LD HL, $dialogue_menu_choice1_routine
+	LD BC, =Exit_Menu
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+
+	LD BC, =Stairs_action
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+
+	LD BC, =Nothing
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+
+	LD BC, =Exit_Menu
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+
+	RET
+
+Nothing:
+	RET
+
+Exit_Menu:
+	LD A, $enum_dungeon_mode
+	LD $mem_requested_mode, A
+
+	LD A, $00
+	LD $mem_display_flag, A
+	RET
+
+Display_dialogue_cursor:
+	LD A, $mem_current_mode
+	CP $enum_dungeon_menu_mode
+	RET NZ
+	LD A, $mem_menu_cursor_position
+	LD BC, $0000
+	LD DE, $0000
+
+	CP $00
+	JR NZ, =Display_dialogue_cursor.choice1_false
+	LD B, $69
+	Display_dialogue_cursor.choice1_false:
+
+	CP $01
+	JR NZ, =Display_dialogue_cursor.choice2_false
+	LD C, $69
+	Display_dialogue_cursor.choice2_false:
+
+	CP $02
+	JR NZ, =Display_dialogue_cursor.choice3_false
+	LD D, $69
+	Display_dialogue_cursor.choice3_false:
+
+	CP $03
+	JR NZ, =Display_dialogue_cursor.choice4_false
+	LD E, $69
+	Display_dialogue_cursor.choice4_false:
+
+	LD A, B
+	LD $dialogue_menu_choice1_cursor, A
+	LD A, C
+	LD $dialogue_menu_choice2_cursor, A
+	LD A, D
+	LD $dialogue_menu_choice3_cursor, A
+	LD A, E
+	LD $dialogue_menu_choice4_cursor, A
+	RET
+
+Move_dialogue_cursor:
+	LD A, $mem_current_mode
+	CP $enum_dungeon_menu_mode
+	RET NZ
+
+	LD A, $mem_last_button_direction
+	LD B, A
+	LD A, $mem_button_direction
+	CP $00
+	RET Z
+	CP B
+	RET Z
+
+	DEC A
+	BIT 1, A
+	JR Z, =Move_dialogue_cursor.Vertical_axis
+	LD A, $mem_menu_cursor_position
+	XOR $02
+	LD $mem_menu_cursor_position, A
+	RET
+
+	Move_dialogue_cursor.Vertical_axis:
+	LD A, $mem_menu_cursor_position
+	XOR $01
+	LD $mem_menu_cursor_position, A
+	RET
+
+Check_dialogue_action:
+	LD A, $mem_current_mode
+	CP $enum_dungeon_menu_mode
+	RET NZ
+
+	LD A, $mem_last_button_action
+	LD B, A
+	LD A, $mem_button_action
+	CP B
+	RET Z
+	BIT 0, A
+	RET Z
+
+	LD HL, $dialogue_menu_choice1_routine
+
+	LD A, $mem_menu_cursor_position
+	SLA A
+	ADD L
+	LD L, A
+
+	LD A, (HL+)
+	LD D, A
+	LD A, (HL+)
+	LD E, A
+
+	.CALL_DE
+	RET

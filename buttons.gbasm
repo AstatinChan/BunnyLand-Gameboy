@@ -2,6 +2,10 @@ Pad_Button_Check:
 	PUSH AF
 	PUSH BC
 
+	LD A, $mem_button_direction
+	LD $mem_last_button_direction, A
+	LD A, $mem_button_action
+	LD $mem_last_button_action, A
 	LD A, $20
 	LD $reg_joypad, A
 	LD A, $reg_joypad
