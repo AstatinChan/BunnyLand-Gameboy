@@ -72,6 +72,8 @@
 
 Entrypoint:
 	CALL =Initialize_RNG
+	LD A, $20
+	LD $mem_bunny_health, A
 New_Dungeon:
 	LD SP, $fffe
 	CALL =Dungeon_Generation
