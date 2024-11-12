@@ -1,0 +1,50 @@
+Hop_Attack_Loading_VBlank:
+	LD A, $mem_current_mode
+	CP $enum_loading_mode
+	RET NZ
+
+	LD A, $mem_viewport_y
+	INC A
+	LD $mem_viewport_y, A
+	LD C, $00
+	Hop_Attack_Loading_VBlank.loop:
+		PUSH BC
+		LD A, $mem_bunny_direction
+		AND $07
+		DEC A
+		AND $01
+		SLA A
+		DEC A
+		LD B, A
+		LD A, $mem_bunny_direction
+		AND $07
+		DEC A
+
+		BIT 1, A
+		JR NZ, =Hop_Attack_Loading_VBlank.Map_Load.vertical
+
+		Hop_Attack_Loading_VBlank.Map_Load.horizontal:
+			CALL =Load_Next_Block_Column
+			JR =Hop_Attack_Loading_VBlank.Map_Load.End
+
+		Hop_Attack_Loading_VBlank.Map_Load.vertical:
+			CALL =Load_Next_Block_Row
+
+			Hop_Attack_Loading_VBlank.Map_Load.End:
+		POP BC
+		INC C
+		LD A, $10
+		CP C
+		JR NZ, =Hop_Attack_Loading_VBlank.loop
+
+	LD A, $mem_viewport_y
+	DEC A
+	LD $mem_viewport_y, A
+
+	LD A, $enum_dungeon_mode
+	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
+	RET
+
+Hop_Attack_Loading_Regular:
+	RET

@@ -27,29 +27,29 @@ Load_Map:
 
 	RET
 
-Load_Row: ; (+1/-1 direction in B)
+Load_Next_Block_Row: ; (+1/-1 direction in B, block number (between 0-f) in C
 	PUSH AF
 	PUSH BC
 	PUSH DE
 	LD A, B
 	CP $01
-	JR NZ, =Load_Row.Up
+	JR NZ, =Load_Next_Block_Row.Up
 
 	LD A, $mem_viewport_y
 	ADD $0C
 	LD B, A
-	JR =Load_Row.Set_X_Limits
+	JR =Load_Next_Block_Row.Set_X_Limits
 
-	Load_Row.Up:
+	Load_Next_Block_Row.Up:
 	LD A, $mem_viewport_y
 	SUB $02
 	LD B, A
 
-	Load_Row.Set_X_Limits:
+	Load_Next_Block_Row.Set_X_Limits:
 	LD A, $mem_viewport_x
 	SUB $03
 	LD D, A
-	LD A, $mem_moving_animation_step
+	LD A, C
 	ADD D
 	LD D, A
 	LD A, $mem_viewport_x
@@ -63,32 +63,33 @@ Load_Row: ; (+1/-1 direction in B)
 	POP AF
 	RET
 
-Load_Column: ; (+1/-1 direction in B)
+Load_Next_Block_Column: ; (+1/-1 direction in B), block number (between 0-f) in C
+
 	PUSH AF
 	PUSH BC
 	PUSH DE
 	LD A, B
 	CP $01
-	JR NZ, =Load_Column.Left
+	JR NZ, =Load_Next_Block_Column.Left
 
 	LD A, $mem_viewport_x
 	ADD $0C
 	LD D, A
-	JR =Load_Column.Set_Y_Limits
+	JR =Load_Next_Block_Column.Set_Y_Limits
 
-	Load_Column.Left:
+	Load_Next_Block_Column.Left:
 	LD A, $mem_viewport_x
 	SUB $02
 	LD D, A
 
-	Load_Column.Set_Y_Limits:
+	Load_Next_Block_Column.Set_Y_Limits:
 	LD A, $mem_viewport_y
 	SUB $03
 	LD B, A
 	LD A, $mem_viewport_y
 	ADD $0D
 	LD E, A
-	LD A, $mem_moving_animation_step
+	LD A, C
 	ADD B
 	LD B, A
 	LD A, D
@@ -103,6 +104,9 @@ Prepare_Scrolling_Map:
 	LD A, $mem_map_loading_flags
 	BIT 0, A
 	JR Z, =Display_Scrolling_Map.End
+
+	LD A, $mem_moving_animation_step
+	LD C, A
 
 	LD A, $mem_bunny_direction
 	AND $07
@@ -119,11 +123,11 @@ Prepare_Scrolling_Map:
 	JR NZ, =Display_Scrolling_Map.vertical
 
 	Display_Scrolling_Map.horizontal:
-		CALL =Load_Column
-		JP =Display_Scrolling_Map.End
+		CALL =Load_Next_Block_Column
+		JR =Display_Scrolling_Map.End
 
 	Display_Scrolling_Map.vertical:
-		CALL =Load_Row
+		CALL =Load_Next_Block_Row
 
 	Display_Scrolling_Map.End:
 	RET

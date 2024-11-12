@@ -1,11 +1,11 @@
--> Spawn enemies in far away rooms when less than X enemies on the map. (Maybe despawn some too)
-
 -> Add special attacks/capacities to the bunny
 	* Jump x2 (even over an enemy) (attacking or not ?)
 	* Stronger attack
 	* Weaker attack on multiple foxes
 	* Freeze a/multiple fox(es) for X turns
 	-> All with limited number of uses
+
+-> Spawn enemies in far away rooms when less than X enemies on the map. (Maybe despawn some too)
 
 -> Remove some health to the bunny (probably to 10 points, maybe max health growing ?)
 

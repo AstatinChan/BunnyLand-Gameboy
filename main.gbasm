@@ -111,8 +111,14 @@ VBLANK_Entrypoint:
 	LD A, $68
 	LD (HL), A
 
-	CALL =Display_Prepared_Block
-	CALL =Display_Object
+	LD A, $mem_current_mode
+	CP $enum_dungeon_mode
+	JR NZ, =Skip_VBlank_Dungeon_Update
+		CALL =Display_Prepared_Block
+		CALL =Display_Object
+	Skip_VBlank_Dungeon_Update:
+
+	CALL =Hop_Attack_Loading_VBlank
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
 	CALL $OAM_DMA_Transfer_routine
@@ -130,13 +136,14 @@ VBLANK_Entrypoint:
 	CP $enum_dungeon_mode
 	JR NZ, =Skip_Dungeon_Update
 
-	CALL =Object_Interactions_Check
-	CALL =Entities_Actions
-	CALL =Prepare_Scrolling_Map
+		CALL =Object_Interactions_Check
+		CALL =Entities_Actions
+		CALL =Prepare_Scrolling_Map
 
 	Skip_Dungeon_Update:
 
 	CALL =Update_Animation_Steps
+	CALL =Check_Open_Menu_button
 	CALL =Move_dialogue_cursor
 	CALL =Check_dialogue_action
 	CALL =Display_Entities
@@ -198,6 +205,7 @@ STAT_Entrypoint:
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"
 .INCLUDE "entity/display.gbasm"
+.INCLUDE "attacks.gbasm"
 .INCLUDE "gui.gbasm"
 .INCLUDE "tileset.gbasm"
 .INCLUDE "dialogues.gbasm"

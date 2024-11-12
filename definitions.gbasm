@@ -57,6 +57,7 @@
 .DEFINE enum_dungeon_mode $00
 .DEFINE enum_dungeon_menu_mode $01
 .DEFINE enum_dungeon_dialogue_mode $02
+.DEFINE enum_loading_mode $03
 
 .DEFINE mem_menu_cursor_position ($c016)
 .DEFINE mem_last_button_direction ($c017)

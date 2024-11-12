@@ -35,7 +35,7 @@ Init_Menu:
 	CALL =Print_str
 
 	LD HL, $dialogue_menu_choice1_routine
-	LD BC, =Exit_Menu
+	LD BC, =Change_To_Loading_Mode
 	LD A, B
 	LD (HL+), A
 	LD A, C
@@ -66,6 +66,14 @@ Nothing:
 
 Exit_Menu:
 	LD A, $enum_dungeon_mode
+	LD $mem_requested_mode, A
+
+	LD A, $00
+	LD $mem_display_flag, A
+	RET
+
+Change_To_Loading_Mode:
+	LD A, $enum_loading_mode
 	LD $mem_requested_mode, A
 
 	LD A, $00
@@ -147,6 +155,8 @@ Check_dialogue_action:
 	LD A, $mem_button_action
 	CP B
 	RET Z
+	BIT 3, A
+	JP NZ, =Exit_Menu
 	BIT 0, A
 	RET Z
 
@@ -163,4 +173,28 @@ Check_dialogue_action:
 	LD E, A
 
 	.CALL_DE
+	RET
+
+Check_Open_Menu_button:
+	LD A, $mem_last_button_action
+	AND $08
+	LD B, A
+	LD A, $mem_button_action
+	AND $08
+	CP B
+	RET Z
+	BIT 3, A
+	RET Z
+
+	CALL =Init_Menu
+
+	LD A, $01
+	LD $mem_display_flag, A
+
+	LD A, $mem_bunny_direction
+	AND $0f
+	LD $mem_bunny_direction, A
+
+	LD A, $enum_dungeon_menu_mode
+	LD $mem_requested_mode, A
 	RET

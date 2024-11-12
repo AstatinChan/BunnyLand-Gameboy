@@ -118,14 +118,13 @@ Fox_Interaction:
 	RET
 
 Open_Dialogue:
-	CALL =Init_Menu
-	; LD HL, $dialogue_first_line
-	; LD BC, =Bunny_Prefix
-	; CALL =Print_str
+	LD HL, $dialogue_first_line
+	LD BC, =Bunny_Prefix
+	CALL =Print_str
 
-	; LD HL, $dialogue_third_line
-	; LD BC, =Text_1
-	; CALL =Print_str
+	LD HL, $dialogue_third_line
+	LD BC, =Text_1
+	CALL =Print_str
 
 	LD A, $01
 	LD $mem_display_flag, A
