@@ -30,6 +30,7 @@
 .DEFINE mem_bunny_direction ($cb03)
 ; aaaamddd: a = animation, m = is_moving, d = direction
 .DEFINE mem_bunny_health ($cb06)
+.DEFINE mem_bunny_flags ($cb07)
 .DEFINE mem_viewport_x ($c008)
 .DEFINE mem_viewport_y ($c009)
 .DEFINE mem_rng_state_1 ($c00a) ; 2 bytes
@@ -131,7 +132,9 @@
 ;	turn_function_jump_table_index: u8
 ;	action_function_jump_table_index: u8
 ;	health: u8 (DAA decimal !!)
-;	_padding: u72
+;	flags: u8
+;		bit 0: speed 2x
+;	_padding: u64
 ;
 ;	# SANTA CHRISTMAS LIST PLEASE #
 ;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)

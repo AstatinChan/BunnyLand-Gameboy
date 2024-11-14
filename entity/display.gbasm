@@ -77,7 +77,7 @@ Display_Entity:
 	SUB C
 	AND $0f
 	SWAP A
-	ADD $02
+	ADD $06
 	LD C, A
 
 	LD A, $mem_map_loading_flags
@@ -183,18 +183,45 @@ Display_Entity:
 			.ADD_A_TO_DIRECTION_BC
 	Display_Entity.Action_Animation.end:
 
-	Display_Entity.Moving_Hops:
+	Display_Entity.SuperJump_Animation:
 		LD A, D
-		BIT 3, A
-		LD A, $00
-		JR Z, =Display_Entity.Moving_Hops.not_moving
+		AND $f0
+		CP $30
+		JR NZ, =Display_Entity.SuperJump_Animation.end
 
 		LD A, $mem_moving_animation_step
-		Display_Entity.Moving_Hops.not_moving:
+		CP $00
+		JR Z, =Display_Entity.SuperJump_Animation.end
+		.ADD_A_TO_DIRECTION_BC
+		LD A, $mem_moving_animation_step
+		SUB $08
+		.ABS
+		SLA A
+		CPL
+		INC A
+		ADD $16
+		CPL
+		INC A
+		ADD C
+		LD C, A
+	Display_Entity.SuperJump_Animation.end:
+
+	Display_Entity.Moving_Hops:
+		LD A, D
+		AND $f8
+		CP $08
+		JR NZ, =Display_Entity.Moving_Hops.end
+
+		LD A, $mem_moving_animation_step
 		SUB $08
 		.ABS
 		SUB $04
 		.ABS
+		CPL
+		INC A
+		ADD $04
+		CPL
+		INC A
 		ADD C
 		LD C, A
 	Display_Entity.Moving_Hops.end:

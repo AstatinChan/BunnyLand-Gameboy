@@ -9,6 +9,13 @@ Move_Bunny:
 
 	Move_Bunny.not_dead:
 
+	LD A, $mem_bunny_flags
+	LD E, $01
+	BIT 0, A
+	JR Z, =Normal_speed
+	LD E, $02
+	Normal_speed:
+
 	Start_action_or_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
@@ -77,7 +84,7 @@ Move_Bunny:
 		LD B, A
 		LD A, $mem_prepared_viewport_y
 		LD C, A
-		LD A, $01
+		LD A, E
 		.ADD_A_TO_DIRECTION_BC
 		LD A, B
 		LD $mem_prepared_viewport_x, A
@@ -95,14 +102,13 @@ Move_Bunny:
 		LD A, $mem_bunny_direction
 		BIT 3, A
 		JR Z, =End_movement.end
-		LD $mem_bunny_direction, A
 
 		LD D, A
 		LD A, $mem_bunny_x
 		LD B, A
 		LD A, $mem_bunny_y
 		LD C, A
-		LD A, $01
+		LD A, E
 		.ADD_A_TO_DIRECTION_BC
 		LD A, B
 		LD $mem_bunny_x, A
@@ -119,7 +125,38 @@ Move_Bunny:
 		LD $mem_viewport_x, A
 		LD A, C
 		LD $mem_viewport_y, A
+
+		LD A, $mem_bunny_flags
+		RES 0, A
+		LD $mem_bunny_flags, A
 	End_movement.end:
+
+	Middle_movement_doublespeed_viewport_update:
+		LD A, $mem_map_loading_flags
+		BIT 3, A
+		JP Z, =Middle_movement_doublespeed_viewport_update.end
+		LD A, $mem_moving_animation_step
+		CP $08
+		JP NZ, =Middle_movement_doublespeed_viewport_update.end
+		LD A, $mem_bunny_direction
+		BIT 3, A
+		JR Z, =Middle_movement_doublespeed_viewport_update.end
+		LD A, E
+		CP $02
+		JR NZ, =Middle_movement_doublespeed_viewport_update.end
+
+		LD A, $mem_viewport_x
+		LD B, A
+		LD A, $mem_viewport_y
+		LD C, A
+		LD A, $01
+		.ADD_A_TO_DIRECTION_BC
+		LD A, B
+		LD $mem_viewport_x, A
+		LD A, C
+		LD $mem_viewport_y, A
+	Middle_movement_doublespeed_viewport_update.end:
+
 
 	Interaction:
 		LD A, $mem_map_loading_flags

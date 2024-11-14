@@ -1,14 +1,9 @@
-Hop_Attack_Loading_VBlank:
-	LD A, $mem_current_mode
-	CP $enum_loading_mode
-	RET NZ
-
-	LD A, $mem_viewport_y
-	INC A
-	LD $mem_viewport_y, A
-	LD C, $00
-	Hop_Attack_Loading_VBlank.loop:
+Preload_Map_Hop:
+	LD C, $01
+	Preload_Map_Hop.loop:
 		PUSH BC
+
+		; Getting the +1/-1 value of the direction to B
 		LD A, $mem_bunny_direction
 		AND $07
 		DEC A
@@ -16,34 +11,82 @@ Hop_Attack_Loading_VBlank:
 		SLA A
 		DEC A
 		LD B, A
+
 		LD A, $mem_bunny_direction
 		AND $07
 		DEC A
 
 		BIT 1, A
-		JR NZ, =Hop_Attack_Loading_VBlank.Map_Load.vertical
+		DBG
+		JR NZ, =Preload_Map_Hop.Map_Load.vertical
 
-		Hop_Attack_Loading_VBlank.Map_Load.horizontal:
+		Preload_Map_Hop.Map_Load.horizontal:
 			CALL =Load_Next_Block_Column
-			JR =Hop_Attack_Loading_VBlank.Map_Load.End
+			JR =Preload_Map_Hop.Map_Load.End
 
-		Hop_Attack_Loading_VBlank.Map_Load.vertical:
+		Preload_Map_Hop.Map_Load.vertical:
 			CALL =Load_Next_Block_Row
 
-			Hop_Attack_Loading_VBlank.Map_Load.End:
+		Preload_Map_Hop.Map_Load.End:
+		CALL =Display_Prepared_Block
 		POP BC
 		INC C
 		LD A, $10
 		CP C
-		JR NZ, =Hop_Attack_Loading_VBlank.loop
+		JR NZ, =Preload_Map_Hop.loop
+RET
 
+Hop_Attack_Loading_VBlank:
+	LD A, $mem_current_mode
+	CP $enum_loading_mode
+	RET NZ
+
+	CALL =Preload_Map_Hop
+
+	LD A, $mem_bunny_direction
+	AND $07
+	LD D, A
+	LD A, $mem_viewport_x
+	LD B, A
 	LD A, $mem_viewport_y
-	DEC A
+	LD C, A
+	LD A, $01
+	.ADD_A_TO_DIRECTION_BC
+	LD A, B
+	LD $mem_viewport_x, A
+	LD A, C
 	LD $mem_viewport_y, A
+
+	CALL =Preload_Map_Hop
+
+	LD A, $mem_bunny_direction
+	AND $07
+	LD D, A
+	LD A, $mem_viewport_x
+	LD B, A
+	LD A, $mem_viewport_y
+	LD C, A
+	LD A, $FF
+	.ADD_A_TO_DIRECTION_BC
+	LD A, B
+	LD $mem_viewport_x, A
+	LD A, C
+	LD $mem_viewport_y, A
+
 
 	LD A, $enum_dungeon_mode
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
+	LD A, $mem_bunny_direction
+	AND $07
+	OR $38
+	LD $mem_bunny_direction, A
+	LD A, $mem_map_loading_flags
+	SET 3, A
+	LD $mem_map_loading_flags, A
+	LD A, $mem_bunny_flags
+	SET 0, A
+	LD $mem_bunny_flags, A
 	RET
 
 Hop_Attack_Loading_Regular:

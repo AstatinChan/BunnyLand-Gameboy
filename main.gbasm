@@ -114,7 +114,7 @@ VBLANK_Entrypoint:
 	LD A, $mem_current_mode
 	CP $enum_dungeon_mode
 	JR NZ, =Skip_VBlank_Dungeon_Update
-		CALL =Display_Prepared_Block
+		; CALL =Display_Prepared_Block
 		CALL =Display_Object
 	Skip_VBlank_Dungeon_Update:
 
@@ -138,7 +138,7 @@ VBLANK_Entrypoint:
 
 		CALL =Object_Interactions_Check
 		CALL =Entities_Actions
-		CALL =Prepare_Scrolling_Map
+		; CALL =Prepare_Scrolling_Map
 
 	Skip_Dungeon_Update:
 
