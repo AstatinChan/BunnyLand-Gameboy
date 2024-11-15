@@ -136,7 +136,7 @@ Move_Bunny:
 		BIT 3, A
 		JP Z, =Middle_movement_doublespeed_viewport_update.end
 		LD A, $mem_moving_animation_step
-		CP $08
+		CP $07
 		JP NZ, =Middle_movement_doublespeed_viewport_update.end
 		LD A, $mem_bunny_direction
 		BIT 3, A

@@ -111,17 +111,18 @@ VBLANK_Entrypoint:
 	LD A, $68
 	LD (HL), A
 
+	CALL $OAM_DMA_Transfer_routine
+	CALL =Hop_Attack_Loading_VBlank
+
 	LD A, $mem_current_mode
 	CP $enum_dungeon_mode
 	JR NZ, =Skip_VBlank_Dungeon_Update
-		; CALL =Display_Prepared_Block
+		CALL =Display_Prepared_Block
 		CALL =Display_Object
 	Skip_VBlank_Dungeon_Update:
 
-	CALL =Hop_Attack_Loading_VBlank
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
-	CALL $OAM_DMA_Transfer_routine
 
 	; LYC
 	LD A, $09
@@ -138,10 +139,11 @@ VBLANK_Entrypoint:
 
 		CALL =Object_Interactions_Check
 		CALL =Entities_Actions
-		; CALL =Prepare_Scrolling_Map
+		CALL =Prepare_Scrolling_Map
 
 	Skip_Dungeon_Update:
 
+	CALL =Hop_Attack_Loading_Regular
 	CALL =Update_Animation_Steps
 	CALL =Check_Open_Menu_button
 	CALL =Move_dialogue_cursor

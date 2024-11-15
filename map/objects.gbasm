@@ -79,7 +79,6 @@ Stairs_action:
 
 Display_Object:
 	LD HL, $mem_object_list
-	Display_Objects.loop:
 	LD A, $mem_object_load_counter
 	INC A
 	AND $0f
@@ -99,7 +98,7 @@ Display_Object:
 	SUB $83
 	CP D
 	JR NC, =Display_Objects.End
-	ADD $10
+	ADD $0e
 	CP D
 	JR C, =Display_Objects.End
 	LD A, D
@@ -113,7 +112,7 @@ Display_Object:
 	SUB $83
 	CP B
 	JR NC, =Display_Objects.End
-	ADD $10
+	ADD $0e
 	CP B
 	JR C, =Display_Objects.End
 	LD A, B

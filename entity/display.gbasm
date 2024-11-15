@@ -97,8 +97,9 @@ Display_Entity:
 
 	Display_Entity.Viewport_offset_left:
 		LD A, $mem_prepared_viewport_x
-		SUB $08
+		SUB $09
 		AND $0f
+		INC A
 		XOR $ff
 		INC A
 		ADD $10
@@ -121,8 +122,9 @@ Display_Entity:
 
 	Display_Entity.Viewport_offset_up:
 		LD A, $mem_prepared_viewport_y
-		SUB $08
+		SUB $09
 		AND $0f
+		INC A
 		XOR $ff
 		INC A
 		ADD $10
@@ -199,7 +201,7 @@ Display_Entity:
 		SLA A
 		CPL
 		INC A
-		ADD $16
+		ADD $10
 		CPL
 		INC A
 		ADD C
