@@ -1,50 +1,3 @@
-Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test in A, X Result in C, Y result in B
-	PUSH HL
-	PUSH AF
-
-	LD A, L
-	AND $f0
-	LD L, A
-
-	INC HL
-
-	LD A, (HL+)
-	LD C, A
-	LD A, (HL+)
-	LD B, A
-
-	POP AF
-	BIT 3, A
-	JR Z, =Get_Position_After_Move.direction_end
-
-	PUSH BC
-
-	DEC A
-	LD B, A
-
-	SLA A
-	AND $02
-	DEC A
-
-	BIT 1, B
-	JR NZ, =Get_Position_After_Move.vertical
-
-	Get_Position_After_Move.horizontal:
-		POP BC
-		ADD C
-		LD C, A
-		JR =Get_Position_After_Move.direction_end
-
-	Get_Position_After_Move.vertical:
-		POP BC
-		ADD B
-		LD B, A
-
-	Get_Position_After_Move.direction_end:
-
-	POP HL
-	RET
-
 .MACRODEF ADD_A_TO_DIRECTION_BC ; Direction in D, XY in BC (muted), offset in A
 	PUSH AF
 	LD A, D
@@ -89,3 +42,46 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 
 	$end:
 .END
+
+Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test in A, X Result in C, Y result in B, E being how much tile entity will move
+	PUSH HL
+	PUSH DE
+	LD D, A
+
+	LD A, L
+	AND $f0
+	LD L, A
+
+	INC HL
+
+	LD A, (HL+)
+	LD B, A
+	LD A, (HL+)
+	LD C, A
+
+	INC HL
+	INC HL
+	INC HL
+	INC HL
+
+	LD E, (HL)
+	BIT 0, E
+	LD A, $01
+	JR Z, =Get_Position_After_Move.Normal_Speed
+	LD A, $02
+	Get_Position_After_Move.Normal_Speed:
+
+	BIT 3, D
+	JR Z, =Get_Position_After_Move.Skip_Move
+
+	.ADD_A_TO_DIRECTION_BC
+
+	Get_Position_After_Move.Skip_Move:
+
+	LD A, C
+	LD C, B
+	LD B, A
+
+	POP DE
+	POP HL
+	RET
