@@ -161,6 +161,7 @@ Hop_Attack:
 	.ADD_A_TO_DIRECTION_BC
 	LD A, B
 	LD B, C
+	LD C, A
 	CALL =Is_Collisionable
 	CALL =Carve_Entity_Collision_Map
 	CP $00

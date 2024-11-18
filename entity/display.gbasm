@@ -226,7 +226,6 @@ Display_Entity:
 		CPL
 		INC A
 		Display_Entity.Shaking_Animation.skip_invert:
-		DBG
 		ADD B
 		LD B, A
 	Display_Entity.Shaking_Animation.end:

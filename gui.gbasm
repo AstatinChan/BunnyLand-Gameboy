@@ -168,6 +168,10 @@ Check_dialogue_action:
 	RET
 
 Check_Open_Menu_button:
+	LD A, $mem_current_mode
+	CP $enum_dungeon_mode
+	RET NZ
+
 	LD A, $mem_last_button_action
 	AND $08
 	LD B, A

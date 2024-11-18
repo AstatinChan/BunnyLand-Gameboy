@@ -70,10 +70,20 @@ Update_Animation_Steps:
 
 	Update_Animation_Steps.update_mode:
 
+	LD A, $mem_bunny_health
+	CP $00
+	JR Z =Update_Animation_Steps.Dead_mode
+
 	LD A, $mem_requested_mode
 	LD $mem_current_mode, A
 
 	Update_Animation_Steps.end:
+	RET
+
+	Update_Animation_Steps.Dead_mode:
+
+	LD A, $enum_dead_mode
+	LD $mem_current_mode, A
 	RET
 
 Turn_Jump_table:
