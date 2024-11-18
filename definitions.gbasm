@@ -29,6 +29,13 @@
 .DEFINE mem_bunny_y ($cb02)
 .DEFINE mem_bunny_direction ($cb03)
 ; aaaamddd: a = animation, m = is_moving, d = direction
+; animations:
+;	nothing = 0
+;	action = 1
+;	death = 2
+;	superjump = 3
+;	shaking = 4
+
 .DEFINE mem_bunny_health ($cb06)
 .DEFINE mem_bunny_flags ($cb07)
 .DEFINE mem_viewport_x ($c008)
@@ -74,6 +81,11 @@
 .DEFINE mem_prepared_loading_block_tile ($c022)
 .DEFINE mem_prepared_loading_block_position_1 ($c023)
 .DEFINE mem_prepared_loading_block_position_2 ($c024)
+
+.DEFINE mem_loading_mode_vblank_func_pointer_high ($c025)
+.DEFINE mem_loading_mode_vblank_func_pointer_low ($c026)
+.DEFINE mem_loading_mode_regular_func_pointer_high ($c027)
+.DEFINE mem_loading_mode_regular_func_pointer_low ($c028)
 
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)

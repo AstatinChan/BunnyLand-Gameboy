@@ -112,7 +112,7 @@ VBLANK_Entrypoint:
 	LD (HL), A
 
 	CALL $OAM_DMA_Transfer_routine
-	CALL =Hop_Attack_Loading_VBlank
+	CALL =Loading_Mode_VBlank
 
 	LD A, $mem_current_mode
 	CP $enum_dungeon_mode
@@ -143,7 +143,7 @@ VBLANK_Entrypoint:
 
 	Skip_Dungeon_Update:
 
-	CALL =Hop_Attack_Loading_Regular
+	CALL =Loading_Mode_Regular
 	CALL =Update_Animation_Steps
 	CALL =Check_Open_Menu_button
 	CALL =Move_dialogue_cursor

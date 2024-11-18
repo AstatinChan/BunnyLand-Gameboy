@@ -13,7 +13,7 @@ build/main.rom: main.gbasm tileset.gbasm dialogues.gbasm
 	gbasm $< $@
 
 run: build/main.rom
-	gb  $<
+	gb $<
 
 sameboy: build/main.rom
 	sameboy build/main.rom

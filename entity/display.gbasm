@@ -208,6 +208,29 @@ Display_Entity:
 		LD C, A
 	Display_Entity.SuperJump_Animation.end:
 
+	Display_Entity.Shaking_Animation:
+		LD A, D
+		AND $f0
+		CP $40
+		JR NZ, =Display_Entity.Shaking_Animation.end
+
+		LD A, $mem_moving_animation_step
+		CP $00
+		JR Z, =Display_Entity.Shaking_Animation.end
+		LD A, $mem_moving_animation_step
+		SRA A
+		AND $03
+		BIT 1, A
+		RES 1, A
+		JR NZ, =Display_Entity.Shaking_Animation.skip_invert
+		CPL
+		INC A
+		Display_Entity.Shaking_Animation.skip_invert:
+		DBG
+		ADD B
+		LD B, A
+	Display_Entity.Shaking_Animation.end:
+
 	Display_Entity.Moving_Hops:
 		LD A, D
 		AND $f8

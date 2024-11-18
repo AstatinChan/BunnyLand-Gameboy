@@ -1,158 +1,78 @@
-Preload_Map_Hop:
-	LD A, $mem_loading_step
-	LD C, A
-	; Getting the +1/-1 value of the direction to B
-	LD A, $mem_bunny_direction
-	AND $07
-	DEC A
-	AND $01
-	SLA A
-	DEC A
-	LD B, A
-
-	LD A, $mem_bunny_direction
-	AND $07
-	DEC A
-
-	BIT 1, A
-	JR NZ, =Preload_Map_Hop.Map_Load.vertical
-
-	Preload_Map_Hop.Map_Load.horizontal:
-		CALL =Load_Next_Block_Column
-		JR =Preload_Map_Hop.Map_Load.End
-
-	Preload_Map_Hop.Map_Load.vertical:
-		CALL =Load_Next_Block_Row
-
-	Preload_Map_Hop.Map_Load.End:
-RET
-
-Hop_Attack_Loading_VBlank:
+Loading_Mode_VBlank:
 	LD A, $mem_current_mode
 	CP $enum_loading_mode
 	RET NZ
 
-	LD A, $mem_loading_step
-	CP $00
-	JP Z, =Hop_Attack_Loading_VBlank.Skip_Display_Block
-
-	LD A, $mem_map_loading_flags
-	BIT 2, A
-	RET Z
-
-	CALL =Display_Prepared_Block
-
-	LD A, $mem_prepared_loading_block_tile
-	LD $mem_prepared_block_tile, A
-	LD A, $mem_prepared_loading_block_position_1
-	LD $mem_prepared_block_position_1, A
-	LD A, $mem_prepared_loading_block_position_2
-	LD $mem_prepared_block_position_2, A
-
-	LD A, $mem_map_loading_flags
-	SET 2, A
-	LD $mem_map_loading_flags, A
-
-	CALL =Display_Prepared_Block
-
-	LD A, $mem_bunny_direction
-	AND $07
-	LD D, A
-	LD A, $mem_viewport_x
+	LD A, $mem_loading_mode_vblank_func_pointer_high
 	LD B, A
-	LD A, $mem_viewport_y
+	LD A, $mem_loading_mode_vblank_func_pointer_low
 	LD C, A
-	LD A, $02
-	.ADD_A_TO_DIRECTION_BC
-	LD A, B
-	LD $mem_viewport_x, A
-	LD A, C
-	LD $mem_viewport_y, A
+	PUSH BC
+	RET
 
-	CALL =Display_Object
-
-	LD A, $mem_bunny_direction
-	AND $07
-	LD D, A
-	LD A, $mem_viewport_x
-	LD B, A
-	LD A, $mem_viewport_y
-	LD C, A
-	LD A, $FE
-	.ADD_A_TO_DIRECTION_BC
-	LD A, B
-	LD $mem_viewport_x, A
-	LD A, C
-	LD $mem_viewport_y, A
-
-
-
-	Hop_Attack_Loading_VBlank.Skip_Display_Block:
-
-	LD A, $mem_loading_step
-	INC A
-	AND $0f
-	LD $mem_loading_step, A
-	CP $00
+Loading_Mode_Regular:
+	LD A, $mem_current_mode
+	CP $enum_loading_mode
 	RET NZ
 
+	LD A, $mem_loading_mode_regular_func_pointer_high
+	LD B, A
+	LD A, $mem_loading_mode_regular_func_pointer_low
+	LD C, A
+	PUSH BC
+	RET
+
+Canceled_Attack_VBlank:
+	RET
+
+Canceled_Attack_Regular:
 	LD A, $enum_dungeon_mode
-	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
-	LD A, $mem_bunny_direction
-	AND $07
-	OR $38
-	LD $mem_bunny_direction, A
+	RET
+
+Canceled_Attack:
+	LD HL, $mem_entities_list
+	LD A, L
+	ADD $13
+	LD L, A
+	Reset_Entities_Animations.loop:
+		LD A, (HL)
+		AND $07
+		LD (HL), A
+		Reset_Entities_Animations.loop.next:
+		LD A, L
+		AND $f0
+		ADD $13
+		LD L, A
+		CP $03
+		JR NZ, =Reset_Entities_Animations.loop
+
+	LD BC, =Canceled_Attack_VBlank
+	LD A, B
+	LD $mem_loading_mode_vblank_func_pointer_high, A
+	LD A, C
+	LD $mem_loading_mode_vblank_func_pointer_low, A
+
+	LD BC, =Canceled_Attack_Regular
+	LD A, B
+	LD $mem_loading_mode_regular_func_pointer_high, A
+	LD A, C
+	LD $mem_loading_mode_regular_func_pointer_low, A
+
+	LD A, $enum_loading_mode
+	LD $mem_requested_mode, A
+
+	LD A, $00
+	LD $mem_display_flag, A
+
 	LD A, $mem_map_loading_flags
 	SET 3, A
 	LD $mem_map_loading_flags, A
-	LD A, $mem_bunny_flags
-	SET 0, A
-	LD $mem_bunny_flags, A
-	RET
-
-Hop_Attack_Loading_Regular:
-	LD A, $mem_current_mode
-	CP $enum_loading_mode
-	RET NZ
-
-	CALL =Preload_Map_Hop
-
-	LD A, $mem_prepared_block_tile
-	LD $mem_prepared_loading_block_tile, A
-	LD A, $mem_prepared_block_position_1
-	LD $mem_prepared_loading_block_position_1, A
-	LD A, $mem_prepared_block_position_2
-	LD $mem_prepared_loading_block_position_2, A
 
 	LD A, $mem_bunny_direction
 	AND $07
-	LD D, A
-	LD A, $mem_viewport_x
-	LD B, A
-	LD A, $mem_viewport_y
-	LD C, A
-	LD A, $01
-	.ADD_A_TO_DIRECTION_BC
-	LD A, B
-	LD $mem_viewport_x, A
-	LD A, C
-	LD $mem_viewport_y, A
-
-	CALL =Preload_Map_Hop
-
-	LD A, $mem_bunny_direction
-	AND $07
-	LD D, A
-	LD A, $mem_viewport_x
-	LD B, A
-	LD A, $mem_viewport_y
-	LD C, A
-	LD A, $FF
-	.ADD_A_TO_DIRECTION_BC
-	LD A, B
-	LD $mem_viewport_x, A
-	LD A, C
-	LD $mem_viewport_y, A
-
+	OR $40
+	LD $mem_bunny_direction, A
 	RET
+
+.INCLUDE "attacks/hop.gbasm"

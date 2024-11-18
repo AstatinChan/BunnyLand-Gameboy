@@ -35,7 +35,7 @@ Init_Menu:
 	CALL =Print_str
 
 	LD HL, $dialogue_menu_choice1_routine
-	LD BC, =Change_To_Loading_Mode
+	LD BC, =Hop_Attack
 	LD A, B
 	LD (HL+), A
 	LD A, C
@@ -66,14 +66,6 @@ Nothing:
 
 Exit_Menu:
 	LD A, $enum_dungeon_mode
-	LD $mem_requested_mode, A
-
-	LD A, $00
-	LD $mem_display_flag, A
-	RET
-
-Change_To_Loading_Mode:
-	LD A, $enum_loading_mode
 	LD $mem_requested_mode, A
 
 	LD A, $00
