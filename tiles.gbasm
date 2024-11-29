@@ -17,6 +17,11 @@ Load_Tile:
 	LD DE, =BG_Tile_Image_Data
 	LD BC, $04a0
 	CALL =memcpy
+
+	LD HL, $8600
+	LD DE, =Animation_Sprites_Data
+	LD BC, $0040
+	CALL =memcpy
 	RET
 
 Dialogue_Box_Tilemap_data:

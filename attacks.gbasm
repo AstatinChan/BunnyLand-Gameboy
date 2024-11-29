@@ -76,3 +76,4 @@ Canceled_Attack:
 	RET
 
 .INCLUDE "attacks/hop.gbasm"
+.INCLUDE "attacks/heal.gbasm"

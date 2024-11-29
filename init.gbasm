@@ -54,6 +54,7 @@ Empty_VRAM: ; (Clear screen)
 	; BG Palette
 	LD A, $e4
 	LD $reg_bg_palette, A
+	LD $reg_obj1_palette, A
 	
 	; OBJ0 Palette
 	LD A, $d3 ; $e4

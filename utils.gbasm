@@ -58,6 +58,74 @@ bzero: ; dest = HL, n = BC
 	.CALL_DE
 .END
 
+.MACRODEF ADD_MOVING_ANIMATION_OFFSET ; Add current moving animation offset to BC, also uses A
+	LD A, $mem_map_loading_flags
+	BIT 3, A
+	JR Z, =$end
+	LD A, $mem_bunny_direction
+	BIT 3, A
+	JR Z, =$end
+	LD A, $mem_bunny_direction
+	AND $07
+	CP $enum_direction_down
+	JR Z, =$down
+	CP $enum_direction_right
+	JR Z, =$right
+	CP $enum_direction_up
+	JR Z, =$up
+
+	$left:
+		LD A, $mem_prepared_viewport_x
+		SUB $09
+		AND $0f
+		INC A
+		XOR $ff
+		INC A
+		ADD $10
+		ADD B
+
+		LD B, A
+		JR =$end
+
+	$right:
+		LD A, $mem_prepared_viewport_x
+		SUB $08
+		AND $0f
+		XOR $ff
+		INC A
+		ADD B
+
+		LD B, A
+
+		JR =$end
+
+	$up:
+		LD A, $mem_prepared_viewport_y
+		SUB $09
+		AND $0f
+		INC A
+		XOR $ff
+		INC A
+		ADD $10
+		ADD C
+
+		LD C, A
+
+		JR =$end
+
+	$down:
+		LD A, $mem_prepared_viewport_y
+		SUB $08
+		AND $0f
+		XOR $ff
+		INC A
+		ADD C
+
+		LD C, A
+
+	$end:
+.END
+
 Print_8bit: ; Number in A, Memory Tilemap position in HL
 	PUSH AF
 	PUSH BC

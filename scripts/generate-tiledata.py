@@ -48,3 +48,9 @@ print("\n\t; Fox back")
 get_sprite_png_parse_output("./sprites/fox/fox-back.png", tallmode=True)
 print("\n\t; Fox front")
 get_sprite_png_parse_output("./sprites/fox/fox-front.png", tallmode=True)
+
+sprite_idx = 0x60
+print("\nAnimation_Sprites_Data:")
+print("\n\t; Sparkles")
+get_sprite_png_parse_output("./sprites/animations/sparkle1.png", tallmode=True)
+get_sprite_png_parse_output("./sprites/animations/sparkle2.png", tallmode=True)

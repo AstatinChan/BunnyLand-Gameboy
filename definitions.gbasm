@@ -7,6 +7,7 @@
 .DEFINE reg_viewport_x ($43)
 .DEFINE reg_bg_palette ($47)
 .DEFINE reg_obj0_palette ($48)
+.DEFINE reg_obj1_palette ($49)
 .DEFINE reg_interrupt_enable ($ff)
 
 .DEFINE VRAM_start $8000
@@ -125,6 +126,7 @@
 
 .DEFINE mem_oam_buffer $ca00 ; Until $ca9f
 .DEFINE mem_oam_buffer_high $ca
+.DEFINE mem_oam_buffer_low ($c980)
 
 .DEFINE dialogue_buffer $caa0 ; Until $cad6
 .DEFINE dialogue_first_line $caa0
@@ -140,6 +142,16 @@
 .DEFINE dialogue_menu_choice2_cursor ($caa9)
 .DEFINE dialogue_menu_choice3_cursor ($cac4)
 .DEFINE dialogue_menu_choice4_cursor ($cacd)
+
+.DEFINE mem_last_animation_low_pointer ($cadf)
+
+.DEFINE mem_animation_list $cae0; Until $caef
+; struct animation {
+;	jump_table_index: u8,
+;	x: u8,
+;	y: u8,
+;	step: u8,
+; }
 
 .DEFINE mem_entities_list $cb00 ; Until cbff
 ; struct entity {

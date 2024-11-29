@@ -41,7 +41,7 @@ Init_Menu:
 	LD A, C
 	LD (HL+), A
 
-	LD BC, =Stairs_action
+	LD BC, =Heal_Attack
 	LD A, B
 	LD (HL+), A
 	LD A, C

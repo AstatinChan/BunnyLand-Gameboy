@@ -1,0 +1,103 @@
+Display_Animation_List:
+	LD HL, $mem_animation_list
+	CALL =Display_Animation
+	CALL =Display_Animation
+	CALL =Display_Animation
+	JP =Display_Animation
+
+Display_Animation:
+	PUSH HL
+
+	LD A, (HL)
+	LD BC, =Animation_Jump_table
+	.JUMP_TABLE
+	
+	POP HL
+	LD A, L
+	ADD $04
+	LD L, A
+
+	RET
+
+Animation_Jump_table:
+	; 00
+	RET
+	NOP
+	NOP
+	NOP
+
+	; 01
+	JP =Sparkle_Animation
+	NOP
+
+Sparkle_Animation:
+	INC HL
+
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_x
+	LD B, A
+	SUB $82
+	CP D
+	RET NC
+	ADD $0e
+	CP D
+	RET C
+	LD A, D
+	SUB $80
+	SUB B
+	AND $0f
+	SWAP A
+	LD B, A
+
+
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_y
+	LD C, A
+	SUB $82
+	CP D
+	RET NC
+	ADD $0d
+	CP D
+	RET C
+	LD A, D
+	SUB $80
+	SUB C
+	AND $0f
+	SWAP A
+	ADD $06
+	LD C, A
+
+	LD E, (HL)
+	INC E
+	LD (HL), E
+
+	.ADD_MOVING_ANIMATION_OFFSET
+
+	PUSH HL
+	LD HL, $mem_oam_buffer
+	LD A, $mem_oam_buffer_low
+	LD L, A
+	ADD $04
+	LD $mem_oam_buffer_low, A
+
+	LD A, C
+	LD (HL+), A
+	LD A, B
+	LD (HL+), A
+	LD A, E
+	SRA A
+	SRA A
+	AND $02
+	ADD $60
+
+	LD (HL+), A
+	LD A, $10
+	LD (HL+), A
+
+	POP HL
+
+	RET

@@ -83,6 +83,13 @@ New_Dungeon:
 	CALL =Load_Map
 	CALL =Load_Objects
 
+	LD HL, $mem_animation_list
+	LD A, $01
+	LD (HL+), A
+	LD A, $10
+	LD (HL+), A
+	LD (HL+), A
+
 	LD A, $00
 	LD $mem_display_flag, A
 
@@ -148,6 +155,10 @@ VBLANK_Entrypoint:
 	CALL =Check_Open_Menu_button
 	CALL =Move_dialogue_cursor
 	CALL =Check_dialogue_action
+
+	LD A, $00
+	LD $mem_oam_buffer_low, A
+	CALL =Display_Animation_List
 	CALL =Display_Entities
 
 	.ENABLE_VBLANK_INTERRUPTS
@@ -207,6 +218,7 @@ STAT_Entrypoint:
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"
 .INCLUDE "entity/display.gbasm"
+.INCLUDE "animation.gbasm"
 .INCLUDE "attacks.gbasm"
 .INCLUDE "gui.gbasm"
 .INCLUDE "tileset.gbasm"

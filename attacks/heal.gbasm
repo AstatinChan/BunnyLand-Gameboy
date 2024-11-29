@@ -1,0 +1,25 @@
+Heal_Attack:
+	LD A, $mem_bunny_direction
+	AND $07
+	LD $mem_bunny_direction, A
+
+	LD A, $mem_bunny_health
+	ADD $03
+	DAA
+	CP $20
+	JR C, =Heal_Attack.Set_health
+	LD A, $20
+	Heal_Attack.Set_health:
+	LD $mem_bunny_health, A
+
+	LD A, $enum_dungeon_mode
+	LD $mem_requested_mode, A
+	LD $mem_current_mode, A
+
+	LD A, $00
+	LD $mem_display_flag, A
+
+	LD A, $mem_map_loading_flags
+	SET 3, A
+	LD $mem_map_loading_flags, A
+	RET

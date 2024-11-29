@@ -1,6 +1,4 @@
 Display_Entities:
-	LD A, $00
-	LD $tmp_var_1, A
 	LD HL, $mem_entities_list
 	CALL =Display_Entity
 	CALL =Display_Entity
@@ -21,11 +19,11 @@ Display_Entities:
 	LD BC, $00a0
 	LD HL, $mem_oam_buffer
 
-	LD A, $tmp_var_1
+	LD A, $mem_oam_buffer_low
 	ADD L
 	LD L, A
 
-	LD A, $tmp_var_1
+	LD A, $mem_oam_buffer_low
 	XOR $ff
 	INC A
 	ADD C
@@ -80,71 +78,7 @@ Display_Entity:
 	ADD $06
 	LD C, A
 
-	LD A, $mem_map_loading_flags
-	BIT 3, A
-	JR Z, =Display_Entity.Viewport_offset_end
-	LD A, $mem_bunny_direction
-	BIT 3, A
-	JR Z, =Display_Entity.Viewport_offset_end
-	LD A, $mem_bunny_direction
-	AND $07
-	CP $enum_direction_down
-	JR Z, =Display_Entity.Viewport_offset_down
-	CP $enum_direction_right
-	JR Z, =Display_Entity.Viewport_offset_right
-	CP $enum_direction_up
-	JR Z, =Display_Entity.Viewport_offset_up
-
-	Display_Entity.Viewport_offset_left:
-		LD A, $mem_prepared_viewport_x
-		SUB $09
-		AND $0f
-		INC A
-		XOR $ff
-		INC A
-		ADD $10
-		ADD B
-
-		LD B, A
-		JR =Display_Entity.Viewport_offset_end
-
-	Display_Entity.Viewport_offset_right:
-		LD A, $mem_prepared_viewport_x
-		SUB $08
-		AND $0f
-		XOR $ff
-		INC A
-		ADD B
-
-		LD B, A
-
-		JR =Display_Entity.Viewport_offset_end
-
-	Display_Entity.Viewport_offset_up:
-		LD A, $mem_prepared_viewport_y
-		SUB $09
-		AND $0f
-		INC A
-		XOR $ff
-		INC A
-		ADD $10
-		ADD C
-
-		LD C, A
-
-		JR =Display_Entity.Viewport_offset_end
-
-	Display_Entity.Viewport_offset_down:
-		LD A, $mem_prepared_viewport_y
-		SUB $08
-		AND $0f
-		XOR $ff
-		INC A
-		ADD C
-
-		LD C, A
-
-	Display_Entity.Viewport_offset_end:
+	.ADD_MOVING_ANIMATION_OFFSET
 
 	LD A, (HL+)
 	BIT 3, A
@@ -295,7 +229,7 @@ Display_Entity:
 		PUSH HL
 		; First OBJ (left)
 		LD HL, $mem_oam_buffer
-		LD A, $tmp_var_1
+		LD A, $mem_oam_buffer_low
 		LD L, A
 		LD A, C
 		LD (HL+), A
@@ -323,7 +257,7 @@ Display_Entity:
 		LD A, D
 		LD (HL+), A
 		LD A, L
-		LD $tmp_var_1, A
+		LD $mem_oam_buffer_low, A
 		POP HL
 
 	Display_Entity.skip:
