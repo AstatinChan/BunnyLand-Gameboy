@@ -164,6 +164,7 @@
 ;	health: u8 (DAA decimal !!)
 ;	flags: u8
 ;		bit 0: speed 2x
+;		bit 1: shadow mode
 ;	_padding: u64
 ;
 ;	# SANTA CHRISTMAS LIST PLEASE #

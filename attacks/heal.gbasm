@@ -12,6 +12,15 @@ Heal_Attack:
 	Heal_Attack.Set_health:
 	LD $mem_bunny_health, A
 
+	PUSH BC
+	LD A, $mem_bunny_x
+	LD B, A
+	LD A, $mem_bunny_y
+	LD C, A
+	LD A, $01
+	CALL =Try_Launch_Animation
+	POP BC
+
 	LD A, $enum_dungeon_mode
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A

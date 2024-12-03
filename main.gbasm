@@ -83,13 +83,8 @@ New_Dungeon:
 	CALL =Load_Map
 	CALL =Load_Objects
 
-	LD HL, $mem_animation_list
-	LD A, $01
-	LD (HL+), A
-	LD A, $10
-	LD (HL+), A
-	LD (HL+), A
-
+	LD A, $02
+	LD $mem_bunny_flags, A
 	LD A, $00
 	LD $mem_display_flag, A
 

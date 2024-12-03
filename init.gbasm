@@ -17,7 +17,7 @@ Nintendo_Logo: ; The Nintendo logo must be stored in bytes 0x104-133
 	.DB $CE,$ED,$66,$66,$CC,$0D,$00,$0B,$03,$73,$00,$83,$00,$0C,$00,$0D 
 	.DB $00,$08,$11,$1F,$88,$89,$00,$0E,$DC,$CC,$6E,$E6,$DD,$DD,$D9,$99 
 	.DB $BB,$BB,$67,$63,$6E,$0E,$EC,$CC,$DD,$DC,$99,$9F,$BB,$B9,$33,$3E 
-	
+
 .PADTO 0x0134
 Checksum: ; The bytes 0x134-0x14d need to add up to 0xe7 (= 0xff - 0x19)
 	.DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -54,12 +54,15 @@ Empty_VRAM: ; (Clear screen)
 	; BG Palette
 	LD A, $e4
 	LD $reg_bg_palette, A
-	LD $reg_obj1_palette, A
-	
+
 	; OBJ0 Palette
 	LD A, $d3 ; $e4
 	LD $reg_obj0_palette, A
-	
+
+	; OBJ1 Palette (frozen, shadow)
+	LD A, $ab
+	LD $reg_obj1_palette, A
+
 Initialize_Window_GUI:
 	LD HL, $9c20
 	Initialize_Window_GUI.top_bar_loop:

@@ -196,7 +196,7 @@ Display_Entity:
 	JP =Display_Entity.Down_Direction_sprite
 
 	Display_Entity.Left_Direction_sprite:
-		CALL =Flags_From_Animation
+		CALL =Flags_From_Animation ; Uses and changes HL
 		LD D, A
 		JP =Display_Entity.Write_OBJ
 
@@ -204,7 +204,7 @@ Display_Entity:
 		LD A, $02
 		ADD E
 		LD E, A
-		CALL =Flags_From_Animation
+		CALL =Flags_From_Animation ; Uses and changes HL
 		OR $20
 		LD D, A
 		JP =Display_Entity.Write_OBJ
@@ -213,7 +213,7 @@ Display_Entity:
 		LD A, $04
 		ADD E
 		LD E, A
-		CALL =Flags_From_Animation
+		CALL =Flags_From_Animation ; Uses and changes HL
 		LD D, A
 		JP =Display_Entity.Write_OBJ
 
@@ -221,7 +221,7 @@ Display_Entity:
 		LD A, $08
 		ADD E
 		LD E, A
-		CALL =Flags_From_Animation
+		CALL =Flags_From_Animation ; Uses and changes HL
 		LD D, A
 		JP =Display_Entity.Write_OBJ
 
@@ -267,11 +267,23 @@ Display_Entity:
 	LD L, A
 	RET
 
-Flags_From_Animation:
+Flags_From_Animation: ; Expect entity in HL (offset doesn't matter) + breaks D (but result in A)
 	LD A, D
 	AND $f0
 	CP $20
-	LD A, $00
-	RET NZ
-	LD A, $40
+	LD D, $00
+	JR NZ, =Flags_From_Animation.Shadow_Palette
+	LD D, $40
+
+	Flags_From_Animation.Shadow_Palette:
+	LD A, L
+	AND $f0
+	OR $07
+	LD L, A
+	BIT 1, (HL)
+	LD A, D
+	RET Z
+
+	OR $10
+
 	RET
