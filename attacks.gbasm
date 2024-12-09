@@ -70,10 +70,10 @@ Canceled_Attack:
 	LD $mem_map_loading_flags, A
 
 	LD A, $mem_bunny_direction
-	AND $07
 	OR $40
 	LD $mem_bunny_direction, A
 	RET
 
 .INCLUDE "attacks/hop.gbasm"
 .INCLUDE "attacks/heal.gbasm"
+.INCLUDE "attacks/freeze.gbasm"

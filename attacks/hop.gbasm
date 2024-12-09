@@ -94,7 +94,6 @@ Hop_Attack_Loading_VBlank:
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
 	LD A, $mem_bunny_direction
-	AND $07
 	OR $38
 	LD $mem_bunny_direction, A
 	LD A, $mem_map_loading_flags

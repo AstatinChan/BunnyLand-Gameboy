@@ -38,7 +38,7 @@
 	LD $reg_viewport_x, A
 	LD A, C
 	LD $reg_viewport_y, A
-	LD A, $palette_normal
+	LD A, $mem_prepared_color_palette
 	LD $reg_bg_palette, A
 	LD A, $lcdc_window_disabled
 	LD $reg_lcd_controller, A
@@ -83,9 +83,8 @@ New_Dungeon:
 	CALL =Load_Map
 	CALL =Load_Objects
 
-	LD A, $02
-	LD $mem_bunny_flags, A
 	LD A, $00
+	LD $mem_bunny_flags, A
 	LD $mem_display_flag, A
 
 	LD A, $enum_dungeon_mode

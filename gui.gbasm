@@ -47,7 +47,7 @@ Init_Menu:
 	LD A, C
 	LD (HL+), A
 
-	LD BC, =Nothing
+	LD BC, =Freeze_Attack
 	LD A, B
 	LD (HL+), A
 	LD A, C

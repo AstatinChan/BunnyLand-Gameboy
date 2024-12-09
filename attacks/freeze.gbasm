@@ -1,0 +1,114 @@
+Freeze_Attack_Loading_VBlank:
+	LD A, $mem_prepared_viewport_x
+	LD B, A
+	LD A, $mem_loading_step
+	SRA A
+	AND $03
+	BIT 1, A
+	RES 1, A
+	JR NZ, =Freeze_Attack_Loading_VBlank.Shaking_Animation.skip_invert
+	CPL
+	INC A
+	Freeze_Attack_Loading_VBlank.Shaking_Animation.skip_invert:
+	ADD B
+	LD $mem_prepared_viewport_x, A
+
+	LD A, $mem_loading_step
+	SRA A
+	SRA A
+	BIT 0, A
+	JR Z, =Freeze_Attack_Loading_VBlank.Blink_Animation.dark_palette	
+	LD A, $palette_normal
+	LD $mem_prepared_color_palette, A
+	JR =Freeze_Attack_Loading_VBlank.end
+
+	Freeze_Attack_Loading_VBlank.Blink_Animation.dark_palette:
+	LD A, $palette_white
+	LD $mem_prepared_color_palette, A
+
+	Freeze_Attack_Loading_VBlank.end:
+	LD A, $mem_loading_step
+	INC A
+	AND $0f
+	LD $mem_loading_step, A
+	CP $00
+	RET NZ
+
+	LD A, $enum_dungeon_mode
+	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
+	LD A, $mem_map_loading_flags
+	SET 3, A
+	LD $mem_map_loading_flags, A
+	RET
+
+Freeze_Attack_Loading_Regular:
+	LD A, $mem_loading_step
+	CP $00
+	RET Z
+
+	LD BC, $mem_entities_list
+	SLA A
+	SLA A
+	SLA A
+	SLA A
+	INC A
+	LD C, A
+
+	LD A, (BC)
+	LD E, A
+
+	LD A, $mem_bunny_x
+	SUB E
+	.ABS
+
+	LD D, A
+
+	INC C
+
+	LD A, (BC)
+	LD E, A
+
+	LD A, $mem_bunny_y
+	SUB E
+	.ABS
+
+	ADD D
+	LD D, A
+
+	LD A, $02
+	CP D
+
+	RET C
+
+	LD A, C
+	ADD $05
+	LD C, A
+	LD A, (BC)
+	SET 1, A
+	LD (BC), A
+
+	INC C
+	LD A, $01
+	LD (BC), A
+	RET
+
+Freeze_Attack:
+	LD BC, =Freeze_Attack_Loading_VBlank
+	LD A, B
+	LD $mem_loading_mode_vblank_func_pointer_high, A
+	LD A, C
+	LD $mem_loading_mode_vblank_func_pointer_low, A
+
+	LD BC, =Freeze_Attack_Loading_Regular
+	LD A, B
+	LD $mem_loading_mode_regular_func_pointer_high, A
+	LD A, C
+	LD $mem_loading_mode_regular_func_pointer_low, A
+
+	LD A, $enum_loading_mode
+	LD $mem_requested_mode, A
+
+	LD A, $00
+	LD $mem_display_flag, A
+	RET

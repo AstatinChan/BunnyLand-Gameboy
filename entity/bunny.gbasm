@@ -100,10 +100,12 @@ Move_Bunny:
 		CP $0f
 		JP NZ, =End_movement.end
 		LD A, $mem_bunny_direction
-		BIT 3, A
+		LD D, A
+		AND $07
+		BIT 3, D
+		LD $mem_bunny_direction, A
 		JR Z, =End_movement.end
 
-		LD D, A
 		LD A, $mem_bunny_x
 		LD B, A
 		LD A, $mem_bunny_y

@@ -67,8 +67,7 @@
 .DEFINE enum_dungeon_menu_mode $01
 .DEFINE enum_dungeon_dialogue_mode $02
 .DEFINE enum_loading_mode $03
-.DEFINE enum_dead_mode $04
-
+.DEFINE enum_dead_mode $0
 .DEFINE mem_menu_cursor_position ($c016)
 .DEFINE mem_last_button_direction ($c017)
 
@@ -88,6 +87,8 @@
 .DEFINE mem_loading_mode_vblank_func_pointer_low ($c026)
 .DEFINE mem_loading_mode_regular_func_pointer_high ($c027)
 .DEFINE mem_loading_mode_regular_func_pointer_low ($c028)
+
+.DEFINE mem_prepared_color_palette ($c029)
 
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
@@ -165,7 +166,9 @@
 ;	flags: u8
 ;		bit 0: speed 2x
 ;		bit 1: shadow mode
-;	_padding: u64
+;	status: u8
+;	; bit 0: whether or not turns should be skipped
+;	_padding: u56
 ;
 ;	# SANTA CHRISTMAS LIST PLEASE #
 ;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)
@@ -177,8 +180,13 @@
 .DEFINE enum_direction_down $04
 
 .DEFINE palette_normal $e4
+.DEFINE palette_black $ff
+.DEFINE palette_white $94
 .DEFINE palette_bold_font $f4
 .DEFINE palette_thin_font $c4
+
+.DEFINE obj_palette_normal $d3
+.DEFINE obj_palette_frozen $ab
 
 .DEFINE lcdc_window_enabled $8d
 .DEFINE lcdc_window_disabled $87

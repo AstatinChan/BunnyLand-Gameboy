@@ -1,8 +1,4 @@
 Heal_Attack:
-	LD A, $mem_bunny_direction
-	AND $07
-	LD $mem_bunny_direction, A
-
 	LD A, $mem_bunny_health
 	ADD $03
 	DAA
