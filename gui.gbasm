@@ -53,7 +53,7 @@ Init_Menu:
 	LD A, C
 	LD (HL+), A
 
-	LD BC, =Exit_Menu
+	LD BC, =Earcoptr_Attack
 	LD A, B
 	LD (HL+), A
 	LD A, C

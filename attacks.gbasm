@@ -77,3 +77,4 @@ Canceled_Attack:
 .INCLUDE "attacks/hop.gbasm"
 .INCLUDE "attacks/heal.gbasm"
 .INCLUDE "attacks/freeze.gbasm"
+.INCLUDE "attacks/earcoptr.gbasm"

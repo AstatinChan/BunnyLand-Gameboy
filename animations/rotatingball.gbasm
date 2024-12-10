@@ -1,0 +1,95 @@
+Rotation_Values:
+	.DB $F4, $07, $F5, $0A, $F7, $0D, $F8, $0F, $FD, $13, $00, $14, $03, $14, $06, $14, $09, $13, $0C, $12, $0E, $10, $11, $0E, $12, $0B, $13, $09, $14, $06, $14, $02, $13, $FF, $12, $FD, $11, $FA, $0E, $F8, $0C, $F6, $09, $F5, $06, $F4, $03, $F4, $00, $F4, $FD, $F5, $FB, $F7, $F8, $F9, $F7, $FB, $F5, $FE, $F4, $01, $F4, $04
+
+Rotating_Ball_Animation:
+	INC HL
+
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_x
+	LD B, A
+	SUB $82
+	CP D
+	RET NC
+	ADD $0e
+	CP D
+	RET C
+	LD A, D
+	SUB $80
+	SUB B
+	AND $0f
+	SWAP A
+	LD B, A
+
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_y
+	LD C, A
+	SUB $82
+	CP D
+	RET NC
+	ADD $0d
+	CP D
+	RET C
+	LD A, D
+	SUB $80
+	SUB C
+	AND $0f
+	SWAP A
+	ADD $06
+	LD C, A
+
+	LD E, (HL)
+	INC E
+	LD A, $1f
+	AND E
+	LD E, A
+	XOR A
+	CP E
+	JP Z, =Rotating_Ball.End_animation
+
+	LD (HL), E
+
+	LD A, E
+	SLA A
+	LD DE, =Rotation_Values
+	ADD E
+	LD E, A
+	LD A, D
+	ADC $00
+	LD D, A
+
+	.ADD_MOVING_ANIMATION_OFFSET
+
+	PUSH HL
+	LD HL, $mem_oam_buffer
+	LD A, $mem_oam_buffer_low
+	LD L, A
+	ADD $08
+	LD $mem_oam_buffer_low, A
+
+	LD A, (DE)
+	ADD C
+	LD (HL+), A
+
+	INC DE
+
+	LD A, (DE)
+	ADD B
+	LD (HL+), A
+	LD A, $64
+	LD (HL+), A
+	LD A, $00
+	LD (HL+), A
+
+	POP HL
+	RET
+
+	Rotating_Ball.End_animation:
+	LD A, L
+	AND $fc
+	LD L, A
+	LD (HL), $00
+	RET
