@@ -37,7 +37,7 @@ sudo cp gameboy-asm /usr/local/bin/gbasm
 
 We can now download the game sources
 ```bash
-git clone git@github.com:AstatinChan/BunnyLand-Gameboy.git
+git clone https://github.com/AstatinChan/BunnyLand-Gameboy.git
 cd BunnyLand-Gameboy
 ```
 
