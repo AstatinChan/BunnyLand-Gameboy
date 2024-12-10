@@ -1,4 +1,16 @@
 Initialize_Entities:
+	LD A, $mem_bunny_health
+	LD B, A
+	LD HL, $mem_entities_list
+	Clear_Entities.loop:
+		XOR A
+		LD (HL+), A
+		CP L
+		JR NZ, =Clear_Entities.loop
+
+	LD A, B
+	LD $mem_bunny_health, A
+
 	LD HL, $mem_entities_list
 	LD A, $01
 	LD (HL+), A

@@ -167,6 +167,59 @@ Fox_Turn:
 	LD A, (HL+)
 	LD D, A
 
+	Fox_Turn.Health_check:
+		LD A, $mem_moving_animation_step
+		CP $03
+		JR NZ, =Fox_Turn.Health_check.end
+
+		LD A, L
+		AND $f0
+		ADD $06
+		LD L, A
+
+		LD A, (HL)
+		CP $00
+		JR NZ, =Fox_Turn.Health_check.end
+
+		LD A, L
+		AND $f0
+		LD L, A
+
+		LD (HL), $00
+		JP NZ, =Fox_Turn.Skip_turn
+	Fox_Turn.Health_check.end:
+
+	Fox_Turn.Freeze_shiver:
+		LD A, $mem_moving_animation_step
+		CP $00
+		JP NZ, =Fox_Turn.Freeze_shiver.end
+		LD A, L
+		AND $f0
+		ADD $08
+		LD L, A
+		LD A, $01
+		CP (HL)
+		JR NZ, =Fox_Turn.Freeze_shiver.end
+		LD A, D
+		AND $07
+		LD D, A
+		CALL =RNG_Step
+		CP $55
+		JP NC, =Fox_Turn.Skip_turn
+		LD A, D
+		OR $40
+		LD D, A
+
+		CALL =RNG_Step
+		CP $55
+		JP NC, =Fox_Turn.Skip_turn
+
+		LD A, $00
+		LD (HL-), A
+		RES 1, (HL)
+		JP =Fox_Turn.Skip_turn
+	Fox_Turn.Freeze_shiver.end:
+
 	Fox_Turn.Should_turn_be_skipped:
 		LD A, L
 		AND $f0
@@ -394,27 +447,7 @@ Fox_Turn:
 		.ADD_A_TO_DIRECTION_BC
 	Fox_Turn.End_movement.end:
 
-	Fox_Turn.Health_check:
-		LD A, $mem_moving_animation_step
-		CP $03
-		JR NZ, =Fox_Turn.Health_check.end
-
-		LD A, L
-		AND $f0
-		ADD $06
-		LD L, A
-
-		LD A, (HL)
-		CP $00
-		JR NZ, =Fox_Turn.Health_check.end
-
-		LD A, L
-		AND $f0
-		LD L, A
-
-		LD (HL), $00
-	Fox_Turn.Health_check.end:
-
+	Fox_Turn.Skip_Turn:
 	LD A, L
 	AND $f0
 	LD L, A
@@ -425,8 +458,6 @@ Fox_Turn:
 	LD (HL+), A
 	LD A, D
 	LD (HL+), A
-
-	Fox_Turn.Skip_Turn:
 	POP DE
 	POP BC
 	POP HL
