@@ -61,6 +61,8 @@
 
 .DEFINE mem_display_flag ($c013)
 ; bit 0: if dialogue box is displayed
+; bit 1: dialogue box first line should be bold
+; bit 2: if dialogue box text should be refreshed
 
 .DEFINE mem_current_mode ($c014)
 .DEFINE mem_requested_mode ($c015)
@@ -140,10 +142,10 @@
 .DEFINE dialogue_menu_choice3 $cac5
 .DEFINE dialogue_menu_choice4 $cace
 
-.DEFINE dialogue_menu_choice1_cursor ($caa0)
-.DEFINE dialogue_menu_choice2_cursor ($caa9)
-.DEFINE dialogue_menu_choice3_cursor ($cac4)
-.DEFINE dialogue_menu_choice4_cursor ($cacd)
+.DEFINE dialogue_menu_choice1_cursor ($9dc1)
+.DEFINE dialogue_menu_choice2_cursor ($9dca)
+.DEFINE dialogue_menu_choice3_cursor ($9e01)
+.DEFINE dialogue_menu_choice4_cursor ($9e0a)
 
 .DEFINE mem_last_animation_low_pointer ($cadf)
 

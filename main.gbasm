@@ -91,16 +91,27 @@ New_Dungeon:
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
 
+	LD HL, $9c0f
+	LD BC, =Debug_Text
+	CALL =Print_str
+
+	LD A, $68
+	LD ($9c02), A
+
 	.ENABLE_WINDOW_NO_WAIT_HBLANK
 	.ENABLE_VBLANK_INTERRUPTS
 	EI
-	Wait_for_VRAM.loop:
+	Wait_for_Interrupt.loop:
 	HALT
 	EI
-	JP =Wait_for_VRAM.loop
+	JP =Wait_for_Interrupt.loop
 
 VBLANK_Entrypoint:
 	.ENABLE_WINDOW_NO_WAIT_HBLANK
+
+	LD A, $tmp_var_5
+	LD HL, $9c12
+	CALL =Print_8bit
 
 	LD A, $palette_bold_font
 	LD $reg_bg_palette, A
@@ -108,9 +119,6 @@ VBLANK_Entrypoint:
 	LD HL, $9c00
 	LD A, $mem_bunny_health
 	CALL =Print_8bit
-
-	LD A, $68
-	LD (HL), A
 
 	CALL $OAM_DMA_Transfer_routine
 	CALL =Loading_Mode_VBlank
@@ -122,8 +130,12 @@ VBLANK_Entrypoint:
 		CALL =Display_Object
 	Skip_VBlank_Dungeon_Update:
 
+
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
+
+	LD A, $reg_lcd_status
+	LD $tmp_var_5, A
 
 	; LYC
 	LD A, $09

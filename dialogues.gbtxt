@@ -1,5 +1,6 @@
 Bunny_Prefix: Bunny:
 Text_1: Hello !
+Debug_Text: DBG
 Menu_Choice_1: Hop
 Menu_Choice_2: Heal
 Menu_Choice_3: Freeze

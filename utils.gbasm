@@ -235,10 +235,10 @@ VBlank_Wait:
 	BIT 7, A
 	JR Z, =VBlank_Wait.End
 	VBlank_Wait.loop:
-	LD A, $reg_lcd_status
-	AND $03
-	CP $01
-	JR NZ, =VBlank_Wait.loop
+		LD A, $reg_lcd_status
+		AND $03
+		CP $01
+		JR NZ, =VBlank_Wait.loop
 	VBlank_Wait.End:
 	POP AF
 	RET

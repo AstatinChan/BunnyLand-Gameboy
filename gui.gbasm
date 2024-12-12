@@ -1,16 +1,18 @@
 Copy_Dialogue_Buffer:
 	LD A, $mem_display_flag
-	BIT 0, A
+	BIT 2, A
 	RET Z
+	RES 2, A
+	LD $mem_display_flag, A
 	LD HL, $9dc1
 	LD DE, $dialogue_first_line
 	LD BC, $12
 	CALL =memcpy
 
-	LD HL, $9de1
-	LD DE, $dialogue_second_line
-	LD BC, $12
-	CALL =memcpy
+	; LD HL, $9de1
+	; LD DE, $dialogue_second_line
+	; LD BC, $12
+	; CALL =memcpy
 
 	LD HL, $9e01
 	LD DE, $dialogue_third_line
@@ -184,7 +186,7 @@ Check_Open_Menu_button:
 
 	CALL =Init_Menu
 
-	LD A, $01
+	LD A, $05
 	LD $mem_display_flag, A
 
 	LD A, $enum_dungeon_menu_mode
