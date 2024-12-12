@@ -36,6 +36,7 @@
 ;	death = 2
 ;	superjump = 3
 ;	shaking = 4
+;	blinking = 5 (Blink with both loading steps and animation step)
 
 .DEFINE mem_bunny_health ($cb06)
 .DEFINE mem_bunny_flags ($cb07)

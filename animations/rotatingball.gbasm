@@ -1,5 +1,5 @@
 Rotation_Values:
-	.DB $F4, $07, $F5, $0A, $F7, $0D, $F8, $0F, $FD, $13, $00, $14, $03, $14, $06, $14, $09, $13, $0C, $12, $0E, $10, $11, $0E, $12, $0B, $13, $09, $14, $06, $14, $02, $13, $FF, $12, $FD, $11, $FA, $0E, $F8, $0C, $F6, $09, $F5, $06, $F4, $03, $F4, $00, $F4, $FD, $F5, $FB, $F7, $F8, $F9, $F7, $FB, $F5, $FE, $F4, $01, $F4, $04
+	.DB $F5, $0A, $F9, $0F, $FE, $13, $0A, $13, $0F, $0F, $13, $0A, $14, $04, $13, $FE, $0F, $F9, $0A, $F5, $04, $F4, $FE, $F5, $F9, $F9, $F5, $FE, $F4, $04, $F5, $0A
 
 Rotating_Ball_Animation:
 	INC HL
@@ -43,16 +43,14 @@ Rotating_Ball_Animation:
 
 	LD E, (HL)
 	INC E
-	LD A, $1f
-	AND E
-	LD E, A
-	XOR A
+	LD A, $2f
 	CP E
-	JP Z, =Rotating_Ball.End_animation
+	JP C, =Rotating_Ball.End_animation
 
 	LD (HL), E
 
 	LD A, E
+	AND $0f
 	SLA A
 	LD DE, =Rotation_Values
 	ADD E

@@ -168,10 +168,6 @@ Fox_Turn:
 	LD D, A
 
 	Fox_Turn.Health_check:
-		LD A, $mem_moving_animation_step
-		CP $03
-		JR NZ, =Fox_Turn.Health_check.end
-
 		LD A, L
 		AND $f0
 		ADD $06

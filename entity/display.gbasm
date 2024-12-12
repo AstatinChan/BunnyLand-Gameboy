@@ -90,6 +90,25 @@ Display_Entity:
 		.ADD_A_TO_DIRECTION_BC
 	Display_Entity.Moving_Animation.end:
 
+	Display_Entity.Blinking_Animation:
+		LD A, D
+		AND $f0
+		CP $50
+		JR NZ, =Display_Entity.Blinking_Animation.end
+
+		LD A, $mem_moving_animation_step
+		PUSH DE
+		LD E, A
+		LD A, $mem_loading_step
+		XOR E
+		POP DE
+		AND $02
+		CP $00
+		JP Z, =Display_Entity.skip
+
+	Display_Entity.Blinking_Animation.end:
+
+
 	Display_Entity.Action_Animation:
 		LD A, D
 		AND $f0
