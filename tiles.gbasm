@@ -1,8 +1,9 @@
 Load_Tile:
 	LD HL, $8020
 	LD DE, =OBJ_Tile_Image_Data
-	LD BC, $0280
+	LD BC, $0180
 	CALL =memcpy
+
 	LD HL, $8800
 	LD DE, =Font_Data
 	LD BC, $2b0
