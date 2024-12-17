@@ -112,6 +112,15 @@ VBLANK_Entrypoint:
 	LD A, $tmp_var_5
 	LD HL, $9c12
 	CALL =Print_8bit
+	LD A, $tmp_var_6
+	LD HL, $9c0d
+	CALL =Print_8bit
+	LD A, $tmp_var_4
+	LD HL, $9c0a
+	CALL =Print_8bit
+	LD A, $mem_bunny_current_room_idx
+	LD HL, $9c07
+	CALL =Print_8bit
 
 	LD A, $palette_bold_font
 	LD $reg_bg_palette, A
@@ -134,9 +143,6 @@ VBLANK_Entrypoint:
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
 
-	LD A, $reg_lcd_status
-	LD $tmp_var_5, A
-
 	; LYC
 	LD A, $09
 	LD $reg_lyc, A
@@ -152,6 +158,7 @@ VBLANK_Entrypoint:
 
 		CALL =Object_Interactions_Check
 		CALL =Entities_Actions
+		CALL =Respawn_Entities
 		CALL =Prepare_Scrolling_Map
 
 	Skip_Dungeon_Update:

@@ -182,6 +182,9 @@ Fox_Turn:
 		LD L, A
 
 		LD (HL), $00
+		LD A, $mem_enemies_alive_count
+		DEC A
+		LD $mem_enemies_alive_count, A
 		JP NZ, =Fox_Turn.Skip_turn
 	Fox_Turn.Health_check.end:
 

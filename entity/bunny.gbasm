@@ -104,7 +104,7 @@ Move_Bunny:
 		AND $07
 		BIT 3, D
 		LD $mem_bunny_direction, A
-		JR Z, =End_movement.end
+		JP Z, =End_movement.end
 
 		LD A, $mem_bunny_x
 		LD B, A
@@ -131,6 +131,59 @@ Move_Bunny:
 		LD A, $mem_bunny_flags
 		RES 0, A
 		LD $mem_bunny_flags, A
+
+		PUSH DE
+		Update_current_room:
+			LD A, $ff
+			LD $mem_bunny_current_room_idx, A
+
+			LD HL, $mem_room_list
+
+			Update_current_room.loop:
+			LD A, $mem_bunny_x
+			LD D, A
+			LD E, (HL)
+			CP E
+			JR C, =Update_current_room.skip
+
+			LD A, E
+			INC HL
+			ADD (HL)
+			CP D
+			JR C, =Update_current_room.skip
+
+			INC HL
+
+			LD A, $mem_bunny_y
+			LD D, A
+			LD E, (HL)
+			CP E
+			JR C, =Update_current_room.skip
+
+			LD A, E
+			INC HL
+			ADD (HL)
+			CP D
+			JR C, =Update_current_room.skip
+
+			LD A, L
+			SUB $83
+			SRA A
+			SRA A
+
+			LD $mem_bunny_current_room_idx, A
+			JR =Update_current_room.end
+
+			Update_current_room.skip:
+			LD A, L
+			AND $fc
+			ADD $04
+			LD L, A
+			CP $a0
+		JR NZ, =Update_current_room.loop
+		Update_current_room.end:
+		POP DE
+
 	End_movement.end:
 
 	Middle_movement_doublespeed_viewport_update:

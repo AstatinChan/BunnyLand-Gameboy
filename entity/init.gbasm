@@ -60,6 +60,12 @@ Initialize_Entities:
 	ADD $0a
 	LD L, A
 
+	LD A, $00
+	LD $mem_enemies_alive_count, A
+
+	LD A, $ff
+	LD $mem_bunny_current_room_idx, A
+
 	CALL =Initialize_Fox
 	CALL =Initialize_Fox
 	CALL =Initialize_Fox
@@ -90,10 +96,39 @@ Fix_Bunny_screen:
 	RET
 
 Initialize_Fox:
+	LD A, $mem_enemies_alive_count
+	INC A
+	LD $mem_enemies_alive_count, A
+
 	LD A, $0d
 	LD (HL+), A
-	LD A, $mem_number_of_rooms
-	CALL =RNG_Bound
+	LD A, $mem_bunny_current_room_idx
+	LD $tmp_var_6, A
+	CP $FF
+	JR Z, =Initialize_Fox.All_rooms_allowed
+	LD B, A
+	Initialize_Fox.Skip_bunny_room:
+		LD A, $mem_number_of_rooms
+		CP $01
+		JR Z, =Initialize_Fox.All_rooms_allowed
+
+		DEC A
+		CALL =RNG_Bound
+		LD $tmp_var_5, A
+		INC A
+		LD C, A
+		LD A, B
+		CP C
+		LD A, C
+		JR C, =Initialize_Fox.Room_restriction.end
+		DEC A
+		JR =Initialize_Fox.Room_restriction.end
+
+	Initialize_Fox.All_rooms_allowed:
+		LD A, $mem_number_of_rooms
+		CALL =RNG_Bound
+	Initialize_Fox.Room_restriction.end:
+	LD $tmp_var_4, A
 	SLA A
 	SLA A
 	ADD $80
@@ -139,4 +174,36 @@ Initialize_Fox:
 	ADD $0a
 	LD L, A
 
+	RET
+
+Respawn_Entities:
+	LD A, $mem_moving_animation_step
+	CP $04
+	RET NZ
+
+	LD A, $mem_enemies_alive_count
+	CP $05
+	RET NC
+
+	CALL =RNG_Step
+	AND $0f
+	CP $00
+	RET NZ
+
+	LD HL, $mem_entities_list
+	FindFreeEntity.loop:
+		; This loop supposes that there is indeed enough space for a new entity
+		; to be spawn (thus the previous mem_enemies_alive_count).
+		; If entities are changed at some point to contain things that are not
+		; counted in mem_enemies_alive_count, this could result in an infinite loop.
+		LD A, L
+		AND $f0
+		ADD $10
+		LD L, A
+
+		LD A, $00
+		CP (HL)
+		JR NZ, =FindFreeEntity.loop
+
+	CALL =Initialize_Fox
 	RET

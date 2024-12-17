@@ -92,7 +92,7 @@ Is_Collisionable: ; X in A, Y in B, Result A
 
 Reset_Entities_Collision_Map:
 	LD A, $mem_moving_animation_step
-	CP $04
+	CP $05
 	JR NZ, =Reset_Entities_Collision_Map.end
 
 	LD HL, $mem_entities_collisions

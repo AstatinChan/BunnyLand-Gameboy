@@ -22,7 +22,8 @@
 ; frame 0 (or 1 ?): movement can be initiated when with button actions
 ; frame 2: applying bunny attack damages
 ; frame 3: checking entities health and death if 0
-; frame 4: entity collision map is being updated
+; frame 4: new entity spawn
+; frame 5: entity collision map is being updated
 ; frame 15: movement is ended and coordinates are updated
 
 .DEFINE mem_bunny_sprite ($cb00)
@@ -93,6 +94,9 @@
 
 .DEFINE mem_prepared_color_palette ($c029)
 
+.DEFINE mem_bunny_current_room_idx ($c02a)
+.DEFINE mem_enemies_alive_count ($c02b)
+
 .DEFINE next_free_head_higher_bytes $c7
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 
@@ -111,13 +115,13 @@
 .DEFINE mem_dungeon_map_high $c8
 
 .DEFINE mem_room_list $c880 ; Takes the memory from c880 to c89f
-.DEFINE mem_number_of_rooms ($c8a0)
 ; struct room {
 ;   x: u8,
 ;   sizex: u8,
 ;   y: u8,
 ;   sizey: u8,
 ; }
+.DEFINE mem_number_of_rooms ($c8a0)
 
 .DEFINE mem_object_list $c900 ; Takes the memory from c900 to c97f
 ; struct objects {
