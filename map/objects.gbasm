@@ -3,11 +3,14 @@ Initialize_Objects:
 	OR $01
 	LD $mem_map_loading_flags, A
 	LD HL, $mem_object_list
+	LD BC, $0080
+	CALL =bzero
+	LD HL, $mem_object_list
 	CALL =Spawn_stairs
+	CALL =Spawn_carrot
 	RET
 
-Spawn_stairs:
-	LD A, $60
+Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E
 	LD (HL+), A
 	
 	LD A, $mem_number_of_rooms
@@ -38,16 +41,72 @@ Spawn_stairs:
 	INC A
 	CALL =RNG_Bound
 	ADD D
-	LD (HL+), A
+	LD (HL), A
 
+	DEC HL
+	
+	LD BC, $mem_object_list
+	Object_check_collisions.loop:
+		LD A, (BC)
+		CP $00
+		JR Z, =Object_check_collisions.loop.next
 
-	LD A, $01
-	LD (HL+), A
+		INC BC
+		LD A, C
+		CP L
+		JR Z, =Object_check_collisions.loop.next
+
+		LD A, (BC)
+		CP (HL)
+		JR NZ, =Object_check_collisions.loop.next
+
+		INC BC
+		INC HL
+		LD A, (BC)
+		CP (HL)
+		JR NZ, =Object_check_collisions.loop.next
+
+		DEC HL
+		DEC HL
+		XOR A
+		LD (HL+), A
+		LD (HL+), A
+		LD (HL), A
+		DEC HL
+		DEC HL
+		RET
+
+		Object_check_collisions.loop.next:	
+		LD A, L
+		AND $f8
+		ADD $01
+		LD L, A
+		LD A, C
+		AND $f8
+		ADD $08
+		LD C, A
+		CP $80
+		JR NZ, =Object_check_collisions.loop
+
 	INC HL
 	INC HL
-	INC HL
-	INC HL
+
+	LD (HL), E
+	LD A, L
+	AND $f8
+	ADD $08
+	LD L, A
 	RET
+
+Spawn_stairs:
+	LD A, $60
+	LD E, $01
+	JP =Spawn_object_in_random_room
+
+Spawn_carrot:
+	LD A, $64
+	LD E, $02
+	JP =Spawn_object_in_random_room
 
 Object_Interaction_Jump_table:
 	; 00
@@ -58,6 +117,10 @@ Object_Interaction_Jump_table:
 
 	; 01
 	JP =Stairs_action
+	NOP
+
+	; 02
+	JP =Heal_Action
 	NOP
 
 Stairs_action:
@@ -76,6 +139,29 @@ Stairs_action:
 
 	CALL =Reset_Map
 	JP =New_Dungeon
+
+Heal_Action:
+	LD A, $mem_bunny_health
+	ADD $03
+	DAA
+	CP $20
+	JR C, =Heal_Action.Set_health
+	LD A, $20
+	Heal_Action.Set_health:
+	LD $mem_bunny_health, A
+
+	PUSH BC
+	LD A, $mem_bunny_x
+	LD B, A
+	LD A, $mem_bunny_y
+	LD C, A
+	LD A, $01
+	CALL =Try_Launch_Animation
+	POP BC
+
+	LD (HL), $00
+
+	RET
 
 Display_Object:
 	LD HL, $mem_object_list
