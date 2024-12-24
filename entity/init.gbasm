@@ -136,6 +136,7 @@ Initialize_Fox:
 
 	LD B, $c8
 
+	; X
 	LD A, (BC)
 	LD D, A
 	INC BC
@@ -148,6 +149,7 @@ Initialize_Fox:
 
 	INC BC
 
+	; Y
 	LD A, (BC)
 	LD D, A
 	INC BC
@@ -156,6 +158,8 @@ Initialize_Fox:
 	CALL =RNG_Bound
 	ADD D
 	LD (HL+), A
+
+	; Direction
 	LD A, $03
 	LD (HL+), A
 

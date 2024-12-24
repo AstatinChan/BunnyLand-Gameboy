@@ -91,9 +91,9 @@ New_Dungeon:
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
 
-	LD HL, $9c0f
-	LD BC, =Debug_Text
-	CALL =Print_str
+	; LD HL, $9c0f
+	; LD BC, =Debug_Text
+	; CALL =Print_str
 
 	LD A, $68
 	LD ($9c02), A
@@ -109,18 +109,18 @@ New_Dungeon:
 VBLANK_Entrypoint:
 	.ENABLE_WINDOW_NO_WAIT_HBLANK
 
-	LD A, $tmp_var_5
-	LD HL, $9c12
-	CALL =Print_8bit
-	LD A, $tmp_var_6
-	LD HL, $9c0d
-	CALL =Print_8bit
-	LD A, $tmp_var_4
-	LD HL, $9c0a
-	CALL =Print_8bit
-	LD A, $mem_bunny_current_room_idx
-	LD HL, $9c07
-	CALL =Print_8bit
+	; LD A, $tmp_var_5
+	; LD HL, $9c12
+	; CALL =Print_8bit
+	; LD A, $tmp_var_6
+	; LD HL, $9c0d
+	; CALL =Print_8bit
+	; LD A, $tmp_var_4
+	; LD HL, $9c0a
+	; CALL =Print_8bit
+	; LD A, $mem_bunny_current_room_idx
+	; LD HL, $9c07
+	; CALL =Print_8bit
 
 	LD A, $palette_bold_font
 	LD $reg_bg_palette, A

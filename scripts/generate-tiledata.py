@@ -36,11 +36,18 @@ get_sprite_png_parse_output("./sprites/font.png")
 sprite_idx = 0x02
 print("\nOBJ_Tile_Image_Data:")
 print("\n\t; Bunny side")
-get_sprite_png_parse_output("./sprites/bunny/bunny-side.png", tallmode=True)
+# get_sprite_png_parse_output("./sprites/bunny/bunny-side.png", tallmode=True)
+# print("\n\t; Bunny back")
+# get_sprite_png_parse_output("./sprites/bunny/bunny-back.png", tallmode=True)
+# print("\n\t; Bunny front")
+# get_sprite_png_parse_output("./sprites/bunny/bunny-front.png", tallmode=True)
+get_sprite_png_parse_output("./sprites/cat/side.png", tallmode=True)
 print("\n\t; Bunny back")
-get_sprite_png_parse_output("./sprites/bunny/bunny-back.png", tallmode=True)
+get_sprite_png_parse_output("./sprites/cat/back.png", tallmode=True)
 print("\n\t; Bunny front")
-get_sprite_png_parse_output("./sprites/bunny/bunny-front.png", tallmode=True)
+get_sprite_png_parse_output("./sprites/cat/front.png", tallmode=True)
+
+
 
 print("\n\t; Fox side")
 get_sprite_png_parse_output("./sprites/fox/fox-side1.png", tallmode=True)
