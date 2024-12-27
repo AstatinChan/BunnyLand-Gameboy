@@ -35,17 +35,25 @@ get_sprite_png_parse_output("./sprites/font.png")
 
 sprite_idx = 0x02
 print("\nOBJ_Tile_Image_Data:")
-print("\n\t; Bunny side")
+# print("\n\t; Bunny side")
 # get_sprite_png_parse_output("./sprites/bunny/bunny-side.png", tallmode=True)
 # print("\n\t; Bunny back")
 # get_sprite_png_parse_output("./sprites/bunny/bunny-back.png", tallmode=True)
 # print("\n\t; Bunny front")
 # get_sprite_png_parse_output("./sprites/bunny/bunny-front.png", tallmode=True)
-get_sprite_png_parse_output("./sprites/cat/side.png", tallmode=True)
-print("\n\t; Bunny back")
-get_sprite_png_parse_output("./sprites/cat/back.png", tallmode=True)
-print("\n\t; Bunny front")
-get_sprite_png_parse_output("./sprites/cat/front.png", tallmode=True)
+#print("\n\t; Cat side")
+#get_sprite_png_parse_output("./sprites/cat/side.png", tallmode=True)
+#print("\n\t; Cat back")
+#get_sprite_png_parse_output("./sprites/cat/back.png", tallmode=True)
+#print("\n\t; Cat front")
+#get_sprite_png_parse_output("./sprites/cat/front.png", tallmode=True)
+
+print("\n\t; Owl side")
+get_sprite_png_parse_output("./sprites/owl/side.png", tallmode=True)
+print("\n\t; Owl back")
+get_sprite_png_parse_output("./sprites/owl/back.png", tallmode=True)
+print("\n\t; Owl front")
+get_sprite_png_parse_output("./sprites/owl/front.png", tallmode=True)
 
 
 
