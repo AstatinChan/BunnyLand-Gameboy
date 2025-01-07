@@ -1,7 +1,7 @@
 Load_Tile:
 	LD HL, $8020
-	LD DE, =OBJ_Tile_Image_Data
-	LD BC, $0180
+	LD DE, =OBJ_Tile_Image_Data.Bunny
+	LD BC, $00c0
 	CALL =memcpy
 
 	LD HL, $8800
@@ -24,6 +24,57 @@ Load_Tile:
 	LD BC, $0060
 	CALL =memcpy
 	RET
+
+Reload_Entities_Tile_Data:
+	LD HL, $mem_loaded_enemies_indices
+	LD E, $03
+	.loop:
+		LD A, (HL)
+		SLA A
+		SLA A
+		SLA A
+		ADD low(=Entity_list)
+		LD C, A
+		LD A, high(=Entity_list)
+		ADC $00
+		LD B, A
+
+		PUSH HL
+		PUSH DE
+
+		LD A, E
+		SLA A
+		SLA A
+		LD E, A
+		SLA A
+		ADD E
+		ADD $02
+		SWAP A
+		LD H, A
+		AND $f0
+		LD L, A
+		LD A, H
+		AND $0f
+		OR $80
+		LD H, A
+
+		LD A, (BC)
+		LD D, A
+		INC BC
+		LD A, (BC)
+		LD E, A
+
+		LD BC, $00c0
+		CALL =memcpy
+
+		POP DE
+		POP HL
+
+		INC HL
+		INC E
+		LD A, low($mem_loaded_entities_indices_end)
+		CP L
+		JR NZ, =.loop
 
 Dialogue_Box_Tilemap_data:
 	.DB 0x11, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00

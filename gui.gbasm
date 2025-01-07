@@ -142,8 +142,12 @@ Move_dialogue_cursor:
 Check_dialogue_action:
 	LD A, $mem_current_mode
 	CP $enum_dungeon_menu_mode
+	JR Z, =.Check_exit
+
+	CP $enum_dungeon_dialogue_mode
 	RET NZ
 
+	.Check_exit:
 	LD A, $mem_last_button_action
 	LD B, A
 	LD A, $mem_button_action
@@ -153,6 +157,10 @@ Check_dialogue_action:
 	JP NZ, =Exit_Menu
 	BIT 0, A
 	RET Z
+
+	LD A, $mem_current_mode
+	CP $enum_dungeon_menu_mode
+	RET NZ
 
 	LD HL, $dialogue_menu_choice1_routine
 

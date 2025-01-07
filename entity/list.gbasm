@@ -1,0 +1,60 @@
+Entity_list:
+	.Fox:
+		; Sprite address
+		.DB =OBJ_Tile_Image_Data.Fox
+
+		; Turn Jump Table index
+		.DB $02
+
+		; Interaction Jump Table index
+		.DB $01
+
+		; Starting health
+		.DB $04
+
+		.PADTO =.Fox+8
+
+	.Frog:
+		; Sprite address
+		.DB =OBJ_Tile_Image_Data.Frog
+
+		; Turn Jump Table index
+		.DB $00
+
+		; Interaction Jump Table index
+		.DB $02
+
+		; Starting health
+		.DB $00
+
+		.PADTO =.Frog+8
+
+	.Mouse:
+		; Sprite address
+		.DB =OBJ_Tile_Image_Data.Mouse
+
+		; Turn Jump Table index
+		.DB $00
+
+		; Interaction Jump Table index
+		.DB $02
+
+		; Starting health
+		.DB $00
+
+		.PADTO =.Mouse+8
+
+	.Fimsh:
+		; Sprite address
+		.DB =OBJ_Tile_Image_Data.Fimsh
+
+		; Turn Jump Table index
+		.DB $00
+
+		; Interaction Jump Table index
+		.DB $02
+
+		; Starting health
+		.DB $00
+
+		.PADTO =.Fimsh+8

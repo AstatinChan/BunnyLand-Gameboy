@@ -140,14 +140,14 @@ Open_Dialogue:
 	LD BC, =Text_1
 	CALL =Print_str
 
-	LD A, $01
+	LD A, $07
 	LD $mem_display_flag, A
 
 	LD A, $mem_bunny_direction
 	AND $0f
 	LD $mem_bunny_direction, A
 
-	LD A, $enum_dungeon_menu_mode
+	LD A, $enum_dungeon_dialogue_mode
 	LD $mem_requested_mode, A
 	RET
 

@@ -76,12 +76,22 @@ Entrypoint:
 	LD $mem_bunny_health, A
 New_Dungeon:
 	LD SP, $fffe
+	LD HL, $mem_loaded_enemies_indices
+	LD A, $00
+	LD (HL+), A
+	INC A
+	LD (HL+), A
+	INC A
+	LD (HL+), A
+	INC A
+	LD (HL+), A
 	CALL =Dungeon_Generation
 	CALL =Initialize_Entities
 	CALL =Initialize_Objects
 	CALL =Load_Tile
 	CALL =Load_Map
 	CALL =Load_Objects
+	CALL =Reload_Entities_Tile_Data
 
 	LD A, $00
 	LD $mem_bunny_flags, A
@@ -231,6 +241,7 @@ STAT_Entrypoint:
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"
 .INCLUDE "entity/display.gbasm"
+.INCLUDE "entity/list.gbasm"
 .INCLUDE "animation.gbasm"
 .INCLUDE "attacks.gbasm"
 .INCLUDE "gui.gbasm"

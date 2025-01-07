@@ -123,6 +123,10 @@
 ; }
 .DEFINE mem_number_of_rooms ($c8a0)
 
+.DEFINE mem_loaded_entities_indices $c8a8 ; Takes the memory from $c8a8 to $c8ae
+.DEFINE mem_loaded_enemies_indices $c8ab ; Takes the memory from $c8ab to $c8ae
+.DEFINE mem_loaded_entities_indices_end $c8af ; Takes the memory from $c8a8 to $c8ae
+
 .DEFINE mem_object_list $c900 ; Takes the memory from c900 to c97f
 ; struct objects {
 ;	sprite: u8,
