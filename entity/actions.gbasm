@@ -1,6 +1,10 @@
 Entities_Actions:
+	LD A, $mem_moving_animation_step
+	CP $05
+	JR NZ, =.Action_Functions
 	CALL =Reset_Entities_Collision_Map
 
+	.Action_Functions:
 	LD HL, $mem_entities_list
 	CALL =Entity_Action
 	CALL =Entity_Action
@@ -23,7 +27,7 @@ Entities_Actions:
 Entity_Action:
 	LD A, (HL+)
 	CP $00
-	JR Z, =Entity_Action.skip
+	JR Z, =.skip
 
 	INC HL
 	INC HL
@@ -43,7 +47,7 @@ Entity_Action:
 
 	POP HL
 
-	Entity_Action.skip:
+	.skip:
 	LD A, L
 	AND $f0
 	ADD $10
@@ -53,7 +57,7 @@ Entity_Action:
 Update_Animation_Steps:
 	LD A, $mem_map_loading_flags
 	BIT 3, A
-	JR Z, =Update_Animation_Steps.update_mode
+	JR Z, =.update_mode
 
 	LD A, $mem_moving_animation_step
 	INC A
@@ -61,26 +65,26 @@ Update_Animation_Steps:
 	LD $mem_moving_animation_step, A
 
 	CP $00
-	JR NZ, =Update_Animation_Steps.end
+	JR NZ, =.end
 
 	LD A, $mem_map_loading_flags
 	RES 3, A
 	SET 1, A
 	LD $mem_map_loading_flags, A
 
-	Update_Animation_Steps.update_mode:
+	.update_mode:
 
 	LD A, $mem_bunny_health
 	CP $00
-	JR Z =Update_Animation_Steps.Dead_mode
+	JR Z =.Dead_mode
 
 	LD A, $mem_requested_mode
 	LD $mem_current_mode, A
 
-	Update_Animation_Steps.end:
+	.end:
 	RET
 
-	Update_Animation_Steps.Dead_mode:
+	.Dead_mode:
 
 	LD A, $enum_dead_mode
 	LD $mem_current_mode, A
@@ -131,6 +135,46 @@ Fox_Interaction:
 	RET
 
 Open_Dialogue:
+	LD A, L
+	AND $f0
+	LD L, A
+
+	INC HL
+
+	LD A, $mem_bunny_x
+	CP (HL)
+	JR Z, =.Vertical_check
+
+	.Horizontal_check:
+		INC A
+		CP (HL)
+		JR Z, =.Left
+		.Right:
+			INC HL
+			INC HL
+			LD (HL), $enum_direction_right
+			JR =.Check_end
+		.Left:
+			INC HL
+			INC HL
+			LD (HL), $enum_direction_left
+			JR =.Check_end
+	.Vertical_check:
+		INC HL
+		LD A, $mem_bunny_y
+		INC A
+		CP (HL)
+		JR Z, =.Up
+		.Down:
+			INC HL
+			LD (HL), $enum_direction_down
+			JR =.Check_end
+		.Up:
+			INC HL
+			LD (HL), $enum_direction_up
+			JR =.Check_end
+	.Check_end:
+
 	LD HL, $dialogue_first_line
 	LD BC, =Bunny_Prefix
 	CALL =Print_str
@@ -166,7 +210,7 @@ Fox_Turn:
 	LD A, (HL+)
 	LD D, A
 
-	Fox_Turn.Health_check:
+	.Health_check:
 		LD A, L
 		AND $f0
 		ADD $06
@@ -174,7 +218,7 @@ Fox_Turn:
 
 		LD A, (HL)
 		CP $00
-		JR NZ, =Fox_Turn.Health_check.end
+		JR NZ, =.Health_check.end
 
 		LD A, L
 		AND $f0
@@ -184,132 +228,132 @@ Fox_Turn:
 		LD A, $mem_enemies_alive_count
 		DEC A
 		LD $mem_enemies_alive_count, A
-		JP NZ, =Fox_Turn.Skip_turn
-	Fox_Turn.Health_check.end:
+		JP NZ, =.Skip_turn
+	.Health_check.end:
 
-	Fox_Turn.Freeze_shiver:
+	.Freeze_shiver:
 		LD A, $mem_moving_animation_step
 		CP $00
-		JP NZ, =Fox_Turn.Freeze_shiver.end
+		JP NZ, =.Freeze_shiver.end
 		LD A, L
 		AND $f0
 		ADD $08
 		LD L, A
 		LD A, $01
 		CP (HL)
-		JR NZ, =Fox_Turn.Freeze_shiver.end
+		JR NZ, =.Freeze_shiver.end
 		LD A, D
 		AND $07
 		LD D, A
 		CALL =RNG_Step
 		CP $55
-		JP NC, =Fox_Turn.Skip_turn
+		JP NC, =.Skip_turn
 		LD A, D
 		OR $40
 		LD D, A
 
 		CALL =RNG_Step
 		CP $55
-		JP NC, =Fox_Turn.Skip_turn
+		JP NC, =.Skip_turn
 
 		LD A, $00
 		LD (HL-), A
 		RES 1, (HL)
-		JP =Fox_Turn.Skip_turn
-	Fox_Turn.Freeze_shiver.end:
+		JP =.Skip_turn
+	.Freeze_shiver.end:
 
-	Fox_Turn.Should_turn_be_skipped:
+	.Should_turn_be_skipped:
 		LD A, L
 		AND $f0
 		ADD $08
 		LD L, A
 
 		BIT 0, (HL)
-		JP NZ, =Fox_Turn.Skip_turn
+		JP NZ, =.Skip_turn
 
-	Fox_Turn.Start_action_or_movement:
+	.Start_action_or_movement:
 		LD A, $mem_moving_animation_step
 		CP $00
-		JP NZ, =Fox_Turn.Start_action_or_movement.end
+		JP NZ, =.Start_action_or_movement.end
 
 		; Is bunny right next to fox
-		Fox_Turn.Check_next_to_vertical:
+		.Check_next_to_vertical:
 
 		LD A, $mem_bunny_x
 		CP B
-		JR NZ, =Fox_Turn.Check_next_to_horizontal
+		JR NZ, =.Check_next_to_horizontal
 
 		; up
 		LD E, $14
 		LD A, $mem_bunny_y
 		SUB $01
 		CP C
-		JR Z, =Fox_Turn.Start_Attack
+		JR Z, =.Start_Attack
 
 		; down
 		LD E, $13
 		ADD $02
 		CP C
-		JR Z, =Fox_Turn.Start_Attack
+		JR Z, =.Start_Attack
 
-		JR =Fox_Turn.Check_next_to.end
+		JR =.Check_next_to.end
 
-		Fox_Turn.Check_next_to_horizontal:
+		.Check_next_to_horizontal:
 
 		LD A, $mem_bunny_y
 		CP C
-		JR NZ, =Fox_Turn.Check_next_to.end
+		JR NZ, =.Check_next_to.end
 
 		; left
 		LD E, $12
 		LD A, $mem_bunny_x
 		SUB $01
 		CP B
-		JR Z, =Fox_Turn.Start_Attack
+		JR Z, =.Start_Attack
 
 		; right
 		LD E, $11
 		ADD $02
 		CP B
-		JR Z, =Fox_Turn.Start_Attack
+		JR Z, =.Start_Attack
 
-		JR NZ, =Fox_Turn.Check_next_to.end
+		JR NZ, =.Check_next_to.end
 
-		Fox_Turn.Start_Attack:
+		.Start_Attack:
 		LD D, E
 
 		LD A, $mem_bunny_health
 		SUB $01
-		JR C, =Fox_Turn.health_underflow_fix
+		JR C, =.health_underflow_fix
 		DAA
 		LD $mem_bunny_health, A
-		JR =Fox_Turn.Skip_health_underflow_fix
+		JR =.Skip_health_underflow_fix
 
-		Fox_Turn.health_underflow_fix:
+		.health_underflow_fix:
 		LD A, $00
 		LD $mem_bunny_health, A
-		Fox_Turn.Skip_health_underflow_fix:
+		.Skip_health_underflow_fix:
 
-		JP =Fox_Turn.Check_Collision
+		JP =.Check_Collision
 
-		Fox_Turn.Check_next_to.end:
+		.Check_next_to.end:
 
 		; Is Bunny close enough to follow
 		LD A, $mem_bunny_x
 		SUB B
 		.ABS
 		CP $08
-		JR NC, =Fox_Turn.Random_walker
+		JR NC, =.Random_walker
 
 		LD A, $mem_bunny_y
 		SUB C
 		.ABS
 		CP $08
-		JR NC, =Fox_Turn.Random_walker
+		JR NC, =.Random_walker
 
-		JR =Fox_Turn.Follow_bunny
+		JR =.Follow_bunny
 
-		Fox_Turn.Random_walker:
+		.Random_walker:
 		CALL =RNG_Step
 		LD E, $00
 		RR A
@@ -319,9 +363,9 @@ Fox_Turn:
 		INC A
 		OR E
 		LD D, A
-		JP =Fox_Turn.Check_Collision
+		JP =.Check_Collision
 
-		Fox_Turn.Follow_bunny:
+		.Follow_bunny:
 		LD A, $mem_bunny_x
 		LD $tmp_var_1, A
 
@@ -333,7 +377,7 @@ Fox_Turn:
 		LD $tmp_var_3, A
 
 		CP $00
-		JR Z, =Fox_Turn.skip_invert_axis
+		JR Z, =.skip_invert_axis
 
 		LD A, $mem_bunny_y
 		LD $tmp_var_1, A
@@ -345,7 +389,7 @@ Fox_Turn:
 		LD B, C
 		LD C, E
 
-		Fox_Turn.skip_invert_axis:
+		.skip_invert_axis:
 
 		; Choose direction
 		LD A, B
@@ -354,16 +398,16 @@ Fox_Turn:
 		LD A, $tmp_var_1
 		ADD $80
 		CP E
-		JR Z =Fox_Turn.Vertical
-		JR C =Fox_Turn.Go_Left
+		JR Z =.Vertical
+		JR C =.Go_Left
 
-		Fox_Turn.Go_Right:
+		.Go_Right:
 		LD A, $enum_direction_right
-		JR =Fox_Turn.Check_Horizontal_Collision
-		Fox_Turn.Go_Left:
+		JR =.Check_Horizontal_Collision
+		.Go_Left:
 		LD A, $enum_direction_left
 
-		Fox_Turn.Check_Horizontal_Collision:
+		.Check_Horizontal_Collision:
 		LD E, A
 		DEC E
 		LD A, $tmp_var_3
@@ -378,9 +422,9 @@ Fox_Turn:
 		POP BC
 		CP $00
 		LD A, E
-		JR Z, =Fox_Turn.Direction_check_end
+		JR Z, =.Direction_check_end
 
-		Fox_Turn.Vertical:
+		.Vertical:
 		LD A, C
 		ADD $80
 		LD E, A
@@ -388,15 +432,15 @@ Fox_Turn:
 		ADD $80
 		CP E
 
-		JR Z =Fox_Turn.No_movement
-		JR C =Fox_Turn.Go_Up
-		Fox_Turn.Go_Down:
+		JR Z =.No_movement
+		JR C =.Go_Up
+		.Go_Down:
 		LD A, $enum_direction_down
-		JR =Fox_Turn.Direction_check_end
-		Fox_Turn.Go_Up:
+		JR =.Direction_check_end
+		.Go_Up:
 		LD A, $enum_direction_up
 
-		Fox_Turn.Direction_check_end:
+		.Direction_check_end:
 
 		DEC A
 		LD E, A
@@ -408,16 +452,16 @@ Fox_Turn:
 
 		; Check collision
 
-		Fox_Turn.No_movement:
+		.No_movement:
 		LD A, $tmp_var_3
 		CP $00
-		JR Z, =Fox_Turn.skip_invert_axis2
+		JR Z, =.skip_invert_axis2
 		LD E, B
 		LD B, C
 		LD C, E
-		Fox_Turn.skip_invert_axis2:
+		.skip_invert_axis2:
 
-		Fox_Turn.Check_Collision:
+		.Check_Collision:
 		LD A, D
 		PUSH BC
 		CALL =Get_Position_After_Move
@@ -426,26 +470,26 @@ Fox_Turn:
 		CALL =Carve_Entity_Collision_Map
 		POP BC
 		CP $00
-		JR Z, =Fox_Turn.Start_action_or_movement.not_collision
+		JR Z, =.Start_action_or_movement.not_collision
 		RES 3, D
-		Fox_Turn.Start_action_or_movement.not_collision:
+		.Start_action_or_movement.not_collision:
 
-	Fox_Turn.Start_action_or_movement.end:
+	.Start_action_or_movement.end:
 
-	Fox_Turn.End_movement:
+	.End_movement:
 		LD A, $mem_moving_animation_step
 		CP $0f
-		JP NZ, =Fox_Turn.End_movement.end
+		JP NZ, =.End_movement.end
 		LD A, D
 		AND $07
 		BIT 3, D
 		LD D, A
-		JR Z, =Fox_Turn.End_movement.end
+		JR Z, =.End_movement.end
 		LD A, $01
 		.ADD_A_TO_DIRECTION_BC
-	Fox_Turn.End_movement.end:
+	.End_movement.end:
 
-	Fox_Turn.Skip_Turn:
+	.Skip_Turn:
 	LD A, L
 	AND $f0
 	LD L, A

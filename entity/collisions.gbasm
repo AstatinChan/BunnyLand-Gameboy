@@ -91,19 +91,15 @@ Is_Collisionable: ; X in A, Y in B, Result A
 	RET
 
 Reset_Entities_Collision_Map:
-	LD A, $mem_moving_animation_step
-	CP $05
-	JR NZ, =Reset_Entities_Collision_Map.end
-
 	LD HL, $mem_entities_collisions
 	LD BC, $0080
 	CALL =bzero
 
 	LD HL, $mem_entities_list
-	Reset_Entities_Collision_Map.loop:
+	.loop:
 		LD A, (HL)
 		CP $00
-		JR Z, =Reset_Entities_Collision_Map.loop.next
+		JR Z, =.loop.next
 
 		INC L
 		INC L
@@ -113,13 +109,13 @@ Reset_Entities_Collision_Map:
 		CALL =Get_Position_After_Move
 		CALL =Carve_Entity_Collision_Map
 
-		Reset_Entities_Collision_Map.loop.next:
+		.loop.next:
 		LD A, L
 		AND $f0
 		ADD $10
 		LD L, A
 		CP $00
-		JR NZ, =Reset_Entities_Collision_Map.loop
+		JR NZ, =.loop
 
-	Reset_Entities_Collision_Map.end:
+	.end:
 	RET
