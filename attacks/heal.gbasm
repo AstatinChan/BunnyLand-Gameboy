@@ -21,8 +21,7 @@ Heal_Attack:
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
 
-	LD A, $00
-	LD $mem_display_flag, A
+	.CLOSE_DIALOGUE
 
 	LD A, $mem_map_loading_flags
 	SET 3, A

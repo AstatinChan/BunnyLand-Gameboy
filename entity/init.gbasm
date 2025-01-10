@@ -178,7 +178,6 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	ADD E
 	LD E, A
 	LD A, (DE)
-	DBG
 	SLA A
 	SLA A
 	SLA A
@@ -192,7 +191,6 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	; Turn
 	LD A, (BC)
 	LD (HL+), A
-	DBG
 
 	INC BC
 

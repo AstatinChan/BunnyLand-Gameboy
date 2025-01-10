@@ -1,3 +1,16 @@
+.MACRODEF CLOSE_DIALOGUE
+	LD A, $04
+	LD $mem_display_flag, A
+
+	LD HL, $dialogue_first_line
+	LD BC, $12
+	CALL =bzero
+
+	LD HL, $dialogue_third_line
+	LD BC, $12
+	CALL =bzero
+.END
+
 Copy_Dialogue_Buffer:
 	LD A, $mem_display_flag
 	BIT 2, A
@@ -70,8 +83,8 @@ Exit_Menu:
 	LD A, $enum_dungeon_mode
 	LD $mem_requested_mode, A
 
-	LD A, $00
-	LD $mem_display_flag, A
+	.CLOSE_DIALOGUE
+
 	RET
 
 Display_dialogue_cursor:

@@ -62,8 +62,7 @@ Canceled_Attack:
 	LD A, $enum_loading_mode
 	LD $mem_requested_mode, A
 
-	LD A, $00
-	LD $mem_display_flag, A
+	.CLOSE_DIALOGUE
 
 	LD A, $mem_map_loading_flags
 	SET 3, A
