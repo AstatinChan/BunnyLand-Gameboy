@@ -12,20 +12,20 @@ Move_Bunny:
 	LD A, $mem_bunny_flags
 	LD E, $01
 	BIT 0, A
-	JR Z, =Normal_speed
+	JR Z, =.Normal_speed
 	LD E, $02
-	Normal_speed:
+	.Normal_speed:
 
-	Start_action_or_movement:
+	.Start_action_or_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JR NZ, =Start_action_or_movement.end
+		JR NZ, =.Start_action_or_movement.end
 
-		Start_action_or_movement.test_movement:
+		.Start_action_or_movement.test_movement:
 
 		LD A, $mem_button_direction
 		CP $00
-		JP Z, =Start_action_or_movement.test_action
+		JP Z, =.Start_action_or_movement.test_action
 		SET 3, A
 		LD D, A
 
@@ -39,27 +39,27 @@ Move_Bunny:
 		CALL =Is_Collisionable
 		CALL =Carve_Entity_Collision_Map
 		CP $00
-		JR Z, =Start_action_or_movement.not_collision
+		JR Z, =.Start_action_or_movement.not_collision
 		RES 3, D
 
 		LD A, $mem_map_loading_flags
 		RES 3, A
 		LD $mem_map_loading_flags, A
 
-		Start_action_or_movement.not_collision:
+		.Start_action_or_movement.not_collision:
 		LD A, D
 
 		LD $mem_bunny_direction, A
-		JR =Start_action_or_movement.end
+		JR =.Start_action_or_movement.end
 
-		Start_action_or_movement.test_action:
+		.Start_action_or_movement.test_action:
 		LD A, $mem_last_button_action
 		LD B, A
 		LD A, $mem_button_action
 		CP B
-		JR Z, =Start_action_or_movement.end
+		JR Z, =.Start_action_or_movement.end
 		BIT 0, A
-		JR Z, =Start_action_or_movement.end
+		JR Z, =.Start_action_or_movement.end
 		LD A, $mem_bunny_direction
 		AND $07
 		OR $10
@@ -68,15 +68,15 @@ Move_Bunny:
 		LD A, $mem_map_loading_flags
 		SET 3, A
 		LD $mem_map_loading_flags, A
-	Start_action_or_movement.end:
+	.Start_action_or_movement.end:
 
-	Scroll_viewport:
+	.Scroll_viewport:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JR Z, =Scroll_viewport.end
+		JR Z, =.Scroll_viewport.end
 		LD A, $mem_bunny_direction
 		BIT 3, A
-		JR Z, =Scroll_viewport.end
+		JR Z, =.Scroll_viewport.end
 
 		LD A, $mem_bunny_direction
 		LD D, A
@@ -90,21 +90,21 @@ Move_Bunny:
 		LD $mem_prepared_viewport_x, A
 		LD A, C
 		LD $mem_prepared_viewport_y, A
-	Scroll_viewport.end:
+	.Scroll_viewport.end:
 
-	End_movement:
+	.End_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JP Z, =End_movement.end
+		JP Z, =.End_movement.end
 		LD A, $mem_moving_animation_step
 		CP $0f
-		JP NZ, =End_movement.end
+		JP NZ, =.End_movement.end
 		LD A, $mem_bunny_direction
 		LD D, A
 		AND $07
 		BIT 3, D
 		LD $mem_bunny_direction, A
-		JP Z, =End_movement.end
+		JP Z, =.End_movement.end
 
 		LD A, $mem_bunny_x
 		LD B, A
@@ -133,24 +133,24 @@ Move_Bunny:
 		LD $mem_bunny_flags, A
 
 		PUSH DE
-		Update_current_room:
+		.End_movement.Update_current_room:
 			LD A, $ff
 			LD $mem_bunny_current_room_idx, A
 
 			LD HL, $mem_room_list
 
-			Update_current_room.loop:
+			.End_movement.Update_current_room.loop:
 			LD A, $mem_bunny_x
 			LD D, A
 			LD E, (HL)
 			CP E
-			JR C, =Update_current_room.skip
+			JR C, =.End_movement.Update_current_room.skip
 
 			LD A, E
 			INC HL
 			ADD (HL)
 			CP D
-			JR C, =Update_current_room.skip
+			JR C, =.End_movement.Update_current_room.skip
 
 			INC HL
 
@@ -158,13 +158,13 @@ Move_Bunny:
 			LD D, A
 			LD E, (HL)
 			CP E
-			JR C, =Update_current_room.skip
+			JR C, =.End_movement.Update_current_room.skip
 
 			LD A, E
 			INC HL
 			ADD (HL)
 			CP D
-			JR C, =Update_current_room.skip
+			JR C, =.End_movement.Update_current_room.skip
 
 			LD A, L
 			SUB $83
@@ -172,33 +172,33 @@ Move_Bunny:
 			SRA A
 
 			LD $mem_bunny_current_room_idx, A
-			JR =Update_current_room.end
+			JR =.End_movement.Update_current_room.end
 
-			Update_current_room.skip:
+			.End_movement.Update_current_room.skip:
 			LD A, L
 			AND $fc
 			ADD $04
 			LD L, A
 			CP $a0
-		JR NZ, =Update_current_room.loop
-		Update_current_room.end:
+		JR NZ, =.End_movement.Update_current_room.loop
+		.End_movement.Update_current_room.end:
 		POP DE
 
-	End_movement.end:
+	.End_movement.end:
 
-	Middle_movement_doublespeed_viewport_update:
+	.Middle_movement_doublespeed_viewport_update:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JP Z, =Middle_movement_doublespeed_viewport_update.end
+		JP Z, =.Middle_movement_doublespeed_viewport_update.end
 		LD A, $mem_moving_animation_step
 		CP $07
-		JP NZ, =Middle_movement_doublespeed_viewport_update.end
+		JP NZ, =.Middle_movement_doublespeed_viewport_update.end
 		LD A, $mem_bunny_direction
 		BIT 3, A
-		JR Z, =Middle_movement_doublespeed_viewport_update.end
+		JR Z, =.Middle_movement_doublespeed_viewport_update.end
 		LD A, E
 		CP $02
-		JR NZ, =Middle_movement_doublespeed_viewport_update.end
+		JR NZ, =.Middle_movement_doublespeed_viewport_update.end
 
 		LD A, $mem_viewport_x
 		LD B, A
@@ -210,21 +210,21 @@ Move_Bunny:
 		LD $mem_viewport_x, A
 		LD A, C
 		LD $mem_viewport_y, A
-	Middle_movement_doublespeed_viewport_update.end:
+	.Middle_movement_doublespeed_viewport_update.end:
 
 
-	Interaction:
+	.Interaction:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JP Z, =Interaction.end
+		JP Z, =.Interaction.end
 		LD A, $mem_moving_animation_step
 		CP $02
-		JP NZ, =Interaction.end
+		JP NZ, =.Interaction.end
 
 		LD A, $mem_bunny_direction
 		AND $f8
 		CP $10
-		JR NZ, =Interaction.end
+		JR NZ, =.Interaction.end
 
 		LD A, $mem_bunny_x
 		LD B, A
@@ -238,25 +238,25 @@ Move_Bunny:
 		.ADD_A_TO_DIRECTION_BC
 
 		LD HL, $mem_entities_list
-		Interaction.entities_loop:
+		.Interaction.entities_loop:
 			LD A, L
 			AND $f0
 			ADD $10
 			LD L, A
 			CP $00
-			JR Z, =Interaction.end
+			JR Z, =.Interaction.end
 
 			LD A, (HL+)
 			CP $00
-			JR Z, =Interaction.entities_loop.next
+			JR Z, =.Interaction.entities_loop.next
 
 			LD A, (HL+)
 			CP B
-			JR NZ, =Interaction.entities_loop.next
+			JR NZ, =.Interaction.entities_loop.next
 
 			LD A, (HL+)
 			CP C
-			JR NZ, =Interaction.entities_loop.next
+			JR NZ, =.Interaction.entities_loop.next
 
 			INC HL
 			INC HL
@@ -271,16 +271,16 @@ Move_Bunny:
 			POP BC
 			POP HL
 
-			Interaction.entities_loop.next:
-			JR =Interaction.entities_loop
-	Interaction.end:
+			.Interaction.entities_loop.next:
+			JR =.Interaction.entities_loop
+	.Interaction.end:
 
-	Check_End_Action:
+	.Check_End_Action:
 		LD A, $mem_bunny_direction
 		AND $f0
 		CP $10
-		JR NZ, =Check_End_Action.end
+		JR NZ, =.Check_End_Action.end
 
-	Check_End_Action.end:
+	.Check_End_Action.end:
 
 	RET
