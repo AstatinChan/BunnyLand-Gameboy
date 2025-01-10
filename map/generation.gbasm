@@ -206,19 +206,19 @@ Dungeon_Generation:
 	LD A, $40
 	PUSH AF
 
-	Dungeon_Generation.Step:
+	.Step:
 		LD HL, $mem_dungeon_generation_heads
 
-		Dungeon_Generation.Head_loop:
+		.Head_loop:
 			LD B, (HL)
 			LD A, B
 
 			CP $00
-			JR Z, =Dungeon_Generation.Head_loop.end
+			JR Z, =.Head_loop.end
 
 			LD A, E
 			CP $00
-			JR Z, =Dungeon_Generation.Head_Mitosis.end
+			JR Z, =.Head_Mitosis.end
 
 			DEC A
 			LD C, A
@@ -227,12 +227,12 @@ Dungeon_Generation:
 			CP $00
 			CALL Z, =Generation_Head_Mitosis
 
-			Dungeon_Generation.Head_Mitosis.end:
+			.Head_Mitosis.end:
 
 			CALL =RNG_Step
 			AND $0f
-			JR NZ, =Dungeon_Generation.Direction_Change.end
-			Dungeon_Generation.Direction_Change:
+			JR NZ, =.Direction_Change.end
+			.Direction_Change:
 				DEC B
 				CALL =RNG_Step
 				AND $01
@@ -241,7 +241,7 @@ Dungeon_Generation:
 				INC A
 				LD B, A
 				LD (HL), B
-			Dungeon_Generation.Direction_Change.end:
+			.Direction_Change.end:
 
 			INC HL
 
@@ -249,23 +249,23 @@ Dungeon_Generation:
 			LD A, B
 
 			CP $enum_direction_left
-			JR NZ =Dungeon_Generation.Left.end
-			Dungeon_Generation.Left:
+			JR NZ =.Left.end
+			.Left:
 				DEC C
-			Dungeon_Generation.Left.end:
+			.Left.end:
 
 			CP $enum_direction_right
-			JR NZ =Dungeon_Generation.Right.end
-			Dungeon_Generation.Right:
+			JR NZ =.Right.end
+			.Right:
 				INC C
-			Dungeon_Generation.Right.end:
-			
+			.Right.end:
+
 			LD A, C
 			AND $e0
 
-			JR NZ, =Dungeon_Generation.DonT_Update_X
+			JR NZ, =.DonT_Update_X
 			LD (HL), C
-			Dungeon_Generation.DonT_Update_X:
+			.DonT_Update_X:
 
 			INC HL
 
@@ -273,51 +273,51 @@ Dungeon_Generation:
 			LD A, B
 
 			CP $enum_direction_up
-			JR NZ =Dungeon_Generation.Up.end
-			Dungeon_Generation.Up:
+			JR NZ =.Up.end
+			.Up:
 				DEC C
-			Dungeon_Generation.Up.end:
+			.Up.end:
 
 			CP $enum_direction_down
-			JR NZ =Dungeon_Generation.Down.end
-			Dungeon_Generation.Down:
+			JR NZ =.Down.end
+			.Down:
 				INC C
-			Dungeon_Generation.Down.end:
-			
+			.Down.end:
+
 			LD A, C
 			AND $e0
 
-			JR NZ, =Dungeon_Generation.DonT_Update_Y
+			JR NZ, =.DonT_Update_Y
 			LD (HL), C
-			Dungeon_Generation.DonT_Update_Y:
+			.DonT_Update_Y:
 
-			DEC HL 
+			DEC HL
 			LD A, (HL+)
 			LD C, A
 			LD A, (HL+)
 			LD B, A
 			LD A, C
 			CALL =Carve_Map
-			JP =Dungeon_Generation.Head_loop
+			JP =.Head_loop
 
-		Dungeon_Generation.Head_loop.end:
+		.Head_loop.end:
 
 		POP AF
 		DEC A
 		PUSH AF
 		CP $00
-		JR NZ, =Dungeon_Generation.Step
+		JR NZ, =.Step
 
 	POP AF
 
 	LD HL, $mem_dungeon_generation_heads
 
-	Dungeon_Generation.Head_explosion_loop:
+	.Head_explosion_loop:
 		LD B, (HL)
 		LD A, B
 
 		CP $00
-		JR Z, =Dungeon_Generation.Head_explosion_loop.end
+		JR Z, =.Head_explosion_loop.end
 
 		CALL =Generation_Head_Explosion
 
@@ -328,9 +328,9 @@ Dungeon_Generation:
 		INC HL
 		INC HL
 		INC HL
-		JR =Dungeon_Generation.Head_explosion_loop
+		JR =.Head_explosion_loop
 
-	Dungeon_Generation.Head_explosion_loop.end:
+	.Head_explosion_loop.end:
 
 	RET
 

@@ -175,22 +175,22 @@ STAT_Entrypoint:
 	PUSH AF
 	LD A, $reg_lyc
 	CP $09
-	JR Z, =STAT_Entrypoint.End_Top_Bar
+	JR Z, =STAT_.End_Top_Bar
 	CP $67
-	JR Z, =STAT_Entrypoint.Start_dialogue
-	STAT_Entrypoint.Thin_font:
+	JR Z, =STAT_.Start_dialogue
+	STAT_.Thin_font:
 	LD A, $palette_thin_font
 	LD $reg_bg_palette, A
-	JR =STAT_Entrypoint.skip_dialogue
+	JR =STAT_.skip_dialogue
 
-	STAT_Entrypoint.Start_dialogue:
+	STAT_.Start_dialogue:
 	LD A, $mem_display_flag
 	BIT 0, A
-	JR Z, =STAT_Entrypoint.skip_dialogue
+	JR Z, =STAT_.skip_dialogue
 	.ENABLE_WINDOW
 	LD A, $mem_display_flag
 	BIT 1, A
-	JR Z, =STAT_Entrypoint.Thin_font
+	JR Z, =STAT_.Thin_font
 	LD A, $palette_bold_font
 	LD $reg_bg_palette, A
 	LD A, $77
@@ -199,12 +199,12 @@ STAT_Entrypoint:
 	POP AF
 	RETI
 
-	STAT_Entrypoint.skip_dialogue:
+	STAT_.skip_dialogue:
 	.DISABLE_LYC_INTERRUPT
 	POP AF
 	RET
 
-	STAT_Entrypoint.End_Top_Bar:
+	STAT_.End_Top_Bar:
 	.DISABLE_WINDOW
 	LD A, $67
 	LD $reg_lyc, A

@@ -46,7 +46,7 @@ Sparkle_Animation:
 	LD E, A
 	XOR A
 	CP E
-	JP Z, =Sparkle_Animation.End_animation
+	JP Z, =.End_animation
 	LD (HL), E
 
 	.ADD_MOVING_ANIMATION_OFFSET
@@ -98,7 +98,7 @@ Sparkle_Animation:
 	POP HL
 	RET
 
-	Sparkle_Animation.End_animation:
+	.End_animation:
 	LD A, L
 	AND $fc
 	LD L, A

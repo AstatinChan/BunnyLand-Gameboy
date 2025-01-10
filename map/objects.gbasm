@@ -12,7 +12,7 @@ Initialize_Objects:
 
 Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E
 	LD (HL+), A
-	
+
 	LD A, $mem_number_of_rooms
 	CALL =RNG_Bound
 	SLA A
@@ -44,7 +44,7 @@ Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E
 	LD (HL), A
 
 	DEC HL
-	
+
 	LD BC, $mem_object_list
 	Object_check_collisions.loop:
 		LD A, (BC)
@@ -76,7 +76,7 @@ Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E
 		DEC HL
 		RET
 
-		Object_check_collisions.loop.next:	
+		Object_check_collisions.loop.next:
 		LD A, L
 		AND $f8
 		ADD $01
@@ -127,11 +127,11 @@ Stairs_action:
 	DI
 	LD A, $00
 	LD $reg_interrupt_flags, A
-	Stairs_action.Wait_VBlank:
+	.Wait_VBlank:
 		LD A, $reg_lcd_status
 		AND $03
 		CP $01
-		JR NZ, =Stairs_action.Wait_VBlank
+		JR NZ, =.Wait_VBlank
 
 	; LCDC
 	XOR A
@@ -145,9 +145,9 @@ Heal_Action:
 	ADD $03
 	DAA
 	CP $20
-	JR C, =Heal_Action.Set_health
+	JR C, =.Set_health
 	LD A, $20
-	Heal_Action.Set_health:
+	.Set_health:
 	LD $mem_bunny_health, A
 
 	PUSH BC
@@ -268,27 +268,27 @@ Load_Objects:
 Object_Interactions_Check:
 	LD A, $mem_moving_animation_step
 	CP $00
-	JR NZ, =Object_Interactions_Check.End
+	JR NZ, =.End
 	LD A, $mem_map_loading_flags
 	BIT 1, A
-	JR Z, =Object_Interactions_Check.End
+	JR Z, =.End
 	LD HL, $mem_object_list
 	LD A, $mem_bunny_x
 	LD C, A
 	LD A, $mem_bunny_y
 	LD B, A
-	Object_Interactions_Check.loop:
+	.loop:
 		LD A, (HL+)
 		CP $00
-		JR Z, =Object_Interactions_Check.next
+		JR Z, =.next
 
 		LD A, (HL+)
 		CP C
-		JR NZ, =Object_Interactions_Check.next
+		JR NZ, =.next
 
 		LD A, (HL+)
 		CP B
-		JR NZ, =Object_Interactions_Check.next
+		JR NZ, =.next
 
 		LD E, (HL)
 
@@ -306,13 +306,13 @@ Object_Interactions_Check:
 
 		POP BC
 
-		Object_Interactions_Check.next:
+		.next:
 		LD A, L
 		AND $f8
 		ADD $08
 		LD L, A
 		CP $80
-		JR NZ, =Object_Interactions_Check.loop
+		JR NZ, =.loop
 
-	Object_Interactions_Check.End:
+	.End:
 	RET

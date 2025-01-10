@@ -19,28 +19,28 @@ Pad_Button_Check:
 	LD A, $reg_joypad
 	LD C, A
 	LD A, $00
-	
-	Pad_Button_Check.Right:
+
+	.Right:
 		BIT 0, C
-		JR NZ =Pad_Button_Check.Left
+		JR NZ =.Left
 		LD A, $enum_direction_right
 
-	Pad_Button_Check.Left:
+	.Left:
 		BIT 1, C
-		JR NZ =Pad_Button_Check.Up
+		JR NZ =.Up
 		LD A, $enum_direction_left
 
-	Pad_Button_Check.Up:
+	.Up:
 		BIT 2, C
-		JR NZ =Pad_Button_Check.Down
+		JR NZ =.Down
 		LD A, $enum_direction_up
 
-	Pad_Button_Check.Down:
+	.Down:
 		BIT 3, C
-		JR NZ =Pad_Button_Check.End
+		JR NZ =.End
 		LD A, $enum_direction_down
 
-	Pad_Button_Check.End:
+	.End:
 		LD $mem_button_direction, A
 
 	LD A, $10

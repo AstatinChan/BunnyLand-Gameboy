@@ -3,9 +3,9 @@ Heal_Attack:
 	ADD $03
 	DAA
 	CP $20
-	JR C, =Heal_Attack.Set_health
+	JR C, =.Set_health
 	LD A, $20
-	Heal_Attack.Set_health:
+	.Set_health:
 	LD $mem_bunny_health, A
 
 	PUSH BC

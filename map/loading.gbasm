@@ -9,8 +9,8 @@ Load_Map:
 	LD B, A
 	ADD $10
 	LD D, A
-	Load_Map.For_Y:
-		Load_Map.For_X:
+	.For_Y:
+		.For_X:
 			LD A, C
 			CALL =Load_Block
 			CALL =Display_Prepared_Block
@@ -18,12 +18,12 @@ Load_Map:
 			INC C
 			LD A, C
 			CP E
-			JR NZ, =Load_Map.For_X
+			JR NZ, =.For_X
 
 		INC B
 		LD A, B
 		CP D
-		JR NZ, =Load_Map.For_Y
+		JR NZ, =.For_Y
 
 	RET
 
@@ -258,7 +258,7 @@ Display_Prepared_Block:
 
 	LD A, $mem_map_loading_flags
 	BIT 2, A
-	JR Z, =Display_Prepared_Block.End
+	JR Z, =.End
 
 	LD A, $mem_map_loading_flags
 	RES 2, A
@@ -291,7 +291,7 @@ Display_Prepared_Block:
 	OR $01
 	LD (DE), A
 
-	Display_Prepared_Block.End:
+	.End:
 
 	POP DE
 	POP BC

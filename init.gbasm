@@ -14,9 +14,9 @@ Start:
 
 .PADTO 0x0104
 Nintendo_Logo: ; The Nintendo logo must be stored in bytes 0x104-133
-	.DB $CE,$ED,$66,$66,$CC,$0D,$00,$0B,$03,$73,$00,$83,$00,$0C,$00,$0D 
-	.DB $00,$08,$11,$1F,$88,$89,$00,$0E,$DC,$CC,$6E,$E6,$DD,$DD,$D9,$99 
-	.DB $BB,$BB,$67,$63,$6E,$0E,$EC,$CC,$DD,$DC,$99,$9F,$BB,$B9,$33,$3E 
+	.DB $CE,$ED,$66,$66,$CC,$0D,$00,$0B,$03,$73,$00,$83,$00,$0C,$00,$0D
+	.DB $00,$08,$11,$1F,$88,$89,$00,$0E,$DC,$CC,$6E,$E6,$DD,$DD,$D9,$99
+	.DB $BB,$BB,$67,$63,$6E,$0E,$EC,$CC,$DD,$DC,$99,$9F,$BB,$B9,$33,$3E
 
 .PADTO 0x0134
 Checksum: ; The bytes 0x134-0x14d need to add up to 0xe7 (= 0xff - 0x19)
@@ -29,12 +29,12 @@ LD A, $00
 LD $reg_interrupt_enable, A
 Empty_WRAM:
 	LD HL, $C000
-	Empty_WRAM.loop:
+	.loop:
 		XOR A
 		LD (HL+), A
 		LD A, $D0
 		CP H
-		JR NZ, =Empty_WRAM.loop
+		JR NZ, =.loop
 
 	CALL =VBlank_Wait
 
@@ -66,14 +66,14 @@ Empty_VRAM: ; (Clear screen)
 
 Initialize_Window_GUI:
 	LD HL, $9c20
-	Initialize_Window_GUI.top_bar_loop:
+	.top_bar_loop:
 		LD A, $10
 		LD (HL+), A
 
 		LD A, L
 		CP $40
 		LD $reg_lcd_status, A
-		JR NZ, =Initialize_Window_GUI.top_bar_loop
+		JR NZ, =.top_bar_loop
 
 	LD HL, $9da0
 	LD BC, $00a0
@@ -92,8 +92,8 @@ OAM_DMA_Transfer_routine_src:
 	LD A, $mem_oam_buffer_high
 	LD ($46), A
 	LD A, $28        ; delay for a total of 4×40 = 160 M-cycles
-	OAM_DMA_Transfer_routine_src.wait:
+	.wait:
 	    DEC A						             ; 1 M-cycle
-	    JR NZ, =OAM_DMA_Transfer_routine_src.wait    ; 3 M-cycles
+	    JR NZ, =.wait    ; 3 M-cycles
 	    RET
-	OAM_DMA_Transfer_routine_src.end:
+	.end:

@@ -11,7 +11,7 @@ Display_Animation:
 	LD A, (HL)
 	LD BC, =Animation_Jump_table
 	.JUMP_TABLE
-	
+
 	POP HL
 	LD A, L
 	ADD $04

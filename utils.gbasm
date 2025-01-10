@@ -135,7 +135,7 @@ Print_8bit: ; Number in A, Memory Tilemap position in HL
 	AND $0f
 	OR $80
 	LD (HL+), A
-	
+
 	LD A, C
 	AND $0f 			   ; Then the lowest
 	OR $80
@@ -233,12 +233,12 @@ VBlank_Wait:
 	PUSH AF
 	LD A, $reg_lcd_controller
 	BIT 7, A
-	JR Z, =VBlank_Wait.End
-	VBlank_Wait.loop:
+	JR Z, =.End
+	.loop:
 		LD A, $reg_lcd_status
 		AND $03
 		CP $01
-		JR NZ, =VBlank_Wait.loop
-	VBlank_Wait.End:
+		JR NZ, =.loop
+	.End:
 	POP AF
 	RET

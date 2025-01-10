@@ -15,22 +15,22 @@ Preload_Map_Hop:
 	DEC A
 
 	BIT 1, A
-	JR NZ, =Preload_Map_Hop.Map_Load.vertical
+	JR NZ, =.Map_Load.vertical
 
-	Preload_Map_Hop.Map_Load.horizontal:
+	.Map_Load.horizontal:
 		CALL =Load_Next_Block_Column
-		JR =Preload_Map_Hop.Map_Load.End
+		JR =.Map_Load.End
 
-	Preload_Map_Hop.Map_Load.vertical:
+	.Map_Load.vertical:
 		CALL =Load_Next_Block_Row
 
-	Preload_Map_Hop.Map_Load.End:
+	.Map_Load.End:
 RET
 
 Hop_Attack_Loading_VBlank:
 	LD A, $mem_loading_step
 	CP $00
-	JP Z, =Hop_Attack_Loading_VBlank.Skip_Display_Block
+	JP Z, =.Skip_Display_Block
 
 	LD A, $mem_map_loading_flags
 	BIT 2, A
@@ -81,7 +81,7 @@ Hop_Attack_Loading_VBlank:
 	LD A, C
 	LD $mem_viewport_y, A
 
-	Hop_Attack_Loading_VBlank.Skip_Display_Block:
+	.Skip_Display_Block:
 
 	LD A, $mem_loading_step
 	INC A

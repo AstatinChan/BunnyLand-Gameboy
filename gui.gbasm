@@ -96,24 +96,24 @@ Display_dialogue_cursor:
 	LD DE, $0000
 
 	CP $00
-	JR NZ, =Display_dialogue_cursor.choice1_false
+	JR NZ, =.choice1_false
 	LD B, $69
-	Display_dialogue_cursor.choice1_false:
+	.choice1_false:
 
 	CP $01
-	JR NZ, =Display_dialogue_cursor.choice2_false
+	JR NZ, =.choice2_false
 	LD C, $69
-	Display_dialogue_cursor.choice2_false:
+	.choice2_false:
 
 	CP $02
-	JR NZ, =Display_dialogue_cursor.choice3_false
+	JR NZ, =.choice3_false
 	LD D, $69
-	Display_dialogue_cursor.choice3_false:
+	.choice3_false:
 
 	CP $03
-	JR NZ, =Display_dialogue_cursor.choice4_false
+	JR NZ, =.choice4_false
 	LD E, $69
-	Display_dialogue_cursor.choice4_false:
+	.choice4_false:
 
 	LD A, B
 	LD $dialogue_menu_choice1_cursor, A
@@ -140,13 +140,13 @@ Move_dialogue_cursor:
 
 	DEC A
 	BIT 1, A
-	JR Z, =Move_dialogue_cursor.Vertical_axis
+	JR Z, =.Vertical_axis
 	LD A, $mem_menu_cursor_position
 	XOR $02
 	LD $mem_menu_cursor_position, A
 	RET
 
-	Move_dialogue_cursor.Vertical_axis:
+	.Vertical_axis:
 	LD A, $mem_menu_cursor_position
 	XOR $01
 	LD $mem_menu_cursor_position, A

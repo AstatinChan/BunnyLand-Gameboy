@@ -6,10 +6,10 @@ Freeze_Attack_Loading_VBlank:
 	AND $03
 	BIT 1, A
 	RES 1, A
-	JR NZ, =Freeze_Attack_Loading_VBlank.Shaking_Animation.skip_invert
+	JR NZ, =.Shaking_Animation.skip_invert
 	CPL
 	INC A
-	Freeze_Attack_Loading_VBlank.Shaking_Animation.skip_invert:
+	.Shaking_Animation.skip_invert:
 	ADD B
 	LD $mem_prepared_viewport_x, A
 
@@ -17,16 +17,16 @@ Freeze_Attack_Loading_VBlank:
 	SRA A
 	SRA A
 	BIT 0, A
-	JR Z, =Freeze_Attack_Loading_VBlank.Blink_Animation.dark_palette	
+	JR Z, =.Blink_Animation.dark_palette
 	LD A, $palette_normal
 	LD $mem_prepared_color_palette, A
-	JR =Freeze_Attack_Loading_VBlank.end
+	JR =.end
 
-	Freeze_Attack_Loading_VBlank.Blink_Animation.dark_palette:
+	.Blink_Animation.dark_palette:
 	LD A, $palette_white
 	LD $mem_prepared_color_palette, A
 
-	Freeze_Attack_Loading_VBlank.end:
+	.end:
 	LD A, $mem_loading_step
 	INC A
 	AND $0f
