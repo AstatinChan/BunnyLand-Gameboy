@@ -16,6 +16,47 @@ Move_Bunny:
 	LD E, $02
 	.Normal_speed:
 
+	.Freeze_shiver:
+		LD A, $mem_moving_animation_step
+		CP $00
+		JP NZ, =.Freeze_shiver.end
+		LD A, $mem_bunny_status
+		CP $01
+		JR NZ, =.Freeze_shiver.end
+		LD A, $mem_bunny_direction
+		AND $07
+		LD $mem_bunny_direction, A
+		CALL =RNG_Step
+		CP $55
+		JP NC, =.Skip_turn
+		LD A, $mem_bunny_direction
+		OR $40
+		LD $mem_bunny_direction, A
+
+		CALL =RNG_Step
+		CP $55
+		JP NC, =.Skip_turn
+
+		LD A, $00
+		LD $mem_bunny_status, A
+		LD A, $mem_bunny_flags
+		RES 1, A
+		LD $mem_bunny_flags, A
+		JP =.Skip_turn
+	.Freeze_shiver.end:
+
+	.Should_turn_be_skipped:
+		LD A, $mem_bunny_status
+		BIT 0, A
+		JR Z, =.no_skip
+	.Skip_turn:
+		LD A, $mem_map_loading_flags
+		SET 3, A
+		LD $mem_map_loading_flags, A
+		RET
+
+	.no_skip:
+
 	.Start_action_or_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A

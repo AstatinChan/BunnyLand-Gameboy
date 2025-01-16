@@ -1,26 +1,33 @@
--> Add special attacks/capacities to the bunny
-	* Jump x2 (even over an enemy) (attacking or not ?)
+  -> Add special attacks/capacities to the bunny
+x	* Jump x2 (even over an enemy) (attacking or not ?)
 	* Stronger attack
-	* Weaker attack on multiple foxes
-	* Freeze a/multiple fox(es) for X turns
-	-> All with limited number of uses
+x	* Weaker attack on multiple foxes
+x	* Freeze a/multiple fox(es) for X turns
 
--> Spawn enemies in far away rooms when less than X enemies on the map. (Maybe despawn some too)
+  -> Limit attacks uses
 
--> Remove some health to the bunny (probably to 10 points, maybe max health growing ?)
+x -> Spawn enemies in far away rooms when less than X enemies on the map. (Maybe despawn some too)
 
--> Add objects to heal and get back limited use attacks/learn new attacks
+  -> Remove some health to the bunny (probably to 10 points, maybe max health growing ?)
 
--> Add attacks for the foxes
+x -> Add objects to heal
 
--> Add other types of enemies (some stronger and some weaker/fleeing)
+  -> Add objects get back limited use attacks/learn new attacks
 
--> Have some enemies drop items
+  -> Add attacks for the foxes
 
--> Allow enemy to join your team after beating/with an item/after completing a quest
+x -> Add other types of enemies
 
--> Get a safe place (not procedurally generated) with friends where we can get quests and choose to explore dungeons
+  -> Make the different types of enemies behave different (fleeing/ambush/etc...)
 
--> Find a way to control the difficulty level so its easier at the start and harder at the end.
+  -> Have some enemies drop items
 
--> (For far future, maybe make a story)
+DEMO
+
+  -> Allow enemy to join your team after beating/with an item/after completing a quest
+
+  -> Get a safe place (not procedurally generated) with friends where we can get quests and choose to explore dungeons
+
+  -> Find a way to control the difficulty level so its easier at the start and harder at the end.
+
+  -> (For far future, maybe make a story)

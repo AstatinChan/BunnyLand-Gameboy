@@ -1,0 +1,47 @@
+Check_player_next_to: ; BC = XY of the enemy. D is unchanged. Direction to face in E (or 0 if not)
+	.vertical:
+	LD A, $mem_bunny_x
+	CP B
+	JR NZ, =.horizontal
+
+	; up
+	LD A, $mem_bunny_y
+	SUB $01
+	CP C
+	LD E, $enum_direction_down
+	RET Z
+
+	; down
+	ADD $02
+	CP C
+	LD E, $enum_direction_up
+	RET Z
+
+	LD E, $00
+	RET
+
+	.horizontal:
+
+	LD A, $mem_bunny_y
+	CP C
+	LD E, $00
+	RET NZ
+
+	; left
+	LD A, $mem_bunny_x
+	SUB $01
+	CP B
+	LD E, $enum_direction_right
+	RET Z
+
+	; right
+	ADD $02
+	CP B
+	LD E, $enum_direction_left
+	RET Z
+
+	LD E, $00
+	RET
+
+.INCLUDE "enemiesattacks/walk.gbasm"
+.INCLUDE "enemiesattacks/basic.gbasm"

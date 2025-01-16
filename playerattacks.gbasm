@@ -73,7 +73,7 @@ Canceled_Attack:
 	LD $mem_bunny_direction, A
 	RET
 
-.INCLUDE "attacks/hop.gbasm"
-.INCLUDE "attacks/heal.gbasm"
-.INCLUDE "attacks/freeze.gbasm"
-.INCLUDE "attacks/earcoptr.gbasm"
+.INCLUDE "playerattacks/hop.gbasm"
+.INCLUDE "playerattacks/heal.gbasm"
+.INCLUDE "playerattacks/freeze.gbasm"
+.INCLUDE "playerattacks/earcoptr.gbasm"

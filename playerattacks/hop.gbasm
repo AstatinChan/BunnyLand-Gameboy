@@ -182,6 +182,8 @@ Hop_Attack:
 	LD $mem_requested_mode, A
 
 	.CLOSE_DIALOGUE
+	LD A, $00
+	LD $mem_loading_step, A
 	RET
 
 

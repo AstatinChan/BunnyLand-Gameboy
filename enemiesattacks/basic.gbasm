@@ -1,0 +1,30 @@
+Basic_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
+	LD A, E
+	OR $10
+	LD D, A
+
+	LD A, $01
+	LD $mem_bunny_status, A
+	LD A, $02
+	LD $mem_bunny_flags, A
+	LD A, $mem_bunny_direction
+	AND $07
+	LD $mem_bunny_direction, A
+	CALL =Fix_Bunny_screen
+
+	LD A, B
+	SUB $04
+	LD B, A
+	; LD A, $mem_bunny_health
+	; SUB $01
+	; JR C, =.health_underflow_fix
+	; DAA
+	; LD $mem_bunny_health, A
+	; JR =.Skip_health_underflow_fix
+
+	; .health_underflow_fix:
+	; LD A, $00
+	; LD $mem_bunny_health, A
+	; .Skip_health_underflow_fix:
+
+	RET

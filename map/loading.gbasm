@@ -320,7 +320,7 @@ Is_Solid: ; X in A, Y in B, Result A
 	LD L, A
 
 	LD C, B
-	LD B, $mem_dungeon_map_high
+	LD B, high($mem_dungeon_map)
 	LD A, (BC)
 
 	AND (HL)

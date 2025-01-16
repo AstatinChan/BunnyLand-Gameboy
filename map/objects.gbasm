@@ -17,10 +17,10 @@ Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E
 	CALL =RNG_Bound
 	SLA A
 	SLA A
-	ADD $80
+	ADD low($mem_room_list)
 	LD C, A
 
-	LD B, $c8
+	LD B, high($mem_room_list)
 
 	LD A, (BC)
 	LD D, A

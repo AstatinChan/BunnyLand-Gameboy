@@ -1,0 +1,137 @@
+Walking: ; entity XY in BC, Breaks DE
+	; Is Bunny close enough to follow
+	LD A, $mem_bunny_x
+	SUB B
+	.ABS
+	CP $08
+	JR NC, =.Random_walker
+
+	LD A, $mem_bunny_y
+	SUB C
+	.ABS
+	CP $08
+	JR NC, =.Random_walker
+
+	JR =.Follow_bunny
+
+	.Random_walker:
+	CALL =RNG_Step
+	LD E, $00
+	RR A
+	RR E
+	SWAP E
+	AND $03
+	INC A
+	OR E
+	LD D, A
+	JP =.Check_Collision
+
+	.Follow_bunny:
+	LD A, $mem_bunny_x
+	LD $tmp_var_1, A
+
+	LD A, $mem_bunny_y
+	LD $tmp_var_2, A
+
+	CALL =RNG_Step
+	AND $02
+	LD $tmp_var_3, A
+
+	CP $00
+	JR Z, =.skip_invert_axis
+
+	LD A, $mem_bunny_y
+	LD $tmp_var_1, A
+
+	LD A, $mem_bunny_x
+	LD $tmp_var_2, A
+
+	LD E, B
+	LD B, C
+	LD C, E
+
+	.skip_invert_axis:
+
+	; Choose direction
+	LD A, B
+	ADD $80
+	LD E, A
+	LD A, $tmp_var_1
+	ADD $80
+	CP E
+	JR Z =.Vertical
+	JR C =.Go_Left
+
+	.Go_Right:
+	LD A, $enum_direction_right
+	JR =.Check_Horizontal_Collision
+	.Go_Left:
+	LD A, $enum_direction_left
+
+	.Check_Horizontal_Collision:
+	LD E, A
+	DEC E
+	LD A, $tmp_var_3
+	XOR E
+	INC E
+	INC A
+	OR $08
+	PUSH BC
+	CALL =Get_Position_After_Move
+	LD A, C
+	CALL =Is_Collisionable
+	POP BC
+	CP $00
+	LD A, E
+	JR Z, =.Direction_check_end
+
+	.Vertical:
+	LD A, C
+	ADD $80
+	LD E, A
+	LD A, $tmp_var_2
+	ADD $80
+	CP E
+
+	JR Z =.No_movement
+	JR C =.Go_Up
+	.Go_Down:
+	LD A, $enum_direction_down
+	JR =.Direction_check_end
+	.Go_Up:
+	LD A, $enum_direction_up
+
+	.Direction_check_end:
+
+	DEC A
+	LD E, A
+	LD A, $tmp_var_3
+	XOR E
+	INC A
+	OR $08
+	LD D, A
+
+	; Check collision
+
+	.No_movement:
+	LD A, $tmp_var_3
+	CP $00
+	JR Z, =.skip_invert_axis2
+	LD E, B
+	LD B, C
+	LD C, E
+	.skip_invert_axis2:
+
+	.Check_Collision:
+	LD A, D
+	PUSH BC
+	CALL =Get_Position_After_Move
+	LD A, C
+	CALL =Is_Collisionable
+	CALL =Carve_Entity_Collision_Map
+	POP BC
+	CP $00
+	RET Z
+	RES 3, D
+
+	RET

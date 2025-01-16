@@ -89,7 +89,7 @@ Copy_OAM_DMA_Transfer_Routine_To_HRAM:
 	JP =Entrypoint
 
 OAM_DMA_Transfer_routine_src:
-	LD A, $mem_oam_buffer_high
+	LD A, high($mem_oam_buffer)
 	LD ($46), A
 	LD A, $28        ; delay for a total of 4×40 = 160 M-cycles
 	.wait:

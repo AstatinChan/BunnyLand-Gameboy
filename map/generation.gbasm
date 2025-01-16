@@ -22,7 +22,7 @@ Carve_Map: ; X in C, Y in B
 	LD L, A
 
 	LD C, B
-	LD B, $mem_dungeon_map_high
+	LD B, high($mem_dungeon_map)
 	LD A, (BC)
 
 	OR (HL)
@@ -51,7 +51,7 @@ Generation_Head_Mitosis:
 	XOR B
 	INC A
 
-	LD B, $next_free_head_higher_bytes
+	LD B, high($mem_dungeon_generation_heads)
 
 	LD (BC), A
 	DEC A
@@ -108,11 +108,11 @@ Generation_Head_Explosion:
 	LD A, (HL+)
 	LD D, A ; Y
 
-	LD H, $c8
+	LD H, high($mem_room_list)
 	LD A, $mem_number_of_rooms
 	SLA A
 	SLA A
-	ADD $80
+	ADD low($mem_room_list)
 	LD L, A
 
 	LD A, E
@@ -335,6 +335,8 @@ Dungeon_Generation:
 	RET
 
 Reset_Map:
-	LD HL, $c6ff
-	LD BC, $0281
+	LD A, $00
+	LD $mem_next_free_head_lower_bytes, A
+	LD HL, $mem_dungeon_generation_heads
+	LD BC, $0280
 	JP =bzero

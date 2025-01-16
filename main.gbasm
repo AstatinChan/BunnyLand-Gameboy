@@ -79,11 +79,8 @@ New_Dungeon:
 	LD HL, $mem_loaded_enemies_indices
 	LD A, $00
 	LD (HL+), A
-	INC A
 	LD (HL+), A
-	INC A
 	LD (HL+), A
-	INC A
 	LD (HL+), A
 	CALL =Dungeon_Generation
 	CALL =Initialize_Entities
@@ -123,6 +120,10 @@ VBLANK_Entrypoint:
 	LD A, $mem_bunny_health
 	CALL =Print_8bit
 
+	LD HL, $9c12
+	LD A, $dbg_VBLANK_STATE
+	CALL =Print_8bit
+
 	CALL $OAM_DMA_Transfer_routine
 	CALL =Loading_Mode_VBlank
 
@@ -136,6 +137,10 @@ VBLANK_Entrypoint:
 
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
+
+	LD A, $reg_lcd_status
+	AND $03
+	LD $dbg_VBLANK_STATE, A
 
 	; LYC
 	LD A, $09
@@ -228,6 +233,7 @@ STAT_Entrypoint:
 .INCLUDE "entity/display.gbasm"
 .INCLUDE "entity/list.gbasm"
 .INCLUDE "animation.gbasm"
-.INCLUDE "attacks.gbasm"
+.INCLUDE "playerattacks.gbasm"
+.INCLUDE "enemiesattacks.gbasm"
 .INCLUDE "tileset.gbasm"
 .INCLUDE "dialogues.gbasm"
