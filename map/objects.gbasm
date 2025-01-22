@@ -156,6 +156,7 @@ Heal_Action:
 	LD A, $mem_bunny_y
 	LD C, A
 	LD A, $01
+	LD E, $20
 	CALL =Try_Launch_Animation
 	POP BC
 

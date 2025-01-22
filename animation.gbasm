@@ -9,6 +9,7 @@ Display_Animation:
 	PUSH HL
 
 	LD A, (HL)
+	AND $3f
 	LD BC, =Animation_Jump_table
 	.JUMP_TABLE
 
@@ -19,7 +20,7 @@ Display_Animation:
 
 	RET
 
-Try_Launch_Animation: ; XY in BC, jump_table index in A
+Try_Launch_Animation: ; XY in BC, jump_table index in A, number of steps in E
 	PUSH HL
 	PUSH AF
 
@@ -60,7 +61,7 @@ Try_Launch_Animation: ; XY in BC, jump_table index in A
 	LD (HL+), A
 	LD A, C
 	LD (HL+), A
-	XOR A
+	LD A, E
 	LD (HL+), A
 
 	POP HL
@@ -88,3 +89,4 @@ Animation_Jump_table:
 
 .INCLUDE "animations/sparkles.gbasm"
 .INCLUDE "animations/rotatingball.gbasm"
+.INCLUDE "animations/laser.gbasm"

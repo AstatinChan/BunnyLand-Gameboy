@@ -1,4 +1,4 @@
-Sparkle_Animation:
+Laser_Animation:
 	INC HL
 
 	LD A, (HL+)
@@ -18,7 +18,6 @@ Sparkle_Animation:
 	AND $0f
 	SWAP A
 	LD B, A
-
 
 	LD A, (HL+)
 	ADD $80
@@ -41,13 +40,59 @@ Sparkle_Animation:
 
 	LD E, (HL)
 	DEC E
-	XOR A
+	DEC E
 	CP E
-	JP Z, =.End_animation
+	JP C, =.End_animation
 	LD (HL), E
-	LD A, $20
-	SUB E
-	LD E, A
+
+	DEC HL
+	DEC HL
+	DEC HL
+	LD A, (HL+)
+	SWAP A
+	SRA A
+	SRA A
+	AND $03
+	INC A
+	LD D, A
+
+	LD A, $04
+	ADD B
+	LD B, A
+
+	LD A, $04
+	ADD C
+	LD C, A
+
+	LD A, $0f
+	AND E
+	CP $00
+	JR NZ =.Skip_move_animation_tile
+
+	PUSH BC
+
+	LD B, (HL)
+	INC HL
+	LD C, (HL)
+
+	LD A, $01
+	.ADD_A_TO_DIRECTION_BC
+
+	LD (HL), C
+	DEC HL
+	LD (HL), B
+
+	POP BC
+
+	.Skip_move_animation_tile:
+
+	LD A, $0f
+	AND E
+	CPL
+	INC A
+	ADD $0f
+	
+	.ADD_A_TO_DIRECTION_BC
 
 	.ADD_MOVING_ANIMATION_OFFSET
 
@@ -58,42 +103,15 @@ Sparkle_Animation:
 	ADD $08
 	LD $mem_oam_buffer_low, A
 
-	LD D, E
-	SRA D
 	LD A, C
-	SUB D
-	ADD $0c
 	LD (HL+), A
+
 	LD A, B
 	LD (HL+), A
-	LD A, E
-	SRA A
-	SRA A
-	AND $02
-	ADD $60
-
+	LD A, $64
 	LD (HL+), A
 	LD A, $00
 	LD (HL+), A
-
-	SRA D
-	LD A, C
-	SUB D
-	ADD $08
-	LD (HL+), A
-	LD A, B
-	ADD $08
-	LD (HL+), A
-	LD A, E
-	SRA A
-	SRA A
-	AND $02
-	ADD $60
-
-	LD (HL+), A
-	LD A, $00
-	LD (HL+), A
-
 
 	POP HL
 	RET

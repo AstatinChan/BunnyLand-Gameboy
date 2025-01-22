@@ -42,12 +42,14 @@ Rotating_Ball_Animation:
 	LD C, A
 
 	LD E, (HL)
-	INC E
-	LD A, $2f
+	DEC E
 	CP E
-	JP C, =Rotating_Ball.End_animation
+	JP C, =.End_animation
 
 	LD (HL), E
+	LD A, $30
+	SUB E
+	LD E, A
 
 	LD A, E
 	AND $0f
@@ -85,7 +87,7 @@ Rotating_Ball_Animation:
 	POP HL
 	RET
 
-	Rotating_Ball.End_animation:
+	.End_animation:
 	LD A, L
 	AND $fc
 	LD L, A

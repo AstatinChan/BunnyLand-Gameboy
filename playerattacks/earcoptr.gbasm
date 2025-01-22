@@ -72,6 +72,7 @@ Earcoptr_Attack:
 	LD A, $mem_bunny_y
 	LD C, A
 	LD A, $02
+	LD E, $30
 	CALL =Try_Launch_Animation
 	POP BC
 
