@@ -72,7 +72,8 @@
 .DEFINE enum_dungeon_menu_mode $01
 .DEFINE enum_dungeon_dialogue_mode $02
 .DEFINE enum_loading_mode $03
-.DEFINE enum_dead_mode $0
+.DEFINE enum_dead_mode $04
+.DEFINE enum_animation_wait_mode $05
 .DEFINE mem_menu_cursor_position ($c016)
 .DEFINE mem_last_button_direction ($c017)
 
@@ -97,6 +98,11 @@
 
 .DEFINE mem_bunny_current_room_idx ($c02a)
 .DEFINE mem_enemies_alive_count ($c02b)
+
+.DEFINE mem_bunny_predicted_x ($c02c)
+.DEFINE mem_bunny_predicted_y ($c02d)
+
+.DEFINE mem_animation_wait_frames ($c02e)
 
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 
@@ -175,6 +181,7 @@
 ;	flags: u8
 ;		bit 0: speed 2x
 ;		bit 1: shadow mode
+;		bit 2: end of turn attack mode
 ;	status: u8
 ;	; bit 0: whether or not turns should be skipped
 ;	_padding: u56

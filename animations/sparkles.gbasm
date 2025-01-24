@@ -55,8 +55,6 @@ Sparkle_Animation:
 	LD HL, $mem_oam_buffer
 	LD A, $mem_oam_buffer_low
 	LD L, A
-	ADD $08
-	LD $mem_oam_buffer_low, A
 
 	LD D, E
 	SRA D
@@ -94,6 +92,8 @@ Sparkle_Animation:
 	LD A, $00
 	LD (HL+), A
 
+	LD A, L
+	LD $mem_oam_buffer_low, A
 
 	POP HL
 	RET

@@ -1,3 +1,18 @@
+Animation_Wait_Mode:
+	LD A, $mem_current_mode
+	CP $enum_animation_wait_mode
+	RET NZ
+
+	LD A, $mem_animation_wait_frames
+	DEC A
+	LD $mem_animation_wait_frames, A
+	CP $00
+	RET NZ
+	LD A, $enum_dungeon_mode
+	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
+	RET
+
 Display_Animation_List:
 	LD HL, $mem_animation_list
 	CALL =Display_Animation
@@ -85,6 +100,10 @@ Animation_Jump_table:
 
 	; 02
 	JP =Rotating_Ball_Animation
+	NOP
+
+	; 03
+	JP =Laser_Animation
 	NOP
 
 .INCLUDE "animations/sparkles.gbasm"

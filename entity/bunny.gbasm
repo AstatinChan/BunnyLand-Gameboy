@@ -1,14 +1,4 @@
 Move_Bunny:
-	LD A, $mem_bunny_health
-	CP $00
-	JR NZ, =.not_dead
-
-	LD A, $20
-	LD $mem_bunny_direction, A
-	RET
-
-	.not_dead:
-
 	LD A, $mem_bunny_flags
 	LD E, $01
 	BIT 0, A
@@ -60,7 +50,7 @@ Move_Bunny:
 	.Start_action_or_movement:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JR NZ, =.Start_action_or_movement.end
+		JP NZ, =.Start_action_or_movement.end
 
 		.Start_action_or_movement.test_movement:
 
@@ -91,6 +81,25 @@ Move_Bunny:
 		LD A, D
 
 		LD $mem_bunny_direction, A
+
+		BIT 3, D
+		JR Z, =.Start_action_or_movement.end
+
+		PUSH BC
+		LD A, B
+		LD B, C
+		LD C, A
+		LD A, $01
+		DBG
+		.ADD_A_TO_DIRECTION_BC
+		DBG
+		LD A, B
+		LD $mem_bunny_predicted_x, A
+		LD A, C
+		LD $mem_bunny_predicted_y, A
+
+		POP BC
+
 		JR =.Start_action_or_movement.end
 
 		.Start_action_or_movement.test_action:
@@ -224,6 +233,11 @@ Move_Bunny:
 		JR NZ, =.End_movement.Update_current_room.loop
 		.End_movement.Update_current_room.end:
 		POP DE
+
+		LD A, $mem_bunny_x
+		LD $mem_bunny_predicted_x, A
+		LD A, $mem_bunny_y
+		LD $mem_bunny_predicted_y, A
 
 	.End_movement.end:
 

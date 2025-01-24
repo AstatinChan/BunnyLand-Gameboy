@@ -1,0 +1,113 @@
+Laser_sight_check: ; BC = XY of the enemy. D is unchanged. Direction to face in E (or 0 if not)
+	LD E, $00
+
+	; straight line + distance <= 4
+	LD A, $mem_bunny_predicted_x
+	CP B
+	JR Z, =.vertical_distance_check
+
+	LD A, $mem_bunny_predicted_y
+	CP C
+	RET NZ
+
+	.horizontal_distance_check:
+	LD A, $mem_bunny_predicted_x
+	CP B
+	JR C, =.left
+
+	.right:
+		SUB $05
+		CP B
+		RET NC
+		LD E, $enum_direction_right
+		RET
+
+	.left:
+		ADD $04
+		CP B
+		RET C
+		LD E, $enum_direction_left
+		RET
+
+	.vertical_distance_check:
+		LD A, $mem_bunny_predicted_y
+		CP C
+		JR C, =.up
+
+		.down:
+			SUB $05
+			CP C
+			RET NC
+			LD E, $enum_direction_down
+			RET
+
+		.up:
+			ADD $04
+			CP C
+			RET C
+			LD E, $enum_direction_up
+			RET
+
+Laser_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
+	PUSH DE
+	PUSH BC
+
+	LD A, E
+	DEC A
+	AND $03
+	SWAP A
+	SLA A
+	SLA A
+	OR $03 ; Laser_Animation
+	LD D, A
+
+	LD A, C
+	ADD B
+	LD B, A
+
+	LD A, $mem_bunny_x
+	LD C, A
+	LD A, $mem_bunny_y
+	ADD C
+	SUB B
+	.ABS
+	SWAP A
+	LD E, A
+
+	POP BC
+	LD A, D
+	CALL =Try_Launch_Animation
+
+	LD A, $enum_animation_wait_mode
+	LD $mem_requested_mode, A
+	LD $mem_current_mode, A
+	LD A, E
+	SUB $f
+	LD E, A
+	LD A, $mem_animation_wait_frames
+	CP E
+	JR NC, =.skip_animation_wait_frames_update
+
+	LD A, E
+	LD $mem_animation_wait_frames, A
+
+	.skip_animation_wait_frames_update:
+
+	LD A, $mem_animation_wait_frames
+	DBG
+
+	POP DE
+
+	LD A, $mem_bunny_health
+	SUB $01
+	JR C, =.health_underflow_fix
+	DAA
+	LD $mem_bunny_health, A
+	JR =.Skip_health_underflow_fix
+
+	.health_underflow_fix:
+	LD A, $00
+	LD $mem_bunny_health, A
+	.Skip_health_underflow_fix:
+
+	RET

@@ -1,20 +1,31 @@
+Need to be refactored:
+  -> AB/BC/XY/YX thingy issue that makes me angry (functions/macro to predict position could be merged after)
+  -> main is messy and unreadable
+  -> rework mode checks (heatlh update should happen on both dungeon and dead mode)
+  -> general structure is messy (why is Update_Animation_Step in entity/action.gbasm ?? What is even entity/action.gbasm supposed to be ??)
+  -> split fox turn into multiple subfunction that could be reused in other enemies turns functions
+  -> create an enemy turns thingy directory, move attacks inside of entity/enemies (both enemiesattacks and playerattacks)
+  -> tiles are duplicated in the tree tilelset and could be reduce to 32 tiles
+
+Medium term:
   -> Add special attacks/capacities to the bunny
 x	* Jump x2 (even over an enemy) (attacking or not ?)
 	* Stronger attack
 x	* Weaker attack on multiple foxes
 x	* Freeze a/multiple fox(es) for X turns
+	* Distance attack (maybe reuse laser of the enemies)
 
   -> Limit attacks uses
 
 x -> Spawn enemies in far away rooms when less than X enemies on the map. (Maybe despawn some too)
 
-  -> Remove some health to the bunny (probably to 10 points, maybe max health growing ?)
+? -> Remove some health to the bunny (probably to 10 points, maybe max health growing ?)
 
 x -> Add objects to heal
 
   -> Add objects get back limited use attacks/learn new attacks
 
-  -> Add attacks for the foxes
+x -> Add attacks for the foxes
 
 x -> Add other types of enemies
 

@@ -116,10 +116,6 @@ VBLANK_Entrypoint:
 	LD A, $palette_bold_font
 	LD $reg_bg_palette, A
 
-	LD HL, $9c00
-	LD A, $mem_bunny_health
-	CALL =Print_8bit
-
 	LD HL, $9c12
 	LD A, $dbg_VBLANK_STATE
 	CALL =Print_8bit
@@ -130,6 +126,10 @@ VBLANK_Entrypoint:
 	LD A, $mem_current_mode
 	CP $enum_dungeon_mode
 	JR NZ, =Skip_VBlank_Dungeon_Update
+		LD HL, $9c00
+		LD A, $mem_bunny_health
+		CALL =Print_8bit
+
 		CALL =Display_Prepared_Block
 		CALL =Display_Object
 	Skip_VBlank_Dungeon_Update:
@@ -160,9 +160,15 @@ VBLANK_Entrypoint:
 		CALL =Respawn_Entities
 		CALL =Prepare_Scrolling_Map
 
+	LD A, $mem_current_mode
+	LD B, A
+	LD A, $mem_animation_wait_frames
+
 	Skip_Dungeon_Update:
+	LD A, $mem_current_mode
 
 	CALL =Loading_Mode_Regular
+	CALL =Animation_Wait_Mode
 	CALL =Update_Animation_Steps
 	CALL =Check_Open_Menu_button
 	CALL =Move_dialogue_cursor

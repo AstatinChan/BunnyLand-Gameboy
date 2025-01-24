@@ -27,10 +27,10 @@ Walking: ; entity XY in BC, Breaks DE
 	JP =.Check_Collision
 
 	.Follow_bunny:
-	LD A, $mem_bunny_x
+	LD A, $mem_bunny_predicted_x
 	LD $tmp_var_1, A
 
-	LD A, $mem_bunny_y
+	LD A, $mem_bunny_predicted_y
 	LD $tmp_var_2, A
 
 	CALL =RNG_Step
@@ -40,10 +40,10 @@ Walking: ; entity XY in BC, Breaks DE
 	CP $00
 	JR Z, =.skip_invert_axis
 
-	LD A, $mem_bunny_y
+	LD A, $mem_bunny_predicted_y
 	LD $tmp_var_1, A
 
-	LD A, $mem_bunny_x
+	LD A, $mem_bunny_predicted_x
 	LD $tmp_var_2, A
 
 	LD E, B

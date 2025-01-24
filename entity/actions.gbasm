@@ -74,17 +74,20 @@ Update_Animation_Steps:
 
 	.update_mode:
 
-	LD A, $mem_bunny_health
-	CP $00
-	JR Z =.Dead_mode
-
 	LD A, $mem_requested_mode
 	LD $mem_current_mode, A
 
 	.end:
+	LD A, $mem_bunny_health
+	CP $00
+	JR Z =.Dead_mode
+
 	RET
 
 	.Dead_mode:
+
+	LD A, $20
+	LD $mem_bunny_direction, A
 
 	LD A, $enum_dead_mode
 	LD $mem_current_mode, A
@@ -276,12 +279,20 @@ Fox_Turn:
 		CP $00
 		JP NZ, =.Start_action_or_movement.end
 
-		CALL =Check_player_next_to
+		; CALL =Check_player_next_to
+		CALL =Laser_sight_check
 		LD A, E
 		CP $00
 		JR Z, =.nyo_basic_attack
 
-		CALL =Basic_Attack
+		; CALL =Basic_Attack
+		LD A, L
+		AND $f0
+		ADD $07
+		LD L, A
+
+		SET 2, (HL)
+
 		JR =.Start_action_or_movement.end
 
 		.nyo_basic_attack:
@@ -296,9 +307,30 @@ Fox_Turn:
 		AND $07
 		BIT 3, D
 		LD D, A
-		JR Z, =.End_movement.end
+		JR Z, =.End_movement.check_end_of_turn_mode_attack
 		LD A, $01
 		.ADD_A_TO_DIRECTION_BC
+
+		.End_movement.check_end_of_turn_mode_attack:
+
+		LD A, L
+		AND $f0
+		ADD $07
+		LD L, A
+
+		BIT 2, (HL)
+		RES 2, (HL)
+		JR Z, =.End_movement.end
+
+		CALL =Laser_sight_check
+		LD A, E
+		CP $00
+		JR Z, =.laser_sight_check_fail
+
+		CALL =Laser_Attack
+
+		.laser_sight_check_fail:
+
 	.End_movement.end:
 
 	.Skip_Turn:
