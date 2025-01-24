@@ -43,7 +43,7 @@
 	$end:
 .END
 
-Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test in A, X Result in C, Y result in B, E being how much tile entity will move
+Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test in A, XY result in BC, E being how much tile entity will move
 	PUSH HL
 	PUSH DE
 	LD D, A
@@ -77,11 +77,6 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 	.ADD_A_TO_DIRECTION_BC
 
 	Get_Position_After_Move.Skip_Move:
-
-	LD A, C
-	LD C, B
-	LD B, A
-
 	POP DE
 	POP HL
 	RET

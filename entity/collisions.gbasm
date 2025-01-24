@@ -1,9 +1,12 @@
-Carve_Entity_Collision_Map: ; X in C, Y in B
+Carve_Entity_Collision_Map: ; XY in BC
 	PUSH BC
 	PUSH HL
 	PUSH AF
 
-	LD A, C
+	LD A, B
+	LD B, C
+	LD C, A
+
 	AND $e0
 	JR NZ, =Carve_Entity_Collision_Map.end
 
@@ -38,18 +41,21 @@ Carve_Entity_Collision_Map: ; X in C, Y in B
 	POP BC
 	RET
 
-Is_Collisionable: ; X in A, Y in B, Result A
+Is_Collisionable: ; XY in BC, Result A
 	PUSH BC
 	PUSH HL
 
-	CP $20
-	JR NC, =Is_Collisionable.Solid
-
-	LD C, A
 	LD A, B
 	CP $20
 	JR NC, =Is_Collisionable.Solid
+
 	LD A, C
+	CP $20
+	JR NC, =Is_Collisionable.Solid
+
+	LD A, B
+	LD B, C
+	LD C, A
 
 	LD H, $00
 	CP $10

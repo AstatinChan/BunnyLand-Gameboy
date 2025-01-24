@@ -283,7 +283,8 @@ Fox_Turn:
 		CALL =Laser_sight_check
 		LD A, E
 		CP $00
-		JR Z, =.nyo_basic_attack
+		;JR Z, =.nyo_basic_attack
+		JR =.nyo_basic_attack
 
 		; CALL =Basic_Attack
 		LD A, L

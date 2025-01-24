@@ -66,7 +66,6 @@ Move_Bunny:
 
 		LD A, D
 		CALL =Get_Position_After_Move
-		LD A, C
 		CALL =Is_Collisionable
 		CALL =Carve_Entity_Collision_Map
 		CP $00
@@ -86,13 +85,8 @@ Move_Bunny:
 		JR Z, =.Start_action_or_movement.end
 
 		PUSH BC
-		LD A, B
-		LD B, C
-		LD C, A
 		LD A, $01
-		DBG
 		.ADD_A_TO_DIRECTION_BC
-		DBG
 		LD A, B
 		LD $mem_bunny_predicted_x, A
 		LD A, C

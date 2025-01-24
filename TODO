@@ -1,5 +1,5 @@
 Need to be refactored:
-  -> AB/BC/XY/YX thingy issue that makes me angry (functions/macro to predict position could be merged after)
+  -> Fox is sometimes moving too far when walking thingy
   -> main is messy and unreadable
   -> rework mode checks (heatlh update should happen on both dungeon and dead mode)
   -> general structure is messy (why is Update_Animation_Step in entity/action.gbasm ?? What is even entity/action.gbasm supposed to be ??)
