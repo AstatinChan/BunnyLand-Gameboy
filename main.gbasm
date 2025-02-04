@@ -234,6 +234,8 @@ STAT_Entrypoint:
 .INCLUDE "entity/utils.gbasm"
 .INCLUDE "entity/init.gbasm"
 .INCLUDE "entity/bunny.gbasm"
+.INCLUDE "entity/fox.gbasm"
+.INCLUDE "entity/frog.gbasm"
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"
 .INCLUDE "entity/display.gbasm"

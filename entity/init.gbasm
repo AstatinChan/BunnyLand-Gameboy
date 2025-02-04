@@ -201,11 +201,19 @@ Initialize_Enemy: ; HL => pointer to entity struct
 
 	INC BC
 
+	; Health
 	LD A, (BC)
 	LD (HL+), A
 
 	XOR A
+	; flags & status
 	LD (HL+), A
+	LD (HL+), A
+
+	INC BC
+
+	; Mana
+	LD A, (BC)
 	LD (HL+), A
 
 	LD A, L

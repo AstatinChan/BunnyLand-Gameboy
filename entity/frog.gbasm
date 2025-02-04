@@ -1,0 +1,123 @@
+Frog_Turn:
+	LD A, $mem_map_loading_flags
+	BIT 3, A
+	RET Z
+
+	PUSH HL
+	PUSH BC
+	PUSH DE
+	INC HL
+	LD A, (HL+)
+	LD B, A
+	LD A, (HL+)
+	LD C, A
+	LD A, (HL+)
+	LD D, A
+
+	.Health_check:
+		LD A, L
+		AND $f0
+		ADD $06
+		LD L, A
+
+		LD A, (HL)
+		CP $00
+		JR NZ, =.Health_check.end
+
+		LD A, L
+		AND $f0
+		LD L, A
+
+		LD (HL), $00
+		LD A, $mem_enemies_alive_count
+		DEC A
+		LD $mem_enemies_alive_count, A
+		JP NZ, =.Skip_turn
+	.Health_check.end:
+
+	.Freeze_shiver:
+		LD A, $mem_moving_animation_step
+		CP $00
+		JP NZ, =.Freeze_shiver.end
+		LD A, L
+		AND $f0
+		ADD $08
+		LD L, A
+		LD A, $01
+		CP (HL)
+		JR NZ, =.Freeze_shiver.end
+		LD A, D
+		AND $07
+		LD D, A
+		CALL =RNG_Step
+		CP $55
+		JP NC, =.Skip_turn
+		LD A, D
+		OR $40
+		LD D, A
+
+		CALL =RNG_Step
+		CP $55
+		JP NC, =.Skip_turn
+
+		LD A, $00
+		LD (HL-), A
+		RES 1, (HL)
+		JP =.Skip_turn
+	.Freeze_shiver.end:
+
+	.Should_turn_be_skipped:
+		LD A, L
+		AND $f0
+		ADD $08
+		LD L, A
+
+		BIT 0, (HL)
+		JP NZ, =.Skip_turn
+
+	.Start_action_or_movement:
+		LD A, $mem_moving_animation_step
+		CP $00
+		JP NZ, =.Start_action_or_movement.end
+
+		.Try_Basic_Attack:
+		CALL =Check_player_next_to
+		LD A, E
+		CP $00
+		JR Z, =.Try_Walking
+		CALL =Basic_Attack
+
+		JR =.Start_action_or_movement.end
+
+		.Try_Walking:
+		CALL =Walking
+	.Start_action_or_movement.end:
+
+	.End_movement:
+		LD A, $mem_moving_animation_step
+		CP $0f
+		JP NZ, =.End_movement.end
+		LD A, D
+		AND $07
+		BIT 3, D
+		LD D, A
+		JR Z, =.End_movement.end
+		LD A, $01
+		.ADD_A_TO_DIRECTION_BC
+	.End_movement.end:
+
+	.Skip_Turn:
+	LD A, L
+	AND $f0
+	LD L, A
+	INC HL
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	LD A, D
+	LD (HL+), A
+	POP DE
+	POP BC
+	POP HL
+	RET

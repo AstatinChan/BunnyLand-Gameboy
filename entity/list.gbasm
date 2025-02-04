@@ -12,6 +12,9 @@ Entity_list:
 		; Starting health
 		.DB $04
 
+		; Starting mana
+		.DB $05
+
 		.PADTO =.Fox+8
 
 	.Frog:
@@ -19,12 +22,15 @@ Entity_list:
 		.DB =OBJ_Tile_Image_Data.Frog
 
 		; Turn Jump Table index
-		.DB $00
+		.DB $03
 
 		; Interaction Jump Table index
-		.DB $02
+		.DB $03
 
 		; Starting health
+		.DB $02
+
+		; Starting mana
 		.DB $00
 
 		.PADTO =.Frog+8
@@ -42,6 +48,9 @@ Entity_list:
 		; Starting health
 		.DB $00
 
+		; Starting mana
+		.DB $00
+
 		.PADTO =.Mouse+8
 
 	.Fimsh:
@@ -55,6 +64,9 @@ Entity_list:
 		.DB $02
 
 		; Starting health
+		.DB $00
+
+		; Starting mana
 		.DB $00
 
 		.PADTO =.Fimsh+8

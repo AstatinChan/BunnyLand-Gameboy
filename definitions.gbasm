@@ -184,7 +184,8 @@
 ;		bit 2: end of turn attack mode
 ;	status: u8
 ;	; bit 0: whether or not turns should be skipped
-;	_padding: u56
+;	mana: u8
+;	_padding: u48
 ;
 ;	# SANTA CHRISTMAS LIST PLEASE #
 ;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)

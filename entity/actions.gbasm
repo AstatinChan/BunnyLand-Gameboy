@@ -111,6 +111,10 @@ Turn_Jump_table:
 	JP =Fox_Turn
 	NOP
 
+	; 03
+	JP =Frog_Turn
+	NOP
+
 Interaction_Jump_table:
 	; 00
 	RET
@@ -119,23 +123,12 @@ Interaction_Jump_table:
 	NOP
 
 	; 01
-	JP =Fox_Interaction
+	JP =Enemy_Interaction
 	NOP
 
 	; 02
 	JP =Open_Dialogue
 	NOP
-
-Fox_Interaction:
-	LD A, L
-	AND $f0
-	ADD $06
-	LD L, A
-	LD A, (HL)
-	DEC A
-	DAA
-	LD (HL), A
-	RET
 
 Open_Dialogue:
 	LD A, L
@@ -197,155 +190,13 @@ Open_Dialogue:
 	LD $mem_requested_mode, A
 	RET
 
-Fox_Turn:
-	LD A, $mem_map_loading_flags
-	BIT 3, A
-	RET Z
-
-	PUSH HL
-	PUSH BC
-	PUSH DE
-	INC HL
-	LD A, (HL+)
-	LD B, A
-	LD A, (HL+)
-	LD C, A
-	LD A, (HL+)
-	LD D, A
-
-	.Health_check:
-		LD A, L
-		AND $f0
-		ADD $06
-		LD L, A
-
-		LD A, (HL)
-		CP $00
-		JR NZ, =.Health_check.end
-
-		LD A, L
-		AND $f0
-		LD L, A
-
-		LD (HL), $00
-		LD A, $mem_enemies_alive_count
-		DEC A
-		LD $mem_enemies_alive_count, A
-		JP NZ, =.Skip_turn
-	.Health_check.end:
-
-	.Freeze_shiver:
-		LD A, $mem_moving_animation_step
-		CP $00
-		JP NZ, =.Freeze_shiver.end
-		LD A, L
-		AND $f0
-		ADD $08
-		LD L, A
-		LD A, $01
-		CP (HL)
-		JR NZ, =.Freeze_shiver.end
-		LD A, D
-		AND $07
-		LD D, A
-		CALL =RNG_Step
-		CP $55
-		JP NC, =.Skip_turn
-		LD A, D
-		OR $40
-		LD D, A
-
-		CALL =RNG_Step
-		CP $55
-		JP NC, =.Skip_turn
-
-		LD A, $00
-		LD (HL-), A
-		RES 1, (HL)
-		JP =.Skip_turn
-	.Freeze_shiver.end:
-
-	.Should_turn_be_skipped:
-		LD A, L
-		AND $f0
-		ADD $08
-		LD L, A
-
-		BIT 0, (HL)
-		JP NZ, =.Skip_turn
-
-	.Start_action_or_movement:
-		LD A, $mem_moving_animation_step
-		CP $00
-		JP NZ, =.Start_action_or_movement.end
-
-		; CALL =Check_player_next_to
-		CALL =Laser_sight_check
-		LD A, E
-		CP $00
-		;JR Z, =.nyo_basic_attack
-		JR =.nyo_basic_attack
-
-		; CALL =Basic_Attack
-		LD A, L
-		AND $f0
-		ADD $07
-		LD L, A
-
-		SET 2, (HL)
-
-		JR =.Start_action_or_movement.end
-
-		.nyo_basic_attack:
-		CALL =Walking
-	.Start_action_or_movement.end:
-
-	.End_movement:
-		LD A, $mem_moving_animation_step
-		CP $0f
-		JP NZ, =.End_movement.end
-		LD A, D
-		AND $07
-		BIT 3, D
-		LD D, A
-		JR Z, =.End_movement.check_end_of_turn_mode_attack
-		LD A, $01
-		.ADD_A_TO_DIRECTION_BC
-
-		.End_movement.check_end_of_turn_mode_attack:
-
-		LD A, L
-		AND $f0
-		ADD $07
-		LD L, A
-
-		BIT 2, (HL)
-		RES 2, (HL)
-		JR Z, =.End_movement.end
-
-		CALL =Laser_sight_check
-		LD A, E
-		CP $00
-		JR Z, =.laser_sight_check_fail
-
-		CALL =Laser_Attack
-
-		.laser_sight_check_fail:
-
-	.End_movement.end:
-
-	.Skip_Turn:
+Enemy_Interaction:
 	LD A, L
 	AND $f0
+	ADD $06
 	LD L, A
-	INC HL
-	LD A, B
-	LD (HL+), A
-	LD A, C
-	LD (HL+), A
-	LD A, D
-	LD (HL+), A
-	POP DE
-	POP BC
-	POP HL
+	LD A, (HL)
+	DEC A
+	DAA
+	LD (HL), A
 	RET
