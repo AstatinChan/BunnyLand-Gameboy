@@ -1,4 +1,4 @@
-Frog_Turn:
+Penguin_Turn:
 	LD A, $mem_map_loading_flags
 	BIT 3, A
 	RET Z
@@ -80,12 +80,35 @@ Frog_Turn:
 		CP $00
 		JP NZ, =.Start_action_or_movement.end
 
-		.Try_Basic_Attack:
+		LD A, $mem_bunny_status
+		CP $01
+		JR NZ, =.Try_Freeze_Attack
+		.Run_away:
+		CALL =Walking_Away
+
+		JR =.Start_action_or_movement.end
+
+		.Try_Freeze_Attack:
+		LD A, L
+		AND $f0
+		ADD $09
+		LD L, A
+		XOR A
+		CP (HL)
+		JR Z, =.Try_Walking
+
 		CALL =Check_player_next_to
 		LD A, E
 		CP $00
 		JR Z, =.Try_Walking
-		CALL =Basic_Enemy_Attack
+		CALL =Freeze_Enemy_Attack
+
+		LD A, L
+		AND $f0
+		ADD $09
+		LD L, A
+
+		DEC (HL)
 
 		JR =.Start_action_or_movement.end
 

@@ -115,6 +115,10 @@ Turn_Jump_table:
 	JP =Frog_Turn
 	NOP
 
+	; 04
+	JP =Penguin_Turn
+	NOP
+
 Interaction_Jump_table:
 	; 00
 	RET

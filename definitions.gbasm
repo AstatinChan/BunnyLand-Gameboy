@@ -104,6 +104,8 @@
 
 .DEFINE mem_animation_wait_frames ($c02e)
 
+.DEFINE mem_bunny_status_clear_turn_counter ($c02f)
+
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 
 .DEFINE mem_dungeon_generation_heads $c700 ; Takes the memory from c700 to c717

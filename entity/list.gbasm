@@ -25,7 +25,7 @@ Entity_list:
 		.DB $03
 
 		; Interaction Jump Table index
-		.DB $03
+		.DB $01
 
 		; Starting health
 		.DB $02
@@ -34,6 +34,42 @@ Entity_list:
 		.DB $00
 
 		.PADTO =.Frog+8
+
+	.Cat:
+		; Sprite address
+		.DB =OBJ_Tile_Image_Data.Cat
+
+		; Turn Jump Table index
+		.DB $03
+
+		; Interaction Jump Table index
+		.DB $01
+
+		; Starting health
+		.DB $02
+
+		; Starting mana
+		.DB $00
+
+		.PADTO =.Cat+8
+
+	.Penguin:
+		; Sprite address
+		.DB =OBJ_Tile_Image_Data.Penguin
+
+		; Turn Jump Table index
+		.DB $04
+
+		; Interaction Jump Table index
+		.DB $01
+
+		; Starting health
+		.DB $05
+
+		; Starting mana
+		.DB $03
+
+		.PADTO =.Penguin+8
 
 	.Mouse:
 		; Sprite address

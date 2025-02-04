@@ -217,7 +217,7 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	LD (HL+), A
 
 	LD A, L
-	ADD $07
+	ADD $06
 	LD L, A
 
 	RET

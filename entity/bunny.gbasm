@@ -16,6 +16,13 @@ Move_Bunny:
 		LD A, $mem_bunny_direction
 		AND $07
 		LD $mem_bunny_direction, A
+
+		LD A, $mem_bunny_status_clear_turn_counter
+		DEC A
+		CP $00
+		LD $mem_bunny_status_clear_turn_counter, A
+		JR Z, =.Unfreeze
+
 		CALL =RNG_Step
 		CP $55
 		JP NC, =.Skip_turn
@@ -27,6 +34,7 @@ Move_Bunny:
 		CP $55
 		JP NC, =.Skip_turn
 
+		.Unfreeze:
 		LD A, $00
 		LD $mem_bunny_status, A
 		LD A, $mem_bunny_flags

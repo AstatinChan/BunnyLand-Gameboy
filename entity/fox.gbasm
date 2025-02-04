@@ -110,7 +110,7 @@ Fox_Turn:
 		CP $00
 		JR Z, =.Try_Walking
 
-		CALL =Basic_Attack
+		CALL =Basic_Enemy_Attack
 
 		JR =.Start_action_or_movement.end
 
@@ -147,7 +147,7 @@ Fox_Turn:
 		CP $00
 		JR Z, =.laser_sight_check_fail
 
-		CALL =Laser_Attack
+		CALL =Laser_Enemy_Attack
 
 		LD A, L
 		AND $f0

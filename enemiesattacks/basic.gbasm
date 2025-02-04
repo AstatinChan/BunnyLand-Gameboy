@@ -1,4 +1,4 @@
-Basic_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
+Basic_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD A, E
 	OR $10
 	LD D, A
