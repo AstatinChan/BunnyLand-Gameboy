@@ -75,11 +75,11 @@ Initialize_Window_GUI:
 		LD (HL+), A
 
 		LD A, L
-		CP $40
+		CP $94
 		LD $reg_lcd_status, A
 		JR NZ, =.top_bar_loop
 
-	LD HL, $9da0
+	LD HL, $9c80
 	LD BC, $00a0
 	LD DE, =Dialogue_Box_Tilemap_data
 	CALL =memcpy

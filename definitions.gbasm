@@ -161,10 +161,10 @@
 .DEFINE dialogue_menu_choice3 $cac5
 .DEFINE dialogue_menu_choice4 $cace
 
-.DEFINE dialogue_menu_choice1_cursor ($9dc1)
-.DEFINE dialogue_menu_choice2_cursor ($9dca)
-.DEFINE dialogue_menu_choice3_cursor ($9e01)
-.DEFINE dialogue_menu_choice4_cursor ($9e0a)
+.DEFINE dialogue_menu_choice1_cursor ($9cb4)
+.DEFINE dialogue_menu_choice2_cursor ($9cbd)
+.DEFINE dialogue_menu_choice3_cursor ($9cf4)
+.DEFINE dialogue_menu_choice4_cursor ($9cfd)
 
 .DEFINE mem_last_animation_low_pointer ($cadf)
 
@@ -215,8 +215,7 @@
 .DEFINE obj_palette_frozen $ab
 
 .DEFINE lcdc_guibg_tilemap $8d
-.DEFINE lcdc_mapbg_no_window_tilemap $87
-.DEFINE lcdc_mapbg_window_tilemap $e7
+.DEFINE lcdc_mapbg_tilemap $87
 
 ; HIGH_RAM:
 ;

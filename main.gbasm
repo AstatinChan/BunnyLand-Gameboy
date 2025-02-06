@@ -13,6 +13,15 @@
 	$HBlank_Wait.End:
 .END
 
+.MACRODEF SET_WINDOW_LCDC_E
+	LD A, $mem_display_flag
+	BIT 3, A
+	LD E, $00
+	JR Z, =$No_Window
+	LD E, $60
+	$No_Window:
+.END
+
 .MACRODEF ENABLE_TOP_BAR
 	XOR A
 	LD $reg_viewport_x, A
@@ -20,20 +29,23 @@
 	LD $reg_viewport_y, A
 
 	LD A, $lcdc_guibg_tilemap
+	OR E
 	LD $reg_lcd_controller, A
 .END
 
 .MACRODEF ENABLE_DIALOGUE
 	.HBLANK_WAIT
-	XOR A
+	LD A, $98
 	LD $reg_viewport_x, A
+	LD A, $b8
 	LD $reg_viewport_y, A
 
 	LD A, $lcdc_guibg_tilemap
+	OR E
 	LD $reg_lcd_controller, A
 .END
 
-.MACRODEF DISABLE_DIALOGUE_NO_WINDOW
+.MACRODEF DISABLE_DIALOGUE
 	PUSH BC
 	LD A, $mem_prepared_viewport_x
 	LD B, A
@@ -46,25 +58,8 @@
 	LD $reg_viewport_y, A
 	LD A, $mem_prepared_color_palette
 	LD $reg_bg_palette, A
-	LD A, $lcdc_mapbg_no_window_tilemap
-	LD $reg_lcd_controller, A
-	POP BC
-.END
-
-.MACRODEF DISABLE_DIALOGUE_WINDOW
-	PUSH BC
-	LD A, $mem_prepared_viewport_x
-	LD B, A
-	LD A, $mem_prepared_viewport_y
-	LD C, A
-	.HBLANK_WAIT
-	LD A, B
-	LD $reg_viewport_x, A
-	LD A, C
-	LD $reg_viewport_y, A
-	LD A, $mem_prepared_color_palette
-	LD $reg_bg_palette, A
-	LD A, $lcdc_mapbg_window_tilemap
+	LD A, $lcdc_mapbg_tilemap
+	OR E
 	LD $reg_lcd_controller, A
 	POP BC
 .END
@@ -131,6 +126,7 @@ New_Dungeon:
 	LD A, $6a
 	LD ($9d66), A
 
+	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
 	.ENABLE_VBLANK_INTERRUPTS
 	EI
@@ -140,6 +136,7 @@ New_Dungeon:
 	JP =Wait_for_Interrupt.loop
 
 VBLANK_Entrypoint:
+	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
 
 	LD A, $palette_bold_font
@@ -205,6 +202,7 @@ VBLANK_Entrypoint:
 	CALL =Loading_Mode_Regular
 	CALL =Animation_Wait_Mode
 	CALL =Update_Animation_Steps
+	CALL =Open_dialogue_on_dungeon_menu_mode
 	CALL =Check_Open_Menu_button
 	CALL =Move_dialogue_cursor
 	CALL =Check_dialogue_action
@@ -219,6 +217,9 @@ VBLANK_Entrypoint:
 
 STAT_Entrypoint:
 	PUSH AF
+	PUSH DE
+	.SET_WINDOW_LCDC_E
+
 	LD A, $reg_lyc
 	CP $0a
 	JR Z, =.End_Top_Bar
@@ -242,28 +243,22 @@ STAT_Entrypoint:
 	LD A, $77
 	LD $reg_lyc, A
 	.RESET_STAT_INTERRUPT
+	POP DE
 	POP AF
 	RETI
 
 	.skip_dialogue:
 	.DISABLE_LYC_INTERRUPT
+	POP DE
 	POP AF
 	RET
 
 	.End_Top_Bar:
-	LD A, $mem_display_flag
-	BIT 3, A
-	JR Z, =.No_Window
-	.Window:
-	.DISABLE_DIALOGUE_WINDOW
-	JR =.Setup_dialogue_lyc
-	.No_Window:
-	.DISABLE_DIALOGUE_NO_WINDOW
-
-	.Setup_dialogue_lyc:
+	.DISABLE_DIALOGUE
 	LD A, $67
 	LD $reg_lyc, A
 	.RESET_STAT_INTERRUPT
+	POP DE
 	POP AF
 	RETI
 

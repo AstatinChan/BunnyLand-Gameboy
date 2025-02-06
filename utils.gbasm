@@ -1,26 +1,47 @@
 memcpy: ; src = DE, dest = HL, n = BC
-	memcpy.loop:
+	.loop:
 		LD A, (DE)
 		LD (HL+), A
 		INC DE
 		DEC BC
 		XOR A
 		CP B
-		JR NZ =memcpy.loop
+		JR NZ =.loop
 		CP C
-		JR NZ =memcpy.loop
+		JR NZ =.loop
+	RET
+
+tilemap_memcpy: ; src = DE, dest = HL, n = C
+	.loop:
+		LD A, (DE)
+		LD (HL), A
+		LD A, L
+
+		INC A
+		AND $1f
+		LD B, A
+		LD A, L
+		AND $e0
+		OR B
+		LD L, A
+
+		INC DE
+		DEC C
+		XOR A
+		CP C
+		JR NZ =.loop
 	RET
 
 bzero: ; dest = HL, n = BC
 	LD A, $00
-	bzero.loop:
+	.loop:
 		LD (HL+), A
 		INC DE
 		DEC BC
 		CP B
-		JR NZ =bzero.loop
+		JR NZ =.loop
 		CP C
-		JR NZ =bzero.loop
+		JR NZ =.loop
 	RET
 
 .MACRODEF ABS
@@ -168,16 +189,16 @@ Print_str: ; Memory Tilemap position in HL, Text address in BC, FF ended
 	PUSH AF
 	PUSH BC
 
-	Print_str.loop:
+	.loop:
 		LD A, (BC)
 		CP $ff
-		JR Z, =Print_str.end
+		JR Z, =.end
 
 		LD (HL+), A
 		INC BC
-		JR =Print_str.loop
+		JR =.loop
 
-	Print_str.end:
+	.end:
 	POP BC
 	POP AF
 	RET
@@ -187,65 +208,65 @@ MUL: ; B x C => EA
 	LD E, $00
 
 	BIT 7, B
-	JR Z, =MUL.bit7
+	JR Z, =.bit7
 		ADD C
-	MUL.bit7:
+	.bit7:
 
 	SLA A
 	RL E
 
 	BIT 6, B
-	JR Z, =MUL.bit6
+	JR Z, =.bit6
 		ADD C
-	MUL.bit6:
+	.bit6:
 
 	SLA A
 	RL E
 
 	BIT 5, B
-	JR Z, =MUL.bit5
+	JR Z, =.bit5
 		ADD C
-	MUL.bit5:
+	.bit5:
 
 	SLA A
 	RL E
 
 	BIT 4, B
-	JR Z, =MUL.bit4
+	JR Z, =.bit4
 		ADD C
-	MUL.bit4:
+	.bit4:
 
 	SLA A
 	RL E
 
 	BIT 3, B
-	JR Z, =MUL.bit3
+	JR Z, =.bit3
 		ADD C
-	MUL.bit3:
+	.bit3:
 
 	SLA A
 	RL E
 
 	BIT 2, B
-	JR Z, =MUL.bit2
+	JR Z, =.bit2
 		ADD C
-	MUL.bit2:
+	.bit2:
 
 	SLA A
 	RL E
 
 	BIT 1, B
-	JR Z, =MUL.bit1
+	JR Z, =.bit1
 		ADD C
-	MUL.bit1:
+	.bit1:
 
 	SLA A
 	RL E
 
 	BIT 0, B
-	JR Z, =MUL.bit0
+	JR Z, =.bit0
 		ADD C
-	MUL.bit0:
+	.bit0:
 	RET
 
 VBlank_Wait:

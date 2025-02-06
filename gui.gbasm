@@ -17,20 +17,20 @@ Copy_Dialogue_Buffer:
 	RET Z
 	RES 2, A
 	LD $mem_display_flag, A
-	LD HL, $9dc1
+	LD HL, $9cb4
 	LD DE, $dialogue_first_line
-	LD BC, $12
-	CALL =memcpy
+	LD C, $12
+	CALL =tilemap_memcpy
 
-	; LD HL, $9de1
+	; LD HL, $9cd4
 	; LD DE, $dialogue_second_line
-	; LD BC, $12
-	; CALL =memcpy
+	; LD C, $12
+	; CALL =tilemap_memcpy
 
-	LD HL, $9e01
+	LD HL, $9cf4
 	LD DE, $dialogue_third_line
-	LD BC, $12
-	JP =memcpy
+	LD C, $12
+	JP =tilemap_memcpy
 
 Init_Menu:
 	LD HL, $dialogue_menu_choice1
@@ -207,9 +207,19 @@ Check_Open_Menu_button:
 
 	CALL =Init_Menu
 
+	LD A, $enum_dungeon_menu_mode
+	LD $mem_requested_mode, A
+	RET
+
+Open_dialogue_on_dungeon_menu_mode:
+	LD A, $mem_current_mode
+	CP $enum_dungeon_menu_mode
+	RET NZ
+	LD A, $mem_requested_mode
+	CP $enum_dungeon_menu_mode
+	RET NZ
+
 	LD A, $0d
 	LD $mem_display_flag, A
 
-	LD A, $enum_dungeon_menu_mode
-	LD $mem_requested_mode, A
 	RET
