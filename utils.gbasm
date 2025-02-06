@@ -145,6 +145,25 @@ Print_8bit: ; Number in A, Memory Tilemap position in HL
 	POP AF
 	RET
 
+Print_8bit_Thin: ; Number in A, Memory Tilemap position in HL
+	PUSH AF
+	PUSH BC
+
+	LD C, A
+	SWAP A 				   ; We start by the highest nibble
+	AND $0f
+	OR $b0
+	LD (HL+), A
+
+	LD A, C
+	AND $0f 			   ; Then the lowest
+	OR $b0
+	LD (HL+), A
+
+	POP BC
+	POP AF
+	RET
+
 Print_str: ; Memory Tilemap position in HL, Text address in BC, FF ended
 	PUSH AF
 	PUSH BC

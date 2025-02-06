@@ -78,6 +78,18 @@ Display_Entity:
 	ADD $06
 	LD C, A
 
+	.Check_Window_Overlap:
+		LD A, $mem_display_flag
+		BIT 3, A
+		JR Z, =.Check_Window_Overlap.end
+		LD A, $6f
+		CP B
+		JR NC, =.Check_Window_Overlap.end
+		LD A, $55
+		CP C
+		JP C, =.skip
+	.Check_Window_Overlap.end:
+
 	.ADD_MOVING_ANIMATION_OFFSET
 
 	LD A, (HL+)

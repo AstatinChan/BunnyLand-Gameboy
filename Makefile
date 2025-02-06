@@ -2,7 +2,7 @@ all: run
 
 .PHONY: build/main.rom clean
 
-tileset.gbasm: ./scripts/generate-tiledata.py $(wildcard ./sprites/**/*)
+tileset.gbasm: ./scripts/generate-tiledata.py $(wildcard ./sprites/**/* ./sprites/*)
 	python ./scripts/generate-tiledata.py > tileset.gbasm
 
 dialogues.gbasm: ./dialogues.gbtxt ./scripts/generate_from_gbtxt.py

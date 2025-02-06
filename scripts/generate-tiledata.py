@@ -28,6 +28,8 @@ print("\n\t; Heart")
 get_sprite_png_parse_output("./sprites/gui/heart.png")
 print("\n\t; Cursor")
 get_sprite_png_parse_output("./sprites/gui/cursor.png")
+print("\n\t; Energy")
+get_sprite_png_parse_output("./sprites/gui/energy-points.png")
 
 sprite_idx = 0x80
 print("\nFont_Data:")

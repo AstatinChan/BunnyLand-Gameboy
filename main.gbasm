@@ -13,21 +13,27 @@
 	$HBlank_Wait.End:
 .END
 
-.MACRODEF ENABLE_WINDOW_NO_WAIT_HBLANK
+.MACRODEF ENABLE_TOP_BAR
+	XOR A
+	LD $reg_viewport_x, A
+	LD A, $57
+	LD $reg_viewport_y, A
+
+	LD A, $lcdc_guibg_tilemap
+	LD $reg_lcd_controller, A
+.END
+
+.MACRODEF ENABLE_DIALOGUE
+	.HBLANK_WAIT
 	XOR A
 	LD $reg_viewport_x, A
 	LD $reg_viewport_y, A
 
-	LD A, $lcdc_window_enabled
+	LD A, $lcdc_guibg_tilemap
 	LD $reg_lcd_controller, A
 .END
 
-.MACRODEF ENABLE_WINDOW
-	.HBLANK_WAIT
-	.ENABLE_WINDOW_NO_WAIT_HBLANK
-.END
-
-.MACRODEF DISABLE_WINDOW
+.MACRODEF DISABLE_DIALOGUE_NO_WINDOW
 	PUSH BC
 	LD A, $mem_prepared_viewport_x
 	LD B, A
@@ -40,7 +46,25 @@
 	LD $reg_viewport_y, A
 	LD A, $mem_prepared_color_palette
 	LD $reg_bg_palette, A
-	LD A, $lcdc_window_disabled
+	LD A, $lcdc_mapbg_no_window_tilemap
+	LD $reg_lcd_controller, A
+	POP BC
+.END
+
+.MACRODEF DISABLE_DIALOGUE_WINDOW
+	PUSH BC
+	LD A, $mem_prepared_viewport_x
+	LD B, A
+	LD A, $mem_prepared_viewport_y
+	LD C, A
+	.HBLANK_WAIT
+	LD A, B
+	LD $reg_viewport_x, A
+	LD A, C
+	LD $reg_viewport_y, A
+	LD A, $mem_prepared_color_palette
+	LD $reg_bg_palette, A
+	LD A, $lcdc_mapbg_window_tilemap
 	LD $reg_lcd_controller, A
 	POP BC
 .END
@@ -101,9 +125,13 @@ New_Dungeon:
 
 	; Heart
 	LD A, $68
-	LD ($9c02), A
+	LD ($9d62), A
 
-	.ENABLE_WINDOW_NO_WAIT_HBLANK
+	; Energy points
+	LD A, $6a
+	LD ($9d66), A
+
+	.ENABLE_TOP_BAR
 	.ENABLE_VBLANK_INTERRUPTS
 	EI
 	Wait_for_Interrupt.loop:
@@ -112,14 +140,17 @@ New_Dungeon:
 	JP =Wait_for_Interrupt.loop
 
 VBLANK_Entrypoint:
-	.ENABLE_WINDOW_NO_WAIT_HBLANK
+	.ENABLE_TOP_BAR
 
 	LD A, $palette_bold_font
 	LD $reg_bg_palette, A
 
-	LD HL, $9c12
+	LD HL, $9d72
 	LD A, $dbg_VBLANK_STATE
 	CALL =Print_8bit
+	LD HL, $9c43
+	LD A, $dbg_VBLANK_STATE
+	CALL =Print_8bit_Thin
 
 	CALL $OAM_DMA_Transfer_routine
 	CALL =Loading_Mode_VBlank
@@ -127,14 +158,17 @@ VBLANK_Entrypoint:
 	LD A, $mem_current_mode
 	CP $enum_dungeon_mode
 	JR NZ, =Skip_VBlank_Dungeon_Update
-		LD HL, $9c00
+		LD HL, $9d60
 		LD A, $mem_bunny_health
+		CALL =Print_8bit
+
+		LD HL, $9d64
+		LD A, $mem_bunny_mana
 		CALL =Print_8bit
 
 		CALL =Display_Prepared_Block
 		CALL =Display_Object
 	Skip_VBlank_Dungeon_Update:
-
 
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
@@ -144,7 +178,7 @@ VBLANK_Entrypoint:
 	LD $dbg_VBLANK_STATE, A
 
 	; LYC
-	LD A, $09
+	LD A, $0a
 	LD $reg_lyc, A
 	.ENABLE_LYC_INTERRUPT
 	.RESET_STAT_INTERRUPT
@@ -186,23 +220,23 @@ VBLANK_Entrypoint:
 STAT_Entrypoint:
 	PUSH AF
 	LD A, $reg_lyc
-	CP $09
-	JR Z, =STAT_.End_Top_Bar
+	CP $0a
+	JR Z, =.End_Top_Bar
 	CP $67
-	JR Z, =STAT_.Start_dialogue
-	STAT_.Thin_font:
+	JR Z, =.Start_dialogue
+	.Thin_font:
 	LD A, $palette_thin_font
 	LD $reg_bg_palette, A
-	JR =STAT_.skip_dialogue
+	JR =.skip_dialogue
 
-	STAT_.Start_dialogue:
+	.Start_dialogue:
 	LD A, $mem_display_flag
 	BIT 0, A
-	JR Z, =STAT_.skip_dialogue
-	.ENABLE_WINDOW
+	JR Z, =.skip_dialogue
+	.ENABLE_DIALOGUE
 	LD A, $mem_display_flag
 	BIT 1, A
-	JR Z, =STAT_.Thin_font
+	JR Z, =.Thin_font
 	LD A, $palette_bold_font
 	LD $reg_bg_palette, A
 	LD A, $77
@@ -211,13 +245,22 @@ STAT_Entrypoint:
 	POP AF
 	RETI
 
-	STAT_.skip_dialogue:
+	.skip_dialogue:
 	.DISABLE_LYC_INTERRUPT
 	POP AF
 	RET
 
-	STAT_.End_Top_Bar:
-	.DISABLE_WINDOW
+	.End_Top_Bar:
+	LD A, $mem_display_flag
+	BIT 3, A
+	JR Z, =.No_Window
+	.Window:
+	.DISABLE_DIALOGUE_WINDOW
+	JR =.Setup_dialogue_lyc
+	.No_Window:
+	.DISABLE_DIALOGUE_NO_WINDOW
+
+	.Setup_dialogue_lyc:
 	LD A, $67
 	LD $reg_lyc, A
 	.RESET_STAT_INTERRUPT

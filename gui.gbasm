@@ -207,7 +207,7 @@ Check_Open_Menu_button:
 
 	CALL =Init_Menu
 
-	LD A, $05
+	LD A, $0d
 	LD $mem_display_flag, A
 
 	LD A, $enum_dungeon_menu_mode

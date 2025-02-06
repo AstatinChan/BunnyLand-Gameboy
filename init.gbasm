@@ -65,7 +65,11 @@ Empty_VRAM: ; (Clear screen)
 	LD $reg_obj1_palette, A
 
 Initialize_Window_GUI:
-	LD HL, $9c20
+	LD A, $48
+	LD $reg_window_y, A
+	LD A, $6f
+	LD $reg_window_x, A
+	LD HL, $9d80
 	.top_bar_loop:
 		LD A, $10
 		LD (HL+), A
@@ -78,6 +82,11 @@ Initialize_Window_GUI:
 	LD HL, $9da0
 	LD BC, $00a0
 	LD DE, =Dialogue_Box_Tilemap_data
+	CALL =memcpy
+
+	LD HL, $9c00
+	LD BC, $0080
+	LD DE, =Cost_Window_Tilemap_data
 	CALL =memcpy
 
 Copy_OAM_DMA_Transfer_Routine_To_HRAM:
