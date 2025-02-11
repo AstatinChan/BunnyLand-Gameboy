@@ -12,6 +12,10 @@
 .END
 
 Copy_Dialogue_Buffer:
+	LD A, $mem_current_focused_attack_ep_cost
+	LD HL, $9c43
+	CALL =Print_8bit_Thin
+
 	LD A, $mem_display_flag
 	BIT 2, A
 	RET Z
@@ -33,47 +37,64 @@ Copy_Dialogue_Buffer:
 	JP =tilemap_memcpy
 
 Init_Menu:
-	LD HL, $dialogue_menu_choice1
-	LD BC, =Menu_Choice_1
-	CALL =Print_str
+	LD HL, $mem_bunny_attacks
 
-	LD HL, $dialogue_menu_choice2
-	LD BC, =Menu_Choice_2
-	CALL =Print_str
+	.MACRODEF SETUP_NEXT_ATTACK_MENU dialogue_buffer choice_routine ; Attack index pointer in (HL)
+		PUSH HL
 
-	LD HL, $dialogue_menu_choice3
-	LD BC, =Menu_Choice_3
-	CALL =Print_str
+		; Getting Attack list pointer from index
+		LD E, (HL)
+		LD D, $00
+		SLA E
+		RL D
+		SLA E
+		RL D
+		SLA E
+		RL D
 
-	LD HL, $dialogue_menu_choice4
-	LD BC, =Menu_Choice_4
-	CALL =Print_str
+		LD HL, =Attack_List
+		LD A, L
+		ADD E
+		LD L, A
+		LD A, H
+		ADC D
+		LD H, A
 
-	LD HL, $dialogue_menu_choice1_routine
-	LD BC, =Hop_Attack
-	LD A, B
-	LD (HL+), A
-	LD A, C
-	LD (HL+), A
+		; Printing txt into dialogue buffer
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
 
-	LD BC, =Heal_Attack
-	LD A, B
-	LD (HL+), A
-	LD A, C
-	LD (HL+), A
+		LD E, L
+		LD D, H
+		LD HL, $dialogue_buffer
+		CALL =Print_str
+		LD H, D
+		LD L, E
 
-	LD BC, =Freeze_Attack
-	LD A, B
-	LD (HL+), A
-	LD A, C
-	LD (HL+), A
+		; Setting up choice routine
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
 
-	LD BC, =Earcoptr_Attack
-	LD A, B
-	LD (HL+), A
-	LD A, C
-	LD (HL+), A
+		LD D, H
+		LD E, L
+		LD HL, $choice_routine
+		LD A, B
+		LD (HL+), A
+		LD A, C
+		LD (HL), A
 
+		POP HL
+		INC HL
+	.END
+
+	.SETUP_NEXT_ATTACK_MENU $dialogue_menu_choice1, $dialogue_menu_choice1_routine
+	.SETUP_NEXT_ATTACK_MENU $dialogue_menu_choice2, $dialogue_menu_choice2_routine
+	.SETUP_NEXT_ATTACK_MENU $dialogue_menu_choice3, $dialogue_menu_choice3_routine
+	.SETUP_NEXT_ATTACK_MENU $dialogue_menu_choice4, $dialogue_menu_choice4_routine
 	RET
 
 Nothing:
@@ -91,28 +112,38 @@ Display_dialogue_cursor:
 	LD A, $mem_current_mode
 	CP $enum_dungeon_menu_mode
 	RET NZ
+
+	LD A, $mem_current_focused_attack_ep_cost
+	LD B, A
+	LD A, $mem_bunny_mana
+	CP B
+	LD H, $69
+	JR NC, =.Skip_Disable_cursor_setting
+	LD H, $6b
+	.Skip_Disable_cursor_setting:
+
 	LD A, $mem_menu_cursor_position
 	LD BC, $0000
 	LD DE, $0000
 
 	CP $00
 	JR NZ, =.choice1_false
-	LD B, $69
+	LD B, H
 	.choice1_false:
 
 	CP $01
 	JR NZ, =.choice2_false
-	LD C, $69
+	LD C, H
 	.choice2_false:
 
 	CP $02
 	JR NZ, =.choice3_false
-	LD D, $69
+	LD D, H
 	.choice3_false:
 
 	CP $03
 	JR NZ, =.choice4_false
-	LD E, $69
+	LD E, H
 	.choice4_false:
 
 	LD A, B
@@ -144,12 +175,43 @@ Move_dialogue_cursor:
 	LD A, $mem_menu_cursor_position
 	XOR $02
 	LD $mem_menu_cursor_position, A
-	RET
+	JR =Reload_EP_Cost
 
 	.Vertical_axis:
 	LD A, $mem_menu_cursor_position
 	XOR $01
 	LD $mem_menu_cursor_position, A
+
+Reload_EP_Cost:
+	LD A, $mem_menu_cursor_position
+	ADD low($mem_bunny_attacks)
+	LD L, A
+	LD A, high($mem_bunny_attacks)
+	ADC $00
+	LD H, A
+
+	; Getting Attack list pointer from index
+	LD E, (HL)
+	LD D, $00
+	SLA E
+	RL D
+	SLA E
+	RL D
+	SLA E
+	RL D
+
+	LD HL, =Attack_List
+	LD A, L
+	ADD E
+	ADD $04
+	LD L, A
+	LD A, H
+	ADC D
+	LD H, A
+
+	LD A, (HL)
+	LD $mem_current_focused_attack_ep_cost, A
+
 	RET
 
 Check_dialogue_action:

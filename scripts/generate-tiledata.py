@@ -30,6 +30,8 @@ print("\n\t; Cursor")
 get_sprite_png_parse_output("./sprites/gui/cursor.png")
 print("\n\t; Energy")
 get_sprite_png_parse_output("./sprites/gui/energy-points.png")
+print("\n\t; Disabled Cursor")
+get_sprite_png_parse_output("./sprites/gui/disabled-cursor.png")
 
 sprite_idx = 0x80
 print("\nFont_Data:")

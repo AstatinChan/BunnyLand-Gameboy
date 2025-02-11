@@ -93,6 +93,8 @@ Entrypoint:
 	CALL =Initialize_RNG
 	LD A, $20
 	LD $mem_bunny_health, A
+	LD A, $3
+	LD $mem_bunny_mana, A
 New_Dungeon:
 	LD SP, $fffe
 	LD HL, $mem_loaded_enemies_indices
@@ -102,6 +104,16 @@ New_Dungeon:
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
+	LD HL, $mem_bunny_attacks
+	LD A, $00
+	LD (HL+), A
+	INC A
+	LD (HL+), A
+	INC A
+	LD (HL+), A
+	INC A
+	LD (HL+), A
+	CALL =Reload_EP_Cost
 	CALL =Dungeon_Generation
 	CALL =Initialize_Entities
 	CALL =Initialize_Objects
@@ -145,9 +157,6 @@ VBLANK_Entrypoint:
 	LD HL, $9d72
 	LD A, $dbg_VBLANK_STATE
 	CALL =Print_8bit
-	LD HL, $9c43
-	LD A, $dbg_VBLANK_STATE
-	CALL =Print_8bit_Thin
 
 	CALL $OAM_DMA_Transfer_routine
 	CALL =Loading_Mode_VBlank

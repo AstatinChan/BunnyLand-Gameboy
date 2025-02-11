@@ -1,4 +1,6 @@
 Initialize_Entities:
+	LD A, $mem_bunny_mana
+	LD C, A
 	LD A, $mem_bunny_health
 	LD B, A
 	LD HL, $mem_entities_list
@@ -10,6 +12,9 @@ Initialize_Entities:
 
 	LD A, B
 	LD $mem_bunny_health, A
+
+	LD A, C
+	LD $mem_bunny_mana, A
 
 	LD HL, $mem_entities_list
 	LD A, $01

@@ -1,7 +1,7 @@
 Bunny_Prefix: Bunny:
 Text_1: Hello !
 Debug_Text: DBG
-Menu_Choice_1: Hop
-Menu_Choice_2: Heal
-Menu_Choice_3: Freeze
-Menu_Choice_4: Earcoptr
+Hop_Attack_Menu_Txt: Hop
+Heal_Attack_Menu_Txt: Heal
+Freeze_Attack_Menu_Txt: Freeze
+Earcoptr_Attack_Menu_Txt: Earcoptr

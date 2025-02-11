@@ -73,6 +73,55 @@ Canceled_Attack:
 	LD $mem_bunny_direction, A
 	RET
 
+Attack_List:
+	.Hop:
+		; Attack menu name string
+		.DB =Hop_Attack_Menu_Txt
+
+		; Attack function
+		.DB =Hop_Attack
+
+		; Energy point cost
+		.DB $01
+
+		.PADTO =.Hop+8
+
+	.Heal:
+		; Attack menu name string
+		.DB =Heal_Attack_Menu_Txt
+
+		;Attack function
+		.DB =Heal_Attack
+
+		; Energy point cost
+		.DB $03
+
+		.PADTO =.Heal+8
+
+	.Freeze:
+		; Attack menu name string
+		.DB =Freeze_Attack_Menu_Txt
+
+		; Attack function
+		.DB =Freeze_Attack
+
+		; Energy point cost
+		.DB $03
+
+		.PADTO =.Freeze+8
+
+	.Earcoptr:
+		; Attack menu name string
+		.DB =Earcoptr_Attack_Menu_Txt
+
+		; Attack function
+		.DB =Earcoptr_Attack
+
+		; Energy point cost
+		.DB $04
+
+		.PADTO =.Earcoptr+8
+
 .INCLUDE "playerattacks/hop.gbasm"
 .INCLUDE "playerattacks/heal.gbasm"
 .INCLUDE "playerattacks/freeze.gbasm"

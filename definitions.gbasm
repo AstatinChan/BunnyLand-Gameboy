@@ -85,7 +85,7 @@
 .DEFINE dialogue_menu_choice1_routine $c018 ; Takes also $c019
 .DEFINE dialogue_menu_choice2_routine $c01a ; Takes also $c01b
 .DEFINE dialogue_menu_choice3_routine $c01c ; Takes also $c01d
-.DEFINE dialogue_menu_choice3_routine $c01e ; Takes also $c01f
+.DEFINE dialogue_menu_choice4_routine $c01e ; Takes also $c01f
 
 .DEFINE mem_last_button_action ($c020)
 .DEFINE mem_loading_step ($c021)
@@ -110,6 +110,9 @@
 .DEFINE mem_animation_wait_frames ($c02e)
 
 .DEFINE mem_bunny_status_clear_turn_counter ($c02f)
+
+.DEFINE mem_bunny_attacks $c030 ; Takes the memory from c030 to c033
+.DEFINE mem_current_focused_attack_ep_cost ($c034)
 
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 

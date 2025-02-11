@@ -16,7 +16,7 @@ Load_Tile:
 
 	LD HL, $9200
 	LD DE, =BG_Tile_Image_Data
-	LD BC, $04b0
+	LD BC, $04c0
 	CALL =memcpy
 
 	LD HL, $8600
