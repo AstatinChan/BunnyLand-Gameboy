@@ -8,6 +8,7 @@ Initialize_Objects:
 	LD HL, $mem_object_list
 	CALL =Spawn_stairs
 	CALL =Spawn_carrot
+	CALL =Spawn_leaf
 	RET
 
 Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E
@@ -108,6 +109,11 @@ Spawn_carrot:
 	LD E, $02
 	JP =Spawn_object_in_random_room
 
+Spawn_leaf:
+	LD A, $68
+	LD E, $03
+	JP =Spawn_object_in_random_room
+
 Object_Interaction_Jump_table:
 	; 00
 	RET
@@ -116,14 +122,17 @@ Object_Interaction_Jump_table:
 	NOP
 
 	; 01
-	JP =Stairs_action
+	JP =Stairs_Action
 	NOP
 
 	; 02
 	JP =Heal_Action
 	NOP
 
-Stairs_action:
+	; 03
+	JP =Restore_EP_Action
+
+Stairs_Action:
 	DI
 	LD A, $00
 	LD $reg_interrupt_flags, A
@@ -161,6 +170,29 @@ Heal_Action:
 	POP BC
 
 	LD (HL), $00
+
+	RET
+
+Restore_EP_Action:
+	LD A, $mem_bunny_mana
+	ADD $15
+	DAA
+	JR NC, =.Set_mana
+	LD A, $99
+	.Set_mana:
+	LD $mem_bunny_mana, A
+
+	PUSH BC
+	LD A, $mem_bunny_x
+	LD B, A
+	LD A, $mem_bunny_y
+	LD C, A
+	LD A, $01
+	LD E, $20
+	CALL =Try_Launch_Animation
+	POP BC
+
+	; LD (HL), $00
 
 	RET
 
@@ -273,6 +305,8 @@ Object_Interactions_Check:
 	LD A, $mem_map_loading_flags
 	BIT 1, A
 	JR Z, =.End
+	RES 1, A
+	LD $mem_map_loading_flags, A
 	LD HL, $mem_object_list
 	LD A, $mem_bunny_x
 	LD C, A

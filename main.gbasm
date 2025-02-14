@@ -93,7 +93,7 @@ Entrypoint:
 	CALL =Initialize_RNG
 	LD A, $20
 	LD $mem_bunny_health, A
-	LD A, $3
+	LD A, $30
 	LD $mem_bunny_mana, A
 New_Dungeon:
 	LD SP, $fffe
@@ -131,11 +131,11 @@ New_Dungeon:
 	LD $mem_requested_mode, A
 
 	; Heart
-	LD A, $68
+	LD A, $f0
 	LD ($9d62), A
 
 	; Energy points
-	LD A, $6a
+	LD A, $f1
 	LD ($9d66), A
 
 	.SET_WINDOW_LCDC_E

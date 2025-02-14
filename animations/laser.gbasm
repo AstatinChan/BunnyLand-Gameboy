@@ -1,5 +1,11 @@
+Set_E_Skip_display:
+	LD E, $01
+RET
+
 Laser_Animation:
 	INC HL
+
+	LD E, $00
 
 	LD A, (HL+)
 	ADD $80
@@ -8,10 +14,10 @@ Laser_Animation:
 	LD B, A
 	SUB $82
 	CP D
-	RET NC
+	CALL NC, =Set_E_Skip_display
 	ADD $0e
 	CP D
-	RET C
+	CALL C, =Set_E_Skip_display
 	LD A, D
 	SUB $80
 	SUB B
@@ -26,10 +32,10 @@ Laser_Animation:
 	LD C, A
 	SUB $82
 	CP D
-	RET NC
+	CALL NC, =Set_E_Skip_display
 	ADD $0d
 	CP D
-	RET C
+	CALL C, =Set_E_Skip_display
 	LD A, D
 	SUB $80
 	SUB C
@@ -38,12 +44,14 @@ Laser_Animation:
 	ADD $06
 	LD C, A
 
-	LD E, (HL)
-	DEC E
-	DEC E
-	CP E
+	LD A, E
+	LD $tmp_var_1, A
+
+	LD A, (HL)
+	SUB $02
 	JP C, =.End_animation
-	LD (HL), E
+	LD E, A
+	LD (HL), A
 
 	DEC HL
 	DEC HL
@@ -86,12 +94,16 @@ Laser_Animation:
 
 	.Skip_move_animation_tile:
 
+	LD A, $tmp_var_1
+	CP $01
+	RET Z
+
 	LD A, $0f
 	AND E
 	CPL
 	INC A
 	ADD $0f
-	
+
 	.ADD_A_TO_DIRECTION_BC
 
 	.ADD_MOVING_ANIMATION_OFFSET

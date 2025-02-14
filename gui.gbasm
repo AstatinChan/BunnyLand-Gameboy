@@ -117,9 +117,9 @@ Display_dialogue_cursor:
 	LD B, A
 	LD A, $mem_bunny_mana
 	CP B
-	LD H, $69
+	LD H, $f2
 	JR NC, =.Skip_Disable_cursor_setting
-	LD H, $6b
+	LD H, $f3
 	.Skip_Disable_cursor_setting:
 
 	LD A, $mem_menu_cursor_position
@@ -236,6 +236,15 @@ Check_dialogue_action:
 	LD A, $mem_current_mode
 	CP $enum_dungeon_menu_mode
 	RET NZ
+
+	LD A, $mem_current_focused_attack_ep_cost
+	LD B, A
+	LD A, $mem_bunny_mana
+	CP B
+	RET C
+	SUB B
+	DAA
+	LD $mem_bunny_mana, A
 
 	LD HL, $dialogue_menu_choice1_routine
 

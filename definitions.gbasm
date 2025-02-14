@@ -53,7 +53,7 @@
 
 .DEFINE mem_map_loading_flags ($c00c)
 ; bit 0: if the object should be reloaded (scroll or first load)
-; bit 1: has a movement ended (objects interaction should be checked, entities should update their positions)
+; bit 1: has a movement ended (objects interaction should be checked, entities sh0uld update their positions)
 ; bit 2: if the prepared block should be updated at the next frame
 ; bit 3: animation step is going up (?)
 
