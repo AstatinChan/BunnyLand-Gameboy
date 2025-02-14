@@ -1,5 +1,12 @@
+Bugs:
+  -> Health is not updated on death
+  -> Penguins freeze can cancel hops but not freezes
+  -> Foxes can attack even if bunny hopped away
+  -> Emulator crash with "not implemented: Only XKB keymaps are supported when unfocused (or workspace change maybe ?)
+  -> There is no way to change direction outside of moving
+  -> There is no indicator that the max health is 20
+
 Need to be refactored:
-  -> Fox is sometimes moving too far when walking thingy
   -> main is messy and unreadable
   -> rework mode checks (heatlh update should happen on both dungeon and dead mode)
   -> general structure is messy (why is Update_Animation_Step in entity/action.gbasm ?? What is even entity/action.gbasm supposed to be ??)
@@ -15,11 +22,9 @@ x	* Weaker attack on multiple foxes
 x	* Freeze a/multiple fox(es) for X turns
 	* Distance attack (maybe reuse laser of the enemies)
 
-  -> Limit attacks uses
+x -> Limit attacks uses
 
 x -> Spawn enemies in far away rooms when less than X enemies on the map. (Maybe despawn some too)
-
-? -> Remove some health to the bunny (probably to 10 points, maybe max health growing ?)
 
 x -> Add objects to heal
 
@@ -29,9 +34,19 @@ x -> Add attacks for the foxes
 
 x -> Add other types of enemies
 
-  -> Make the different types of enemies behave different (fleeing/ambush/etc...)
+  -> Add more enemies & enemy behaviours:
+x	* Fox with distance limited attack and close unlimited attack
+x	* Penguin freezing and fleeing when the player is frozen
+	* Mouse weaker and only close attacks but can move 2x faster
+	* Cats being normal (only close attacks)
+	* Fimsh being super rare have a bunch of HP, not do anything but drop super cool objects
+	* Owls heal the enemies around (different pathfinding where it tries to stay 1 block away from the bnuy?) + cooldown
+	* Bugs move 2x faster and sacrifice themselves to give the bunny a status (poisoned & taking damages/slower and skipping one of 2 turns)
+	* Frogs: ?
 
   -> Have some enemies drop items
+
+  -> Add floor count + a kind of goal (rescuing another bunny/getting a rare item ?)
 
 DEMO
 

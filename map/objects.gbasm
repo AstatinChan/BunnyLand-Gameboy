@@ -192,7 +192,7 @@ Restore_EP_Action:
 	CALL =Try_Launch_Animation
 	POP BC
 
-	; LD (HL), $00
+	LD (HL), $00
 
 	RET
 

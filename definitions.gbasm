@@ -114,6 +114,8 @@
 .DEFINE mem_bunny_attacks $c030 ; Takes the memory from c030 to c033
 .DEFINE mem_current_focused_attack_ep_cost ($c034)
 
+.DEFINE mem_bunny_next_mana_regen ($c035)
+
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 
 .DEFINE mem_dungeon_generation_heads $c700 ; Takes the memory from c700 to c717

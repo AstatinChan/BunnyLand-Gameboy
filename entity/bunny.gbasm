@@ -92,15 +92,10 @@ Move_Bunny:
 		BIT 3, D
 		JR Z, =.Start_action_or_movement.end
 
-		PUSH BC
-		LD A, $01
-		.ADD_A_TO_DIRECTION_BC
 		LD A, B
 		LD $mem_bunny_predicted_x, A
 		LD A, C
 		LD $mem_bunny_predicted_y, A
-
-		POP BC
 
 		JR =.Start_action_or_movement.end
 
@@ -240,6 +235,22 @@ Move_Bunny:
 		LD $mem_bunny_predicted_x, A
 		LD A, $mem_bunny_y
 		LD $mem_bunny_predicted_y, A
+
+		LD A, $mem_bunny_next_mana_regen
+		DEC A
+		AND $07
+		LD $mem_bunny_next_mana_regen, A
+		CP $00
+		JR NZ, =.End_movement.skip_mana_regen
+		LD A, $mem_bunny_mana
+		INC A
+		DAA
+		JR C, =.End_movement.skip_mana_regen
+		CP $30
+		JR NC, =.End_movement.skip_mana_regen
+		LD $mem_bunny_mana, A
+
+		.End_movement.skip_mana_regen:
 
 	.End_movement.end:
 
