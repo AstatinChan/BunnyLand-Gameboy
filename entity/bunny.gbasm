@@ -72,12 +72,17 @@ Move_Bunny:
 		SET 3, A
 		LD $mem_map_loading_flags, A
 
+		LD A, $mem_button_action
+		BIT 1, A
+		JR NZ, =.Start_action_or_movement.cancel_movement
+
 		LD A, D
 		CALL =Get_Position_After_Move
 		CALL =Is_Collisionable
 		CALL =Carve_Entity_Collision_Map
 		CP $00
 		JR Z, =.Start_action_or_movement.not_collision
+		.Start_action_or_movement.cancel_movement:
 		RES 3, D
 
 		LD A, $mem_map_loading_flags

@@ -1,9 +1,7 @@
 Bugs:
-  -> Health is not updated on death
   -> Penguins freeze can cancel hops but not freezes
   -> Foxes can attack even if bunny hopped away
   -> Emulator crash with "not implemented: Only XKB keymaps are supported when unfocused (or workspace change maybe ?)
-  -> There is no way to change direction outside of moving
   -> There is no indicator that the max health is 20
 
 Need to be refactored:

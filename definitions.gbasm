@@ -73,12 +73,13 @@
 
 .DEFINE mem_current_mode ($c014)
 .DEFINE mem_requested_mode ($c015)
+; bit 7: setp if map, objects and gui update are frozen
 .DEFINE enum_dungeon_mode $00
-.DEFINE enum_dungeon_menu_mode $01
-.DEFINE enum_dungeon_dialogue_mode $02
-.DEFINE enum_loading_mode $03
-.DEFINE enum_dead_mode $04
-.DEFINE enum_animation_wait_mode $05
+.DEFINE enum_dead_mode $01
+.DEFINE enum_dungeon_menu_mode $80
+.DEFINE enum_dungeon_dialogue_mode $81
+.DEFINE enum_loading_mode $82
+.DEFINE enum_animation_wait_mode $83
 .DEFINE mem_menu_cursor_position ($c016)
 .DEFINE mem_last_button_direction ($c017)
 

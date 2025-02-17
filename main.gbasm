@@ -162,7 +162,7 @@ VBLANK_Entrypoint:
 	CALL =Loading_Mode_VBlank
 
 	LD A, $mem_current_mode
-	CP $enum_dungeon_mode
+	BIT 7, A
 	JR NZ, =Skip_VBlank_Dungeon_Update
 		LD HL, $9d60
 		LD A, $mem_bunny_health
@@ -196,8 +196,8 @@ VBLANK_Entrypoint:
 	CP $enum_dungeon_mode
 	JR NZ, =Skip_Dungeon_Update
 
-		CALL =Object_Interactions_Check
 		CALL =Entities_Actions
+		CALL =Object_Interactions_Check
 		CALL =Respawn_Entities
 		CALL =Prepare_Scrolling_Map
 
