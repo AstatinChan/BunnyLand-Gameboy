@@ -1,4 +1,5 @@
 Bugs:
+  -> Enemy urn seems to start on dungeon change sometimes (maybe when going to the stairs with hop ?)
   -> Penguins freeze can cancel hops but not freezes
   -> Foxes can attack even if bunny hopped away
   -> Emulator crash with "not implemented: Only XKB keymaps are supported when unfocused (or workspace change maybe ?)
