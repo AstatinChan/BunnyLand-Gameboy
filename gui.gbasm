@@ -203,10 +203,16 @@ Reload_EP_Cost:
 	LD HL, =Attack_List
 	LD A, L
 	ADD E
-	ADD $04
 	LD L, A
 	LD A, H
 	ADC D
+	LD H, A
+
+	LD A, L
+	ADD $04
+	LD L, A
+	LD A, H
+	ADC $00
 	LD H, A
 
 	LD A, (HL)

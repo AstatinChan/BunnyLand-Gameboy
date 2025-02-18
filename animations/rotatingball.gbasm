@@ -44,7 +44,7 @@ Rotating_Ball_Animation:
 	LD E, (HL)
 	DEC E
 	CP E
-	JP C, =.End_animation
+	JP C, =End_animation
 
 	LD (HL), E
 	LD A, $30
@@ -86,11 +86,4 @@ Rotating_Ball_Animation:
 	LD $mem_oam_buffer_low, A
 
 	POP HL
-	RET
-
-	.End_animation:
-	LD A, L
-	AND $fc
-	LD L, A
-	LD (HL), $00
 	RET

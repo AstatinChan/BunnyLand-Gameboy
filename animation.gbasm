@@ -30,12 +30,12 @@ Display_Animation:
 
 	POP HL
 	LD A, L
-	ADD $04
+	ADD $08
 	LD L, A
 
 	RET
 
-Try_Launch_Animation: ; XY in BC, jump_table index in A, number of steps in E
+Try_Launch_Animation: ; XY in BC, jump_table index in A, number of steps in E, entity_effect in D
 	PUSH HL
 	PUSH AF
 
@@ -44,7 +44,7 @@ Try_Launch_Animation: ; XY in BC, jump_table index in A, number of steps in E
 	CP (HL)
 	JP Z, =Try_Launch_Animation.Free_slot_Found
 
-	LD A, $04
+	LD A, $08
 	ADD L
 	LD L, A
 
@@ -52,7 +52,7 @@ Try_Launch_Animation: ; XY in BC, jump_table index in A, number of steps in E
 	CP (HL)
 	JP Z, =Try_Launch_Animation.Free_slot_Found
 
-	LD A, $04
+	LD A, $08
 	ADD L
 	LD L, A
 
@@ -60,7 +60,7 @@ Try_Launch_Animation: ; XY in BC, jump_table index in A, number of steps in E
 	CP (HL)
 	JP Z, =Try_Launch_Animation.Free_slot_Found
 
-	LD A, $04
+	LD A, $08
 	ADD L
 	LD L, A
 
@@ -78,6 +78,7 @@ Try_Launch_Animation: ; XY in BC, jump_table index in A, number of steps in E
 	LD (HL+), A
 	LD A, E
 	LD (HL+), A
+	LD (HL), D
 
 	POP HL
 	RET
@@ -85,6 +86,34 @@ Try_Launch_Animation: ; XY in BC, jump_table index in A, number of steps in E
 	Try_Launch_Animation.No_Free_slot_found:
 	POP AF
 	POP HL
+	RET
+
+End_animation:
+	LD A, L
+	AND $f8
+	LD L, A
+	LD (HL), $00
+	LD A, L
+	ADD $04
+	LD L, A
+
+	LD A, $f0
+	AND (HL)
+	CP $10
+	RET NZ
+
+	LD A, (HL)
+	AND $0f
+	SWAP A
+
+	PUSH HL
+	ADD $07
+	LD L, A
+	LD H, high($mem_entities_list)
+
+	SET 3, (HL)
+	POP HL
+
 	RET
 
 Animation_Jump_table:

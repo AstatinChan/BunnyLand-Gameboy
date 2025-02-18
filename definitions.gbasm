@@ -32,14 +32,6 @@
 .DEFINE mem_bunny_x ($cb01)
 .DEFINE mem_bunny_y ($cb02)
 .DEFINE mem_bunny_direction ($cb03)
-; aaaamddd: a = animation, m = is_moving, d = direction
-; animations:
-;	nothing = 0
-;	action = 1
-;	death = 2
-;	superjump = 3
-;	shaking = 4
-;	blinking = 5 (Blink with both loading steps and animation step)
 
 .DEFINE mem_bunny_health ($cb06)
 .DEFINE mem_bunny_flags ($cb07)
@@ -117,6 +109,8 @@
 
 .DEFINE mem_bunny_next_mana_regen ($c035)
 
+.DEFINE mem_blinking_animation_counter ($c036)
+
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 
 .DEFINE mem_dungeon_generation_heads $c700 ; Takes the memory from c700 to c717
@@ -174,12 +168,16 @@
 
 .DEFINE mem_last_animation_low_pointer ($cadf)
 
-.DEFINE mem_animation_list $cae0; Until $caef
+.DEFINE mem_animation_list $cae0; Until $caff
 ; struct animation {
 ;	jump_table_index: u8,
 ;	x: u8,
 ;	y: u8,
 ;	step: u8,
+;	entity_effect: u8,
+;		high(u4): effect to start (0 = nothing, 1 = blinking)
+;		low(u4): entity_id
+;	_padding: u24,
 ; }
 
 .DEFINE mem_entities_list $cb00 ; Until cbff
@@ -188,6 +186,13 @@
 ;	x: u8,
 ;	y: u8,
 ;	direction: u8 (animation = bit 7-4, bit 3 = is_moving, bit 2-0: direction),
+;		 aaaamddd: a = animation, m = is_moving, d = direction
+;		 animations:
+;			nothing = 0
+;			action = 1
+;			death = 2
+;			superjump = 3
+;			shaking = 4
 ;	turn_function_jump_table_index: u8
 ;	action_function_jump_table_index: u8
 ;	health: u8 (DAA decimal !!)
@@ -195,6 +200,7 @@
 ;		bit 0: speed 2x
 ;		bit 1: shadow mode
 ;		bit 2: end of turn attack mode
+;		bit 3: blinking mode
 ;	status: u8
 ;	; bit 0: whether or not turns should be skipped
 ;	mana: u8

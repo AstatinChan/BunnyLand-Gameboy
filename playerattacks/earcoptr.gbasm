@@ -51,10 +51,6 @@ Earcoptr_Attack_Loading_Regular:
 	RET NC
 
 	INC C
-	LD A, (BC)
-	AND $0f
-	OR $50
-	LD (BC), A
 
 	LD A, C
 	ADD $03
@@ -63,6 +59,18 @@ Earcoptr_Attack_Loading_Regular:
 	SUB $01
 	RET C
 	LD (BC), A
+	
+	INC C
+	LD A, (BC)
+	SET 3, A
+	LD (BC), A
+
+	LD A, $mem_moving_animation_step
+	LD B, A
+	LD A, $1f
+	SUB B
+	LD $mem_blinking_animation_counter, A
+
 	RET
 
 Earcoptr_Attack:
@@ -72,8 +80,11 @@ Earcoptr_Attack:
 	LD A, $mem_bunny_y
 	LD C, A
 	LD A, $02
+	PUSH DE
 	LD E, $30
+	LD D, $00
 	CALL =Try_Launch_Animation
+	POP DE
 	POP BC
 
 	LD BC, =Earcoptr_Attack_Loading_VBlank

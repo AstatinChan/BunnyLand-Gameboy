@@ -82,6 +82,12 @@ Fox_Turn:
 
 		LD A, L
 		AND $f0
+		OR $07
+		LD L, A
+		RES 3, (HL)
+
+		LD A, L
+		AND $f0
 		ADD $09
 		LD L, A
 		XOR A

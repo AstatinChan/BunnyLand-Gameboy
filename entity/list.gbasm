@@ -10,7 +10,7 @@ Entity_list:
 		.DB $01
 
 		; Starting health
-		.DB $04
+		.DB $02
 
 		; Starting mana
 		.DB $05
@@ -64,7 +64,7 @@ Entity_list:
 		.DB $01
 
 		; Starting health
-		.DB $05
+		.DB $01
 
 		; Starting mana
 		.DB $03

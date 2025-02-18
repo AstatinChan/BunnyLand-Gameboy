@@ -55,6 +55,13 @@ Entity_Action:
 	RET
 
 Update_Animation_Steps:
+	LD A, $mem_blinking_animation_counter
+	DEC A
+	CP $ff
+	JR Z, =.Skip_blinking_update
+	LD $mem_blinking_animation_counter, A
+	.Skip_blinking_update:
+
 	LD A, $mem_map_loading_flags
 	BIT 3, A
 	JR Z, =.update_mode
@@ -112,7 +119,7 @@ Turn_Jump_table:
 	NOP
 
 	; 03
-	JP =Frog_Turn
+	JP =Cat_Turn
 	NOP
 
 	; 04
@@ -202,5 +209,10 @@ Enemy_Interaction:
 	LD A, (HL)
 	DEC A
 	DAA
-	LD (HL), A
+	LD (HL+), A
+
+	SET 3, (HL)
+	LD A, $24
+	LD $mem_blinking_animation_counter, A
+
 	RET

@@ -51,6 +51,10 @@ Move_Bunny:
 		LD A, $mem_map_loading_flags
 		SET 3, A
 		LD $mem_map_loading_flags, A
+
+		LD A, $mem_bunny_flags
+		RES 3, A
+		LD $mem_bunny_flags, A
 		RET
 
 	.no_skip:
@@ -71,6 +75,10 @@ Move_Bunny:
 		LD A, $mem_map_loading_flags
 		SET 3, A
 		LD $mem_map_loading_flags, A
+
+		LD A, $mem_bunny_flags
+		RES 3, A
+		LD $mem_bunny_flags, A
 
 		LD A, $mem_button_action
 		BIT 1, A

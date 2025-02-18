@@ -103,21 +103,22 @@ Display_Entity:
 	.Moving_Animation.end:
 
 	.Blinking_Animation:
-		LD A, D
+		LD A, L
 		AND $f0
-		CP $50
-		JR NZ, =.Blinking_Animation.end
+		OR $07
+		LD L, A
+		BIT 3, (HL)
+		JR Z, =.Blinking_Animation.end
 
-		LD A, $mem_moving_animation_step
+		LD A, $mem_blinking_animation_counter
 		PUSH DE
 		LD E, A
 		LD A, $mem_loading_step
 		XOR E
 		POP DE
 		AND $02
-		CP $00
+		CP $02
 		JP Z, =.skip
-
 	.Blinking_Animation.end:
 
 

@@ -3,6 +3,17 @@ Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	OR $10
 	LD D, A
 
+	PUSH BC
+	LD A, $mem_bunny_direction
+	AND $08
+	LD B, A
+	LD A, $mem_bunny_flags
+	AND $01
+	OR B
+	CP $09
+	POP BC
+	RET Z
+
 	LD A, $01
 	LD $mem_bunny_status, A
 	LD A, $02

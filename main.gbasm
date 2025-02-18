@@ -98,9 +98,10 @@ Entrypoint:
 New_Dungeon:
 	LD SP, $fffe
 	LD HL, $mem_loaded_enemies_indices
+	LD A, $02
+	LD (HL+), A
+	LD (HL+), A
 	LD A, $00
-	LD (HL+), A
-	LD (HL+), A
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
@@ -283,7 +284,7 @@ STAT_Entrypoint:
 .INCLUDE "entity/init.gbasm"
 .INCLUDE "entity/bunny.gbasm"
 .INCLUDE "entity/fox.gbasm"
-.INCLUDE "entity/frog.gbasm"
+.INCLUDE "entity/cat.gbasm"
 .INCLUDE "entity/penguin.gbasm"
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"

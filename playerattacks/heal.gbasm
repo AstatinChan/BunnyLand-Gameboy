@@ -14,8 +14,11 @@ Heal_Attack:
 	LD A, $mem_bunny_y
 	LD C, A
 	LD A, $01
+	PUSH DE
 	LD E, $20
+	LD D, $00
 	CALL =Try_Launch_Animation
+	POP DE
 	POP BC
 
 	LD A, $enum_dungeon_mode

@@ -49,7 +49,7 @@ Laser_Animation:
 
 	LD A, (HL)
 	SUB $02
-	JP C, =.End_animation
+	JP C, =End_animation
 	LD E, A
 	LD (HL), A
 
@@ -127,11 +127,4 @@ Laser_Animation:
 	LD $mem_oam_buffer_low, A
 
 	POP HL
-	RET
-
-	.End_animation:
-	LD A, L
-	AND $fc
-	LD L, A
-	LD (HL), $00
 	RET

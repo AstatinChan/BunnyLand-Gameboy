@@ -43,7 +43,7 @@ Sparkle_Animation:
 	DEC E
 	XOR A
 	CP E
-	JP Z, =.End_animation
+	JP Z, =End_animation
 	LD (HL), E
 	LD A, $20
 	SUB E
@@ -96,11 +96,4 @@ Sparkle_Animation:
 	LD $mem_oam_buffer_low, A
 
 	POP HL
-	RET
-
-	.End_animation:
-	LD A, L
-	AND $fc
-	LD L, A
-	LD (HL), $00
 	RET

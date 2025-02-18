@@ -76,6 +76,7 @@ Laser_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 
 	POP BC
 	LD A, D
+	LD D, $10
 	CALL =Try_Launch_Animation
 
 	LD A, $enum_animation_wait_mode

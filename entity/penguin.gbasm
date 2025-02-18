@@ -80,6 +80,12 @@ Penguin_Turn:
 		CP $00
 		JP NZ, =.Start_action_or_movement.end
 
+		LD A, L
+		AND $f0
+		OR $07
+		LD L, A
+		RES 3, (HL)
+
 		LD A, $mem_bunny_status
 		CP $01
 		JR NZ, =.Try_Freeze_Attack
