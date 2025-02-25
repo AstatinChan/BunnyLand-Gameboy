@@ -112,6 +112,10 @@ End_animation:
 	LD H, high($mem_entities_list)
 
 	SET 3, (HL)
+
+	LD A, $1f
+	LD $mem_blinking_animation_counter, A
+
 	POP HL
 
 	RET

@@ -30,10 +30,12 @@ Basic_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	SET 3, A
 	LD $mem_bunny_flags, A
 
+	PUSH BC
 	LD A, $mem_moving_animation_step
 	LD B, A
 	LD A, $1f
 	SUB B
 	LD $mem_blinking_animation_counter, A
+	POP BC
 
 	RET

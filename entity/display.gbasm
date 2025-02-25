@@ -111,11 +111,6 @@ Display_Entity:
 		JR Z, =.Blinking_Animation.end
 
 		LD A, $mem_blinking_animation_counter
-		PUSH DE
-		LD E, A
-		LD A, $mem_loading_step
-		XOR E
-		POP DE
 		AND $02
 		CP $02
 		JP Z, =.skip

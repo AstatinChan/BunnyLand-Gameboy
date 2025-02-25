@@ -50,10 +50,8 @@ Earcoptr_Attack_Loading_Regular:
 	CP $02
 	RET NC
 
-	INC C
-
 	LD A, C
-	ADD $03
+	ADD $04
 	LD C, A
 	LD A, (BC)
 	SUB $01

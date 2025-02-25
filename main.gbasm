@@ -126,6 +126,18 @@ New_Dungeon:
 	LD A, $00
 	LD $mem_bunny_flags, A
 	LD $mem_display_flag, A
+	LD $mem_moving_animation_step, A
+	LD $mem_animation_wait_frames, A
+	LD $mem_blinking_animation_counter, A
+
+	LD A, $mem_map_loading_flags
+	RES 3, A
+	LD $mem_map_loading_flags, A
+
+	; Clear OAM
+	LD HL, $fe00
+	LD BC, $00a0
+	CALL =bzero
 
 	LD A, $enum_dungeon_mode
 	LD $mem_current_mode, A
@@ -157,6 +169,7 @@ VBLANK_Entrypoint:
 
 	LD HL, $9d72
 	LD A, $dbg_VBLANK_STATE
+	LD A, $mem_bunny_x
 	CALL =Print_8bit
 
 	CALL $OAM_DMA_Transfer_routine

@@ -72,6 +72,7 @@
 .DEFINE enum_dungeon_dialogue_mode $81
 .DEFINE enum_loading_mode $82
 .DEFINE enum_animation_wait_mode $83
+
 .DEFINE mem_menu_cursor_position ($c016)
 .DEFINE mem_last_button_direction ($c017)
 

@@ -44,6 +44,18 @@ bzero: ; dest = HL, n = BC
 		JR NZ =.loop
 	RET
 
+bff: ; dest = HL, n = BC
+	LD A, $ff
+	.loop:
+		LD (HL+), A
+		INC DE
+		DEC BC
+		CP B
+		JR NZ =.loop
+		CP C
+		JR NZ =.loop
+	RET
+
 .MACRODEF ABS
 	BIT 7, A
 	JR Z, =$end

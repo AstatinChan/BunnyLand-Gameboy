@@ -4,14 +4,14 @@ Initialize_Objects:
 	LD $mem_map_loading_flags, A
 	LD HL, $mem_object_list
 	LD BC, $0080
-	CALL =bzero
+	CALL =bff
 	LD HL, $mem_object_list
 	CALL =Spawn_stairs
 	CALL =Spawn_carrot
 	CALL =Spawn_leaf
 	RET
 
-Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E
+Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E, Object pointer in HL
 	LD (HL+), A
 
 	LD A, $mem_number_of_rooms
@@ -214,18 +214,25 @@ Display_Object:
 	AND $f8
 	LD L, A
 
-	LD A, (HL+)
+	LD A, (HL)
+	CP $FF
+	RET Z
 	LD C, A
+	CP $00
+	JR NZ, =.skip_remove_object_after_display
+	LD (HL), $FF
+	.skip_remove_object_after_display:
+	INC HL
 	LD A, (HL+)
 	ADD $80
 	LD D, A
 	LD A, $mem_viewport_x
 	SUB $83
 	CP D
-	JR NC, =Display_Objects.End
+	RET NC
 	ADD $0e
 	CP D
-	JR C, =Display_Objects.End
+	RET C
 	LD A, D
 	SUB $80
 	LD D, A
@@ -236,10 +243,10 @@ Display_Object:
 	LD A, $mem_viewport_y
 	SUB $83
 	CP B
-	JR NC, =Display_Objects.End
+	RET NC
 	ADD $0e
 	CP B
-	JR C, =Display_Objects.End
+	RET C
 	LD A, B
 	SUB $80
 	LD B, A
@@ -276,7 +283,6 @@ Display_Object:
 	LD A, C
 	LD (DE), A
 
-	Display_Objects.End:
 	RET
 
 	Display_Objects.Nothing:
