@@ -1,7 +1,6 @@
 Bugs:
   -> Emulator crash with "not implemented: Only XKB keymaps are supported when unfocused (or workspace change maybe ?)
   -> There is no indicator that the max health is 20
-  -> The bunny should not be able to spawn on the stairs and the enemies should not be able to spawn on top of another entity
 
 Need to be refactored:
   -> main is messy and unreadable

@@ -272,6 +272,10 @@ Check_Open_Menu_button:
 	CP $enum_dungeon_mode
 	RET NZ
 
+	LD A, $mem_bunny_status
+	BIT 0, A
+	RET NZ
+
 	LD A, $mem_last_button_action
 	AND $08
 	LD B, A

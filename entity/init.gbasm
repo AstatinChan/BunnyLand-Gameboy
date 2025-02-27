@@ -48,7 +48,20 @@ Initialize_Entities:
 	INC A
 	CALL =RNG_Bound
 	ADD D
-	LD (HL+), A
+
+	LD (HL), A
+
+	PUSH BC
+	LD C, (HL)
+	DEC HL
+	LD B, (HL)
+	INC HL
+
+	CALL =Carve_Entity_Collision_Map
+
+	POP BC
+
+	INC HL
 
 	LD A, $enum_direction_down
 	LD (HL+), A
@@ -152,6 +165,7 @@ Initialize_Enemy: ; HL => pointer to entity struct
 
 	LD B, high($mem_room_list)
 
+	; X
 	LD A, (BC)
 	LD D, A
 	INC BC
@@ -172,7 +186,33 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	INC A
 	CALL =RNG_Bound
 	ADD D
-	LD (HL+), A
+	LD (HL), A
+
+	; Check if spawning on collisionable tile
+	PUSH BC
+	LD C, (HL)
+	DEC HL
+	LD B, (HL)
+	INC HL
+
+	CALL =Is_Collisionable
+	CP $00
+	JR Z, =.no_collision
+
+	XOR A
+	LD (HL-), A
+	LD (HL-), A
+	LD (HL-), A
+
+	POP BC
+	RET
+
+	.no_collision:
+	CALL =Carve_Entity_Collision_Map
+
+	POP BC
+
+	INC HL
 
 	; Direction
 	LD A, $03

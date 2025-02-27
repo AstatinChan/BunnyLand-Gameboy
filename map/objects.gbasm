@@ -14,6 +14,7 @@ Initialize_Objects:
 Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E, Object pointer in HL
 	LD (HL+), A
 
+	.place_in_random_room:
 	LD A, $mem_number_of_rooms
 	CALL =RNG_Bound
 	SLA A
@@ -44,7 +45,15 @@ Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E, Obje
 	ADD D
 	LD (HL), A
 
+	LD C, (HL)
+
 	DEC HL
+
+	LD B, (HL)
+
+	CALL =Is_Collisionable
+	CP $00
+	JR NZ, =.place_in_random_room
 
 	LD BC, $mem_object_list
 	Object_check_collisions.loop:
