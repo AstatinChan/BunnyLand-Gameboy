@@ -202,7 +202,8 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	XOR A
 	LD (HL-), A
 	LD (HL-), A
-	LD (HL-), A
+	LD (HL), A
+
 
 	POP BC
 	RET

@@ -283,6 +283,7 @@ Move_Bunny:
 		BIT 3, A
 		JR Z, =.Middle_movement_doublespeed_viewport_update.end
 		LD A, E
+		LD $dbg_var, A
 		CP $02
 		JR NZ, =.Middle_movement_doublespeed_viewport_update.end
 

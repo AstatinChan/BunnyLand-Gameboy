@@ -168,8 +168,7 @@ VBLANK_Entrypoint:
 	LD $reg_bg_palette, A
 
 	LD HL, $9d72
-	LD A, $dbg_VBLANK_STATE
-	LD A, $mem_bunny_x
+	LD A, $dbg_var
 	CALL =Print_8bit
 
 	CALL $OAM_DMA_Transfer_routine
@@ -192,10 +191,6 @@ VBLANK_Entrypoint:
 
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
-
-	LD A, $reg_lcd_status
-	AND $03
-	LD $dbg_VBLANK_STATE, A
 
 	; LYC
 	LD A, $0a

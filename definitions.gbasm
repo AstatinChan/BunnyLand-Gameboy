@@ -211,7 +211,7 @@
 ;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)
 ; }
 
-.DEFINE dbg_VBLANK_STATE ($dfff)
+.DEFINE dbg_var ($dfff)
 
 .DEFINE enum_direction_left $01
 .DEFINE enum_direction_right $02
