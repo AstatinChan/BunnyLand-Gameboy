@@ -36,7 +36,7 @@ Hop_Attack_Loading_VBlank:
 	BIT 2, A
 	RET Z
 
-	CALL =Display_Prepared_Block
+	CALL =Display_Main_Prepared_Block
 
 	LD A, $mem_prepared_loading_block_tile
 	LD $mem_prepared_block_tile, A
@@ -49,7 +49,7 @@ Hop_Attack_Loading_VBlank:
 	SET 2, A
 	LD $mem_map_loading_flags, A
 
-	CALL =Display_Prepared_Block
+	CALL =Display_Main_Prepared_Block
 
 	LD A, $mem_bunny_direction
 	AND $07

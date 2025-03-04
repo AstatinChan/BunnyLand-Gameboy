@@ -13,7 +13,7 @@ Load_Map:
 		.For_X:
 			LD A, C
 			CALL =Load_Block
-			CALL =Display_Prepared_Block
+			CALL =Display_Main_Prepared_Block
 
 			INC C
 			LD A, C
@@ -251,18 +251,54 @@ Load_Block: ; X in A, Y in B
 	POP BC
 	RET
 
-Display_Prepared_Block:
-	PUSH AF
-	PUSH BC
-	PUSH DE
+Load_Additional_Block:
+	LD A, $mem_display_flag
+	BIT 6, A
+	RET Z
+	LD A, $mem_additional_loading_block_y
+	LD B, A
+	LD A, $mem_additional_loading_block_x
+	CALL =Load_Block
+	LD A, $mem_prepared_block_tile
+	LD $mem_additional_loading_block_tile, A
+	LD A, $mem_prepared_block_position_1
+	LD $mem_additional_loading_block_position_1, A
+	LD A, $mem_prepared_block_position_2
+	LD $mem_additional_loading_block_position_2, A
+	RET
 
+Display_Prepared_Blocks:
 	LD A, $mem_map_loading_flags
 	BIT 2, A
-	JR Z, =.End
+	JR Z, =.Skip_Main
 
 	LD A, $mem_map_loading_flags
 	RES 2, A
 	LD $mem_map_loading_flags, A
+
+	CALL =Display_Main_Prepared_Block
+
+	.Skip_Main:
+	LD A, $mem_display_flag
+	BIT 6, A
+	RET Z
+	RES 6, A
+	LD $mem_display_flag, A
+
+	LD A, $mem_additional_loading_block_tile
+	LD $mem_prepared_block_tile, A
+	LD A, $mem_additional_loading_block_position_1
+	LD $mem_prepared_block_position_1, A
+	LD A, $mem_additional_loading_block_position_2
+	LD $mem_prepared_block_position_2, A
+	JP =Display_Main_Prepared_Block
+
+Display_Main_Prepared_Block:
+	PUSH AF
+	PUSH BC
+	PUSH DE
+
+
 
 	LD A, $mem_prepared_block_position_1
 	LD D, A

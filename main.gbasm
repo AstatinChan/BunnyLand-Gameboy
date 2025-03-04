@@ -154,6 +154,7 @@ New_Dungeon:
 	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
 	.ENABLE_VBLANK_INTERRUPTS
+	.HBLANK_WAIT
 	EI
 	Wait_for_Interrupt.loop:
 	HALT
@@ -161,6 +162,7 @@ New_Dungeon:
 	JP =Wait_for_Interrupt.loop
 
 VBLANK_Entrypoint:
+	DBG
 	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
 
@@ -185,13 +187,22 @@ VBLANK_Entrypoint:
 		LD A, $mem_bunny_mana
 		CALL =Print_8bit
 
-		CALL =Display_Prepared_Block
+		CALL =Display_Prepared_Blocks
 		CALL =Display_Object
 	Skip_VBlank_Dungeon_Update:
 
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
 
+	LD A, $reg_lcd_status
+	AND $03
+	CP $01
+	JR Z, =.skip_stop
+		; STOP
+	.skip_stop:
+	LD $dbg_var A
+
+	DBG
 	; LYC
 	LD A, $0a
 	LD $reg_lyc, A
@@ -200,6 +211,7 @@ VBLANK_Entrypoint:
 	EI
 
 	CALL =Pad_Button_Check
+	CALL =Load_Additional_Block
 
 	LD A, $mem_current_mode
 	CP $enum_dungeon_mode
@@ -209,10 +221,6 @@ VBLANK_Entrypoint:
 		CALL =Object_Interactions_Check
 		CALL =Respawn_Entities
 		CALL =Prepare_Scrolling_Map
-
-	LD A, $mem_current_mode
-	LD B, A
-	LD A, $mem_animation_wait_frames
 
 	Skip_Dungeon_Update:
 	LD A, $mem_current_mode

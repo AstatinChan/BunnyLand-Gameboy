@@ -2,6 +2,7 @@
 .DEFINE reg_interrupt_flags ($0f)
 .DEFINE reg_lcd_controller ($40)
 .DEFINE reg_lcd_status ($41)
+.DEFINE reg_ly ($44)
 .DEFINE reg_lyc ($45)
 .DEFINE reg_viewport_y ($42)
 .DEFINE reg_viewport_x ($43)
@@ -45,7 +46,7 @@
 
 .DEFINE mem_map_loading_flags ($c00c)
 ; bit 0: if the object should be reloaded (scroll or first load)
-; bit 1: has a movement ended (objects interaction should be checked, entities sh0uld update their positions)
+; bit 1: has a movement ended (objects interaction should be checked, entities should update their positions)
 ; bit 2: if the prepared block should be updated at the next frame
 ; bit 3: animation step is going up (?)
 
@@ -60,8 +61,11 @@
 .DEFINE mem_display_flag ($c013)
 ; bit 0: if dialogue box is displayed
 ; bit 1: dialogue box first line should be bold
-; bit 2: if dialogue box text should be refreshed
+; bit 2: if dialogue box text should be refreshed (part1)
 ; bit 3: if side window box should be displayed
+; bit 4: if dialogue box text should be refreshed (part2)
+; bit 5: if object display is paused
+; bit 6: if additional tile should be loaded
 
 .DEFINE mem_current_mode ($c014)
 .DEFINE mem_requested_mode ($c015)
@@ -111,6 +115,12 @@
 .DEFINE mem_bunny_next_mana_regen ($c035)
 
 .DEFINE mem_blinking_animation_counter ($c036)
+
+.DEFINE mem_additional_loading_block_x ($c037)
+.DEFINE mem_additional_loading_block_y ($c038)
+.DEFINE mem_additional_loading_block_tile ($c039)
+.DEFINE mem_additional_loading_block_position_1 ($c03a)
+.DEFINE mem_additional_loading_block_position_2 ($c03b)
 
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 

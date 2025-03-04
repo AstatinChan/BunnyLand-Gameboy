@@ -212,6 +212,9 @@ Restore_EP_Action:
 	RET
 
 Display_Object:
+	LD A, $mem_display_flag
+	BIT 5, A
+	RET NZ
 	LD HL, $mem_object_list
 	LD A, $mem_object_load_counter
 	INC A
@@ -296,8 +299,12 @@ Display_Object:
 
 	Display_Objects.Nothing:
 	LD A, D
-	CALL =Load_Block
-	CALL =Display_Prepared_Block
+	LD $mem_additional_loading_block_x, A
+	LD A, B
+	LD $mem_additional_loading_block_y, A
+	LD A, $mem_display_flag
+	SET 6, A
+	LD $mem_display_flag, A
 	RET
 
 Load_Objects:

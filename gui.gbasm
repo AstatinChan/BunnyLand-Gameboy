@@ -18,18 +18,20 @@ Copy_Dialogue_Buffer:
 
 	LD A, $mem_display_flag
 	BIT 2, A
-	RET Z
+	JR Z, =Copy_Dialogue_Buffer_Part2
 	RES 2, A
+	SET 4, A
 	LD $mem_display_flag, A
 	LD HL, $9cb4
 	LD DE, $dialogue_first_line
 	LD C, $12
-	CALL =tilemap_memcpy
+	JP =tilemap_memcpy
 
-	; LD HL, $9cd4
-	; LD DE, $dialogue_second_line
-	; LD C, $12
-	; CALL =tilemap_memcpy
+Copy_Dialogue_Buffer_Part2:
+	BIT 4, A
+	RET Z
+	RES 4, A
+	LD $mem_display_flag, A
 
 	LD HL, $9cf4
 	LD DE, $dialogue_third_line
@@ -300,6 +302,9 @@ Open_dialogue_on_dungeon_menu_mode:
 	CP $enum_dungeon_menu_mode
 	RET NZ
 
+	LD A, $mem_display_flag
+	BIT 0, A
+	RET NZ
 	LD A, $0d
 	LD $mem_display_flag, A
 
