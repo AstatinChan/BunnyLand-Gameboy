@@ -10,7 +10,7 @@ dialogues.gbasm: ./dialogues.gbtxt ./scripts/generate_from_gbtxt.py
 
 build/main.rom: main.gbasm tileset.gbasm dialogues.gbasm
 	mkdir -p build
-	gbasm $< $@
+	gbasm $< $@ > build/main.sym
 
 run: build/main.rom
 	mkdir -p recordings
@@ -20,7 +20,7 @@ sameboy: build/main.rom
 	sameboy build/main.rom
 
 gearboy: build/main.rom
-	gearboy build/main.rom
+	gearboy build/main.rom build/main.sym
 
 clean:
 	rm -rf build
