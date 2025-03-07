@@ -89,11 +89,10 @@ Attack_List:
 		.DB =Hop_Attack_Menu_Txt
 
 		; Attack function
-		.DB =Stairs_Action
-		; .DB =Hop_Attack
+		.DB =Hop_Attack
 
 		; Energy point cost
-		.DB $00
+		.DB $01
 
 		.PADTO =.Hop+8
 
