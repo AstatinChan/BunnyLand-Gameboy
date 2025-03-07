@@ -74,8 +74,19 @@ Initialize_Entities:
 	LD A, $00
 	LD (HL+), A
 
+	INC HL ; skip health
+
+	LD A, $00
+
+	; Flags
+	LD (HL+), A
+
+	; Status
+	LD (HL+), A
+
 	LD A, L
-	ADD $0a
+	AND $f0
+	ADD $10
 	LD L, A
 
 	LD A, $00

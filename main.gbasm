@@ -98,6 +98,8 @@ Entrypoint:
 	LD $mem_bunny_health, A
 	LD A, $30
 	LD $mem_bunny_mana, A
+	LD A, $01
+	LD $mem_floor_count, A
 New_Dungeon:
 	LD SP, $fffe
 	LD HL, $mem_loaded_enemies_indices
@@ -126,12 +128,21 @@ New_Dungeon:
 	CALL =Load_Objects
 	CALL =Reload_Entities_Tile_Data
 
+	; Reset animations
+	LD HL, $mem_animation_list
+	LD BC, $1f
+	CALL =bzero
+
 	LD A, $00
-	LD $mem_bunny_flags, A
 	LD $mem_display_flag, A
 	LD $mem_moving_animation_step, A
 	LD $mem_animation_wait_frames, A
 	LD $mem_blinking_animation_counter, A
+
+	LD A, $mem_bunny_x
+	LD $mem_bunny_predicted_x, A
+	LD A, $mem_bunny_y
+	LD $mem_bunny_predicted_y, A
 
 	LD A, $mem_map_loading_flags
 	RES 3, A
@@ -154,12 +165,20 @@ New_Dungeon:
 	LD A, $f1
 	LD ($9d66), A
 
+	; Floor
+	LD A, $f4
+	LD ($9d73), A
+
 	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
 	.ENABLE_VBLANK_INTERRUPTS
 	EI
 	Wait_for_Interrupt.loop:
-	HALT
+	LD A, $reg_interrupt_enable
+	LD C, A
+	LD B, $00
+	LD A, $reg_interrupt_flags
+	DBG
 	EI
 	JP =Wait_for_Interrupt.loop
 
@@ -170,8 +189,8 @@ VBLANK_Entrypoint:
 	LD A, $palette_bold_font
 	LD $reg_bg_palette, A
 
-	LD HL, $9d72
-	LD A, $dbg_var
+	LD HL, $9d71
+	LD A, $mem_floor_count
 	CALL =Print_8bit
 
 	CALL $OAM_DMA_Transfer_routine
@@ -194,14 +213,6 @@ VBLANK_Entrypoint:
 
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
-
-	LD A, $reg_lcd_status
-	AND $03
-	CP $01
-	JR Z, =.skip_stop
-		; STOP
-	.skip_stop:
-	LD $dbg_var A
 
 	; LYC
 	LD A, $0a
@@ -237,6 +248,10 @@ VBLANK_Entrypoint:
 	LD $mem_oam_buffer_low, A
 	CALL =Display_Animation_List
 	CALL =Display_Entities
+
+	LD A, $mem_loop_rng_timer
+	INC A
+	LD $mem_loop_rng_timer, A
 
 	.ENABLE_VBLANK_INTERRUPTS
 	RET

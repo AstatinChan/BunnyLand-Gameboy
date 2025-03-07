@@ -149,9 +149,10 @@ Fox_Turn:
 		JR Z, =.End_movement.end
 
 		CALL =Laser_sight_check
-		LD A, E
-		CP $00
-		JR Z, =.laser_sight_check_fail
+		LD A, D
+		AND $07
+		CP E
+		JR NZ, =.laser_sight_check_fail
 
 		CALL =Laser_Enemy_Attack
 

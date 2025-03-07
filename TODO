@@ -1,11 +1,13 @@
 Bugs:
   -> Emulator crash with "not implemented: Only XKB keymaps are supported when unfocused (or workspace change maybe ?)
-  -> There is no indicator that the max health is 20
-  -> object tile only is getting removed, not the effect
-  -> hop cancelled uses EPs
+  -> Crash/infinite loop on dungeon generation
+  -> Hoping over a fox doesn't cancel a laser attack
+
+Accessibility issues:
   -> freeze/earcopter attack patterns are not obvious (either needs to be shown on map or add select menu with infos if not possible + tutorial to explain the existence of select menu ?)
-  -> when stairs spawn in the same room as the bunny, it's not obvious that it's not the stairs we just came from
+  -> There is no indicator that the max health is 20
   -> B + arrow is not obvious (tutorial ?)
+  -> when stairs spawn in the same room as the bunny, it's not obvious that it's not the stairs we just came from
 
 Need to be refactored:
   -> main is messy and unreadable

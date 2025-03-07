@@ -155,6 +155,14 @@ Stairs_Action:
 	XOR A
 	LD $reg_lcd_controller, A
 
+	LD A, $mem_floor_count
+	INC A
+	DAA
+	JR C, =.skip_update_floor_count
+
+	LD $mem_floor_count, A
+
+	.skip_update_floor_count:
 	CALL =Reset_Map
 	JP =New_Dungeon
 

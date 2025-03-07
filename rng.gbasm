@@ -60,8 +60,13 @@ RNG_Step:
 	LD A, D
 	LD $mem_rng_state_1, A
 
+	LD A, $mem_loop_rng_timer
+	LD D, A
+
 	LD A, E
 	LD $mem_rng_state_2, A
+
+	; XOR D
 
 	POP DE
 	POP BC

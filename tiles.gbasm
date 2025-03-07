@@ -21,7 +21,7 @@ Load_Tile:
 
 	LD HL, $8f00
 	LD DE, =Small_sprites
-	LD BC, $0040
+	LD BC, $0050
 	CALL =memcpy
 
 	LD HL, $8600

@@ -71,6 +71,16 @@ Canceled_Attack:
 	LD A, $mem_bunny_direction
 	OR $40
 	LD $mem_bunny_direction, A
+
+	LD A, $mem_bunny_mana
+	LD B, A
+	LD A, $mem_current_focused_attack_ep_cost
+	ADD B
+	DAA
+	JR NC, =.skip_fallback_max_mana
+	LD A, $99
+	.skip_fallback_max_mana:
+	LD $mem_bunny_mana, A
 	RET
 
 Attack_List:
@@ -79,10 +89,11 @@ Attack_List:
 		.DB =Hop_Attack_Menu_Txt
 
 		; Attack function
-		.DB =Hop_Attack
+		.DB =Stairs_Action
+		; .DB =Hop_Attack
 
 		; Energy point cost
-		.DB $01
+		.DB $00
 
 		.PADTO =.Hop+8
 
