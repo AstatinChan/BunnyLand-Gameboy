@@ -174,11 +174,7 @@ New_Dungeon:
 	.ENABLE_VBLANK_INTERRUPTS
 	EI
 	Wait_for_Interrupt.loop:
-	LD A, $reg_interrupt_enable
-	LD C, A
-	LD B, $00
-	LD A, $reg_interrupt_flags
-	DBG
+	HALT
 	EI
 	JP =Wait_for_Interrupt.loop
 

@@ -13,7 +13,8 @@ build/main.rom: main.gbasm tileset.gbasm dialogues.gbasm
 	gbasm $< $@
 
 run: build/main.rom
-	gb $<
+	mkdir -p recordings
+	gb $< --record-input "./recordings/$(shell date -Iseconds).record"
 
 sameboy: build/main.rom
 	sameboy build/main.rom
