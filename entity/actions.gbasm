@@ -81,6 +81,16 @@ Update_Animation_Steps:
 
 	.update_mode:
 
+	; We need to make sure that the mode doesn't change to a mode with objects update while a dialogue box refresh is currently being done
+	LD A, $mem_current_mode
+	BIT 7, A
+	JR Z, =.set_current_mode
+	LD A, $mem_display_flag
+	AND 0b00010100
+	CP $00
+	JR NZ, =.end
+
+	.set_current_mode:
 	LD A, $mem_requested_mode
 	LD $mem_current_mode, A
 

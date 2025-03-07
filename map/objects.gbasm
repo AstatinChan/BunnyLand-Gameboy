@@ -344,6 +344,8 @@ Object_Interactions_Check:
 		LD A, (HL+)
 		CP $00
 		JR Z, =.next
+		CP $FF
+		JR Z, =.next
 
 		LD A, (HL+)
 		CP C

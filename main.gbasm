@@ -65,6 +65,9 @@
 .END
 
 .MACRODEF ENABLE_VBLANK_INTERRUPTS
+	LD A, $reg_interrupt_flags
+	RES 0, A
+	LD $reg_interrupt_flags, A
 	LD A, $03
 	LD $reg_interrupt_enable, A
 .END
@@ -154,7 +157,6 @@ New_Dungeon:
 	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
 	.ENABLE_VBLANK_INTERRUPTS
-	.HBLANK_WAIT
 	EI
 	Wait_for_Interrupt.loop:
 	HALT
@@ -162,7 +164,6 @@ New_Dungeon:
 	JP =Wait_for_Interrupt.loop
 
 VBLANK_Entrypoint:
-	DBG
 	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
 
@@ -202,7 +203,6 @@ VBLANK_Entrypoint:
 	.skip_stop:
 	LD $dbg_var A
 
-	DBG
 	; LYC
 	LD A, $0a
 	LD $reg_lyc, A
