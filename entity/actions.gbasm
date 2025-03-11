@@ -136,6 +136,10 @@ Turn_Jump_table:
 	JP =Penguin_Turn
 	NOP
 
+	; 05
+	JP =QuestGoal_Turn
+	NOP
+
 Interaction_Jump_table:
 	; 00
 	RET
@@ -150,66 +154,6 @@ Interaction_Jump_table:
 	; 02
 	JP =Open_Dialogue
 	NOP
-
-Open_Dialogue:
-	LD A, L
-	AND $f0
-	LD L, A
-
-	INC HL
-
-	LD A, $mem_bunny_x
-	CP (HL)
-	JR Z, =.Vertical_check
-
-	.Horizontal_check:
-		INC A
-		CP (HL)
-		JR Z, =.Left
-		.Right:
-			INC HL
-			INC HL
-			LD (HL), $enum_direction_right
-			JR =.Check_end
-		.Left:
-			INC HL
-			INC HL
-			LD (HL), $enum_direction_left
-			JR =.Check_end
-	.Vertical_check:
-		INC HL
-		LD A, $mem_bunny_y
-		INC A
-		CP (HL)
-		JR Z, =.Up
-		.Down:
-			INC HL
-			LD (HL), $enum_direction_down
-			JR =.Check_end
-		.Up:
-			INC HL
-			LD (HL), $enum_direction_up
-			JR =.Check_end
-	.Check_end:
-
-	LD HL, $dialogue_first_line
-	LD BC, =Bunny_Prefix
-	CALL =Print_str
-
-	LD HL, $dialogue_third_line
-	LD BC, =Text_1
-	CALL =Print_str
-
-	LD A, $07
-	LD $mem_display_flag, A
-
-	LD A, $mem_bunny_direction
-	AND $0f
-	LD $mem_bunny_direction, A
-
-	LD A, $enum_dungeon_dialogue_mode
-	LD $mem_requested_mode, A
-	RET
 
 Enemy_Interaction:
 	LD A, L

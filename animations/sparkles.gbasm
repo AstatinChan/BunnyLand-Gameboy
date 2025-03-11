@@ -68,7 +68,7 @@ Sparkle_Animation:
 	SRA A
 	SRA A
 	AND $02
-	ADD $60
+	ADD $vram_animation_index
 
 	LD (HL+), A
 	LD A, $00
@@ -86,7 +86,7 @@ Sparkle_Animation:
 	SRA A
 	SRA A
 	AND $02
-	ADD $60
+	ADD $vram_animation_index
 
 	LD (HL+), A
 	LD A, $00

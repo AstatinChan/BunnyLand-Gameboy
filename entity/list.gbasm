@@ -12,6 +12,9 @@ Entity_list:
 		; Starting health
 		.DB $02
 
+		; Starting status
+		.DB $00
+
 		; Starting mana
 		.DB $05
 
@@ -29,6 +32,9 @@ Entity_list:
 
 		; Starting health
 		.DB $02
+
+		; Starting status
+		.DB $00
 
 		; Starting mana
 		.DB $00
@@ -48,6 +54,9 @@ Entity_list:
 		; Starting health
 		.DB $02
 
+		; Starting status
+		.DB $00
+
 		; Starting mana
 		.DB $00
 
@@ -66,6 +75,9 @@ Entity_list:
 		; Starting health
 		.DB $01
 
+		; Starting status
+		.DB $00
+
 		; Starting mana
 		.DB $03
 
@@ -82,6 +94,9 @@ Entity_list:
 		.DB $02
 
 		; Starting health
+		.DB $00
+
+		; Starting status
 		.DB $00
 
 		; Starting mana
@@ -102,7 +117,31 @@ Entity_list:
 		; Starting health
 		.DB $00
 
+		; Starting status
+		.DB $00
+
 		; Starting mana
 		.DB $00
 
 		.PADTO =.Fimsh+8
+
+	.QuestGoalBunny:
+		; Sprite address
+		.DB =OBJ_Tile_Image_Data.Bunny
+
+		; Turn Jump Table index
+		.DB $05
+
+		; Interaction Jump Table index
+		.DB $02
+
+		; Starting health
+		.DB $00
+
+		; Starting status
+		.DB $02
+
+		; Starting mana
+		.DB $00
+
+		.PADTO =.QuestGoalBunny+8

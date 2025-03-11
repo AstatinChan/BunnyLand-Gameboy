@@ -22,15 +22,15 @@ Earcoptr_Attack_Loading_Regular:
 	RET C
 
 	SUB $10
-	LD BC, $mem_entities_list
+	LD HL, $mem_entities_list
 	SLA A
 	SLA A
 	SLA A
 	SLA A
 	INC A
-	LD C, A
+	LD L, A
 
-	LD A, (BC)
+	LD A, (HL+)
 	LD E, A
 
 	LD A, $mem_bunny_x
@@ -39,9 +39,7 @@ Earcoptr_Attack_Loading_Regular:
 	CP $02
 	RET NC
 
-	INC C
-
-	LD A, (BC)
+	LD A, (HL)
 	LD E, A
 
 	LD A, $mem_bunny_y
@@ -50,24 +48,30 @@ Earcoptr_Attack_Loading_Regular:
 	CP $02
 	RET NC
 
-	LD A, C
-	ADD $04
-	LD C, A
-	LD A, (BC)
-	SUB $01
-	RET C
-	LD (BC), A
-	
-	INC C
-	LD A, (BC)
+	LD A, L
+	ADD $06
+	LD L, A
+
+	LD A, $02
+	CP (HL)
+	RET Z
+
+	DEC HL
+
+	LD A, (HL)
 	SET 3, A
-	LD (BC), A
+	LD (HL-), A
 
 	LD A, $mem_moving_animation_step
 	LD B, A
 	LD A, $1f
 	SUB B
 	LD $mem_blinking_animation_counter, A
+
+	LD A, (HL)
+	SUB $01
+	RET C
+	LD (HL), A
 
 	RET
 

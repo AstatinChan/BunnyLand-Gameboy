@@ -106,10 +106,12 @@ Move_Bunny:
 		JR =.Start_action_or_movement.end
 
 		.Start_action_or_movement.test_action:
-		LD A, $mem_last_button_action
-		LD B, A
 		LD A, $mem_button_action
-		CP B
+		LD B, A
+		LD A, $mem_last_button_action
+		XOR B
+		AND B
+		CP $00
 		JR Z, =.Start_action_or_movement.end
 		BIT 0, A
 		JR Z, =.Start_action_or_movement.end

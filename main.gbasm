@@ -110,6 +110,8 @@ New_Dungeon:
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
+	LD A, $06
+	LD $mem_loaded_special_entity_index, A
 	LD HL, $mem_bunny_attacks
 	LD A, $00
 	LD (HL+), A
@@ -313,6 +315,7 @@ STAT_Entrypoint:
 .INCLUDE "entity/fox.gbasm"
 .INCLUDE "entity/cat.gbasm"
 .INCLUDE "entity/penguin.gbasm"
+.INCLUDE "entity/questgoal.gbasm"
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"
 .INCLUDE "entity/display.gbasm"

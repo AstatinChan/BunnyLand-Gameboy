@@ -225,25 +225,35 @@ Reload_EP_Cost:
 Check_dialogue_action:
 	LD A, $mem_current_mode
 	CP $enum_dungeon_menu_mode
-	JR Z, =.Check_exit
+	JR Z, =.Dungeon_Menu
 
 	CP $enum_dungeon_dialogue_mode
 	RET NZ
 
-	.Check_exit:
-	LD A, $mem_last_button_action
-	LD B, A
+	.Dialogue_Box:
 	LD A, $mem_button_action
-	CP B
+	LD B, A
+	LD A, $mem_last_button_action
+	XOR B
+	AND B
+	CP $00
+	RET Z
+	BIT 0, A
+	JP NZ, =Exit_Menu
+	RET
+
+	.Dungeon_Menu:
+	LD A, $mem_button_action
+	LD B, A
+	LD A, $mem_last_button_action
+	XOR B
+	AND B
+	CP $00
 	RET Z
 	BIT 3, A
 	JP NZ, =Exit_Menu
 	BIT 0, A
 	RET Z
-
-	LD A, $mem_current_mode
-	CP $enum_dungeon_menu_mode
-	RET NZ
 
 	LD A, $mem_current_focused_attack_ep_cost
 	LD B, A
@@ -271,6 +281,10 @@ Check_dialogue_action:
 
 Check_Open_Menu_button:
 	LD A, $mem_current_mode
+	CP $enum_dungeon_mode
+	RET NZ
+
+	LD A, $mem_requested_mode
 	CP $enum_dungeon_mode
 	RET NZ
 

@@ -95,6 +95,8 @@ Initialize_Entities:
 	LD A, $ff
 	LD $mem_bunny_current_room_idx, A
 
+	LD A, $07
+	CALL =Initialize_Entity
 	CALL =Initialize_Enemy
 	CALL =Initialize_Enemy
 	CALL =Initialize_Enemy
@@ -133,6 +135,9 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	CALL =RNG_Step
 	AND $03
 	ADD $03
+
+Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index
+	DBG
 	LD E, A
 	SLA A
 	SLA A
@@ -215,7 +220,6 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	LD (HL-), A
 	LD (HL), A
 
-
 	POP BC
 	RET
 
@@ -262,9 +266,13 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	LD A, (BC)
 	LD (HL+), A
 
+	INC BC
+
 	XOR A
 	; flags & status
 	LD (HL+), A
+
+	LD A, (BC)
 	LD (HL+), A
 
 	INC BC

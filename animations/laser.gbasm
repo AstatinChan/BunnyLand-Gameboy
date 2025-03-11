@@ -118,7 +118,7 @@ Laser_Animation:
 
 	LD A, B
 	LD (HL+), A
-	LD A, $64
+	LD A, $vram_animation_index+4
 	LD (HL+), A
 	LD A, $00
 	LD (HL+), A

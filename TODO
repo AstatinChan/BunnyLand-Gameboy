@@ -1,7 +1,5 @@
 Bugs:
   -> Emulator crash with "not implemented: Only XKB keymaps are supported when unfocused (or workspace change maybe ?)
-  -> Crash/infinite loop on dungeon generation
-  -> Hoping over a fox doesn't cancel a laser attack
 
 Accessibility issues:
   -> freeze/earcopter attack patterns are not obvious (either needs to be shown on map or add select menu with infos if not possible + tutorial to explain the existence of select menu ?)

@@ -1,0 +1,119 @@
+Open_Dialogue:
+	LD A, L
+	AND $f0
+	LD L, A
+
+	INC HL
+
+	LD A, $mem_bunny_x
+	CP (HL)
+	JR Z, =.Vertical_check
+
+	.Horizontal_check:
+		INC A
+		CP (HL)
+		JR Z, =.Left
+		.Right:
+			INC HL
+			INC HL
+			LD (HL), $enum_direction_right
+			JR =.Check_end
+		.Left:
+			INC HL
+			INC HL
+			LD (HL), $enum_direction_left
+			JR =.Check_end
+	.Vertical_check:
+		INC HL
+		LD A, $mem_bunny_y
+		INC A
+		CP (HL)
+		JR Z, =.Up
+		.Down:
+			INC HL
+			LD (HL), $enum_direction_down
+			JR =.Check_end
+		.Up:
+			INC HL
+			LD (HL), $enum_direction_up
+			JR =.Check_end
+	.Check_end:
+
+	LD HL, $dialogue_first_line
+	LD BC, =Bunny_Prefix
+	CALL =Print_str
+
+	LD HL, $dialogue_third_line
+	LD BC, =Text_1
+	CALL =Print_str
+
+	LD A, $07
+	LD $mem_display_flag, A
+
+	LD A, $mem_bunny_direction
+	AND $0f
+	LD $mem_bunny_direction, A
+
+	LD A, $enum_dungeon_dialogue_mode
+	LD $mem_requested_mode, A
+	RET
+
+QuestGoal_Turn:
+	LD A, $mem_map_loading_flags
+	BIT 3, A
+	RET Z
+
+	PUSH HL
+	PUSH BC
+	PUSH DE
+	INC HL
+	LD A, (HL+)
+	LD B, A
+	LD A, (HL+)
+	LD C, A
+	LD A, (HL+)
+	LD D, A
+
+	.Start_action_or_movement:
+		LD A, $mem_moving_animation_step
+		CP $00
+		JP NZ, =.Start_action_or_movement.end
+
+		.Try_Walking:
+
+		CALL =RNG_Step
+		BIT 0, A
+		JR Z, =.Start_action_or_movement.end
+
+		CALL =Walking.Random_walker
+	.Start_action_or_movement.end:
+
+	.End_movement:
+		LD A, $mem_moving_animation_step
+		CP $0f
+		JP NZ, =.End_movement.end
+		LD A, D
+		AND $07
+		BIT 3, D
+		LD D, A
+		JR Z, =.End_movement.end
+		LD A, $01
+		.ADD_A_TO_DIRECTION_BC
+
+	.End_movement.end:
+
+	.Skip_Turn:
+	LD A, L
+	AND $f0
+	LD L, A
+	INC HL
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	LD A, D
+	LD (HL+), A
+	POP DE
+	POP BC
+	POP HL
+	RET

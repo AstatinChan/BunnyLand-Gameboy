@@ -152,7 +152,8 @@
 
 .DEFINE mem_loaded_entities_indices $c8a8 ; Takes the memory from $c8a8 to $c8ae
 .DEFINE mem_loaded_enemies_indices $c8ab ; Takes the memory from $c8ab to $c8ae
-.DEFINE mem_loaded_entities_indices_end $c8af ; Takes the memory from $c8a8 to $c8ae
+.DEFINE mem_loaded_special_entity_index ($c8af)
+.DEFINE mem_loaded_entities_indices_end $c8b0 ; Takes the memory from $c8a8 to $c8af
 
 .DEFINE mem_object_list $c900 ; Takes the memory from c900 to c97f
 ; struct objects {
@@ -218,6 +219,8 @@
 ;		bit 3: blinking mode
 ;	status: u8
 ;	; bit 0: whether or not turns should be skipped
+;	; 01: freeze
+;	; 02: invincible
 ;	mana: u8
 ;	_padding: u48
 ;
@@ -243,6 +246,13 @@
 
 .DEFINE lcdc_guibg_tilemap $8d
 .DEFINE lcdc_mapbg_tilemap $87
+
+.DEFINE vram_entity_index $02
+.DEFINE vram_animation_index $62
+.DEFINE vram_character_index $80
+.DEFINE vram_icon_index $F0
+.DEFINE vram_bg_index $20
+.DEFINE vram_object_index $60
 
 ; HIGH_RAM:
 ;

@@ -82,14 +82,20 @@ Freeze_Attack_Loading_Regular:
 	RET C
 
 	LD A, C
-	ADD $05
+	ADD $06
 	LD C, A
+
 	LD A, (BC)
-	SET 1, A
+	CP $02
+	RET Z
+
+	LD A, $01
 	LD (BC), A
 
-	INC C
-	LD A, $01
+	DEC C
+
+	LD A, (BC)
+	SET 1, A
 	LD (BC), A
 	RET
 

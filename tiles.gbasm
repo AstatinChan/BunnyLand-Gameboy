@@ -24,7 +24,7 @@ Load_Tile:
 	LD BC, $0050
 	CALL =memcpy
 
-	LD HL, $8600
+	LD HL, $8620
 	LD DE, =Animation_Sprites_Data
 	LD BC, $0060
 	CALL =memcpy
