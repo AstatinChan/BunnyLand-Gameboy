@@ -39,16 +39,7 @@ Open_Dialogue:
 			JR =.Check_end
 	.Check_end:
 
-	LD HL, $dialogue_first_line
-	LD BC, =Bunny_Prefix
-	CALL =Print_str
-
-	LD HL, $dialogue_third_line
-	LD BC, =Text_1
-	CALL =Print_str
-
-	LD A, $07
-	LD $mem_display_flag, A
+	.START_SCRIPT =Demo_quest_bunny
 
 	LD A, $mem_bunny_direction
 	AND $0f

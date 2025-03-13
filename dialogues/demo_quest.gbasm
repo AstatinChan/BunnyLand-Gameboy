@@ -1,0 +1,5 @@
+Demo_quest_bunny:
+.TEXTB =Bunny_Header_Text =Dialogue_1_1b
+.TEXT =Dialogue_1_2t =Dialogue_1_2b
+.TEXT =Dialogue_1_3t =Empty
+.END

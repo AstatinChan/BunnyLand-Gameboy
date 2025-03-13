@@ -137,7 +137,6 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	ADD $03
 
 Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index
-	DBG
 	LD E, A
 	SLA A
 	SLA A

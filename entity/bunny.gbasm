@@ -58,6 +58,9 @@ Move_Bunny:
 
 	.Start_action_or_movement:
 		LD A, $mem_map_loading_flags
+		BIT 4, A
+		JP NZ, =.Start_action_or_movement.start_from_interaction
+
 		BIT 3, A
 		JP NZ, =.Start_action_or_movement.end
 
@@ -65,7 +68,7 @@ Move_Bunny:
 
 		LD A, $mem_button_direction
 		CP $00
-		JP Z, =.Start_action_or_movement.test_action
+		JP Z, =.Start_action_or_movement.end
 		SET 3, A
 		LD D, A
 
@@ -105,22 +108,9 @@ Move_Bunny:
 
 		JR =.Start_action_or_movement.end
 
-		.Start_action_or_movement.test_action:
-		LD A, $mem_button_action
-		LD B, A
-		LD A, $mem_last_button_action
-		XOR B
-		AND B
-		CP $00
-		JR Z, =.Start_action_or_movement.end
-		BIT 0, A
-		JR Z, =.Start_action_or_movement.end
-		LD A, $mem_bunny_direction
-		AND $07
-		OR $10
-		LD $mem_bunny_direction, A
-
+		.Start_action_or_movement.start_from_interaction:
 		LD A, $mem_map_loading_flags
+		RES 4, A
 		SET 3, A
 		LD $mem_map_loading_flags, A
 	.Start_action_or_movement.end:
@@ -136,6 +126,36 @@ Move_Bunny:
 		RES 3, A
 		LD $mem_bunny_flags, A
 	.Reset_Blinking_flag.end:
+
+	.Delayed_Attack:
+		LD A, $mem_moving_animation_step
+		CP $08
+		JR NZ, =.Delayed_Attack.end
+
+		LD A, $mem_map_loading_flags
+		BIT 3, A
+		JR Z, =.Delayed_Attack.end
+
+		LD A, $mem_entity_being_attacked_low
+		CP $00
+		JR Z, =.Delayed_Attack.end
+
+		ADD $06
+		LD L, A
+		LD H, high($mem_entities_list)
+		LD A, (HL)
+		DEC A
+		DAA
+		LD (HL+), A
+		DBG
+
+		SET 3, (HL)
+		LD A, $24
+		LD $mem_blinking_animation_counter, A
+
+		LD A, $00
+		LD $mem_entity_being_attacked_low, A
+	.Delayed_Attack.end:
 
 	.Scroll_viewport:
 		LD A, $mem_map_loading_flags
@@ -300,19 +320,20 @@ Move_Bunny:
 		LD $mem_viewport_y, A
 	.Middle_movement_doublespeed_viewport_update.end:
 
-
 	.Interaction:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
-		JP Z, =.Interaction.end
-		LD A, $mem_moving_animation_step
-		CP $02
 		JP NZ, =.Interaction.end
-
-		LD A, $mem_bunny_direction
-		AND $f8
-		CP $10
-		JR NZ, =.Interaction.end
+		.Interaction.test_action:
+		LD A, $mem_button_action
+		LD B, A
+		LD A, $mem_last_button_action
+		XOR B
+		AND B
+		CP $00
+		JP Z, =.Interaction.end
+		BIT 0, A
+		JP Z, =.Interaction.end
 
 		LD A, $mem_bunny_x
 		LD B, A
@@ -332,7 +353,7 @@ Move_Bunny:
 			ADD $10
 			LD L, A
 			CP $00
-			JR Z, =.Interaction.end
+			JR Z, =.Interaction.for_else
 
 			LD A, (HL+)
 			CP $00
@@ -358,9 +379,20 @@ Move_Bunny:
 
 			POP BC
 			POP HL
+			JR =.Interaction.end
 
 			.Interaction.entities_loop.next:
 			JR =.Interaction.entities_loop
+
+			.Interaction.for_else:
+			LD A, $mem_bunny_direction
+			AND $07
+			OR $10
+			LD $mem_bunny_direction, A
+
+			LD A, $mem_map_loading_flags
+			SET 4, A
+			LD $mem_map_loading_flags, A
 	.Interaction.end:
 
 	.Check_End_Action:

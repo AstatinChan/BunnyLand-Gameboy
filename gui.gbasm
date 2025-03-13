@@ -223,6 +223,11 @@ Reload_EP_Cost:
 	RET
 
 Check_dialogue_action:
+	LD A, $mem_display_flag
+	AND 0b00010100
+	CP $00
+	RET NZ
+
 	LD A, $mem_current_mode
 	CP $enum_dungeon_menu_mode
 	JR Z, =.Dungeon_Menu
@@ -239,7 +244,7 @@ Check_dialogue_action:
 	CP $00
 	RET Z
 	BIT 0, A
-	JP NZ, =Exit_Menu
+	JP NZ, =Dialogue_script_step
 	RET
 
 	.Dungeon_Menu:
@@ -322,4 +327,45 @@ Open_dialogue_on_dungeon_menu_mode:
 	LD A, $0d
 	LD $mem_display_flag, A
 
+	RET
+
+Dialogue_Arrow_Animation:
+	LD A, $mem_display_flag
+	BIT 0, A
+	RET Z
+
+	LD A, $mem_current_mode
+	CP $enum_dungeon_dialogue_mode
+	JR Z, =.dialogue
+
+	LD A, $18
+	LD ($9d05), A
+	LD A, $14
+	LD ($9d06), A
+	RET
+
+	.dialogue:
+	LD A, $mem_loop_frame_timer
+	AND $7f
+	CP $4e
+	JR C, =.normal
+	CP $5a
+	JR C, =.down
+	CP $66
+	JR C, =.normal
+	CP $72
+	JR C, =.down
+
+	.normal:
+	LD A, $19
+	LD ($9d05), A
+	LD A, $1a
+	LD ($9d06), A
+	RET
+
+	.down:
+	LD A, $1b
+	LD ($9d05), A
+	LD A, $1c
+	LD ($9d06), A
 	RET

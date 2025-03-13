@@ -11,7 +11,7 @@ Load_Tile:
 
 	LD HL, $9100
 	LD DE, =GUI_Border_Data
-	LD BC, $0090
+	LD BC, $00d0
 	CALL =memcpy
 
 	LD HL, $9200

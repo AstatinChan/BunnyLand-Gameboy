@@ -1,0 +1,94 @@
+Dialogue_script_step:
+	LD A, ($mem_dialogue_script_program_counter)
+	LD H, A
+	LD A, ($mem_dialogue_script_program_counter+1)
+	LD L, A
+
+	LD A, (HL+)
+
+	LD BC, =Dialogue_script_instruction_Jump_Table
+
+	.JUMP_TABLE
+
+	LD A, H
+	LD ($mem_dialogue_script_program_counter), A
+	LD A, L
+	LD ($mem_dialogue_script_program_counter+1), A
+
+	RET
+
+Dialogue_script_instruction_Jump_Table:
+	; 00
+	JP =Exit_Menu
+	NOP
+
+	; 01
+	JP =.Text
+	NOP
+
+	;02
+	JP =.TextB
+	NOP
+
+	.Text:
+		PUSH HL
+		LD HL, $dialogue_first_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_first_line
+		CALL =Print_str
+		POP HL
+
+		PUSH HL
+		LD HL, $dialogue_third_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_third_line
+		CALL =Print_str
+		POP HL
+
+		LD A, $05
+		LD $mem_display_flag, A
+
+		RET
+
+	.TextB:
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_first_line
+		CALL =Print_str
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_third_line
+		CALL =Print_str
+		POP HL
+
+		LD A, $07
+		LD $mem_display_flag, A
+
+		RET
+
+.INCLUDE "dialogues/text.gbasm"
+.INCLUDE "dialogues/demo_quest.gbasm"

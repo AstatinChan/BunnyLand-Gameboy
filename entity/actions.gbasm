@@ -158,15 +158,14 @@ Interaction_Jump_table:
 Enemy_Interaction:
 	LD A, L
 	AND $f0
-	ADD $06
-	LD L, A
-	LD A, (HL)
-	DEC A
-	DAA
-	LD (HL+), A
+	LD $mem_entity_being_attacked_low, A
+	LD A, $mem_bunny_direction
+	AND $07
+	OR $10
+	LD $mem_bunny_direction, A
 
-	SET 3, (HL)
-	LD A, $24
-	LD $mem_blinking_animation_counter, A
+	LD A, $mem_map_loading_flags
+	SET 4, A
+	LD $mem_map_loading_flags, A
 
 	RET

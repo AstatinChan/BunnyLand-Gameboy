@@ -1,0 +1,23 @@
+.MACRODEF START_SCRIPT script
+	LD A, high($script)
+	LD ($mem_dialogue_script_program_counter), A
+	LD A, low($script)
+	LD ($mem_dialogue_script_program_counter+1), A
+	CALL =Dialogue_script_step
+.END
+
+.MACRODEF END
+	.DB 00
+.END
+
+.MACRODEF TEXT first_line second_line
+	.DB 01
+	.DB $first_line
+	.DB $second_line
+.END
+
+.MACRODEF TEXTB first_line second_line
+	.DB 02
+	.DB $first_line
+	.DB $second_line
+.END

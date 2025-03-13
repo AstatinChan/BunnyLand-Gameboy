@@ -49,6 +49,7 @@
 ; bit 1: has a movement ended (objects interaction should be checked, entities should update their positions)
 ; bit 2: if the prepared block should be updated at the next frame
 ; bit 3: animation step is going up (?)
+; bit 4: animation step should start to go up on next frame
 
 .DEFINE mem_prepared_block_tile ($c00d)
 .DEFINE mem_prepared_block_position_1 ($c00e)
@@ -124,7 +125,11 @@
 
 .DEFINE mem_floor_count ($c03c)
 
-.DEFINE mem_loop_rng_timer ($c03d)
+.DEFINE mem_loop_frame_timer ($c03d)
+
+.DEFINE mem_dialogue_script_program_counter $c03e ; takes c03e and c03f
+
+.DEFINE mem_entity_being_attacked_low ($c040)
 
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 

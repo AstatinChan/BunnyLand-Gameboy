@@ -209,6 +209,7 @@ VBLANK_Entrypoint:
 		CALL =Display_Object
 	Skip_VBlank_Dungeon_Update:
 
+	CALL =Dialogue_Arrow_Animation
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
 
@@ -247,9 +248,9 @@ VBLANK_Entrypoint:
 	CALL =Display_Animation_List
 	CALL =Display_Entities
 
-	LD A, $mem_loop_rng_timer
+	LD A, $mem_loop_frame_timer
 	INC A
-	LD $mem_loop_rng_timer, A
+	LD $mem_loop_frame_timer, A
 
 	.ENABLE_VBLANK_INTERRUPTS
 	RET
@@ -309,6 +310,7 @@ STAT_Entrypoint:
 .INCLUDE "map/generation.gbasm"
 .INCLUDE "map/objects.gbasm"
 .INCLUDE "gui.gbasm"
+.INCLUDE "dialogues/utils.gbasm"
 .INCLUDE "entity/utils.gbasm"
 .INCLUDE "entity/init.gbasm"
 .INCLUDE "entity/bunny.gbasm"
@@ -324,4 +326,5 @@ STAT_Entrypoint:
 .INCLUDE "playerattacks.gbasm"
 .INCLUDE "enemiesattacks.gbasm"
 .INCLUDE "tileset.gbasm"
-.INCLUDE "dialogues.gbasm"
+.INCLUDE "text.gbasm"
+.INCLUDE "dialogues/dialogues.gbasm"
