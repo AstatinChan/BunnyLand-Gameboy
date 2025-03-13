@@ -1,6 +1,6 @@
 Entities_Actions:
 	LD A, $mem_moving_animation_step
-	CP $05
+	CP $09
 	JR NZ, =.Action_Functions
 	CALL =Reset_Entities_Collision_Map
 

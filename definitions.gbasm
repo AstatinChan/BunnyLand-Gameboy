@@ -22,11 +22,12 @@
 .DEFINE mem_button_direction ($c002)
 .DEFINE mem_button_action ($c003)
 .DEFINE mem_moving_animation_step ($c004)
-; frame 0 (or 1 ?): movement can be initiated when with button actions
+; frame 0: movement can be initiated when with button actions
 ; frame 2: applying bunny attack damages
 ; frame 3: checking entities health and death if 0
 ; frame 4: new entity spawn
-; frame 5: entity collision map is being updated
+; frame 9: entity collision map is being updated
+; frame 8: attack is executed on the enemies if it was predicted in frame "-1"
 ; frame 15: movement is ended and coordinates are updated
 
 .DEFINE mem_bunny_sprite ($cb00)

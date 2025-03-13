@@ -25,6 +25,10 @@ Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD $mem_bunny_predicted_x, A
 	LD A, $mem_bunny_y
 	LD $mem_bunny_predicted_y, A
+
+	LD A, $00
+	LD $mem_entity_being_attacked_low, A
+
 	CALL =Fix_Bunny_screen
 	LD A, $04
 	LD $mem_bunny_status_clear_turn_counter, A
