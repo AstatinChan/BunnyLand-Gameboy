@@ -97,9 +97,10 @@ Update_Animation_Steps:
 	.end:
 	LD A, $mem_bunny_health
 	CP $00
-	JR Z =.Dead_mode
-
-	RET
+	RET NZ
+	LD A, $mem_moving_animation_step
+	CP $00
+	RET NZ
 
 	.Dead_mode:
 
