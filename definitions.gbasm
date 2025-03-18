@@ -170,6 +170,20 @@
 ; 	_padding: u32
 ; }
 
+.DEFINE mem_dungeon_generation_events $c9c0 ; Takes the memory from c9c0 to c9ff (16 events)
+; struct events {
+;	floor_idx: u8,
+;
+;	dungeon_gen_event_jump_table_index: u8
+;		00: Nothing
+;		01: Start dialogue at the beggining
+;		02: Spawn a special entity (should not be used twice on the same floor
+;
+;	free_parameters: (u16)
+;		01: Dialogue script address
+;		02: Entity template index (u8 + padding8)
+; }
+
 .DEFINE mem_oam_buffer $ca00 ; Until $ca9f
 .DEFINE mem_oam_buffer_low ($c980)
 

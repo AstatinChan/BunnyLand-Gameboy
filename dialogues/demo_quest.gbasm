@@ -3,3 +3,16 @@ Demo_quest_bunny:
 .TEXT =Dialogue_1_2t =Dialogue_1_2b
 .TEXT =Dialogue_1_3t =Empty
 .END
+
+Demo_quest_init:
+.TEXTB =Bunny_Header_Text =Dialogue_2_1b
+.TEXT =Dialogue_2_2t =Empty
+.TEXT =Dialogue_2_3t =Dialogue_2_3b
+.TEXT =Dialogue_2_4t =Dialogue_2_4b
+.TEXT =Dialogue_2_5t =Empty
+.END
+
+Demo_quest_floor_reach:
+.TEXT =Dialogue_3_1t =Dialogue_3_1b
+.TEXT =Dialogue_3_2t =Dialogue_3_2b
+.TEXT =Dialogue_3_3t =Empty

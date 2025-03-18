@@ -1,3 +1,5 @@
+; Baguette is tasty nomnom 🥖(๑ᵔ⤙ᵔ๑)
+
 memcpy: ; src = DE, dest = HL, n = BC
 	.loop:
 		LD A, (DE)

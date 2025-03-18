@@ -147,7 +147,6 @@ Move_Bunny:
 		DEC A
 		DAA
 		LD (HL+), A
-		DBG
 
 		SET 3, (HL)
 		LD A, $24

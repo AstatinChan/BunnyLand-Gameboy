@@ -66,7 +66,7 @@ RNG_Step:
 	LD A, E
 	LD $mem_rng_state_2, A
 
-	; XOR D
+	XOR D
 
 	POP DE
 	POP BC

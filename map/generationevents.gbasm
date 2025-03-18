@@ -1,0 +1,111 @@
+Generation_Event_Execution:
+	LD A, $mem_floor_count
+	LD D, A
+	LD HL, $mem_dungeon_generation_events
+	.loop:
+		LD A, (HL+)
+		CP $00
+		JR Z, =.skip
+		CP D
+		JR NZ, =.skip
+
+		LD A, (HL+)
+		PUSH HL
+		PUSH DE
+		LD BC, =Generation_Event_Jump_Table
+
+		.JUMP_TABLE
+
+		POP DE
+		POP HL
+
+		.skip:
+		LD A, L
+		AND $fc
+		ADD $04
+		LD L, A
+		CP $00
+		JR NZ, =.loop
+	RET
+
+Generation_Event_Jump_Table:
+	; 00
+	RET
+	NOP
+	NOP
+	NOP
+
+	; 01
+	JP =.Dialogue_Script
+	NOP
+
+	; 02
+	JP =.Entity
+	NOP
+
+	; 03
+	JP =.Remove_Stairs
+
+	.Dialogue_Script:
+	LD A, $enum_dungeon_dialogue_mode
+	LD $mem_requested_mode, A
+
+	LD A, (HL+)
+	LD ($mem_dialogue_script_program_counter), A
+	LD A, (HL)
+	LD ($mem_dialogue_script_program_counter+1), A
+	JP =Dialogue_script_step
+
+	.Entity:
+	LD A, (HL)
+	LD $mem_loaded_special_entity_index, A
+
+	CALL =FindFreeEntity
+	LD A, $07
+	CALL =Initialize_Entity
+	RET
+
+	.Remove_Stairs:
+	LD HL, $mem_object_list
+	LD (HL), $00
+	RET
+
+Init_DemoQuest_Event:
+	LD HL, $mem_dungeon_generation_events
+	
+	LD (HL), $01 ; floor
+	INC HL
+	LD (HL), $01 ; jump table dialogue script
+	INC HL
+	LD (HL), high(=Demo_quest_init)
+	INC HL
+	LD (HL), low(=Demo_quest_init)
+
+	INC HL
+
+	LD (HL), $10 ; floor
+	INC HL
+	LD (HL), $02 ; jump table entity
+	INC HL
+	LD (HL), $06 ; demo quest bunny idx
+	INC HL
+
+	INC HL
+
+	LD (HL), $10 ; floor
+	INC HL
+	LD (HL), $03 ; jump table remove stairs
+	INC HL
+	INC HL
+
+	INC HL
+
+	LD (HL), $10 ; floor
+	INC HL
+	LD (HL), $01 ; jump table dialogue script
+	INC HL
+	LD (HL), high(=Demo_quest_floor_reach)
+	INC HL
+	LD (HL), low(=Demo_quest_floor_reach)
+
+	RET

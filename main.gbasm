@@ -100,6 +100,8 @@ Entrypoint:
 	LD $mem_bunny_mana, A
 	LD A, $01
 	LD $mem_floor_count, A
+	CALL =Init_DemoQuest_Event
+
 New_Dungeon:
 	LD SP, $fffe
 	LD HL, $mem_loaded_enemies_indices
@@ -125,10 +127,6 @@ New_Dungeon:
 	CALL =Dungeon_Generation
 	CALL =Initialize_Entities
 	CALL =Initialize_Objects
-	CALL =Load_Tile
-	CALL =Load_Map
-	CALL =Load_Objects
-	CALL =Reload_Entities_Tile_Data
 
 	; Reset animations
 	LD HL, $mem_animation_list
@@ -170,6 +168,15 @@ New_Dungeon:
 	; Floor
 	LD A, $f4
 	LD ($9d73), A
+
+	CALL =Generation_Event_Execution
+
+	CALL =Reload_Entities_Tile_Data
+	CALL =Reset_Entities_Collision_Map
+
+	CALL =Load_Tile
+	CALL =Load_Map
+	CALL =Load_Objects
 
 	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
@@ -309,6 +316,7 @@ STAT_Entrypoint:
 .INCLUDE "map/loading.gbasm"
 .INCLUDE "map/generation.gbasm"
 .INCLUDE "map/objects.gbasm"
+.INCLUDE "map/generationevents.gbasm"
 .INCLUDE "gui.gbasm"
 .INCLUDE "dialogues/utils.gbasm"
 .INCLUDE "entity/utils.gbasm"

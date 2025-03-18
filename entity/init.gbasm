@@ -95,8 +95,6 @@ Initialize_Entities:
 	LD A, $ff
 	LD $mem_bunny_current_room_idx, A
 
-	LD A, $07
-	CALL =Initialize_Entity
 	CALL =Initialize_Enemy
 	CALL =Initialize_Enemy
 	CALL =Initialize_Enemy
@@ -136,7 +134,7 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	AND $03
 	ADD $03
 
-Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index
+Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1 in $tmp_var_3 if should retry if collsion (could potentially fail multiple time/infinite loop)
 	LD E, A
 	SLA A
 	SLA A
@@ -166,6 +164,8 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index
 		LD A, C
 		JR C, =Initialize_Enemy.Room_restriction.end
 		DEC A
+
+		LD A, E
 		JR =Initialize_Enemy.Room_restriction.end
 
 	Initialize_Enemy.All_rooms_allowed:
@@ -220,7 +220,13 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index
 	LD (HL), A
 
 	POP BC
-	RET
+
+	LD A, $tmp_var_3
+	CP $01
+	RET Z
+
+	LD A, E
+	JP =Initialize_Entity
 
 	.no_collision:
 	CALL =Carve_Entity_Collision_Map
@@ -286,6 +292,24 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index
 
 	RET
 
+FindFreeEntity:
+	LD HL, $mem_entities_list
+	FindFreeEntity.loop:
+		; This loop supposes that there is indeed enough space for a new entity
+		; to be spawn (thus the previous mem_enemies_alive_count).
+		; If entities are changed at some point to contain things that are not
+		; counted in mem_enemies_alive_count, this could result in an infinite loop.
+		; (Technically the quest goals can spawn other entities. We assume that the enemies alive count and the quest goal entities spawned will never exceed 15 together)
+		LD A, L
+		AND $f0
+		ADD $10
+		LD L, A
+
+		LD A, $00
+		CP (HL)
+		JR NZ, =FindFreeEntity.loop
+	RET
+
 Respawn_Entities:
 	LD A, $mem_moving_animation_step
 	CP $04
@@ -300,20 +324,7 @@ Respawn_Entities:
 	CP $00
 	RET NZ
 
-	LD HL, $mem_entities_list
-	FindFreeEntity.loop:
-		; This loop supposes that there is indeed enough space for a new entity
-		; to be spawn (thus the previous mem_enemies_alive_count).
-		; If entities are changed at some point to contain things that are not
-		; counted in mem_enemies_alive_count, this could result in an infinite loop.
-		LD A, L
-		AND $f0
-		ADD $10
-		LD L, A
-
-		LD A, $00
-		CP (HL)
-		JR NZ, =FindFreeEntity.loop
+	CALL =FindFreeEntity
 
 	CALL =Initialize_Enemy
 	RET
