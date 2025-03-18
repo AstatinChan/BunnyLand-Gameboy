@@ -260,7 +260,7 @@ VBLANK_Entrypoint:
 	LD $mem_loop_frame_timer, A
 
 	.ENABLE_VBLANK_INTERRUPTS
-	RET
+	RETI
 
 STAT_Entrypoint:
 	PUSH AF

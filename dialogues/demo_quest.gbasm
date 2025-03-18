@@ -5,7 +5,7 @@ Demo_quest_bunny:
 .END
 
 Demo_quest_init:
-.TEXTB =Bunny_Header_Text =Dialogue_2_1b
+.TEXTB =Unknown_Header_Text =Dialogue_2_1b
 .TEXT =Dialogue_2_2t =Empty
 .TEXT =Dialogue_2_3t =Dialogue_2_3b
 .TEXT =Dialogue_2_4t =Dialogue_2_4b

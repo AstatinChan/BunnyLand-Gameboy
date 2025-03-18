@@ -61,6 +61,8 @@ Generation_Event_Jump_Table:
 	LD $mem_loaded_special_entity_index, A
 
 	CALL =FindFreeEntity
+	LD A, $01
+	LD $tmp_var_3, A
 	LD A, $07
 	CALL =Initialize_Entity
 	RET

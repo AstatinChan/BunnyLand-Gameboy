@@ -95,6 +95,8 @@ Initialize_Entities:
 	LD A, $ff
 	LD $mem_bunny_current_room_idx, A
 
+	LD A, $00
+	LD $tmp_var_3, A
 	CALL =Initialize_Enemy
 	CALL =Initialize_Enemy
 	CALL =Initialize_Enemy
@@ -318,6 +320,9 @@ Respawn_Entities:
 	LD A, $mem_enemies_alive_count
 	CP $05
 	RET NC
+
+	LD A, $00
+	LD $tmp_var_3, A
 
 	CALL =RNG_Step
 	AND $0f

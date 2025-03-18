@@ -1,5 +1,6 @@
 Empty:
 Bunny_Header_Text: Bunny:
+Unknown_Header_Text: ???:
 
 
 Dialogue_1_1b: Hello !
@@ -10,7 +11,7 @@ Dialogue_1_2b: dungeon.
 Dialogue_1_3t: Would you help me?
 
 
-Dialogue_2_1b: Help !
+Dialogue_2_1b: Help !!!
 
 Dialogue_2_2t: ...
 
