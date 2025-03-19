@@ -167,7 +167,6 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 		JR C, =Initialize_Enemy.Room_restriction.end
 		DEC A
 
-		LD A, E
 		JR =Initialize_Enemy.Room_restriction.end
 
 	Initialize_Enemy.All_rooms_allowed:
@@ -225,7 +224,8 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 
 	LD A, $tmp_var_3
 	CP $01
-	RET Z
+
+	RET NZ
 
 	LD A, E
 	JP =Initialize_Entity
