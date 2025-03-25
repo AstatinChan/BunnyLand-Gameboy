@@ -1,0 +1,93 @@
+; VBlank: Write loading text, then wait for generation, then loading vram stuff
+; When VBlank interrupts -> context switch
+; When stat out of vblank interrupt -> context switch back to generation
+
+New_Dungeon:
+	LD SP, $fffe
+	LD HL, $mem_loaded_enemies_indices
+	LD A, $02
+	LD (HL+), A
+	LD (HL+), A
+	LD A, $00
+	LD (HL+), A
+	LD A, $03
+	LD (HL+), A
+	LD A, $06
+	LD $mem_loaded_special_entity_index, A
+	LD HL, $mem_bunny_attacks
+	LD A, $00
+	LD (HL+), A
+	INC A
+	LD (HL+), A
+	INC A
+	LD (HL+), A
+	INC A
+	LD (HL+), A
+	CALL =Reload_EP_Cost
+	CALL =Dungeon_Generation
+	CALL =Initialize_Entities
+	CALL =Initialize_Objects
+
+	; Reset animations
+	LD HL, $mem_animation_list
+	LD BC, $1f
+	CALL =bzero
+
+	LD A, $00
+	LD $mem_display_flag, A
+	LD $mem_moving_animation_step, A
+	LD $mem_animation_wait_frames, A
+	LD $mem_blinking_animation_counter, A
+
+	LD A, $mem_bunny_x
+	LD $mem_bunny_predicted_x, A
+	LD A, $mem_bunny_y
+	LD $mem_bunny_predicted_y, A
+
+	LD A, $mem_map_loading_flags
+	RES 3, A
+	LD $mem_map_loading_flags, A
+
+	LD A, $enum_dungeon_mode
+	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
+	CALL =Update_VBlank_Handler
+
+	; Heart
+	LD A, $f0
+	LD ($9d62), A
+
+	; Energy points
+	LD A, $f1
+	LD ($9d66), A
+
+	; Floor
+	LD A, $f4
+	LD ($9d73), A
+
+	CALL =Generation_Event_Execution
+
+	CALL =Reload_Entities_Tile_Data
+	CALL =Reset_Entities_Collision_Map
+
+	; Clear OAM
+	LD HL, $fe00
+	LD BC, $00a0
+	CALL =bzero
+
+	CALL =Load_Tile
+	CALL =Load_Map
+	CALL =Load_Objects
+
+	LD HL, $9d71
+	LD A, $mem_floor_count
+	CALL =Print_8bit
+
+	.SET_WINDOW_LCDC_E
+	.ENABLE_TOP_BAR
+	.ENABLE_VBLANK_INTERRUPTS
+	EI
+	Wait_for_Interrupt.loop:
+	HALT
+	EI
+	JP =Wait_for_Interrupt.loop

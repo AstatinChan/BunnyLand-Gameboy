@@ -1,0 +1,39 @@
+Dialogue_VBLANK_Entrypoint:
+	.SET_WINDOW_LCDC_E
+	.ENABLE_TOP_BAR
+
+	LD A, $palette_bold_font
+	LD $reg_bg_palette, A
+
+	CALL $OAM_DMA_Transfer_routine
+
+	CALL =Dialogue_Arrow_Animation
+	CALL =Copy_Dialogue_Buffer
+	CALL =Display_dialogue_cursor
+
+	; LYC
+	LD A, $0a
+	LD $reg_lyc, A
+	.ENABLE_LYC_INTERRUPT
+	.RESET_STAT_INTERRUPT
+	EI
+
+	CALL =Pad_Button_Check
+
+	CALL =Update_Blinking_Counter
+	CALL =Update_Animation_Steps
+	CALL =Open_dialogue_on_dungeon_menu_mode
+	CALL =Move_dialogue_cursor
+	CALL =Check_dialogue_action
+
+	LD A, $00
+	LD $mem_oam_buffer_low, A
+	CALL =Display_Animation_List
+	CALL =Display_Entities
+
+	LD A, $mem_loop_frame_timer
+	INC A
+	LD $mem_loop_frame_timer, A
+
+	.ENABLE_VBLANK_INTERRUPTS
+	RETI

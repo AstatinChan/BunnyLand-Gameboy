@@ -82,6 +82,7 @@ Laser_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD A, $enum_animation_wait_mode
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
+	CALL =Update_VBlank_Handler
 	LD A, E
 	SUB $f
 	LD E, A

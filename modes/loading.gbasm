@@ -1,0 +1,36 @@
+Loading_VBLANK_Entrypoint:
+	.SET_WINDOW_LCDC_E
+	.ENABLE_TOP_BAR
+
+	LD A, $palette_bold_font
+	LD $reg_bg_palette, A
+
+	CALL $OAM_DMA_Transfer_routine
+	CALL =Loading_Mode_VBlank
+
+	; LYC
+	LD A, $0a
+	LD $reg_lyc, A
+	.ENABLE_LYC_INTERRUPT
+	.RESET_STAT_INTERRUPT
+	EI
+
+	CALL =Pad_Button_Check
+	CALL =Load_Additional_Block
+
+	CALL =Animation_Wait_Mode
+	CALL =Update_Blinking_Counter
+	CALL =Update_Animation_Steps
+	CALL =Loading_Mode_Regular
+
+	LD A, $00
+	LD $mem_oam_buffer_low, A
+	CALL =Display_Animation_List
+	CALL =Display_Entities
+
+	LD A, $mem_loop_frame_timer
+	INC A
+	LD $mem_loop_frame_timer, A
+
+	.ENABLE_VBLANK_INTERRUPTS
+	RETI

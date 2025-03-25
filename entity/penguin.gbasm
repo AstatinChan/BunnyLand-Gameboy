@@ -88,11 +88,9 @@ Penguin_Turn:
 
 		LD A, $mem_bunny_status
 		CP $01
-		JR NZ, =.Try_Freeze_Attack
-		.Run_away:
-		CALL =Walking_Away
-
-		JR =.Start_action_or_movement.end
+		JR Z, =.Run_away
+		CP $04
+		JR Z, =.Run_away
 
 		.Try_Freeze_Attack:
 		LD A, L
@@ -115,6 +113,11 @@ Penguin_Turn:
 		LD L, A
 
 		DEC (HL)
+
+		JR =.Start_action_or_movement.end
+
+		.Run_away:
+		CALL =Walking_Away
 
 		JR =.Start_action_or_movement.end
 

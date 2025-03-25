@@ -2,11 +2,11 @@
 
 .PADTO 0x0040
 VBlank:
-	JP =VBLANK_Entrypoint
+	JP $mem_vblank_jump_instruction
 
 .PADTO 0x0048
 STAT:
-	JP =STAT_Entrypoint
+	JP $mem_stat_jump_instruction
 
 .PADTO 0x0100
 Start:
@@ -63,6 +63,12 @@ Empty_VRAM: ; (Clear screen)
 	; OBJ1 Palette (frozen, shadow)
 	LD A, $obj_palette_frozen
 	LD $reg_obj1_palette, A
+
+	; Interrupt jmp instruction
+	LD A, $c3 ; Unconditional imm16 jump
+	LD ($mem_vblank_jump_instruction), A
+	LD ($mem_stat_jump_instruction), A
+
 
 Initialize_Window_GUI:
 	LD A, $48

@@ -79,6 +79,10 @@
 .END
 
 .MACRODEF ENABLE_LYC_INTERRUPT
+	LD A, low(=STAT_Entrypoint)
+	LD ($mem_stat_jump_destination), A
+	LD A, high(=STAT_Entrypoint)
+	LD ($mem_stat_jump_destination+1), A
 	.RESET_STAT_INTERRUPT
 	LD A, $02
 	LD $reg_interrupt_enable, A
@@ -102,212 +106,8 @@ Entrypoint:
 	LD $mem_floor_count, A
 	CALL =Init_DemoQuest_Event
 
-New_Dungeon:
-	LD SP, $fffe
-	LD HL, $mem_loaded_enemies_indices
-	LD A, $02
-	LD (HL+), A
-	LD (HL+), A
-	LD A, $00
-	LD (HL+), A
-	LD A, $03
-	LD (HL+), A
-	LD A, $06
-	LD $mem_loaded_special_entity_index, A
-	LD HL, $mem_bunny_attacks
-	LD A, $00
-	LD (HL+), A
-	INC A
-	LD (HL+), A
-	INC A
-	LD (HL+), A
-	INC A
-	LD (HL+), A
-	CALL =Reload_EP_Cost
-	CALL =Dungeon_Generation
-	CALL =Initialize_Entities
-	CALL =Initialize_Objects
-
-	; Reset animations
-	LD HL, $mem_animation_list
-	LD BC, $1f
-	CALL =bzero
-
-	LD A, $00
-	LD $mem_display_flag, A
-	LD $mem_moving_animation_step, A
-	LD $mem_animation_wait_frames, A
-	LD $mem_blinking_animation_counter, A
-
-	LD A, $mem_bunny_x
-	LD $mem_bunny_predicted_x, A
-	LD A, $mem_bunny_y
-	LD $mem_bunny_predicted_y, A
-
-	LD A, $mem_map_loading_flags
-	RES 3, A
-	LD $mem_map_loading_flags, A
-
-	; Clear OAM
-	LD HL, $fe00
-	LD BC, $00a0
-	CALL =bzero
-
-	LD A, $enum_dungeon_mode
-	LD $mem_current_mode, A
-	LD $mem_requested_mode, A
-
-	; Heart
-	LD A, $f0
-	LD ($9d62), A
-
-	; Energy points
-	LD A, $f1
-	LD ($9d66), A
-
-	; Floor
-	LD A, $f4
-	LD ($9d73), A
-
-	CALL =Generation_Event_Execution
-
-	CALL =Reload_Entities_Tile_Data
-	CALL =Reset_Entities_Collision_Map
-
-	CALL =Load_Tile
-	CALL =Load_Map
-	CALL =Load_Objects
-
-	.SET_WINDOW_LCDC_E
-	.ENABLE_TOP_BAR
-	.ENABLE_VBLANK_INTERRUPTS
-	EI
-	Wait_for_Interrupt.loop:
-	HALT
-	EI
-	JP =Wait_for_Interrupt.loop
-
-VBLANK_Entrypoint:
-	.SET_WINDOW_LCDC_E
-	.ENABLE_TOP_BAR
-
-	LD A, $palette_bold_font
-	LD $reg_bg_palette, A
-
-	LD HL, $9d71
-	LD A, $mem_floor_count
-	CALL =Print_8bit
-
-	CALL $OAM_DMA_Transfer_routine
-	CALL =Loading_Mode_VBlank
-
-	LD A, $mem_current_mode
-	BIT 7, A
-	JR NZ, =Skip_VBlank_Dungeon_Update
-		LD HL, $9d60
-		LD A, $mem_bunny_health
-		CALL =Print_8bit
-
-		LD HL, $9d64
-		LD A, $mem_bunny_mana
-		CALL =Print_8bit
-
-		CALL =Display_Prepared_Blocks
-		CALL =Display_Object
-	Skip_VBlank_Dungeon_Update:
-
-	CALL =Dialogue_Arrow_Animation
-	CALL =Copy_Dialogue_Buffer
-	CALL =Display_dialogue_cursor
-
-	; LYC
-	LD A, $0a
-	LD $reg_lyc, A
-	.ENABLE_LYC_INTERRUPT
-	.RESET_STAT_INTERRUPT
-	EI
-
-	CALL =Pad_Button_Check
-	CALL =Load_Additional_Block
-
-	LD A, $mem_current_mode
-	CP $enum_dungeon_mode
-	JR NZ, =Skip_Dungeon_Update
-
-		CALL =Entities_Actions
-		CALL =Object_Interactions_Check
-		CALL =Respawn_Entities
-		CALL =Prepare_Scrolling_Map
-
-	Skip_Dungeon_Update:
-	LD A, $mem_current_mode
-
-	CALL =Loading_Mode_Regular
-	CALL =Animation_Wait_Mode
-	CALL =Update_Animation_Steps
-	CALL =Open_dialogue_on_dungeon_menu_mode
-	CALL =Check_Open_Menu_button
-	CALL =Move_dialogue_cursor
-	CALL =Check_dialogue_action
-
-	LD A, $00
-	LD $mem_oam_buffer_low, A
-	CALL =Display_Animation_List
-	CALL =Display_Entities
-
-	LD A, $mem_loop_frame_timer
-	INC A
-	LD $mem_loop_frame_timer, A
-
-	.ENABLE_VBLANK_INTERRUPTS
-	RETI
-
-STAT_Entrypoint:
-	PUSH AF
-	PUSH DE
-	.SET_WINDOW_LCDC_E
-
-	LD A, $reg_lyc
-	CP $0a
-	JR Z, =.End_Top_Bar
-	CP $67
-	JR Z, =.Start_dialogue
-	.Thin_font:
-	LD A, $palette_thin_font
-	LD $reg_bg_palette, A
-	JR =.skip_dialogue
-
-	.Start_dialogue:
-	LD A, $mem_display_flag
-	BIT 0, A
-	JR Z, =.skip_dialogue
-	.ENABLE_DIALOGUE
-	LD A, $mem_display_flag
-	BIT 1, A
-	JR Z, =.Thin_font
-	LD A, $palette_bold_font
-	LD $reg_bg_palette, A
-	LD A, $77
-	LD $reg_lyc, A
-	.RESET_STAT_INTERRUPT
-	POP DE
-	POP AF
-	RETI
-
-	.skip_dialogue:
-	.DISABLE_LYC_INTERRUPT
-	POP DE
-	POP AF
-	RETI
-
-	.End_Top_Bar:
-	.DISABLE_DIALOGUE
-	LD A, $67
-	LD $reg_lyc, A
-	.RESET_STAT_INTERRUPT
-	POP DE
-	POP AF
-	RETI
+	JP =New_Dungeon
+	
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"
@@ -318,6 +118,7 @@ STAT_Entrypoint:
 .INCLUDE "map/objects.gbasm"
 .INCLUDE "map/generationevents.gbasm"
 .INCLUDE "gui.gbasm"
+.INCLUDE "modes/vblank_handler_list.gbasm"
 .INCLUDE "dialogues/utils.gbasm"
 .INCLUDE "entity/utils.gbasm"
 .INCLUDE "entity/init.gbasm"

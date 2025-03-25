@@ -4,6 +4,8 @@ import sys
 
 sprite_8x16 = "--8x16" in sys.argv
 
+sprite_8x8 = "--8x8" in sys.argv
+
 sprite_1bpp = "--1bpp" in sys.argv
 
 file = Image.open(sys.argv[1]).convert("RGB")
@@ -24,6 +26,10 @@ def getpx(sprite_nb, x, y):
 
     sprite_line = sprite_double_line * 2 + sprite_tile_y
     sprite_column = sprite_double_column * 2 + sprite_tile_x
+
+    if sprite_8x8:
+        sprite_line = int(sprite_nb / (file.width / 8))
+        sprite_column = int(sprite_nb % (file.width / 8))
 
     if file.width < 16:
         sprite_line = sprite_column * 2 + sprite_line

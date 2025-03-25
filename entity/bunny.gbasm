@@ -6,6 +6,17 @@ Move_Bunny:
 	LD E, $02
 	.Normal_speed:
 
+	.Finish_unfreeze:
+		LD A, $mem_moving_animation_step
+		CP $00
+		JR NZ, =.Finish_unfreeze.end
+		LD A, $mem_bunny_status
+		CP $04
+		JR NZ, =.Finish_unfreeze.end
+		LD A, $00
+		LD $mem_bunny_status, A
+	.Finish_unfreeze.end:
+
 	.Freeze_shiver:
 		LD A, $mem_moving_animation_step
 		CP $00
@@ -35,7 +46,7 @@ Move_Bunny:
 		JP NC, =.Skip_turn
 
 		.Unfreeze:
-		LD A, $00
+		LD A, $04
 		LD $mem_bunny_status, A
 		LD A, $mem_bunny_flags
 		RES 1, A

@@ -87,12 +87,19 @@ Hop_Attack_Loading_VBlank:
 	INC A
 	AND $0f
 	LD $mem_loading_step, A
+	RET
+
+
+Hop_Attack_Loading_Regular:
+	LD A, $mem_loading_step
 	CP $00
-	RET NZ
+	JR NZ, =.preload_tiles
 
 	LD A, $enum_dungeon_mode
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
+	CALL =Update_VBlank_Handler
+	CALL =Fix_Bunny_screen
 	LD A, $mem_bunny_direction
 	OR $38
 	LD $mem_bunny_direction, A
@@ -104,7 +111,11 @@ Hop_Attack_Loading_VBlank:
 	LD $mem_bunny_flags, A
 	RET
 
-Hop_Attack_Loading_Regular:
+
+	.preload_tiles:
+	LD A, $mem_current_mode
+	CP $enum_loading_mode
+	RET NZ
 	CALL =Preload_Map_Hop
 
 	LD A, $mem_prepared_block_tile

@@ -79,7 +79,7 @@ Entity_list:
 		.DB $00
 
 		; Starting mana
-		.DB $03
+		.DB $05
 
 		.PADTO =.Penguin+8
 

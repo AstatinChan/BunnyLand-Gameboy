@@ -54,66 +54,6 @@ Entity_Action:
 	LD L, A
 	RET
 
-Update_Animation_Steps:
-	LD A, $mem_blinking_animation_counter
-	DEC A
-	CP $ff
-	JR Z, =.Skip_blinking_update
-	LD $mem_blinking_animation_counter, A
-	.Skip_blinking_update:
-
-	LD A, $mem_map_loading_flags
-	BIT 3, A
-	JR Z, =.update_mode
-
-	LD A, $mem_moving_animation_step
-	INC A
-	AND $0f
-	LD $mem_moving_animation_step, A
-
-	CP $00
-	JR NZ, =.end
-
-	LD A, $mem_map_loading_flags
-	RES 3, A
-	SET 1, A
-	LD $mem_map_loading_flags, A
-
-	.update_mode:
-
-	; We need to make sure that the mode doesn't change to a mode with objects update while a dialogue box refresh is currently being done
-	LD A, $mem_current_mode
-	BIT 7, A
-	JR Z, =.set_current_mode
-	LD A, $mem_display_flag
-	AND 0b00010100
-	CP $00
-	JR NZ, =.end
-
-	.set_current_mode:
-	LD A, $mem_requested_mode
-	LD $mem_current_mode, A
-
-	.end:
-	LD A, $mem_bunny_health
-	CP $00
-	RET NZ
-	LD A, $mem_moving_animation_step
-	CP $00
-	RET NZ
-
-	.Dead_mode:
-
-	LD A, $20
-	LD $mem_bunny_direction, A
-
-	LD A, $enum_dead_mode
-	LD $mem_current_mode, A
-
-	.CLOSE_DIALOGUE
-
-	RET
-
 Turn_Jump_table:
 	; 00
 	RET

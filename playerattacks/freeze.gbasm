@@ -37,6 +37,8 @@ Freeze_Attack_Loading_VBlank:
 	LD A, $enum_dungeon_mode
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
+	CALL =Update_VBlank_Handler
+
 	LD A, $mem_map_loading_flags
 	SET 3, A
 	LD $mem_map_loading_flags, A

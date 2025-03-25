@@ -1,0 +1,32 @@
+Update_VBlank_Handler:
+	PUSH HL
+	LD A, $mem_current_mode
+	AND $0f
+	SLA A
+	LD HL, =VBlank_Handler_List
+	ADD L
+	LD L, A
+	LD A, $00
+	ADC H
+	LD H, A
+	LD A, (HL+)
+	LD ($mem_vblank_jump_destination+1), A
+	LD A, (HL)
+	LD ($mem_vblank_jump_destination), A
+	POP HL
+	RET
+
+VBlank_Handler_List:
+	; 0 (dungeon, dead)
+	.DB =Dungeon_VBLANK_Entrypoint
+
+	; 1 (dungeon dialogue, menu)
+	.DB =Dialogue_VBLANK_Entrypoint
+
+	; 2 (loading, animation)
+	.DB =Loading_VBLANK_Entrypoint
+
+.INCLUDE "modes/dialoguemenu.gbasm"
+.INCLUDE "modes/dungeon.gbasm"
+.INCLUDE "modes/loading.gbasm"
+.INCLUDE "modes/dungeongeneration.gbasm"
