@@ -170,8 +170,6 @@ Dungeon_generation_VBlank:
 
 	.ENABLE_VBLANK_INTERRUPTS
 	.RESET_INTERRUPTS
-	LD A, $lcdc_mapbg_tilemap
-	LD $reg_lcd_controller, A
 	EI
 
 	Wait_for_Interrupt.loop:
