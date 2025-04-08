@@ -38,7 +38,7 @@ x -> Add other types of enemies
 x	* Fox with distance limited attack and close unlimited attack
 x	* Penguin freezing and fleeing when the player is frozen
 	* Mouse weaker and only close attacks but can move 2x faster
-	* Cats being normal (only close attacks)
+x	* Cats being normal (only close attacks)
 	* Fimsh being super rare have a bunch of HP, not do anything but drop super cool objects
 	* Owls heal the enemies around (different pathfinding where it tries to stay 1 block away from the bnuy?) + cooldown
 	* Bugs move 2x faster and sacrifice themselves to give the bunny a status (poisoned & taking damages/slower and skipping one of 2 turns)
@@ -46,7 +46,7 @@ x	* Penguin freezing and fleeing when the player is frozen
 
   -> Have some enemies drop items
 
-  -> Add floor count + a kind of goal (rescuing another bunny/getting a rare item ?)
+x -> Add floor count + a kind of goal (rescuing another bunny/getting a rare item ?)
 
 DEMO
 

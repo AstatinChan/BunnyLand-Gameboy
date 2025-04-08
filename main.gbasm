@@ -68,13 +68,13 @@
 	LD A, $reg_interrupt_flags
 	RES 0, A
 	LD $reg_interrupt_flags, A
-	LD A, $03
+	LD A, $reg_interrupt_enable
+	OR $01
 	LD $reg_interrupt_enable, A
 .END
 
-.MACRODEF RESET_STAT_INTERRUPT
-	LD A, $reg_interrupt_flags
-	RES 1, A
+.MACRODEF RESET_INTERRUPTS
+	LD A, $00
 	LD $reg_interrupt_flags, A
 .END
 
@@ -83,7 +83,7 @@
 	LD ($mem_stat_jump_destination), A
 	LD A, high(=STAT_Entrypoint)
 	LD ($mem_stat_jump_destination+1), A
-	.RESET_STAT_INTERRUPT
+	.RESET_INTERRUPTS
 	LD A, $40
 	LD $reg_lcd_status, A
 	LD A, $02

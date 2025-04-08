@@ -7,7 +7,7 @@
 	LD ($mem_stat_jump_destination), A
 	LD A, high(=Dungeon_generation_Out_Of_VBlank)
 	LD ($mem_stat_jump_destination+1), A
-	.RESET_STAT_INTERRUPT
+	.RESET_INTERRUPTS
 	LD A, $20
 	LD $reg_lcd_status, A
 	LD A, $02
@@ -125,6 +125,8 @@ New_Dungeon:
 
 	CALL =Load_Prepared_Map
 
+	CALL =VBlank_Wait
+
 Dungeon_generation_VBlank:
 	.ENABLE_MODE_2_INTERRUPT
 	EI
@@ -141,7 +143,9 @@ Dungeon_generation_VBlank:
 	LD A, $f4
 	LD ($9d73), A
 
+	LD B, B
 	CALL =Reload_Entities_Tile_Data
+	LD B, B
 	; Clear OAM
 	LD HL, $fe00
 	LD BC, $00a0
@@ -164,14 +168,14 @@ Dungeon_generation_VBlank:
 
 	CALL =Reset_Entities_Collision_Map
 
-	.SET_WINDOW_LCDC_E
 	.ENABLE_VBLANK_INTERRUPTS
-	.RESET_STAT_INTERRUPT
-	LD A, $00
-	LD $reg_interrupt_flags, A
+	.RESET_INTERRUPTS
+	LD A, $lcdc_mapbg_tilemap
+	LD $reg_lcd_controller, A
 	EI
 
 	Wait_for_Interrupt.loop:
+	LD A, $reg_lcd_status
 	HALT
 	JP =Wait_for_Interrupt.loop
 
@@ -179,5 +183,6 @@ Dungeon_generation_Out_Of_VBlank:
 	PUSH AF
 	CALL =VBlank_Wait	
 	.ENABLE_MODE_2_INTERRUPT
+	.RESET_INTERRUPTS
 	POP AF
 	RETI

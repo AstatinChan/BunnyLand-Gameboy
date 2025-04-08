@@ -69,8 +69,10 @@ Reload_Entities_Tile_Data:
 		LD A, (BC)
 		LD E, A
 
+		LD B, B
 		LD BC, $00c0
 		CALL =memcpy
+		LD B, B
 
 		POP DE
 		POP HL

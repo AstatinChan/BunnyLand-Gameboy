@@ -88,7 +88,7 @@ STAT_Entrypoint:
 	LD $reg_bg_palette, A
 	LD A, $77
 	LD $reg_lyc, A
-	.RESET_STAT_INTERRUPT
+	.RESET_INTERRUPTS
 	POP DE
 	POP AF
 	RETI
@@ -103,7 +103,7 @@ STAT_Entrypoint:
 	.DISABLE_DIALOGUE
 	LD A, $67
 	LD $reg_lyc, A
-	.RESET_STAT_INTERRUPT
+	.RESET_INTERRUPTS
 	POP DE
 	POP AF
 	RETI
@@ -136,7 +136,7 @@ Dungeon_VBLANK_Entrypoint:
 	LD A, $0a
 	LD $reg_lyc, A
 	.ENABLE_LYC_INTERRUPT
-	.RESET_STAT_INTERRUPT
+	.RESET_INTERRUPTS
 	EI
 
 	CALL =Pad_Button_Check

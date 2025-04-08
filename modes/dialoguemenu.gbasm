@@ -15,7 +15,7 @@ Dialogue_VBLANK_Entrypoint:
 	LD A, $0a
 	LD $reg_lyc, A
 	.ENABLE_LYC_INTERRUPT
-	.RESET_STAT_INTERRUPT
+	.RESET_INTERRUPTS
 	EI
 
 	CALL =Pad_Button_Check
