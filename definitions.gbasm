@@ -72,13 +72,13 @@
 .DEFINE mem_current_mode ($c014)
 .DEFINE mem_requested_mode ($c015)
 ; bit 0-3: which vblank handler group
-; bit 7: setp if map, objects and gui update are frozen
 .DEFINE enum_dungeon_mode $00
 .DEFINE enum_dead_mode $10
 .DEFINE enum_dungeon_menu_mode $01
 .DEFINE enum_dungeon_dialogue_mode $11
 .DEFINE enum_loading_mode $02
 .DEFINE enum_animation_wait_mode $12
+.DEFINE enum_dungeon_generation_mode $03
 
 .DEFINE mem_menu_cursor_position ($c016)
 .DEFINE mem_last_button_direction ($c017)
@@ -138,6 +138,9 @@
 .DEFINE mem_stat_jump_instruction $c044 ; takes from c044 to c046
 .DEFINE mem_stat_jump_destination $c045 ; takes from c045 to c046
 
+; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
+.DEFINE mem_map_loading_buffer $c400
+
 .DEFINE mem_next_free_head_lower_bytes ($c6ff)
 
 .DEFINE mem_dungeon_generation_heads $c700 ; Takes the memory from c700 to c717
@@ -149,6 +152,8 @@
 
 ; a bit of 1 is equivalent to an entity being on the tile
 .DEFINE mem_entities_collisions $c780 ; Takes the memory from c780 to c7ff
+
+; ## END OF THE LOADING MAP FUNCTION
 
 ; a bit of 1 is equivalent to the tile being free
 .DEFINE mem_dungeon_map $c800 ; Takes the memory from c800 to c87f

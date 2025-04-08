@@ -142,18 +142,10 @@ Object_Interaction_Jump_table:
 	JP =Restore_EP_Action
 
 Stairs_Action:
-	DI
-	LD A, $00
-	LD $reg_interrupt_flags, A
-	.Wait_VBlank:
-		LD A, $reg_lcd_status
-		AND $03
-		CP $01
-		JR NZ, =.Wait_VBlank
-
-	; LCDC
-	XOR A
-	LD $reg_lcd_controller, A
+	LD A, $enum_dungeon_generation_mode
+	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
+	CALL =Update_VBlank_Handler
 
 	LD A, $mem_floor_count
 	INC A
@@ -163,8 +155,7 @@ Stairs_Action:
 	LD $mem_floor_count, A
 
 	.skip_update_floor_count:
-	CALL =Reset_Map
-	JP =New_Dungeon
+	RET
 
 Heal_Action:
 	LD A, $mem_bunny_health

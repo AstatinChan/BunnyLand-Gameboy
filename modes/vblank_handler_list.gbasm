@@ -26,6 +26,9 @@ VBlank_Handler_List:
 	; 2 (loading, animation)
 	.DB =Loading_VBLANK_Entrypoint
 
+	; 3 (new dungeon)
+	.DB =New_Dungeon
+
 .INCLUDE "modes/dialoguemenu.gbasm"
 .INCLUDE "modes/dungeon.gbasm"
 .INCLUDE "modes/loading.gbasm"

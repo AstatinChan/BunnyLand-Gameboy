@@ -217,6 +217,21 @@ Print_str: ; Memory Tilemap position in HL, Text address in BC, FF ended
 	POP AF
 	RET
 
+strlen: ; Text address in HL, FF ended. Result in A
+	PUSH HL
+	PUSH BC
+	.loop:
+		LD A, (HL+)
+		CP $FF
+		JR Z, =.end
+		INC B
+		JR =.loop
+	.end:
+	LD A, B
+	POP BC
+	POP HL
+	RET
+
 MUL: ; B x C => EA
 	XOR A
 	LD E, $00

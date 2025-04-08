@@ -84,10 +84,10 @@
 	LD A, high(=STAT_Entrypoint)
 	LD ($mem_stat_jump_destination+1), A
 	.RESET_STAT_INTERRUPT
-	LD A, $02
-	LD $reg_interrupt_enable, A
 	LD A, $40
 	LD $reg_lcd_status, A
+	LD A, $02
+	LD $reg_interrupt_enable, A
 .END
 
 .MACRODEF DISABLE_LYC_INTERRUPT
@@ -106,8 +106,9 @@ Entrypoint:
 	LD $mem_floor_count, A
 	CALL =Init_DemoQuest_Event
 
+	CALL =Load_Tile
+
 	JP =New_Dungeon
-	
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"

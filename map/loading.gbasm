@@ -1,4 +1,4 @@
-Load_Map:
+Load_Prepared_Map:
 	LD A, $mem_viewport_x
 	SUB $02
 	LD C, A
@@ -13,6 +13,10 @@ Load_Map:
 		.For_X:
 			LD A, C
 			CALL =Load_Block
+			LD A, $mem_prepared_block_position_1
+			SUB $98
+			ADD $c4
+			LD $mem_prepared_block_position_1, A
 			CALL =Display_Main_Prepared_Block
 
 			INC C

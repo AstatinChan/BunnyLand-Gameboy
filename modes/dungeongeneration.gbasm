@@ -2,8 +2,68 @@
 ; When VBlank interrupts -> context switch
 ; When stat out of vblank interrupt -> context switch back to generation
 
+.MACRODEF ENABLE_MODE_2_INTERRUPT
+	LD A, low(=Dungeon_generation_Out_Of_VBlank)
+	LD ($mem_stat_jump_destination), A
+	LD A, high(=Dungeon_generation_Out_Of_VBlank)
+	LD ($mem_stat_jump_destination+1), A
+	.RESET_STAT_INTERRUPT
+	LD A, $20
+	LD $reg_lcd_status, A
+	LD A, $02
+	LD $reg_interrupt_enable, A
+.END
+
+.MACRODEF DISABLE_MODE_2_INTERRUPT
+	LD A, $00
+	LD $reg_lcd_status, A
+	LD A, $00
+	LD $reg_interrupt_enable, A
+.END
+
 New_Dungeon:
 	LD SP, $fffe
+
+	LD A, $00
+	LD $reg_viewport_x, A
+	LD A, $68
+	LD $reg_viewport_y, A
+
+	LD A, $00
+	LD $mem_display_flag, A
+
+	LD HL, =Dungeon_Name_1_Txt	
+	CALL =strlen
+	LD B, A
+
+	LD A, $14
+	SUB B
+	SRA A
+
+	LD HL, $9e80
+	ADD L
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+	LD BC, =Dungeon_Name_1_Txt
+	CALL =Print_str
+
+	LD HL, $9ec9
+	LD A, $mem_floor_count
+	CALL =Print_8bit
+
+	LD A, $f4
+	LD ($9ecb), A
+
+	LD A, $07
+	LD $reg_bg_palette, A
+
+	LD A, $lcdc_guibg_tilemap
+	LD $reg_lcd_controller, A
+
+	CALL =Reset_Map
+
 	LD HL, $mem_loaded_enemies_indices
 	LD A, $02
 	LD (HL+), A
@@ -33,6 +93,11 @@ New_Dungeon:
 	LD BC, $1f
 	CALL =bzero
 
+	; Clear OAM buffer
+	LD HL, $mem_oam_buffer
+	LD BC, $00a0
+	CALL =bzero
+
 	LD A, $00
 	LD $mem_display_flag, A
 	LD $mem_moving_animation_step, A
@@ -51,7 +116,18 @@ New_Dungeon:
 	LD A, $enum_dungeon_mode
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
-	CALL =Update_VBlank_Handler
+
+	LD A, $00
+	LD $mem_oam_buffer_low, A
+	CALL =Display_Entities
+
+	CALL =Generation_Event_Execution
+
+	CALL =Load_Prepared_Map
+
+Dungeon_generation_VBlank:
+	.ENABLE_MODE_2_INTERRUPT
+	EI
 
 	; Heart
 	LD A, $f0
@@ -65,29 +141,43 @@ New_Dungeon:
 	LD A, $f4
 	LD ($9d73), A
 
-	CALL =Generation_Event_Execution
-
 	CALL =Reload_Entities_Tile_Data
-	CALL =Reset_Entities_Collision_Map
-
 	; Clear OAM
 	LD HL, $fe00
 	LD BC, $00a0
 	CALL =bzero
 
-	CALL =Load_Tile
-	CALL =Load_Map
+	LD DE, $mem_map_loading_buffer
+	LD HL, $9800
+	LD BC, $0400
+	CALL =memcpy
 	CALL =Load_Objects
 
 	LD HL, $9d71
 	LD A, $mem_floor_count
 	CALL =Print_8bit
 
+	CALL =Update_VBlank_Handler
+
+	DI
+	.DISABLE_MODE_2_INTERRUPT
+
+	CALL =Reset_Entities_Collision_Map
+
 	.SET_WINDOW_LCDC_E
-	.ENABLE_TOP_BAR
 	.ENABLE_VBLANK_INTERRUPTS
+	.RESET_STAT_INTERRUPT
+	LD A, $00
+	LD $reg_interrupt_flags, A
 	EI
+
 	Wait_for_Interrupt.loop:
 	HALT
-	EI
 	JP =Wait_for_Interrupt.loop
+
+Dungeon_generation_Out_Of_VBlank:
+	PUSH AF
+	CALL =VBlank_Wait	
+	.ENABLE_MODE_2_INTERRUPT
+	POP AF
+	RETI
