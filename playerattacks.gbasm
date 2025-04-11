@@ -83,7 +83,23 @@ Canceled_Attack:
 	LD $mem_bunny_mana, A
 	RET
 
+Empty_Attack:
+	RET
+
 Attack_List:
+	.Empty:
+		; Attack menu name string
+		.DB =Empty
+
+		; Attack function
+		.DB =Empty_Attack
+
+		; Energy point cost
+		.DB $00
+
+		.PADTO =.Empty+8
+
+
 	.Hop:
 		; Attack menu name string
 		.DB =Hop_Attack_Menu_Txt

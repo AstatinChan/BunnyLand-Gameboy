@@ -11,6 +11,22 @@ Initialize_Objects:
 	CALL =Spawn_leaf
 	RET
 
+Find_Free_Object_slot: ; Return free object slot in HL ($80 if none is found)
+	LD HL, $mem_object_list
+
+	.loop:
+		LD A, $ff
+		CP (HL)
+		RET Z
+
+		LD A, L
+		ADD $08
+		LD L, A
+		CP $80
+		JR NZ, =.loop
+
+	RET
+
 Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E, Object pointer in HL
 	LD (HL+), A
 
@@ -55,6 +71,25 @@ Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E, Obje
 	CP $00
 	JR NZ, =.place_in_random_room
 
+	CALL =Check_other_object_collision
+	CP $00
+	RET NZ
+
+	INC HL
+	INC HL
+
+	LD (HL), E
+	LD A, L
+	AND $f8
+	ADD $08
+	LD L, A
+	RET
+
+Check_other_object_collision: ; Object in HL (with only sprite x & y set), will be zeroed on collision and A will be 1 on return
+	LD A, L
+	AND $f8
+	ADD $01
+	LD L, A
 	LD BC, $mem_object_list
 	Object_check_collisions.loop:
 		LD A, (BC)
@@ -84,6 +119,7 @@ Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E, Obje
 		LD (HL), A
 		DEC HL
 		DEC HL
+		LD A, $01
 		RET
 
 		Object_check_collisions.loop.next:
@@ -97,15 +133,7 @@ Spawn_object_in_random_room: ; Object tile in A, Object jump table id in E, Obje
 		LD C, A
 		CP $80
 		JR NZ, =Object_check_collisions.loop
-
-	INC HL
-	INC HL
-
-	LD (HL), E
-	LD A, L
-	AND $f8
-	ADD $08
-	LD L, A
+	LD A, $00
 	RET
 
 Spawn_stairs:
@@ -140,6 +168,11 @@ Object_Interaction_Jump_table:
 
 	; 03
 	JP =Restore_EP_Action
+	NOP
+
+	; 04
+	JP =Heal_Attack_Box_Action
+	NOP
 
 Stairs_Action:
 	LD A, $enum_dungeon_generation_mode
@@ -183,6 +216,20 @@ Heal_Action:
 	LD (HL), $00
 
 	RET
+
+Heal_Attack_Box_Action:
+	LD (HL), $00
+
+	.START_SCRIPT =.Script
+
+	LD A, $enum_dungeon_dialogue_mode
+	LD $mem_requested_mode, A
+
+	RET
+
+	.Script:
+	.LEARN_ATTACK $02
+	.END
 
 Restore_EP_Action:
 	LD A, $mem_bunny_mana

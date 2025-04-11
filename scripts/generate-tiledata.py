@@ -24,6 +24,8 @@ print("\n\t; Carrot")
 get_sprite_png_parse_output("./sprites/bg/carrot.png")
 print("\n\t; Leaf")
 get_sprite_png_parse_output("./sprites/bg/leaf.png")
+print("\n\t; Box")
+get_sprite_png_parse_output("./sprites/bg/box.png")
 
 sprite_idx = 0xf0
 print("Small_sprites:")

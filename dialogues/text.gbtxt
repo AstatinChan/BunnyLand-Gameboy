@@ -2,6 +2,26 @@ Empty:
 Bunny_Header_Text: Bunny:
 Unknown_Header_Text: ???:
 
+Double_Exclamation: !!
+
+New_attack_1t: You learned the
+New_attack_1b: attack:
+
+No_attslot_1t: You found the
+No_attslot_1b: attack:
+
+No_attslot_3t: But you already
+No_attslot_3b: know too many
+
+No_attslot_4t: attacks...
+
+dup_attack_1t: You found the
+dup_attack_1b: attack:
+
+dup_attack_3t: But you already
+dup_attack_3b: know this
+
+dup_attack_4t: attack...
 
 Dialogue_1_1b: Hello !
 

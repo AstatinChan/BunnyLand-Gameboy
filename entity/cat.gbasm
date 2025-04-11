@@ -32,6 +32,42 @@ Cat_Turn:
 		LD A, $mem_enemies_alive_count
 		DEC A
 		LD $mem_enemies_alive_count, A
+
+		CALL =RNG_Step
+		AND $07
+		CP $00
+		JR NZ, =.skip_spawn_loot
+		PUSH HL
+		CALL =Find_Free_Object_slot
+		LD A, $80
+		CP L
+		JR Z, =.skip_spawn_loot_pop_hl
+
+		LD A, $6C
+		LD (HL+), A
+		LD A, B
+		LD (HL+), A
+		LD A, C
+		LD (HL+), A
+		CALL =Check_other_object_collision
+		CP $00
+		JR NZ, =.skip_spawn_loot_pop_hl
+		LD A, L
+		AND $f8
+		ADD $03
+		LD L, A
+		LD (HL), $04
+		LD A, L
+		SRA A
+		SRA A
+		SRA A
+		SUB $01
+		LD $mem_object_load_counter, A
+
+		.skip_spawn_loot_pop_hl:
+		POP HL
+		.skip_spawn_loot:
+
 		JP NZ, =.Skip_turn
 	.Health_check.end:
 

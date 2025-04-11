@@ -75,15 +75,7 @@ New_Dungeon:
 	CALL =Update_Enemies_Spawning_Pattern
 	LD A, $06
 	LD $mem_loaded_special_entity_index, A
-	LD HL, $mem_bunny_attacks
-	LD A, $00
-	LD (HL+), A
-	INC A
-	LD (HL+), A
-	INC A
-	LD (HL+), A
-	INC A
-	LD (HL+), A
+
 	CALL =Reload_EP_Cost
 	CALL =Dungeon_Generation
 	CALL =Initialize_Entities

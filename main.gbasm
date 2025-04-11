@@ -104,6 +104,17 @@ Entrypoint:
 	LD $mem_bunny_mana, A
 	LD A, $01
 	LD $mem_floor_count, A
+
+	LD HL, $mem_bunny_attacks
+	LD A, $01
+	LD (HL+), A
+	XOR A
+	LD (HL+), A
+	LD (HL+), A
+	LD (HL+), A
+	LD A, $01
+	LD $mem_number_of_attacks, A
+
 	CALL =Init_DemoQuest_Event
 
 	CALL =Load_Tile
@@ -113,6 +124,7 @@ Entrypoint:
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"
 .INCLUDE "utils.gbasm"
+.INCLUDE "dialogues/utils.gbasm"
 .INCLUDE "buttons.gbasm"
 .INCLUDE "map/loading.gbasm"
 .INCLUDE "map/generation.gbasm"
@@ -120,7 +132,6 @@ Entrypoint:
 .INCLUDE "map/generationevents.gbasm"
 .INCLUDE "gui.gbasm"
 .INCLUDE "modes/vblank_handler_list.gbasm"
-.INCLUDE "dialogues/utils.gbasm"
 .INCLUDE "entity/utils.gbasm"
 .INCLUDE "entity/init.gbasm"
 .INCLUDE "entity/bunny.gbasm"

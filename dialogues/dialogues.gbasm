@@ -4,6 +4,7 @@ Dialogue_script_step:
 	LD A, ($mem_dialogue_script_program_counter+1)
 	LD L, A
 
+	.next:
 	LD A, (HL+)
 
 	LD BC, =Dialogue_script_instruction_Jump_Table
@@ -26,8 +27,20 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Text
 	NOP
 
-	;02
+	; 02
 	JP =.TextB
+	NOP
+
+	; 03
+	JP =.Learn_Attack
+	NOP
+
+	; 04
+	JP =.TextB_Indirect
+	NOP
+
+	; 05
+	JP =.Learn_Attack_Return
 	NOP
 
 	.Text:
@@ -67,6 +80,12 @@ Dialogue_script_instruction_Jump_Table:
 		RET
 
 	.TextB:
+		PUSH HL
+		LD HL, $dialogue_first_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
 		LD A, (HL+)
 		LD B, A
 		LD A, (HL+)
@@ -74,6 +93,12 @@ Dialogue_script_instruction_Jump_Table:
 		PUSH HL
 		LD HL, $dialogue_first_line
 		CALL =Print_str
+		POP HL
+
+		PUSH HL
+		LD HL, $dialogue_third_line
+		LD BC, $12
+		CALL =bzero
 		POP HL
 
 		LD A, (HL+)
@@ -89,6 +114,145 @@ Dialogue_script_instruction_Jump_Table:
 		LD $mem_display_flag, A
 
 		RET
+
+	.TextB_Indirect:
+		PUSH HL
+		LD HL, $dialogue_first_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH DE
+		LD A, (BC)
+		LD D, A
+		INC BC
+		LD A, (BC)
+		LD E, A
+		LD B, D
+		LD C, E
+		POP DE
+		PUSH HL
+		LD HL, $dialogue_first_line
+		DBG
+		CALL =Print_str
+		POP HL
+
+
+		PUSH HL
+		LD HL, $dialogue_third_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_third_line
+		CALL =Print_str
+		POP HL
+
+		LD A, $07
+		LD $mem_display_flag, A
+
+		RET
+
+	.Learn_Attack:
+		LD A, (HL+)
+		LD E, A
+
+		LD B, $00
+		LD C, A
+		SLA C
+		RR B
+		SLA C
+		RR B
+		SLA C
+		RR B
+		LD A, C
+		ADD low(=Attack_List)
+		LD C, A
+		LD A, B
+		ADC high(=Attack_List)
+		LD B, A
+
+		LD A, (BC)
+		LD ($mem_learn_attack_attack_name_ptr), A
+		INC BC
+		LD A, (BC)
+		LD ($mem_learn_attack_attack_name_ptr+1), A
+
+		LD A, H
+		LD ($mem_learn_attack_dialogue_ret_ptr), A
+		LD A, L
+		LD ($mem_learn_attack_dialogue_ret_ptr+1), A
+
+		LD A, E
+		LD HL, $mem_bunny_attacks
+		.Learn_Attack.Check_doubles.loop:
+			LD A, (HL)
+			CP E
+			JR Z, =.Learn_Attack.Duplicate
+			INC HL
+			LD A, L
+			CP low($mem_bunny_attacks+4)
+			JR NZ, =.Learn_Attack.Check_doubles.loop
+
+		LD A, $mem_number_of_attacks
+		CP $04
+		JR NC, =.Learn_Attack.Not_enough_slot
+
+		.Learn_Attack.Success:
+			LD A, $mem_number_of_attacks
+			LD HL, $mem_bunny_attacks
+			ADD L
+			LD L, A
+			LD (HL), $02
+			LD A, $mem_number_of_attacks
+			INC A
+			LD $mem_number_of_attacks, A
+
+			LD HL, =.Learn_Attack.Dialogue
+			JP =Dialogue_script_step.next
+			.Learn_Attack.Dialogue:
+				.TEXT =New_attack_1t =New_attack_1b
+				.TEXTB_INDIRECT $mem_learn_attack_attack_name_ptr =Double_Exclamation
+				.LEARN_ATTACK_RET
+
+
+		.Learn_Attack.Not_enough_slot:
+
+			LD HL, =.Learn_Attack.Not_enough_slot.Dialogue
+			JP =Dialogue_script_step.next
+			.Learn_Attack.Not_enough_slot.Dialogue:
+				.TEXT =No_attslot_1t =No_attslot_1b
+				.TEXTB_INDIRECT $mem_learn_attack_attack_name_ptr =Double_Exclamation
+				.TEXT =No_attslot_3t =No_attslot_3b
+				.TEXT =No_attslot_4t =Empty
+				.LEARN_ATTACK_RET
+
+		.Learn_Attack.Duplicate:
+			LD HL, =.Learn_Attack.Duplicate.Dialogue
+			JP =Dialogue_script_step.next
+			.Learn_Attack.Duplicate.Dialogue:
+				.TEXT =dup_attack_1t =dup_attack_1b
+				.TEXTB_INDIRECT $mem_learn_attack_attack_name_ptr =Double_Exclamation
+				.TEXT =dup_attack_3t =dup_attack_3b
+				.TEXT =dup_attack_4t =Empty
+				.LEARN_ATTACK_RET
+
+	.Learn_Attack_Return:
+		LD A, ($mem_learn_attack_dialogue_ret_ptr)
+		LD H, A
+		LD A, ($mem_learn_attack_dialogue_ret_ptr+1)
+		LD L, A
+		DBG
+		JP =Dialogue_script_step.next
 
 .INCLUDE "dialogues/text.gbasm"
 .INCLUDE "dialogues/demo_quest.gbasm"

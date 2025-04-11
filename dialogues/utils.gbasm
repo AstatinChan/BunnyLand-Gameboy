@@ -7,17 +7,32 @@
 .END
 
 .MACRODEF END
-	.DB 00
+	.DB $00
 .END
 
 .MACRODEF TEXT first_line second_line
-	.DB 01
+	.DB $01
 	.DB $first_line
 	.DB $second_line
 .END
 
 .MACRODEF TEXTB first_line second_line
-	.DB 02
+	.DB $02
 	.DB $first_line
 	.DB $second_line
+.END
+
+.MACRODEF LEARN_ATTACK attack_idx
+	.DB $03
+	.DB low($attack_idx)
+.END
+
+.MACRODEF TEXTB_INDIRECT indirect_line second_line
+	.DB $04
+	.DB $indirect_line
+	.DB $second_line
+.END
+
+.MACRODEF LEARN_ATTACK_RET
+	.DB $05
 .END

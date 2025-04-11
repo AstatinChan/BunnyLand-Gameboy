@@ -19,7 +19,7 @@ Entity_list:
 		.DB $05
 
 		; Spawning rate (2 lsb)
-		.DB 0b11
+		.DB 0b10
 
 		.PADTO =.Fox+8
 
