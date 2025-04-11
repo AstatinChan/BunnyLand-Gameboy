@@ -296,7 +296,7 @@ Move_Bunny:
 		INC A
 		DAA
 		JR C, =.End_movement.skip_mana_regen
-		CP $30
+		CP $31
 		JR NC, =.End_movement.skip_mana_regen
 		LD $mem_bunny_mana, A
 

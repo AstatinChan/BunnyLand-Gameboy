@@ -18,6 +18,9 @@ Entity_list:
 		; Starting mana
 		.DB $05
 
+		; Spawning rate (2 lsb)
+		.DB 0b11
+
 		.PADTO =.Fox+8
 
 	.Frog:
@@ -38,6 +41,9 @@ Entity_list:
 
 		; Starting mana
 		.DB $00
+
+		; Spawning rate (2 lsb)
+		.DB 0b01
 
 		.PADTO =.Frog+8
 
@@ -60,6 +66,9 @@ Entity_list:
 		; Starting mana
 		.DB $00
 
+		; Spawning rate (2 lsb)
+		.DB 0b11
+
 		.PADTO =.Cat+8
 
 	.Penguin:
@@ -80,6 +89,9 @@ Entity_list:
 
 		; Starting mana
 		.DB $05
+
+		; Spawning rate (2 lsb)
+		.DB 0b01
 
 		.PADTO =.Penguin+8
 
@@ -102,6 +114,9 @@ Entity_list:
 		; Starting mana
 		.DB $00
 
+		; Spawning rate (2 lsb)
+		.DB 0b10
+
 		.PADTO =.Mouse+8
 
 	.Fimsh:
@@ -123,6 +138,9 @@ Entity_list:
 		; Starting mana
 		.DB $00
 
+		; Spawning rate (2 lsb)
+		.DB 0b00
+
 		.PADTO =.Fimsh+8
 
 	.QuestGoalBunny:
@@ -143,5 +161,8 @@ Entity_list:
 
 		; Starting mana
 		.DB $00
+
+		; Spawning rate (2 lsb)
+		.DB 0b00
 
 		.PADTO =.QuestGoalBunny+8

@@ -298,6 +298,31 @@ MUL: ; B x C => EA
 	.bit0:
 	RET
 
+RRx: ; B is the number to rotate, A & 7 is how many bits to rotate it
+	AND $07
+
+	CP $04
+	CALL NC, =.swap
+	CP $00
+	RET Z
+
+	RRC B
+	DEC A
+	RET Z
+
+	RRC B
+	DEC A
+	RET Z
+
+	RRC B
+	DEC A
+	RET
+
+	.swap:
+		SWAP B
+		SUB $04
+		RET
+
 VBlank_Wait:
 	PUSH AF
 	LD A, $reg_lcd_controller

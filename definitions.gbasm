@@ -138,6 +138,8 @@
 .DEFINE mem_stat_jump_instruction $c044 ; takes from c044 to c046
 .DEFINE mem_stat_jump_destination $c045 ; takes from c045 to c046
 
+.DEFINE mem_entity_spawning_pattern ($c046)
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 

@@ -128,12 +128,9 @@ Fix_Bunny_screen:
 	RET
 
 Initialize_Enemy: ; HL => pointer to entity struct
-	LD A, $mem_enemies_alive_count
-	INC A
-	LD $mem_enemies_alive_count, A
-
-	CALL =RNG_Step
-	AND $03
+	CALL =Enemy_idx_to_spawn
+	CP $ff
+	RET Z
 	ADD $03
 
 Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1 in $tmp_var_3 if should retry if collsion (could potentially fail multiple time/infinite loop)
@@ -241,21 +238,10 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 	LD A, $03
 	LD (HL+), A
 
-	LD BC, =Entity_list
-	LD D, high($mem_loaded_entities_indices)
-	LD A, low($mem_loaded_entities_indices)
-	ADD E
-	LD E, A
-	LD A, (DE)
-	SLA A
-	SLA A
-	SLA A
-	ADD $02
-	ADD low(=Entity_list)
-	LD C, A
-	LD A, high(=Entity_list)
-	ADC $00
-	LD B, A
+	LD A, E
+	CALL =Entity_idx_to_entity_list_ptr
+	INC BC
+	INC BC
 
 	; Turn
 	LD A, (BC)
@@ -292,6 +278,16 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 	ADD $06
 	LD L, A
 
+	LD A, E
+	CP $03
+	RET C
+
+	CP $07
+	RET NC
+
+	LD A, $mem_enemies_alive_count
+	INC A
+	LD $mem_enemies_alive_count, A
 	RET
 
 FindFreeEntity:
@@ -325,11 +321,103 @@ Respawn_Entities:
 	LD $tmp_var_3, A
 
 	CALL =RNG_Step
-	AND $0f
+	AND $07
 	CP $00
 	RET NZ
 
 	CALL =FindFreeEntity
 
 	CALL =Initialize_Enemy
+	RET
+
+Enemy_spawn_pattern_to_probability: ; (1/(x + 1))
+	.DB 0b11111111
+	.DB 0b00000111
+	.DB 0b00000001
+	.DB 0b00000000
+
+Enemy_idx_to_spawn: ; Return in A, ff if no entity to be spawned
+	PUSH BC
+
+	LD A, $mem_entity_spawning_pattern
+	LD B, A
+
+	CALL =RNG_Step
+	AND $03
+	LD C, A
+	SLA A
+	CALL =RRx
+	LD A, B
+	AND $03
+
+	PUSH DE
+	LD DE, =Enemy_spawn_pattern_to_probability
+	ADD E
+	LD E, A
+	LD A, D
+	ADC $00
+	LD D, A
+	LD A, (DE)
+	POP DE
+
+	LD B, A
+	CALL =RNG_Step
+	AND B
+	CP $00
+	LD A, $ff
+	JR NZ, =.skip_set_enemy_idx
+
+	LD A, C
+
+	.skip_set_enemy_idx:
+
+	POP BC
+	RET
+
+.MACRODEF GET_ENTITY_IDX_SPAWN_RATE idx ; breaks BC & A
+	LD A, low($idx)
+	CALL =Entity_idx_to_entity_list_ptr
+	LD A, C
+	ADD $07
+	LD C, A
+	LD A, B
+	ADC $00
+	LD B, A
+	LD A, (BC)
+	AND $03
+.END
+
+Update_Enemies_Spawning_Pattern:
+	PUSH AF
+	PUSH BC
+	PUSH DE
+
+	LD E, $00
+	.GET_ENTITY_IDX_SPAWN_RATE $06
+	OR E
+	LD E, A
+
+	SLA E
+	SLA E
+	.GET_ENTITY_IDX_SPAWN_RATE $05
+	OR E
+	LD E, A
+
+	SLA E
+	SLA E
+	.GET_ENTITY_IDX_SPAWN_RATE $04
+	OR E
+	LD E, A
+
+	SLA E
+	SLA E
+	.GET_ENTITY_IDX_SPAWN_RATE $03
+	OR E
+
+	LD $mem_entity_spawning_pattern, A
+	DBG
+
+	POP DE
+	POP BC
+	POP AF
 	RET

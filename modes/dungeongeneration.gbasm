@@ -72,6 +72,7 @@ New_Dungeon:
 	LD (HL+), A
 	LD A, $03
 	LD (HL+), A
+	CALL =Update_Enemies_Spawning_Pattern
 	LD A, $06
 	LD $mem_loaded_special_entity_index, A
 	LD HL, $mem_bunny_attacks

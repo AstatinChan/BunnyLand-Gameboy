@@ -80,3 +80,29 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 	POP DE
 	POP HL
 	RET
+
+Entity_idx_to_entity_list_ptr: ; loaded idx in A, return in BC
+	PUSH DE
+
+	LD D, high($mem_loaded_entities_indices)
+	LD E, low($mem_loaded_entities_indices)
+	ADD E
+	LD E, A
+	LD A, (DE)
+	LD C, A
+	LD B, $00
+	SLA C
+	RL B
+	SLA C
+	RL B
+	SLA C
+	RL B
+	LD A, C
+	ADD low(=Entity_list)
+	LD C, A
+	LD A, B
+	ADC high(=Entity_list)
+	LD B, A
+
+	POP DE
+	RET
