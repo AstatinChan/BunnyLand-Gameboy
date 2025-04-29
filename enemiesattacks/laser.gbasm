@@ -1,4 +1,20 @@
 Laser_sight_check: ; BC = XY of the enemy. D is unchanged. Direction to face in E (or 0 if not)
+	LD A, E
+	DEC A
+	DEC D
+	XOR D
+	INC D
+	CP $00
+	JR Z, =.attack
+	BIT 1, A
+	JR NZ, =.attack
+
+	LD A, E
+	OR $00
+	LD D, A
+	RET
+
+	.attack:
 	LD E, $00
 
 	; straight line + distance <= 4

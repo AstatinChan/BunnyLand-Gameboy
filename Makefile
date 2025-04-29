@@ -8,7 +8,11 @@ tileset.gbasm: ./scripts/generate-tiledata.py $(wildcard ./sprites/**/* ./sprite
 %.gbasm: ./%.gbtxt ./scripts/generate_from_gbtxt.py
 	python ./scripts/generate_from_gbtxt.py $< > $@
 
-build/main.rom: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm
+build/main.rom: build/main.rom.unsigned
+	cp build/main.rom.unsigned build/main.rom
+	python scripts/set_checksums.py build/main.rom
+
+build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm
 	mkdir -p build
 	gbasm $< $@ > build/main.sym
 
@@ -23,4 +27,4 @@ gearboy: build/main.rom
 	gearboy build/main.rom build/main.sym
 
 clean:
-	rm -rf build
+	rm -rf buil1

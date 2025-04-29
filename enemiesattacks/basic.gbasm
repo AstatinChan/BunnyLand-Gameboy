@@ -1,5 +1,21 @@
 Basic_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD A, E
+	DEC A
+	DEC D
+	XOR D
+	INC D
+	CP $00
+	JR Z, =.attack
+	BIT 1, A
+	JR NZ, =.attack
+
+	LD A, E
+	OR $00
+	LD D, A
+	RET
+
+	.attack:
+	LD A, E
 	OR $10
 	LD D, A
 
