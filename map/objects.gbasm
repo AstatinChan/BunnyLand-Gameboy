@@ -195,6 +195,10 @@ Stairs_Action:
 
 	LD $mem_floor_count, A
 
+	LD A, $mem_floor_count_bin
+	INC A
+	LD $mem_floor_count_bin, A
+
 	.skip_update_floor_count:
 	RET
 

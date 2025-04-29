@@ -1,6 +1,6 @@
 all: run
 
-.PHONY: build/main.rom clean
+.PHONY: build/main.rom.unsigned build/main.rom clean
 
 tileset.gbasm: ./scripts/generate-tiledata.py $(wildcard ./sprites/**/* ./sprites/*)
 	python ./scripts/generate-tiledata.py > tileset.gbasm
@@ -27,4 +27,4 @@ gearboy: build/main.rom
 	gearboy build/main.rom build/main.sym
 
 clean:
-	rm -rf buil1
+	rm -rf build

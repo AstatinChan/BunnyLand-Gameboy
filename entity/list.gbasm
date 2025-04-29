@@ -130,7 +130,7 @@ Entity_list:
 		.DB $02
 
 		; Starting health
-		.DB $00
+		.DB $01
 
 		; Starting status
 		.DB $00

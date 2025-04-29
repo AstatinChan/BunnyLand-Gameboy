@@ -32,29 +32,15 @@ New_Dungeon:
 	LD A, $00
 	LD $mem_display_flag, A
 
-	LD HL, =Dungeon_Name_1_Txt	
-	CALL =strlen
-	LD B, A
+	LD HL, =Dungeon
+	CALL =Load_Dungeon
 
-	LD A, $14
-	SUB B
-	SRA A
-
-	LD HL, $9e80
-	ADD L
-	LD L, A
-	LD A, H
-	ADC $00
-	LD H, A
-	LD BC, =Dungeon_Name_1_Txt
-	CALL =Print_str
+	LD A, $f4
+	LD ($9ecb), A
 
 	LD HL, $9ec9
 	LD A, $mem_floor_count
 	CALL =Print_8bit
-
-	LD A, $f4
-	LD ($9ecb), A
 
 	LD A, $07
 	LD $reg_bg_palette, A

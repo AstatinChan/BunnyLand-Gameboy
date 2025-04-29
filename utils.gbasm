@@ -220,6 +220,7 @@ Print_str: ; Memory Tilemap position in HL, Text address in BC, FF ended
 strlen: ; Text address in HL, FF ended. Result in A
 	PUSH HL
 	PUSH BC
+	LD B, $00
 	.loop:
 		LD A, (HL+)
 		CP $FF

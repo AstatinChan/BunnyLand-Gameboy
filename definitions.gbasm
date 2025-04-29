@@ -139,13 +139,14 @@
 .DEFINE mem_stat_jump_instruction $c044 ; takes from c044 to c046
 .DEFINE mem_stat_jump_destination $c045 ; takes from c045 to c046
 
-.DEFINE mem_entity_spawning_pattern ($c046)
-
 .DEFINE mem_number_of_attacks ($c047)
 .DEFINE mem_cursor_max_position ($c048)
 
 .DEFINE mem_learn_attack_dialogue_ret_ptr $c049 ; Takes $c049 and $c04a
 .DEFINE mem_learn_attack_attack_name_ptr $c04b ; Takes $c04b and $c04c
+
+.DEFINE mem_entity_spawning_pattern ($c04d)
+.DEFINE mem_floor_count_bin ($c04e)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
