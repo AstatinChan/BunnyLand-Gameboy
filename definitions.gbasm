@@ -51,6 +51,7 @@
 ; bit 2: if the prepared block should be updated at the next frame
 ; bit 3: animation step is going up (?)
 ; bit 4: animation step should start to go up on next frame
+; bit 5: if entity collision map should be updated
 
 .DEFINE mem_prepared_block_tile ($c00d)
 .DEFINE mem_prepared_block_position_1 ($c00e)

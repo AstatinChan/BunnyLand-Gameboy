@@ -32,6 +32,13 @@ Fox_Turn:
 		LD A, $mem_enemies_alive_count
 		DEC A
 		LD $mem_enemies_alive_count, A
+
+		PUSH DE
+		LD D, $6C
+		LD E, $06
+		CALL =Spawn_object
+		POP DE
+
 		JP NZ, =.Skip_turn
 	.Health_check.end:
 

@@ -32,7 +32,14 @@ Penguin_Turn:
 		LD A, $mem_enemies_alive_count
 		DEC A
 		LD $mem_enemies_alive_count, A
-		JP NZ, =.Skip_turn
+
+		PUSH DE
+		LD D, $6C
+		LD E, $05
+		CALL =Spawn_object
+		POP DE
+
+		JP =.Skip_turn
 	.Health_check.end:
 
 	.Freeze_shiver:

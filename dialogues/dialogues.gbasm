@@ -137,7 +137,6 @@ Dialogue_script_instruction_Jump_Table:
 		POP DE
 		PUSH HL
 		LD HL, $dialogue_first_line
-		DBG
 		CALL =Print_str
 		POP HL
 
@@ -192,7 +191,6 @@ Dialogue_script_instruction_Jump_Table:
 		LD A, L
 		LD ($mem_learn_attack_dialogue_ret_ptr+1), A
 
-		LD A, E
 		LD HL, $mem_bunny_attacks
 		.Learn_Attack.Check_doubles.loop:
 			LD A, (HL)
@@ -212,7 +210,7 @@ Dialogue_script_instruction_Jump_Table:
 			LD HL, $mem_bunny_attacks
 			ADD L
 			LD L, A
-			LD (HL), $02
+			LD (HL), E
 			LD A, $mem_number_of_attacks
 			INC A
 			LD $mem_number_of_attacks, A
@@ -251,7 +249,6 @@ Dialogue_script_instruction_Jump_Table:
 		LD H, A
 		LD A, ($mem_learn_attack_dialogue_ret_ptr+1)
 		LD L, A
-		DBG
 		JP =Dialogue_script_step.next
 
 .INCLUDE "dialogues/text.gbasm"

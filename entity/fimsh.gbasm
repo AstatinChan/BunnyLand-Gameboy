@@ -1,4 +1,4 @@
-Cat_Turn:
+Fimsh_Turn:
 	LD A, $mem_map_loading_flags
 	BIT 3, A
 	RET Z
@@ -35,7 +35,7 @@ Cat_Turn:
 
 		PUSH DE
 		LD D, $6C
-		LD E, $04
+		LD E, $05
 		CALL =Spawn_object
 		POP DE
 
@@ -93,12 +93,38 @@ Cat_Turn:
 		LD L, A
 		RES 3, (HL)
 
-		.Try_Basic_Attack:
+		LD A, $mem_bunny_status
+		CP $01
+		JR Z, =.Run_away
+		CP $04
+		JR Z, =.Run_away
+
+		.Try_Freeze_Attack:
+		LD A, L
+		AND $f0
+		ADD $09
+		LD L, A
+		XOR A
+		CP (HL)
+		JR Z, =.Try_Walking
+
 		CALL =Check_player_next_to
 		LD A, E
 		CP $00
 		JR Z, =.Try_Walking
-		CALL =Basic_Enemy_Attack
+		CALL =Freeze_Enemy_Attack
+
+		LD A, L
+		AND $f0
+		ADD $09
+		LD L, A
+
+		DEC (HL)
+
+		JR =.Start_action_or_movement.end
+
+		.Run_away:
+		CALL =Walking_Away
 
 		JR =.Start_action_or_movement.end
 
@@ -110,7 +136,6 @@ Cat_Turn:
 		LD A, $mem_moving_animation_step
 		CP $0f
 		JP NZ, =.End_movement.end
-
 		LD A, D
 		AND $07
 		BIT 3, D

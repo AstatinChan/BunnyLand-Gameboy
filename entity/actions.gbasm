@@ -1,7 +1,13 @@
 Entities_Actions:
 	LD A, $mem_moving_animation_step
 	CP $09
-	JR NZ, =.Action_Functions
+	JR Z, =.Reset_Entities_Collision_Map
+	LD A, $mem_map_loading_flags
+	BIT 5, A
+
+	JR Z, =.Action_Functions
+
+	.Reset_Entities_Collision_Map:
 	CALL =Reset_Entities_Collision_Map
 
 	.Action_Functions:
@@ -79,6 +85,10 @@ Turn_Jump_table:
 
 	; 05
 	JP =QuestGoal_Turn
+	NOP
+
+	; 06
+	JP =Fimsh_Turn
 	NOP
 
 Interaction_Jump_table:

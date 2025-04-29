@@ -415,7 +415,6 @@ Update_Enemies_Spawning_Pattern:
 	OR E
 
 	LD $mem_entity_spawning_pattern, A
-	DBG
 
 	POP DE
 	POP BC

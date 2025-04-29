@@ -91,7 +91,7 @@ Entity_list:
 		.DB $05
 
 		; Spawning rate (2 lsb)
-		.DB 0b01
+		.DB 0b11
 
 		.PADTO =.Penguin+8
 
@@ -124,7 +124,7 @@ Entity_list:
 		.DB =OBJ_Tile_Image_Data.Fimsh
 
 		; Turn Jump Table index
-		.DB $00
+		.DB $06
 
 		; Interaction Jump Table index
 		.DB $02
@@ -139,7 +139,7 @@ Entity_list:
 		.DB $00
 
 		; Spawning rate (2 lsb)
-		.DB 0b00
+		.DB 0b11
 
 		.PADTO =.Fimsh+8
 
@@ -151,7 +151,7 @@ Entity_list:
 		.DB $05
 
 		; Interaction Jump Table index
-		.DB $02
+		.DB $01
 
 		; Starting health
 		.DB $00
