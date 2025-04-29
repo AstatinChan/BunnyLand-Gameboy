@@ -33,7 +33,7 @@ New_Dungeon:
 	LD $mem_display_flag, A
 
 	LD HL, =Dungeon
-	CALL =Load_Dungeon
+	CALL =Load_Dungeon_Txt
 
 	LD A, $f4
 	LD ($9ecb), A
@@ -50,15 +50,9 @@ New_Dungeon:
 
 	CALL =Reset_Map
 
-	LD HL, $mem_loaded_enemies_indices
-	LD A, $02
-	LD (HL+), A
-	LD (HL+), A
-	LD A, $00
-	LD (HL+), A
-	LD A, $03
-	LD (HL+), A
-	CALL =Update_Enemies_Spawning_Pattern
+
+	LD HL, =Dungeon
+	CALL =Load_Dungeon_Spawn_patterns
 	LD A, $06
 	LD $mem_loaded_special_entity_index, A
 

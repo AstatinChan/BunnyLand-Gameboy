@@ -386,37 +386,3 @@ Enemy_idx_to_spawn: ; Return in A, ff if no entity to be spawned
 	LD A, (BC)
 	AND $03
 .END
-
-Update_Enemies_Spawning_Pattern:
-	PUSH AF
-	PUSH BC
-	PUSH DE
-
-	LD E, $00
-	.GET_ENTITY_IDX_SPAWN_RATE $06
-	OR E
-	LD E, A
-
-	SLA E
-	SLA E
-	.GET_ENTITY_IDX_SPAWN_RATE $05
-	OR E
-	LD E, A
-
-	SLA E
-	SLA E
-	.GET_ENTITY_IDX_SPAWN_RATE $04
-	OR E
-	LD E, A
-
-	SLA E
-	SLA E
-	.GET_ENTITY_IDX_SPAWN_RATE $03
-	OR E
-
-	LD $mem_entity_spawning_pattern, A
-
-	POP DE
-	POP BC
-	POP AF
-	RET

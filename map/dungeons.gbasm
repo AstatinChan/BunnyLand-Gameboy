@@ -1,10 +1,9 @@
-Load_Dungeon: ; pointer to Dungeon struct in HL
+Load_Dungeon_Txt: ; pointer to Dungeon struct in HL
 	LD A, (HL+)
 	LD B, A
 	LD A, (HL+)
 	LD C, A
 
-	PUSH HL
 	PUSH BC
 	LD H, B
 	LD L, C
@@ -25,23 +24,47 @@ Load_Dungeon: ; pointer to Dungeon struct in HL
 	POP BC
 	CALL =Print_str
 
-	POP HL
+	RET
 
+Load_Dungeon_Spawn_patterns: ; pointer to Dungeon struct in HL
+	INC HL
+	INC HL
 	INC HL
 
 	; TODO FIX THE THING WHEN THERE'S MORE THAN 256/7 FLOORS
-	LD A, $mem_floor_count
+	LD A, $mem_floor_count_bin
 	LD C, A
 	LD B, $07
 	CALL =MUL
 	LD C, A
 	LD B, (HL)
 	CALL =MUL
-	DBG
 	CALL =RNG_Step
 	AND $01
 	ADD E
-	DBG
+
+	INC HL
+	ADD L
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+
+	LD BC, $mem_loaded_enemies_indices
+	LD A, (HL+)
+	LD (BC), A
+	INC BC
+	LD A, (HL+)
+	LD (BC), A
+	INC BC
+	LD A, (HL+)
+	LD (BC), A
+	INC BC
+	LD A, (HL+)
+	LD (BC), A
+
+	LD A, (HL)
+	LD $mem_entity_spawning_pattern, A
 
 	RET
 
@@ -49,11 +72,11 @@ Dungeon:
 	.name: .DB =Dungeon_Name_1_Txt
 	.max_floor: .DB 0x0a, inv(0x0a)
 	.spawning_patterns:
-		.DB $02, $02, $02, $05, 0b10000000
-		.DB $02, $02, $03, $05, 0b11000100
-		.DB $02, $02, $00, $05, 0b11110100
-		.DB $00, $02, $03, $05, 0b10111000
-		.DB $02, $02, $00, $05, 0b11111100
-		.DB $02, $00, $03, $05, 0b11111000
-		.DB $00, $00, $03, $05, 0b11111000
-		.DB $00, $00, $03, $05, 0b11111100
+		.DB $02, $02, $02, $05, 0b00000010
+		.DB $02, $02, $03, $05, 0b00100011
+		.DB $02, $02, $00, $05, 0b00100111
+		.DB $00, $02, $03, $05, 0b00011101
+		.DB $02, $02, $00, $05, 0b00111111
+		.DB $02, $00, $03, $05, 0b00011111
+		.DB $00, $00, $03, $05, 0b00011111
+		.DB $00, $00, $03, $05, 0b00111111
