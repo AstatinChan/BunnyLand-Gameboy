@@ -42,12 +42,28 @@ Load_Dungeon_Spawn_patterns: ; pointer to Dungeon struct in HL
 	CALL =RNG_Step
 	AND $01
 	ADD E
+	LD E, A
+	LD D, $00
+	LD B, D
+	LD C, E
+	SLA E
+	RL D
+	SLA E
+	RL D
+	LD A, E
+	ADD C
+	LD E, A
+	LD A, D
+	ADC B
+	LD D, A
+
 
 	INC HL
-	ADD L
+	LD A, L
+	ADD E
 	LD L, A
 	LD A, H
-	ADC $00
+	ADC D
 	LD H, A
 
 	LD BC, $mem_loaded_enemies_indices
