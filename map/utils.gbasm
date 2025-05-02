@@ -1,0 +1,29 @@
+Pick_Random_Room_Avoid_A: ; input A = room to avoid (or FF if none), output A = chosen room idx
+	PUSH BC
+	CP $FF
+	JR Z, =.All_rooms_allowed
+	LD B, A
+	.Skip_bunny_room:
+		LD A, $mem_number_of_rooms
+		CP $01
+		JR Z, =.All_rooms_allowed
+
+		DEC A
+		CALL =RNG_Bound
+		INC A
+		LD C, A
+		LD A, B
+		CP C
+		LD A, C
+		JR C, =.Room_restriction.end
+		DEC A
+
+		JR =.Room_restriction.end
+
+	.All_rooms_allowed:
+		LD A, $mem_number_of_rooms
+		CALL =RNG_Bound
+	.Room_restriction.end:
+	POP BC
+	RET
+

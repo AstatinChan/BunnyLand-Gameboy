@@ -158,6 +158,7 @@ Hop_Attack_Loading_Regular:
 	RET
 
 Hop_Attack:
+	CALL =Stairs_Action
 	LD A, $mem_bunny_direction
 	AND $07
 	LD D, A

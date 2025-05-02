@@ -22,6 +22,7 @@ Initialize_Entities:
 
 	LD A, $mem_number_of_rooms
 	CALL =RNG_Bound
+	LD $tmp_var_1, A
 	SLA A
 	SLA A
 	ADD low($mem_room_list)
@@ -102,6 +103,9 @@ Initialize_Entities:
 	CALL =Initialize_Enemy
 	CALL =Initialize_Enemy
 	CALL =Initialize_Enemy
+	LD A, $tmp_var_1
+	LD $mem_bunny_current_room_idx, A
+
 	CALL =Reset_Entities_Collision_Map
 
 Fix_Bunny_screen:
@@ -144,33 +148,8 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 	LD (HL+), A
 
 	LD A, $mem_bunny_current_room_idx
-	LD $tmp_var_6, A
-	CP $FF
-	JR Z, =Initialize_Enemy.All_rooms_allowed
-	LD B, A
-	Initialize_Enemy.Skip_bunny_room:
-		LD A, $mem_number_of_rooms
-		CP $01
-		JR Z, =Initialize_Enemy.All_rooms_allowed
+	CALL =Pick_Random_Room_Avoid_A
 
-		DEC A
-		CALL =RNG_Bound
-		LD $tmp_var_5, A
-		INC A
-		LD C, A
-		LD A, B
-		CP C
-		LD A, C
-		JR C, =Initialize_Enemy.Room_restriction.end
-		DEC A
-
-		JR =Initialize_Enemy.Room_restriction.end
-
-	Initialize_Enemy.All_rooms_allowed:
-		LD A, $mem_number_of_rooms
-		CALL =RNG_Bound
-	Initialize_Enemy.Room_restriction.end:
-	LD $tmp_var_4, A
 	SLA A
 	SLA A
 	ADD low($mem_room_list)
