@@ -1,7 +1,11 @@
 Demo_quest_bunny:
 .TEXTB =Bunny_Header_Text =Dialogue_1_1b
-.TEXT =Dialogue_1_2t =Dialogue_1_2b
-.TEXT =Dialogue_1_3t =Empty
+.TEXT =Dialogue_1_2t =Empty
+.TEXT =Dialogue_1_3t =Dialogue_1_3b
+.TEXT =Dialogue_1_4t =Empty
+.TEXT =Dialogue_1_5t =Dialogue_1_5b
+.TEXT =Dialogue_1_6t =Dialogue_1_6b
+.TEXT =Dialogue_1_7t =Empty
 .END
 
 Demo_quest_init:
