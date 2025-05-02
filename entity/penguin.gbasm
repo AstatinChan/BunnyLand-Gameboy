@@ -36,7 +36,10 @@ Penguin_Turn:
 		PUSH DE
 		LD D, $6C
 		LD E, $05
-		CALL =Spawn_object
+		CALL =RNG_Step
+		AND $03
+		CP $00
+		CALL Z, =Spawn_object
 		POP DE
 
 		JP =.Skip_turn

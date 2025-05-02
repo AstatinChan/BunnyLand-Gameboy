@@ -108,10 +108,6 @@ Entity_idx_to_entity_list_ptr: ; loaded idx in A, return in BC
 	RET
 
 Spawn_object: ; Texture in D, XY in BC, jump table thingy in E
-	CALL =RNG_Step
-	AND $03
-	CP $00
-	JR NZ, =.skip_spawn_loot
 	PUSH HL
 	CALL =Find_Free_Object_slot
 	LD A, $80

@@ -127,7 +127,7 @@ Entity_list:
 		.DB $06
 
 		; Interaction Jump Table index
-		.DB $02
+		.DB $01
 
 		; Starting health
 		.DB $01

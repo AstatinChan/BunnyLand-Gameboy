@@ -182,6 +182,10 @@ Object_Interaction_Jump_table:
 	JP =Earcopter_Attack_Box_Action
 	NOP
 
+	; 07
+	JP =Fimsh_Attack_Box_Action
+	NOP
+
 Stairs_Action:
 	LD A, $enum_dungeon_generation_mode
 	LD $mem_current_mode, A
@@ -296,6 +300,32 @@ Earcopter_Attack_Box_Action:
 
 	.Script:
 	.LEARN_ATTACK $04
+	.END
+
+Fimsh_Attack_Box_Action:
+	LD (HL), $00
+
+	.START_SCRIPT =.Script
+
+	LD A, $enum_dungeon_dialogue_mode
+	LD $mem_requested_mode, A
+	LD $mem_current_mode, A
+	LD A, $mem_bunny_direction
+	AND $07
+	LD $mem_bunny_direction, A
+	LD A, $mem_map_loading_flags
+	SET 5, A
+	LD $mem_map_loading_flags, A
+
+	CALL =Fix_Bunny_screen
+
+	RET
+
+	.Script:
+	.TEXT =fimsh_eegg_1t =fimsh_eegg_1b
+	.TEXT =fimsh_eegg_2t =Empty
+	.TEXT =fimsh_eegg_3t =fimsh_eegg_3b
+	.TEXT =fimsh_eegg_4t =Empty
 	.END
 
 Restore_EP_Action:
