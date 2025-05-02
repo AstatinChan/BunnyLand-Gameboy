@@ -106,6 +106,20 @@ Fox_Turn:
 		CP $00
 		JR Z, =.Try_Basic_Attack
 
+		LD A, E
+		DEC A
+		DEC D
+		XOR D
+		INC D
+		CP $00
+		JR Z, =.attack
+		BIT 1, A
+		JR NZ, =.attack
+
+		LD D, E
+		JR =.Start_action_or_movement.end
+
+		.attack:
 		LD D, E
 		LD A, L
 		AND $f0
