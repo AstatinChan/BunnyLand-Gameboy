@@ -262,6 +262,7 @@ Heal_Attack_Box_Action:
 	LD $mem_bunny_direction, A
 	LD A, $mem_map_loading_flags
 	SET 5, A
+	RES 3, A
 	LD $mem_map_loading_flags, A
 
 	CALL =Fix_Bunny_screen
@@ -285,6 +286,7 @@ Freeze_Attack_Box_Action:
 	LD $mem_bunny_direction, A
 	LD A, $mem_map_loading_flags
 	SET 5, A
+	RES 3, A
 	LD $mem_map_loading_flags, A
 
 	CALL =Fix_Bunny_screen
@@ -308,6 +310,7 @@ Earcopter_Attack_Box_Action:
 	LD $mem_bunny_direction, A
 	LD A, $mem_map_loading_flags
 	SET 5, A
+	RES 3, A
 	LD $mem_map_loading_flags, A
 
 	CALL =Fix_Bunny_screen
@@ -331,6 +334,7 @@ Fimsh_Attack_Box_Action:
 	LD $mem_bunny_direction, A
 	LD A, $mem_map_loading_flags
 	SET 5, A
+	RES 3, A
 	LD $mem_map_loading_flags, A
 
 	CALL =Fix_Bunny_screen
