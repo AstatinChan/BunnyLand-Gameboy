@@ -191,6 +191,39 @@ Display_Entity:
 		LD B, A
 	.Shaking_Animation.end:
 
+	.Moving_2x:
+		LD A, D
+		AND $f0
+		CP $50
+		JR NZ, =.Moving_2x.end
+
+		LD A, $mem_moving_animation_step
+		CP $00
+		JR Z, =.Moving_2x.end
+		SLA A
+		AND $0f
+		PUSH BC
+		LD B, A
+		LD A, $mem_moving_animation_step
+		CPL
+		INC A
+		ADD B
+		POP BC
+		.ADD_A_TO_DIRECTION_BC
+		LD A, $mem_moving_animation_step
+		SUB $08
+		.ABS
+		SUB $04
+		.ABS
+		CPL
+		INC A
+		ADD $04
+		CPL
+		INC A
+		ADD C
+		LD C, A
+	.Moving_2x.end:
+
 	.Moving_Hops:
 		LD A, D
 		AND $f8

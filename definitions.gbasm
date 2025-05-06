@@ -26,8 +26,9 @@
 ; frame 2: applying bunny attack damages
 ; frame 3: checking entities health and death if 0
 ; frame 4: new entity spawn
-; frame 9: entity collision map is being updated
+; frame 5: entity collision map is being updated
 ; frame 8: attack is executed on the enemies if it was predicted in frame "-1"
+; frame 9: entity collision map is being updated (again)
 ; frame 15: movement is ended and coordinates are updated
 
 .DEFINE mem_bunny_sprite ($cb00)
@@ -250,6 +251,7 @@
 ;			death = 2
 ;			superjump = 3
 ;			shaking = 4
+;			doubleseed = 5
 ;	turn_function_jump_table_index: u8
 ;	action_function_jump_table_index: u8
 ;	health: u8 (DAA decimal !!)

@@ -100,13 +100,13 @@ Entity_list:
 		.DB =OBJ_Tile_Image_Data.Mouse
 
 		; Turn Jump Table index
-		.DB $00
+		.DB $07
 
 		; Interaction Jump Table index
-		.DB $02
+		.DB $01
 
 		; Starting health
-		.DB $00
+		.DB $01
 
 		; Starting status
 		.DB $00

@@ -88,6 +88,8 @@ Dungeon:
 	.name: .DB =Dungeon_Name_1_Txt
 	.max_floor: .DB 0x0a, inv(0x0a)
 	.spawning_patterns:
+		.DB $04, $04, $04, $04, 0b11111111
+		; UNDER THIS IS THE REAL ONE
 		.DB $02, $02, $02, $05, 0b00000010
 		.DB $02, $02, $03, $05, 0b00100011
 		.DB $02, $02, $00, $05, 0b00100111

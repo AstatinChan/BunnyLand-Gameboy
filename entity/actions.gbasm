@@ -2,6 +2,8 @@ Entities_Actions:
 	LD A, $mem_moving_animation_step
 	CP $09
 	JR Z, =.Reset_Entities_Collision_Map
+	CP $05
+	JR Z, =.Reset_Entities_Collision_Map
 	LD A, $mem_map_loading_flags
 	BIT 5, A
 
@@ -89,6 +91,10 @@ Turn_Jump_table:
 
 	; 06
 	JP =Fimsh_Turn
+	NOP
+
+	; 07
+	JP =Mouse_Turn
 	NOP
 
 Interaction_Jump_table:
