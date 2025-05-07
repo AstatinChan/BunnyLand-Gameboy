@@ -129,6 +129,22 @@ Fix_Bunny_screen:
 	OR $08
 	LD $mem_prepared_viewport_y, A
 
+	LD A, $mem_bunny_direction
+	BIT 3, A
+	RET Z
+
+	LD A, $mem_bunny_direction
+	DEC A
+	XOR $01
+	INC A
+	LD D, A
+	LD A, $mem_viewport_x
+	LD B, A
+	LD A, $mem_viewport_y
+	LD C, A
+	LD A, $mem_moving_animation_step
+	.ADD_A_TO_DIRECTION_BC
+
 	RET
 
 Initialize_Enemy: ; HL => pointer to entity struct

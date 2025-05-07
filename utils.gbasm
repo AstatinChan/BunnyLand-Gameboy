@@ -93,7 +93,7 @@ bff: ; dest = HL, n = BC
 	.CALL_DE
 .END
 
-.MACRODEF ADD_MOVING_ANIMATION_OFFSET ; Add current moving animation offset to BC, also uses A
+.MACRODEF ADD_MOVING_ANIMATION_OFFSET ; Add current moving animation offset to BC, also overwrites A
 	LD A, $mem_map_loading_flags
 	BIT 3, A
 	JR Z, =$end

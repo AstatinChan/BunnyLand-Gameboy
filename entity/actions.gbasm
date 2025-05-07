@@ -97,6 +97,10 @@ Turn_Jump_table:
 	JP =Mouse_Turn
 	NOP
 
+	; 08
+	JP =Frog_Turn
+	NOP
+
 Interaction_Jump_table:
 	; 00
 	RET

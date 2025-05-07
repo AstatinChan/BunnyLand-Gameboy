@@ -167,27 +167,28 @@ Move_Bunny:
 		LD $mem_entity_being_attacked_low, A
 	.Delayed_Attack.end:
 
-	.Scroll_viewport:
-		LD A, $mem_map_loading_flags
-		BIT 3, A
-		JR Z, =.Scroll_viewport.end
-		LD A, $mem_bunny_direction
-		BIT 3, A
-		JR Z, =.Scroll_viewport.end
+	.2x_speed_middle_update:
+		LD A, $mem_bunny_flags
+		BIT 0, A
+		JR Z, =.2x_speed_middle_update.end
+		LD A, $mem_moving_animation_step
+		CP $07
+		JR NZ, =.2x_speed_middle_update.end
 
+		LD A, $mem_bunny_x
+		LD B, A
+		LD A, $mem_bunny_y
+		LD C, A
 		LD A, $mem_bunny_direction
 		LD D, A
-		LD A, $mem_prepared_viewport_x
-		LD B, A
-		LD A, $mem_prepared_viewport_y
-		LD C, A
-		LD A, E
+		LD A, $02
 		.ADD_A_TO_DIRECTION_BC
 		LD A, B
-		LD $mem_prepared_viewport_x, A
+		LD $mem_bunny_x, A
 		LD A, C
-		LD $mem_prepared_viewport_y, A
-	.Scroll_viewport.end:
+		LD $mem_bunny_y, A
+		DBG
+	.2x_speed_middle_update.end:
 
 	.End_movement:
 		LD A, $mem_map_loading_flags
@@ -207,23 +208,12 @@ Move_Bunny:
 		LD B, A
 		LD A, $mem_bunny_y
 		LD C, A
-		LD A, E
+		LD A, $01
 		.ADD_A_TO_DIRECTION_BC
 		LD A, B
 		LD $mem_bunny_x, A
 		LD A, C
 		LD $mem_bunny_y, A
-
-		LD A, $mem_viewport_x
-		LD B, A
-		LD A, $mem_viewport_y
-		LD C, A
-		LD A, $01
-		.ADD_A_TO_DIRECTION_BC
-		LD A, B
-		LD $mem_viewport_x, A
-		LD A, C
-		LD $mem_viewport_y, A
 
 		LD A, $mem_bunny_flags
 		RES 0, A
@@ -303,33 +293,7 @@ Move_Bunny:
 		.End_movement.skip_mana_regen:
 
 	.End_movement.end:
-
-	.Middle_movement_doublespeed_viewport_update:
-		LD A, $mem_map_loading_flags
-		BIT 3, A
-		JP Z, =.Middle_movement_doublespeed_viewport_update.end
-		LD A, $mem_moving_animation_step
-		CP $07
-		JP NZ, =.Middle_movement_doublespeed_viewport_update.end
-		LD A, $mem_bunny_direction
-		BIT 3, A
-		JR Z, =.Middle_movement_doublespeed_viewport_update.end
-		LD A, E
-		CP $02
-		JR NZ, =.Middle_movement_doublespeed_viewport_update.end
-
-		LD A, $mem_viewport_x
-		LD B, A
-		LD A, $mem_viewport_y
-		LD C, A
-		LD A, $01
-		.ADD_A_TO_DIRECTION_BC
-		LD A, B
-		LD $mem_viewport_x, A
-		LD A, C
-		LD $mem_viewport_y, A
-	.Middle_movement_doublespeed_viewport_update.end:
-
+	
 	.Interaction:
 		LD A, $mem_map_loading_flags
 		BIT 3, A
@@ -412,5 +376,60 @@ Move_Bunny:
 		JR NZ, =.Check_End_Action.end
 
 	.Check_End_Action.end:
+
+	RET
+
+Center_viewport_around_entity: ; Entity pointer in HL
+	INC HL
+	LD A, (HL)
+	SUB $05
+	LD $mem_viewport_x, A
+
+	LD A, (HL+)
+	LD B, A
+
+	LD A, (HL)
+	SUB $04
+	LD $mem_viewport_y, A
+
+	LD A, (HL+)
+	LD C, A
+	LD D, (HL)
+	LD E, $00
+	BIT 3, D
+	JR Z, =.moving_animation_end
+	LD A, $mem_moving_animation_step
+	LD E, A
+	LD A, L
+	AND $f0
+	OR $07
+	LD L, A
+	BIT 0, (HL)
+	JR Z, =.moving_animation_end
+	SLA E
+	LD A, E
+	AND $0f
+	LD E, A
+	.moving_animation_end:
+	
+	LD A, B
+	SWAP A
+	AND $f0
+	SUB $48
+	LD B, A
+	
+	LD A, C
+	SWAP A
+	AND $f0
+	SUB $38
+	LD C, A
+
+	LD A, E
+	.ADD_A_TO_DIRECTION_BC
+	
+	LD A, B
+	LD $mem_prepared_viewport_x, A
+	LD A, C
+	LD $mem_prepared_viewport_y, A
 
 	RET

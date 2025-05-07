@@ -1,4 +1,4 @@
-Penguin_Turn:
+Frog_Turn:
 	LD A, $mem_map_loading_flags
 	BIT 3, A
 	RET Z
@@ -35,23 +35,14 @@ Penguin_Turn:
 
 		; Drop when deadged
 		PUSH DE
-		LD E, $03
+		LD E, $02
 		CALL =Check_attack_already_learnt
 		CP $01
-		JR Z, =.drops.ep_regen_item
+		JR Z, =.drops.hp_regen_item
 
-		.drops.attack_item:
-		LD D, $6C
-		LD E, $05
-		CALL =RNG_Step
-		AND $03
-		CP $00
-		CALL Z, =Spawn_object
-		JR =.drops.end
-
-		.drops.ep_regen_item:
-		LD D, $68
-		LD E, $03
+		.drops.hp_regen_item:
+		LD D, $64
+		LD E, $02
 		CALL =RNG_Step
 		AND $03
 		CP $00
@@ -114,49 +105,45 @@ Penguin_Turn:
 		LD L, A
 		RES 3, (HL)
 
-		LD A, $mem_bunny_status
-		CP $01
-		JR Z, =.Run_away
-		CP $04
-		JR Z, =.Run_away
-
-		.Try_Freeze_Attack:
 		LD A, L
 		AND $f0
 		ADD $09
 		LD L, A
 		XOR A
 		CP (HL)
-		JR Z, =.Try_Walking
+		JR Z, =.Try_Basic_Attack
+
+		CALL =Grab_sight_check
+		LD A, E
+		CP $00
+		JR Z, =.Try_Basic_Attack
+
+		CALL =Grab_Enemy_Attack
+
+		JR =.Start_action_or_movement.end
+
+		.Try_Basic_Attack:
 
 		CALL =Check_player_next_to
 		LD A, E
 		CP $00
 		JR Z, =.Try_Walking
-		CALL =Freeze_Enemy_Attack
 
-		LD A, L
-		AND $f0
-		ADD $09
-		LD L, A
-
-		DEC (HL)
-
-		JR =.Start_action_or_movement.end
-
-		.Run_away:
-		CALL =Walking_Away
+		CALL =Basic_Enemy_Attack
 
 		JR =.Start_action_or_movement.end
 
 		.Try_Walking:
+
 		CALL =Walking
+
 	.Start_action_or_movement.end:
 
 	.End_movement:
 		LD A, $mem_moving_animation_step
 		CP $0f
 		JP NZ, =.End_movement.end
+
 		LD A, D
 		AND $07
 		BIT 3, D

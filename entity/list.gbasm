@@ -28,7 +28,7 @@ Entity_list:
 		.DB =OBJ_Tile_Image_Data.Frog
 
 		; Turn Jump Table index
-		.DB $03
+		.DB $08
 
 		; Interaction Jump Table index
 		.DB $01
@@ -40,7 +40,7 @@ Entity_list:
 		.DB $00
 
 		; Starting mana
-		.DB $00
+		.DB $05
 
 		; Spawning rate (2 lsb)
 		.DB 0b01

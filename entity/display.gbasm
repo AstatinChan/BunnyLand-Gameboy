@@ -152,7 +152,16 @@ Display_Entity:
 		CP $30
 		JR NZ, =.SuperJump_Animation.end
 
+		PUSH BC
 		LD A, $mem_moving_animation_step
+		CPL
+		INC A
+		LD B, A
+		LD A, $mem_moving_animation_step
+		SLA A
+		AND $0f
+		ADD B
+		POP BC
 		CP $00
 		JR Z, =.SuperJump_Animation.end
 		.ADD_A_TO_DIRECTION_BC

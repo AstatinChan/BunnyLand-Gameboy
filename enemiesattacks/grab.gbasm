@@ -1,0 +1,90 @@
+Grab_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Direction to face in E (or 0 if not)
+	.vertical:
+	LD A, $mem_bunny_x
+	CP B
+	JR NZ, =.horizontal
+
+	; up
+	LD A, $mem_bunny_y
+	SUB $02
+	CP C
+	LD E, $enum_direction_down
+	RET Z
+
+	; down
+	ADD $04
+	CP C
+	LD E, $enum_direction_up
+	RET Z
+
+	LD E, $00
+	RET
+
+	.horizontal:
+
+	LD A, $mem_bunny_y
+	CP C
+	LD E, $00
+	RET NZ
+
+	; left
+	LD A, $mem_bunny_x
+	SUB $02
+	CP B
+	LD E, $enum_direction_right
+	RET Z
+
+	; right
+	ADD $04
+	CP B
+	LD E, $enum_direction_left
+	RET Z
+
+	LD E, $00
+	RET
+
+Grab_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
+	LD A, E
+	DEC A
+	DEC D
+	XOR D
+	INC D
+	CP $00
+	JR Z, =.attack
+	BIT 1, A
+	JR NZ, =.attack
+
+	LD D, E
+	RET
+
+	.attack:
+	LD A, E
+	OR $10
+	LD D, A
+
+	PUSH BC
+	LD A, $mem_bunny_direction
+	AND $08
+	LD B, A
+	LD A, $mem_bunny_flags
+	AND $01
+	OR B
+	CP $09
+	POP BC
+	RET Z
+
+	PUSH DE
+	PUSH BC
+
+	LD D, E	
+	LD A, E
+	DEC A
+	XOR $01
+	INC A
+	OR $08
+	LD $mem_bunny_direction, A
+	CALL =Fix_Bunny_screen
+
+	POP BC
+	POP DE
+	RET

@@ -191,15 +191,9 @@ Dialogue_script_instruction_Jump_Table:
 		LD A, L
 		LD ($mem_learn_attack_dialogue_ret_ptr+1), A
 
-		LD HL, $mem_bunny_attacks
-		.Learn_Attack.Check_doubles.loop:
-			LD A, (HL)
-			CP E
-			JR Z, =.Learn_Attack.Duplicate
-			INC HL
-			LD A, L
-			CP low($mem_bunny_attacks+4)
-			JR NZ, =.Learn_Attack.Check_doubles.loop
+		CALL =Check_attack_already_learnt
+		CP $01
+		JR Z, =.Learn_Attack.Duplicate
 
 		LD A, $mem_number_of_attacks
 		CP $04

@@ -34,8 +34,8 @@ Mouse_Turn:
 		LD $mem_enemies_alive_count, A
 
 		PUSH DE
-		LD D, $6C
-		LD E, $04
+		LD D, $64
+		LD E, $02
 		CALL =RNG_Step
 		AND $03
 		CP $00

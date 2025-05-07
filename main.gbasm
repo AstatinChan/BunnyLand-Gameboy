@@ -144,6 +144,7 @@ Entrypoint:
 .INCLUDE "entity/mouse.gbasm"
 .INCLUDE "entity/penguin.gbasm"
 .INCLUDE "entity/fimsh.gbasm"
+.INCLUDE "entity/frog.gbasm"
 .INCLUDE "entity/questgoal.gbasm"
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"

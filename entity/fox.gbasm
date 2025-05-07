@@ -33,13 +33,31 @@ Fox_Turn:
 		DEC A
 		LD $mem_enemies_alive_count, A
 
+		; Drop when deadged
 		PUSH DE
+		LD E, $04
+		CALL =Check_attack_already_learnt
+		CP $01
+		JR Z, =.drops.ep_regen_item
+
+		.drops.attack_item:
 		LD D, $6C
 		LD E, $06
 		CALL =RNG_Step
 		AND $03
 		CP $00
 		CALL Z, =Spawn_object
+		JR =.drops.end
+
+		.drops.ep_regen_item:
+		LD D, $68
+		LD E, $03
+		CALL =RNG_Step
+		AND $03
+		CP $00
+		CALL Z, =Spawn_object
+
+		.drops.end:
 		POP DE
 
 		JP NZ, =.Skip_turn

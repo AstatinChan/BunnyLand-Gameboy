@@ -86,7 +86,27 @@ Canceled_Attack:
 Empty_Attack:
 	RET
 
+Check_attack_already_learnt: ; Attack id in E, result in A (1 for already there, 0 for not), overwrites HL
+	PUSH HL
+	LD HL, $mem_bunny_attacks
+	.loop:
+		LD A, (HL)
+		CP E
+		JR Z, =.duplicate
+		INC HL
+		LD A, L
+		CP low($mem_bunny_attacks+4)
+		JR NZ, =.loop
+	LD A, $00
+	POP HL
+	RET
+	.duplicate:
+	LD A, $01
+	POP HL
+	RET
+
 Attack_List:
+	; 00
 	.Empty:
 		; Attack menu name string
 		.DB =Empty
@@ -99,7 +119,7 @@ Attack_List:
 
 		.PADTO =.Empty+8
 
-
+	; 01
 	.Hop:
 		; Attack menu name string
 		.DB =Hop_Attack_Menu_Txt
@@ -112,6 +132,7 @@ Attack_List:
 
 		.PADTO =.Hop+8
 
+	; 02
 	.Heal:
 		; Attack menu name string
 		.DB =Heal_Attack_Menu_Txt
@@ -120,10 +141,11 @@ Attack_List:
 		.DB =Heal_Attack
 
 		; Energy point cost
-		.DB $03
+		.DB $05
 
 		.PADTO =.Heal+8
 
+	; 03
 	.Freeze:
 		; Attack menu name string
 		.DB =Freeze_Attack_Menu_Txt
@@ -132,10 +154,11 @@ Attack_List:
 		.DB =Freeze_Attack
 
 		; Energy point cost
-		.DB $03
+		.DB $05
 
 		.PADTO =.Freeze+8
 
+	; 04
 	.Earcoptr:
 		; Attack menu name string
 		.DB =Earcoptr_Attack_Menu_Txt

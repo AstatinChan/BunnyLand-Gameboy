@@ -48,3 +48,4 @@ Check_player_next_to: ; BC = XY of the enemy. D is unchanged. Direction to face 
 .INCLUDE "enemiesattacks/basic.gbasm"
 .INCLUDE "enemiesattacks/laser.gbasm"
 .INCLUDE "enemiesattacks/freeze.gbasm"
+.INCLUDE "enemiesattacks/grab.gbasm"

@@ -159,6 +159,8 @@ Dungeon_VBLANK_Entrypoint:
 	CALL =Update_Animation_Steps
 	CALL =Check_Open_Menu_button
 
+	LD HL, $mem_entities_list
+	CALL =Center_viewport_around_entity
 	LD A, $00
 	LD $mem_oam_buffer_low, A
 	CALL =Display_Animation_List

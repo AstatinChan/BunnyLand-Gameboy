@@ -224,7 +224,7 @@ Stairs_Action:
 
 Heal_Action:
 	LD A, $mem_bunny_health
-	ADD $05
+	ADD $03
 	DAA
 	CP $20
 	JR C, =.Set_health
@@ -350,7 +350,7 @@ Fimsh_Attack_Box_Action:
 
 Restore_EP_Action:
 	LD A, $mem_bunny_mana
-	ADD $15
+	ADD $05
 	DAA
 	JR NC, =.Set_mana
 	LD A, $99

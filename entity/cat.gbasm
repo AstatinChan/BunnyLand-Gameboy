@@ -33,13 +33,31 @@ Cat_Turn:
 		DEC A
 		LD $mem_enemies_alive_count, A
 
+		; Drop when deadged
 		PUSH DE
+		LD E, $02
+		CALL =Check_attack_already_learnt
+		CP $01
+		JR Z, =.drops.hp_regen_item
+
+		.drops.attack_item:
 		LD D, $6C
 		LD E, $04
 		CALL =RNG_Step
 		AND $03
 		CP $00
 		CALL Z, =Spawn_object
+		JR =.drops.end
+
+		.drops.hp_regen_item:
+		LD D, $64
+		LD E, $02
+		CALL =RNG_Step
+		AND $03
+		CP $00
+		CALL Z, =Spawn_object
+
+		.drops.end:
 		POP DE
 
 		JP =.Skip_turn
