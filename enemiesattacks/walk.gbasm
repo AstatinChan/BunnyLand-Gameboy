@@ -77,7 +77,9 @@ Walking: ; entity XY in BC, Breaks DE
 	INC A
 	OR $08
 	PUSH BC
-	CALL =Get_Position_After_Move
+	LD D, A
+	LD A, $01
+	.ADD_A_TO_DIRECTION_BC
 	CALL =Is_Collisionable
 	POP BC
 	CP $00
@@ -123,8 +125,8 @@ Walking: ; entity XY in BC, Breaks DE
 
 	.Check_Collision:
 	PUSH BC
-	LD A, D
-	CALL =Get_Position_After_Move
+	LD A, $01
+	.ADD_A_TO_DIRECTION_BC
 	CALL =Is_Collisionable
 	CALL =Carve_Entity_Collision_Map
 	POP BC
