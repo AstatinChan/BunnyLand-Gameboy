@@ -1,4 +1,20 @@
+Freeze_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Direction to face in E (or 0 if not)
+	LD E, $00
+
+	LD A, L
+	AND $f0
+	ADD $09
+	LD L, A
+	LD A, $00
+	CP (HL)
+	RET Z
+	JP =Check_player_next_to
+
 Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
+	LD A, D
+	AND $f0
+	SWAP A
+	LD D, A
 	LD A, E
 	DEC A
 	DEC D
@@ -10,12 +26,24 @@ Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	JR NZ, =.attack
 
 	LD D, E
+	LD A, D
+	SWAP A
+	AND $70
+	OR D
+	LD D, A
 	RET
 
 	.attack:
 	LD A, E
-	OR $10
+	SWAP A
+	AND $70
+	OR E
 	LD D, A
+	LD A, L
+	AND $f0
+	OR $0a
+	LD L, A
+	LD (HL), $01
 
 	PUSH BC
 	LD A, $mem_bunny_direction
@@ -33,8 +61,10 @@ Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD A, $02
 	LD $mem_bunny_flags, A
 	LD A, $mem_bunny_direction
-	AND $07
+	RES 3, A
 	LD $mem_bunny_direction, A
+	LD A, $00
+	LD $mem_bunny_animation, A
 	LD A, $mem_bunny_x
 	LD $mem_bunny_predicted_x, A
 	LD A, $mem_bunny_y
@@ -47,5 +77,11 @@ Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD $mem_bunny_status_clear_turn_counter, A
 	LD A, $enum_dungeon_mode
 	LD $mem_requested_mode, A
+
+	LD A, L
+	AND $f0
+	ADD $09
+	LD L, A
+	DEC (HL)
 
 	RET

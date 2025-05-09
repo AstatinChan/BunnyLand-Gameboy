@@ -1,4 +1,4 @@
-Walking: ; entity XY in BC, Breaks DE
+Walking: ; entity XY in BC, Breaks E, Direction result in D
 	; Is Bunny close enough to follow
 	LD A, $mem_bunny_x
 	SUB B
@@ -23,6 +23,10 @@ Walking: ; entity XY in BC, Breaks DE
 	AND $03
 	INC A
 	OR E
+	LD D, A
+	AND $07
+	SWAP A
+	OR D
 	LD D, A
 	JP =.Check_Collision
 
@@ -122,6 +126,12 @@ Walking: ; entity XY in BC, Breaks DE
 	LD B, C
 	LD C, E
 	.skip_invert_axis2:
+
+	LD A, D
+	AND $07
+	SWAP A
+	OR D
+	LD D, A
 
 	.Check_Collision:
 	PUSH BC

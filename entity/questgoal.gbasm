@@ -41,9 +41,8 @@ Open_Dialogue:
 
 	.START_SCRIPT =Demo_quest_bunny
 
-	LD A, $mem_bunny_direction
-	AND $0f
-	LD $mem_bunny_direction, A
+	LD A, $00
+	LD $mem_bunny_animation, A
 
 	LD A, $enum_dungeon_dialogue_mode
 	LD $mem_requested_mode, A

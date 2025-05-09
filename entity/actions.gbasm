@@ -121,9 +121,10 @@ Enemy_Interaction:
 	AND $f0
 	LD $mem_entity_being_attacked_low, A
 	LD A, $mem_bunny_direction
-	AND $07
-	OR $10
+	RES 3, A
 	LD $mem_bunny_direction, A
+	LD A, $01
+	LD $mem_bunny_animation, A
 
 	LD A, $mem_map_loading_flags
 	SET 4, A

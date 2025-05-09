@@ -1,4 +1,14 @@
 Grab_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Direction to face in E (or 0 if not)
+	LD E, $00
+
+	LD A, L
+	AND $f0
+	ADD $09
+	LD L, A
+	LD A, $00
+	CP (HL)
+	JR Z, =.end
+
 	.vertical:
 	LD A, $mem_bunny_x
 	CP B
@@ -9,41 +19,64 @@ Grab_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Dir
 	SUB $02
 	CP C
 	LD E, $enum_direction_down
-	RET Z
+	JR Z, =.end
 
 	; down
 	ADD $04
 	CP C
 	LD E, $enum_direction_up
-	RET Z
+	JR Z, =.end
 
 	LD E, $00
-	RET
+	JR =.end
 
 	.horizontal:
 
 	LD A, $mem_bunny_y
 	CP C
 	LD E, $00
-	RET NZ
+	JR NZ, =.end
 
 	; left
 	LD A, $mem_bunny_x
 	SUB $02
 	CP B
 	LD E, $enum_direction_right
-	RET Z
+	JR Z, =.end
 
 	; right
 	ADD $04
 	CP B
 	LD E, $enum_direction_left
+	JR Z, =.end
+
+	LD E, $00
+
+	LD A, E
+	CP $00
+	RET Z
+
+	.end:
+	PUSH BC
+	PUSH DE
+	LD D, E
+	LD A, $01
+	.ADD_A_TO_DIRECTION_BC
+	CALL =Is_Collisionable
+	POP DE
+	POP BC
+
+	CP $00
 	RET Z
 
 	LD E, $00
 	RET
 
-Grab_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
+Grab_Enemy_Attack: ; Entity in HL (whatever alignment), Direction to face in E. Result in BC (XY), Direction in D
+	LD A, D
+	AND $f0
+	SWAP A
+	LD D, A
 	LD A, E
 	DEC A
 	DEC D
@@ -55,12 +88,24 @@ Grab_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	JR NZ, =.attack
 
 	LD D, E
+	LD A, D
+	SWAP A
+	AND $70
+	OR D
+	LD D, A
 	RET
 
 	.attack:
 	LD A, E
-	OR $10
+	SWAP A
+	AND $70
+	OR E
 	LD D, A
+	LD A, L
+	AND $f0
+	OR $0a
+	LD L, A
+	LD (HL), $01
 
 	PUSH BC
 	LD A, $mem_bunny_direction
@@ -82,8 +127,22 @@ Grab_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	XOR $01
 	INC A
 	OR $08
+	AND $0f
+	LD B, A
+	LD A, $mem_bunny_direction
+	AND $f0
+	OR B
 	LD $mem_bunny_direction, A
+	LD A, $06
+	LD $mem_bunny_animation, A
 
 	POP BC
 	POP DE
+
+	LD A, L
+	AND $f0
+	ADD $09
+	LD L, A
+	DEC (HL)
+
 	RET

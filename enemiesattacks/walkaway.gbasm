@@ -24,6 +24,10 @@ Walking_Away: ; entity XY in BC, Breaks DE
 	INC A
 	OR E
 	LD D, A
+	AND $07
+	SWAP A
+	OR D
+	LD D, A
 	JP =.Check_Collision
 
 	.Follow_bunny:
@@ -108,6 +112,10 @@ Walking_Away: ; entity XY in BC, Breaks DE
 	XOR E
 	INC A
 	OR $08
+	LD D, A
+	AND $07
+	SWAP A
+	OR D
 	LD D, A
 
 	; Check collision

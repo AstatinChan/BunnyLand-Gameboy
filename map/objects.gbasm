@@ -258,8 +258,10 @@ Heal_Attack_Box_Action:
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
 	LD A, $mem_bunny_direction
-	AND $07
+	RES 3, A
 	LD $mem_bunny_direction, A
+	LD A, $00
+	LD $mem_bunny_animation, A
 	LD A, $mem_map_loading_flags
 	SET 5, A
 	RES 3, A
@@ -280,8 +282,10 @@ Freeze_Attack_Box_Action:
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
 	LD A, $mem_bunny_direction
-	AND $07
+	RES 3, A
 	LD $mem_bunny_direction, A
+	LD A, $00
+	LD $mem_bunny_animation, A
 	LD A, $mem_map_loading_flags
 	SET 5, A
 	RES 3, A
@@ -302,8 +306,10 @@ Earcopter_Attack_Box_Action:
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
 	LD A, $mem_bunny_direction
-	AND $07
+	RES 3, A
 	LD $mem_bunny_direction, A
+	LD A, $00
+	LD $mem_bunny_animation, A
 	LD A, $mem_map_loading_flags
 	SET 5, A
 	RES 3, A
@@ -324,8 +330,10 @@ Fimsh_Attack_Box_Action:
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
 	LD A, $mem_bunny_direction
-	AND $07
+	RES 3, A
 	LD $mem_bunny_direction, A
+	LD A, $00
+	LD $mem_bunny_animation, A
 	LD A, $mem_map_loading_flags
 	SET 5, A
 	RES 3, A

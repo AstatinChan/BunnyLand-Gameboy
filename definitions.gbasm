@@ -40,6 +40,7 @@
 .DEFINE mem_bunny_flags ($cb07)
 .DEFINE mem_bunny_status ($cb08)
 .DEFINE mem_bunny_mana ($cb09)
+.DEFINE mem_bunny_animation ($cb0a)
 
 .DEFINE mem_viewport_x ($c008)
 .DEFINE mem_viewport_y ($c009)
@@ -243,15 +244,8 @@
 ;	sprite: u8,
 ;	x: u8,
 ;	y: u8,
-;	direction: u8 (animation = bit 7-4, bit 3 = is_moving, bit 2-0: direction),
-;		 aaaamddd: a = animation, m = is_moving, d = direction
-;		 animations:
-;			nothing = 0
-;			action = 1
-;			death = 2
-;			superjump = 3
-;			shaking = 4
-;			doubleseed = 5
+;	direction: u8 (facing = bit 6-4, bit 3 = is_moving, bit 2-0: direction moving),
+;		 0aaamddd: f = facing direction, m = is_moving, d = moving direction
 ;	turn_function_jump_table_index: u8
 ;	action_function_jump_table_index: u8
 ;	health: u8 (DAA decimal !!)
@@ -267,7 +261,16 @@
 ;	; 02: invincible
 ;	; 04: end of freeze
 ;	mana: u8
-;	_padding: u48
+;	animation: u8
+;		 animations:
+;			nothing = 0
+;			action = 1
+;			death = 2
+;			superjump = 3
+;			shaking = 4
+;			doubleseed = 5
+;			slide (forcing no hops on move) = 6
+;	_padding: u40
 ;
 ;	# SANTA CHRISTMAS LIST PLEASE #
 ;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)

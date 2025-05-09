@@ -1,6 +1,14 @@
 Laser_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Direction to face in E (or 0 if not)
 	LD E, $00
 
+	LD A, L
+	AND $f0
+	ADD $09
+	LD L, A
+	LD A, $00
+	CP (HL)
+	RET Z
+
 	; straight line + distance <= 4
 	LD A, $mem_bunny_predicted_x
 	CP B
@@ -48,7 +56,64 @@ Laser_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Di
 			LD E, $enum_direction_up
 			RET
 
-Laser_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
+Laser_Prepare_Attack:
+	LD A, D
+	AND $f0
+	SWAP A
+	LD D, A
+	LD A, E
+	DEC A
+	DEC D
+	XOR D
+	INC D
+	CP $00
+	JR Z, =.attack
+	BIT 1, A
+	JR NZ, =.attack
+
+	LD D, E
+	LD A, D
+	SWAP A
+	AND $70
+	OR D
+	LD D, A
+	RET
+
+	.attack:
+	LD A, E
+	SWAP A
+	AND $70
+	OR E
+	LD D, A
+	LD A, L
+	AND $f0
+	ADD $07
+	LD L, A
+
+	SET 2, (HL)
+
+	RET
+
+Apply_Prepared_Laser_Enemy_Attack: ; Entity (whatever alignment) in HL Direction to face in E. Result in BC (XY), Direction in D
+	LD A, $mem_moving_animation_step
+	CP $0f
+	RET NZ
+
+	LD A, L
+	AND $f0
+	ADD $07
+	LD L, A
+	BIT 2, (HL)
+	RES 2, (HL)
+	RET Z
+
+	CALL =Laser_sight_check
+	LD A, D
+	AND $70
+	SWAP A
+	CP E
+	RET NZ
+
 	PUSH DE
 	PUSH BC
 
@@ -110,5 +175,13 @@ Laser_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD A, $00
 	LD $mem_bunny_health, A
 	.Skip_health_underflow_fix:
+
+	; Mana
+	LD A, L
+	AND $f0
+	ADD $09
+	LD L, A
+
+	DEC (HL)
 
 	RET

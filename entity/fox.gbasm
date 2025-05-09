@@ -1,3 +1,31 @@
+Fox_Drop:
+	PUSH DE
+	LD E, $04
+	CALL =Check_attack_already_learnt
+	CP $01
+	JR Z, =.drops.ep_regen_item
+
+	.drops.attack_item:
+	LD D, $6C
+	LD E, $06
+	CALL =RNG_Step
+	AND $03
+	CP $00
+	CALL Z, =Spawn_object
+	JR =.drops.end
+
+	.drops.ep_regen_item:
+	LD D, $68
+	LD E, $03
+	CALL =RNG_Step
+	AND $03
+	CP $00
+	CALL Z, =Spawn_object
+
+	.drops.end:
+	POP DE
+	RET
+
 Fox_Turn:
 	LD A, $mem_map_loading_flags
 	BIT 3, A
@@ -14,200 +42,20 @@ Fox_Turn:
 	LD A, (HL+)
 	LD D, A
 
-	.Health_check:
-		LD A, L
-		AND $f0
-		ADD $06
-		LD L, A
+	.ENTITY_HEALTH_CHECK =.Skip_turn =Fox_Drop
+	.ENTITY_FREEZE_SHIVER =.Skip_turn
+	.ENTITY_STATUS_SKIP_TURN =.Skip_turn
 
-		LD A, (HL)
-		CP $00
-		JR NZ, =.Health_check.end
+	.RESET_BLINKING_MODE
 
-		LD A, L
-		AND $f0
-		LD L, A
+	.ENTITY_TRY_ATTACK =Laser_sight_check =Laser_Prepare_Attack =.attack_end
+	.ENTITY_TRY_ATTACK =Check_player_next_to =Basic_Enemy_Attack =.attack_end
+	CALL =Walking
+	.attack_end:
 
-		LD (HL), $00
-		LD A, $mem_enemies_alive_count
-		DEC A
-		LD $mem_enemies_alive_count, A
+	CALL =Entity_End_movement
 
-		; Drop when deadged
-		PUSH DE
-		LD E, $04
-		CALL =Check_attack_already_learnt
-		CP $01
-		JR Z, =.drops.ep_regen_item
-
-		.drops.attack_item:
-		LD D, $6C
-		LD E, $06
-		CALL =RNG_Step
-		AND $03
-		CP $00
-		CALL Z, =Spawn_object
-		JR =.drops.end
-
-		.drops.ep_regen_item:
-		LD D, $68
-		LD E, $03
-		CALL =RNG_Step
-		AND $03
-		CP $00
-		CALL Z, =Spawn_object
-
-		.drops.end:
-		POP DE
-
-		JP NZ, =.Skip_turn
-	.Health_check.end:
-
-	.Freeze_shiver:
-		LD A, $mem_moving_animation_step
-		CP $00
-		JP NZ, =.Freeze_shiver.end
-		LD A, L
-		AND $f0
-		ADD $08
-		LD L, A
-		LD A, $01
-		CP (HL)
-		JR NZ, =.Freeze_shiver.end
-		LD A, D
-		AND $07
-		LD D, A
-		CALL =RNG_Step
-		CP $55
-		JP NC, =.Skip_turn
-		LD A, D
-		OR $40
-		LD D, A
-
-		CALL =RNG_Step
-		CP $55
-		JP NC, =.Skip_turn
-
-		LD A, $00
-		LD (HL-), A
-		RES 1, (HL)
-		JP =.Skip_turn
-	.Freeze_shiver.end:
-
-	.Should_turn_be_skipped:
-		LD A, L
-		AND $f0
-		ADD $08
-		LD L, A
-
-		BIT 0, (HL)
-		JP NZ, =.Skip_turn
-
-	.Start_action_or_movement:
-		LD A, $mem_moving_animation_step
-		CP $00
-		JP NZ, =.Start_action_or_movement.end
-
-		LD A, L
-		AND $f0
-		OR $07
-		LD L, A
-		RES 3, (HL)
-
-		LD A, L
-		AND $f0
-		ADD $09
-		LD L, A
-		XOR A
-		CP (HL)
-		JR Z, =.Try_Basic_Attack
-
-		CALL =Laser_sight_check
-		LD A, E
-		CP $00
-		JR Z, =.Try_Basic_Attack
-
-		LD A, E
-		DEC A
-		DEC D
-		XOR D
-		INC D
-		CP $00
-		JR Z, =.attack
-		BIT 1, A
-		JR NZ, =.attack
-
-		LD D, E
-		JR =.Start_action_or_movement.end
-
-		.attack:
-		LD D, E
-		LD A, L
-		AND $f0
-		ADD $07
-		LD L, A
-
-		SET 2, (HL)
-
-		JR =.Start_action_or_movement.end
-
-		.Try_Basic_Attack:
-
-		CALL =Check_player_next_to
-		LD A, E
-		CP $00
-		JR Z, =.Try_Walking
-
-		CALL =Basic_Enemy_Attack
-
-		JR =.Start_action_or_movement.end
-
-		.Try_Walking:
-
-		CALL =Walking
-	.Start_action_or_movement.end:
-
-	.End_movement:
-		LD A, $mem_moving_animation_step
-		CP $0f
-		JP NZ, =.End_movement.end
-		LD A, D
-		AND $07
-		BIT 3, D
-		LD D, A
-		JR Z, =.End_movement.check_end_of_turn_mode_attack
-		LD A, $01
-		.ADD_A_TO_DIRECTION_BC
-
-		.End_movement.check_end_of_turn_mode_attack:
-
-		LD A, L
-		AND $f0
-		ADD $07
-		LD L, A
-
-		BIT 2, (HL)
-		RES 2, (HL)
-		JR Z, =.End_movement.end
-
-		CALL =Laser_sight_check
-		LD A, D
-		AND $07
-		CP E
-		JR NZ, =.laser_sight_check_fail
-
-		CALL =Laser_Enemy_Attack
-
-		LD A, L
-		AND $f0
-		ADD $09
-		LD L, A
-
-		DEC (HL)
-
-		.laser_sight_check_fail:
-
-	.End_movement.end:
+	CALL =Apply_Prepared_Laser_Enemy_Attack
 
 	.Skip_Turn:
 	LD A, L

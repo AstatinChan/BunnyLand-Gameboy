@@ -50,8 +50,10 @@ Update_Animation_Steps:
 
 	.Dead_mode:
 
-	LD A, $20
+	LD A, $00
 	LD $mem_bunny_direction, A
+	LD A, $02
+	LD $mem_bunny_animation, A
 
 	LD A, $enum_dead_mode
 	LD $mem_current_mode, A

@@ -52,6 +52,7 @@ Hop_Attack_Loading_VBlank:
 	CALL =Display_Main_Prepared_Block
 
 	LD A, $mem_bunny_direction
+	SWAP A
 	AND $07
 	LD D, A
 	LD A, $mem_viewport_x
@@ -68,6 +69,7 @@ Hop_Attack_Loading_VBlank:
 	CALL =Display_Object
 
 	LD A, $mem_bunny_direction
+	SWAP A
 	AND $07
 	LD D, A
 	LD A, $mem_viewport_x
@@ -100,8 +102,10 @@ Hop_Attack_Loading_Regular:
 	LD $mem_requested_mode, A
 	CALL =Update_VBlank_Handler
 	LD A, $mem_bunny_direction
-	OR $38
+	OR $08
 	LD $mem_bunny_direction, A
+	LD A, $03
+	LD $mem_bunny_animation, A
 	LD A, $mem_map_loading_flags
 	SET 3, A
 	LD $mem_map_loading_flags, A
@@ -125,6 +129,7 @@ Hop_Attack_Loading_Regular:
 	LD $mem_prepared_loading_block_position_2, A
 
 	LD A, $mem_bunny_direction
+	SWAP A
 	AND $07
 	LD D, A
 	LD A, $mem_viewport_x
@@ -141,6 +146,7 @@ Hop_Attack_Loading_Regular:
 	CALL =Preload_Map_Hop
 
 	LD A, $mem_bunny_direction
+	SWAP A
 	AND $07
 	LD D, A
 	LD A, $mem_viewport_x
@@ -158,7 +164,10 @@ Hop_Attack_Loading_Regular:
 
 Hop_Attack:
 	LD A, $mem_bunny_direction
-	AND $07
+	AND $70
+	LD D, A
+	SWAP A
+	OR D
 	LD D, A
 
 	LD A, $mem_bunny_x
@@ -192,5 +201,3 @@ Hop_Attack:
 	LD A, $00
 	LD $mem_loading_step, A
 	RET
-
-

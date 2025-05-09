@@ -25,8 +25,10 @@ Move_Bunny:
 		CP $01
 		JR NZ, =.Freeze_shiver.end
 		LD A, $mem_bunny_direction
-		AND $07
+		RES 3, A
 		LD $mem_bunny_direction, A
+		LD A, $00
+		LD $mem_bunny_animation, A
 
 		LD A, $mem_bunny_status_clear_turn_counter
 		DEC A
@@ -37,9 +39,8 @@ Move_Bunny:
 		CALL =RNG_Step
 		CP $55
 		JP NC, =.Skip_turn
-		LD A, $mem_bunny_direction
-		OR $40
-		LD $mem_bunny_direction, A
+		LD A, $04
+		LD $mem_bunny_animation, A
 
 		CALL =RNG_Step
 		CP $55
@@ -75,11 +76,21 @@ Move_Bunny:
 		BIT 3, A
 		JP NZ, =.Start_action_or_movement.end
 
+		LD A, $mem_bunny_direction
+		AND $70
+		LD D, A
+		SWAP A
+		OR D
+		LD $mem_bunny_direction, A
+
 		.Start_action_or_movement.test_movement:
 
 		LD A, $mem_button_direction
 		CP $00
 		JP Z, =.Start_action_or_movement.end
+		LD D, A
+		SWAP A
+		OR D
 		SET 3, A
 		LD D, A
 
@@ -176,9 +187,11 @@ Move_Bunny:
 		JP NZ, =.End_movement.end
 		LD A, $mem_bunny_direction
 		LD D, A
-		AND $07
+		RES 3, A
 		BIT 3, D
 		LD $mem_bunny_direction, A
+		LD A, $00
+		LD $mem_bunny_animation, A
 		JP Z, =.End_movement.end
 
 		LD A, $mem_bunny_x
@@ -291,7 +304,7 @@ Move_Bunny:
 		LD A, $mem_bunny_y
 		LD C, A
 		LD A, $mem_bunny_direction
-		OR $08
+		SET 3, A
 		AND $0f
 		LD D, A
 		LD A, $01
@@ -337,9 +350,10 @@ Move_Bunny:
 
 			.Interaction.for_else:
 			LD A, $mem_bunny_direction
-			AND $07
-			OR $10
+			RES 3, A
 			LD $mem_bunny_direction, A
+			LD A, $01
+			LD $mem_bunny_animation, A
 
 			LD A, $mem_map_loading_flags
 			SET 4, A
@@ -347,9 +361,8 @@ Move_Bunny:
 	.Interaction.end:
 
 	.Check_End_Action:
-		LD A, $mem_bunny_direction
-		AND $f0
-		CP $10
+		LD A, $mem_bunny_animation
+		CP $01
 		JR NZ, =.Check_End_Action.end
 
 	.Check_End_Action.end:

@@ -141,3 +141,119 @@ Spawn_object: ; Texture in D, XY in BC, jump table thingy in E
 	POP HL
 	.skip_spawn_loot:
 	RET
+
+.MACRODEF ENTITY_HEALTH_CHECK Skip_turn Drop_Function
+	LD A, L
+	AND $f0
+	ADD $06
+	LD L, A
+
+	LD A, (HL)
+	CP $00
+	JR NZ, =$end
+
+	LD A, L
+	AND $f0
+	LD L, A
+
+	LD (HL), $00
+	LD A, $mem_enemies_alive_count
+	DEC A
+	LD $mem_enemies_alive_count, A
+
+	CALL $Drop_Function
+
+	JP $Skip_turn
+	$end:
+.END
+
+.MACRODEF ENTITY_FREEZE_SHIVER Skip_turn
+	LD A, $mem_moving_animation_step
+	CP $00
+	JP NZ, =$end
+	LD A, L
+	AND $f0
+	ADD $08
+	LD L, A
+	LD A, $01
+	CP (HL)
+	JR NZ, =$end
+	RES 3, D
+	CALL =RNG_Step
+	CP $55
+	JP NC, $Skip_turn
+	LD A, L
+	AND $f0
+	OR $0a
+	LD L, A
+	LD (HL), $04
+
+	CALL =RNG_Step
+	CP $55
+	JP NC, $Skip_turn
+
+	LD A, $00
+	LD (HL-), A
+	RES 1, (HL)
+	JP $Skip_turn
+	$end:
+.END
+
+.MACRODEF ENTITY_STATUS_SKIP_TURN Skip_Turn
+	LD A, L
+	AND $f0
+	ADD $08
+	LD L, A
+
+	BIT 0, (HL)
+	JP NZ, $Skip_turn
+.END
+
+Entity_End_movement:
+	LD A, $mem_moving_animation_step
+	CP $0f
+	RET NZ
+
+	LD A, L
+	AND $f0
+	OR $0a
+	LD L, A
+	LD (HL), $00
+	LD A, D
+	RES 3, A
+	BIT 3, D
+	LD D, A
+	RET Z
+	LD A, $01
+	.ADD_A_TO_DIRECTION_BC
+	RET
+
+.MACRODEF RESET_BLINKING_MODE
+	LD A, $mem_moving_animation_step
+	CP $00
+	JP NZ, =$end
+
+	LD A, L
+	AND $f0
+	OR $07
+	LD L, A
+	RES 3, (HL)
+
+	$end:
+.END
+
+.MACRODEF ENTITY_TRY_ATTACK Sight_check Attack_Function Attack_end
+	LD A, $mem_moving_animation_step
+	CP $00
+	JP NZ, $Attack_end
+
+	CALL $Sight_check
+	LD A, $00
+	CP E
+	JR Z, =$next
+
+	CALL $Attack_Function
+	JP $Attack_end
+
+	$next:
+.END

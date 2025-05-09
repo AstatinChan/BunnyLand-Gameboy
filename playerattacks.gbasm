@@ -68,9 +68,8 @@ Canceled_Attack:
 	SET 3, A
 	LD $mem_map_loading_flags, A
 
-	LD A, $mem_bunny_direction
-	OR $40
-	LD $mem_bunny_direction, A
+	LD A, $04
+	LD $mem_bunny_animation, A
 
 	LD A, $mem_bunny_mana
 	LD B, A

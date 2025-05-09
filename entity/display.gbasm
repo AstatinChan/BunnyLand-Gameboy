@@ -118,9 +118,12 @@ Display_Entity:
 
 
 	.Action_Animation:
-		LD A, D
+		LD A, L
 		AND $f0
-		CP $10
+		OR $0a
+		LD L, A
+		LD A, $01
+		CP (HL)
 		JR NZ, =.Action_Animation.end
 
 		LD A, $mem_moving_animation_step
@@ -147,9 +150,12 @@ Display_Entity:
 	.Action_Animation.end:
 
 	.SuperJump_Animation:
-		LD A, D
+		LD A, L
 		AND $f0
-		CP $30
+		OR $0a
+		LD L, A
+		LD A, $03
+		CP (HL)
 		JR NZ, =.SuperJump_Animation.end
 
 		LD A, $mem_moving_animation_step
@@ -170,9 +176,12 @@ Display_Entity:
 	.SuperJump_Animation.end:
 
 	.Shaking_Animation:
-		LD A, D
+		LD A, L
 		AND $f0
-		CP $40
+		OR $0a
+		LD L, A
+		LD A, $04
+		CP (HL)
 		JR NZ, =.Shaking_Animation.end
 
 		LD A, $mem_moving_animation_step
@@ -192,9 +201,12 @@ Display_Entity:
 	.Shaking_Animation.end:
 
 	.Moving_2x:
-		LD A, D
+		LD A, L
 		AND $f0
-		CP $50
+		OR $0a
+		LD L, A
+		LD A, $05
+		CP (HL)
 		JR NZ, =.Moving_2x.end
 
 		LD A, $mem_moving_animation_step
@@ -225,9 +237,15 @@ Display_Entity:
 	.Moving_2x.end:
 
 	.Moving_Hops:
-		LD A, D
-		AND $f8
-		CP $08
+		BIT 3, D
+		JR Z, =.Moving_Hops.end
+		LD A, L
+		AND $f0
+		OR $0a
+		LD L, A
+		LD A, (HL)
+		LD A, $00
+		CP (HL)
 		JR NZ, =.Moving_Hops.end
 
 		LD A, $mem_moving_animation_step
@@ -245,6 +263,7 @@ Display_Entity:
 	.Moving_Hops.end:
 
 	LD A, D
+	SWAP A
 	AND $07
 
 	CP $enum_direction_left
@@ -328,9 +347,12 @@ Display_Entity:
 	RET
 
 Flags_From_Animation: ; Expect entity in HL (offset doesn't matter) + breaks D (but result in A)
-	LD A, D
+	LD A, L
 	AND $f0
-	CP $20
+	OR $0a
+	LD L, A
+	LD A, $02
+	CP (HL)
 	LD D, $00
 	JR NZ, =Flags_From_Animation.Shadow_Palette
 	LD D, $40

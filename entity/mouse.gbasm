@@ -1,3 +1,14 @@
+Mouse_Drop:
+	PUSH DE
+	LD D, $64
+	LD E, $02
+	CALL =RNG_Step
+	AND $03
+	CP $00
+	CALL Z, =Spawn_object
+	POP DE
+	RET
+
 Mouse_Turn:
 	LD A, $mem_map_loading_flags
 	BIT 3, A
@@ -14,146 +25,72 @@ Mouse_Turn:
 	LD A, (HL+)
 	LD D, A
 
-	.Health_check:
-		LD A, L
-		AND $f0
-		ADD $06
-		LD L, A
+	.ENTITY_HEALTH_CHECK =.Skip_turn =Mouse_Drop
+	.ENTITY_FREEZE_SHIVER =.Skip_turn
+	.ENTITY_STATUS_SKIP_TURN =.Skip_turn
 
-		LD A, (HL)
-		CP $00
-		JR NZ, =.Health_check.end
+	.RESET_BLINKING_MODE
 
-		LD A, L
-		AND $f0
-		LD L, A
-
-		LD (HL), $00
-		LD A, $mem_enemies_alive_count
-		DEC A
-		LD $mem_enemies_alive_count, A
-
-		PUSH DE
-		LD D, $64
-		LD E, $02
-		CALL =RNG_Step
-		AND $03
-		CP $00
-		CALL Z, =Spawn_object
-		POP DE
-
-		JP =.Skip_turn
-	.Health_check.end:
-
-	.Freeze_shiver:
-		LD A, $mem_moving_animation_step
-		CP $00
-		JP NZ, =.Freeze_shiver.end
-		LD A, L
-		AND $f0
-		ADD $08
-		LD L, A
-		LD A, $01
-		CP (HL)
-		JR NZ, =.Freeze_shiver.end
-		LD A, D
-		AND $07
-		LD D, A
-		CALL =RNG_Step
-		CP $55
-		JP NC, =.Skip_turn
-		LD A, D
-		OR $40
-		LD D, A
-
-		CALL =RNG_Step
-		CP $55
-		JP NC, =.Skip_turn
-
-		LD A, $00
-		LD (HL-), A
-		RES 1, (HL)
-		JP =.Skip_turn
-	.Freeze_shiver.end:
-
-	.Should_turn_be_skipped:
-		LD A, L
-		AND $f0
-		ADD $08
-		LD L, A
-
-		BIT 0, (HL)
-		JP NZ, =.Skip_turn
-
-	.Start_action_or_movement:
-		LD A, $mem_moving_animation_step
-		CP $00
-		JP NZ, =.Start_action_or_movement.end
-
-		LD A, L
-		AND $f0
-		OR $07
-		LD L, A
-		RES 3, (HL)
-
-		.Try_Basic_Attack:
-		CALL =Check_player_next_to
-		LD A, E
-		CP $00
-		JR Z, =.Try_Walking
-		CALL =Basic_Enemy_Attack
-
-		JR =.Start_action_or_movement.end
-
-		.Try_Walking:
-		CALL =Walking
-		BIT 3, D
-		JR Z, =.Start_action_or_movement.end
-		LD A, D
-		OR $50
-		LD D, A
-	.Start_action_or_movement.end:
+	.ENTITY_TRY_ATTACK =Check_player_next_to =Basic_Enemy_Attack =.attack_end
+	CALL =Walking
+	BIT 3, D
+	JR Z, =.attack_end
+	LD A, L
+	AND $f0
+	OR $0a
+	LD L, A
+	LD (HL), $05
+	LD A, (HL)
+	DBG
+	.attack_end:
 
 	.Mid_movement:
 		LD A, $mem_moving_animation_step
 		CP $07
 		JR NZ, =.Mid_movement.end
 
-		LD A, D
+		BIT 3, D
+		JR Z, =.Mid_movement.end
+
+		LD A, L
 		AND $f0
-		CP $50
+		OR $0a
+		LD L, A
+		LD A, $05
+		CP (HL)
+		LD A, (HL)
 		JR NZ, =.Mid_movement.end
 
+		LD A, L
+		AND $f0
+		OR $0a
+		LD L, A
+		LD (HL), $00
+
 		LD A, D
-		AND $07
-		BIT 3, D
+		RES 3, A
 		LD D, A
-		JR Z, =.Mid_movement.end
 		LD A, $01
 		.ADD_A_TO_DIRECTION_BC
 
 		.Mid_movement.Try_Walking:
+		PUSH DE
 		CALL =Walking
 		BIT 3, D
-		JR Z, =.Mid_movement.end
-		LD A, D
-		OR $50
-		LD D, A
+		JR Z, =.Mid_movement.Walk_cancelled
+		LD A, L
+		AND $f0
+		OR $0a
+		LD L, A
+		LD (HL), $05
+		ADD SP, $02
+		JR =.Mid_movement.end
+		.Mid_movement.Walk_cancelled:
+		POP DE
+		RES 3, D
 	.Mid_movement.end:
 
-	.End_movement:
-		LD A, $mem_moving_animation_step
-		CP $0f
-		JR NZ, =.End_movement.end
-
-		LD A, D
-		AND $07
-		BIT 3, D
-		LD D, A
-		JR Z, =.End_movement.end
-		LD A, $01
-		.ADD_A_TO_DIRECTION_BC
-	.End_movement.end:
+	CALL =Entity_End_movement
 
 	.Skip_Turn:
 	LD A, L
