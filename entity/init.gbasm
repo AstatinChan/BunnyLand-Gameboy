@@ -108,7 +108,6 @@ Initialize_Entities:
 
 	CALL =Reset_Entities_Collision_Map
 
-Fix_Bunny_screen:
 	LD A, $mem_bunny_x
 	SUB $05
 	LD $mem_viewport_x, A

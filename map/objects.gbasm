@@ -265,8 +265,6 @@ Heal_Attack_Box_Action:
 	RES 3, A
 	LD $mem_map_loading_flags, A
 
-	CALL =Fix_Bunny_screen
-
 	RET
 
 	.Script:
@@ -288,8 +286,6 @@ Freeze_Attack_Box_Action:
 	SET 5, A
 	RES 3, A
 	LD $mem_map_loading_flags, A
-
-	CALL =Fix_Bunny_screen
 
 	RET
 
@@ -313,8 +309,6 @@ Earcopter_Attack_Box_Action:
 	RES 3, A
 	LD $mem_map_loading_flags, A
 
-	CALL =Fix_Bunny_screen
-
 	RET
 
 	.Script:
@@ -336,8 +330,6 @@ Fimsh_Attack_Box_Action:
 	SET 5, A
 	RES 3, A
 	LD $mem_map_loading_flags, A
-
-	CALL =Fix_Bunny_screen
 
 	RET
 

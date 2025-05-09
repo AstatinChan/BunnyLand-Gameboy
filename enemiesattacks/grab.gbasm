@@ -83,7 +83,6 @@ Grab_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	INC A
 	OR $08
 	LD $mem_bunny_direction, A
-	CALL =Fix_Bunny_screen
 
 	POP BC
 	POP DE
