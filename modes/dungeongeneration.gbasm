@@ -53,7 +53,7 @@ New_Dungeon:
 
 	LD HL, =Dungeon
 	CALL =Load_Dungeon_Spawn_patterns
-	LD A, $06
+	LD A, $entity_questgoalbunny_index
 	LD $mem_loaded_special_entity_index, A
 
 	CALL =Reload_EP_Cost

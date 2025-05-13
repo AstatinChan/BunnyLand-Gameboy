@@ -88,14 +88,11 @@ Dungeon:
 	.name: .DB =Dungeon_Name_1_Txt
 	.max_floor: .DB 0x0a, inv(0x0a)
 	.spawning_patterns:
-		; --DBG--
-		.DB $01, $01, $01, $01, 0b11111111
-		; --DBG--
-		.DB $02, $02, $02, $05, 0b00000010
-		.DB $02, $02, $03, $05, 0b00100011
-		.DB $02, $02, $00, $05, 0b00100111
-		.DB $00, $02, $03, $05, 0b00011101
-		.DB $02, $02, $04, $05, 0b00111111
-		.DB $02, $00, $03, $05, 0b00011111
-		.DB $00, $04, $03, $05, 0b00011111
-		.DB $00, $04, $03, $05, 0b00111111
+		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
+		.DB $entity_cat_index, $entity_cat_index, $entity_penguin_index, $entity_fimsh_index, 0b00100011
+		.DB $entity_cat_index, $entity_cat_index, $entity_fox_index, $entity_fimsh_index, 0b00100111
+		.DB $entity_fox_index, $entity_cat_index, $entity_penguin_index, $entity_fimsh_index, 0b00011101
+		.DB $entity_cat_index, $entity_cat_index, $entity_mouse_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00011111
+		.DB $entity_fox_index, $entity_bug_index, $entity_penguin_index, $entity_fimsh_index, 0b00011111
+		.DB $entity_fox_index, $entity_mouse_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111

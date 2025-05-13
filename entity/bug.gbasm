@@ -1,0 +1,130 @@
+Bug_Drop:
+	PUSH DE
+	LD D, $64
+	LD E, $02
+	CALL =RNG_Step
+	AND $03
+	CP $00
+	CALL Z, =Spawn_object
+	POP DE
+	RET
+
+Bug_Turn:
+	LD A, $mem_map_loading_flags
+	BIT 3, A
+	RET Z
+
+	PUSH HL
+	PUSH BC
+	PUSH DE
+	INC HL
+	LD A, (HL+)
+	LD B, A
+	LD A, (HL+)
+	LD C, A
+	LD A, (HL+)
+	LD D, A
+
+	.ENTITY_HEALTH_CHECK =.Skip_turn =Mouse_Drop
+	.ENTITY_FREEZE_SHIVER =.Skip_turn
+	.ENTITY_STATUS_SKIP_TURN =.Skip_turn
+
+	.RESET_BLINKING_MODE
+
+	LD A, $mem_moving_animation_step
+	CP $00
+	JR NZ, =.attack_end
+
+	.ENTITY_TRY_ATTACK =Poison_sight_check =Poison_Enemy_Attack =.attack_end
+	CALL =Walking
+	BIT 3, D
+	JR Z, =.attack_end
+	LD A, L
+	AND $f0
+	OR $0a
+	LD L, A
+	LD (HL), $05
+	LD A, (HL)
+	DBG
+	.attack_end:
+
+	.Mid_movement:
+		LD A, $mem_moving_animation_step
+		CP $07
+		JR NZ, =.Mid_movement.end
+
+		BIT 3, D
+		JR Z, =.Mid_movement.end
+
+		LD A, L
+		AND $f0
+		OR $0a
+		LD L, A
+		LD A, $05
+		CP (HL)
+		LD A, (HL)
+		JR NZ, =.Mid_movement.end
+
+		LD A, L
+		AND $f0
+		OR $0a
+		LD L, A
+		LD (HL), $00
+
+		LD A, D
+		RES 3, A
+		LD D, A
+		LD A, $01
+		.ADD_A_TO_DIRECTION_BC
+
+		.Mid_movement.Try_Walking:
+		PUSH DE
+		CALL =Walking
+		BIT 3, D
+		JR Z, =.Mid_movement.Walk_cancelled
+		LD A, L
+		AND $f0
+		OR $0a
+		LD L, A
+		LD (HL), $05
+		ADD SP, $02
+		JR =.Mid_movement.end
+		.Mid_movement.Walk_cancelled:
+		POP DE
+		RES 3, D
+	.Mid_movement.end:
+
+	.Die_After_Attack:
+		LD A, $mem_moving_animation_step
+		CP $07
+		JR NZ, =.Die_After_Attack.end
+		LD A, L
+		AND $f0
+		OR $07
+		LD L, A
+		BIT 2, (HL)
+		JR Z, =.Die_After_Attack.end
+
+		DEC HL
+
+		LD (HL), $00
+
+	.Die_After_Attack.end:
+
+	CALL =Entity_End_movement
+
+	.Skip_Turn:
+	LD A, L
+	AND $f0
+	LD L, A
+	INC HL
+	LD A, B
+	LD (HL+), A
+	LD A, C
+	LD (HL+), A
+	LD A, D
+	LD (HL+), A
+	POP DE
+	POP BC
+	POP HL
+	RET

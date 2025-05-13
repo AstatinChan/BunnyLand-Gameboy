@@ -1,10 +1,11 @@
 import subprocess
+import parse_sprite_png
 
 sprite_idx = 0x0
 
 def get_sprite_png_parse_output(png, tallmode=False, sprite_1bpp_mode=False):
     global sprite_idx
-    result = str(subprocess.check_output(["python", "./scripts/parse_sprite_png.py", png] + (["--8x16"] if tallmode else []) + (["--1bpp"] if sprite_1bpp_mode else []))).split("\\n")
+    result = parse_sprite_png.parseSprite(png, sprite_8x16=tallmode, sprite_1bpp=sprite_1bpp_mode).split("\n")
     for r in result:
         if r.startswith(".DB"):
             print("\t{} ; 0x{:02x}".format(r, sprite_idx))
@@ -39,6 +40,10 @@ print("\n\t; Disabled Cursor")
 get_sprite_png_parse_output("./sprites/gui/disabled-cursor.png")
 print("\n\t; Floor")
 get_sprite_png_parse_output("./sprites/gui/floor.png")
+print("\n\t; Freeze status")
+get_sprite_png_parse_output("./sprites/gui/status-frozen.png")
+print("\n\t; Poison status")
+get_sprite_png_parse_output("./sprites/gui/status-poison.png")
 
 sprite_idx = 0x80
 print("\nFont_Data:")
@@ -124,3 +129,5 @@ print("\n\t; Sparkles")
 get_sprite_png_parse_output("./sprites/animations/sparkle1.png", tallmode=True)
 get_sprite_png_parse_output("./sprites/animations/sparkle2.png", tallmode=True)
 get_sprite_png_parse_output("./sprites/animations/ball.png", tallmode=True)
+get_sprite_png_parse_output("./sprites/animations/bubble1.png", tallmode=True)
+get_sprite_png_parse_output("./sprites/animations/bubble2.png", tallmode=True)

@@ -62,44 +62,7 @@ Entity_Action:
 	LD L, A
 	RET
 
-Turn_Jump_table:
-	; 00
-	RET
-	NOP
-	NOP
-	NOP
 
-	; 01
-	JP =Move_Bunny
-	NOP
-
-	; 02
-	JP =Fox_Turn
-	NOP
-
-	; 03
-	JP =Cat_Turn
-	NOP
-
-	; 04
-	JP =Penguin_Turn
-	NOP
-
-	; 05
-	JP =QuestGoal_Turn
-	NOP
-
-	; 06
-	JP =Fimsh_Turn
-	NOP
-
-	; 07
-	JP =Mouse_Turn
-	NOP
-
-	; 08
-	JP =Frog_Turn
-	NOP
 
 Interaction_Jump_table:
 	; 00

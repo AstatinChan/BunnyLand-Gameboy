@@ -6,6 +6,9 @@ Move_Bunny:
 	LD E, $02
 	.Normal_speed:
 
+	LD A, $00
+	LD $mem_bunny_status_tile, A
+
 	.Finish_unfreeze:
 		LD A, $mem_moving_animation_step
 		CP $00
@@ -18,12 +21,14 @@ Move_Bunny:
 	.Finish_unfreeze.end:
 
 	.Freeze_shiver:
-		LD A, $mem_moving_animation_step
-		CP $00
-		JP NZ, =.Freeze_shiver.end
 		LD A, $mem_bunny_status
 		CP $01
 		JR NZ, =.Freeze_shiver.end
+		LD A, $f5
+		LD $mem_bunny_status_tile, A
+		LD A, $mem_moving_animation_step
+		CP $00
+		JP NZ, =.Freeze_shiver.end
 		LD A, $mem_bunny_direction
 		RES 3, A
 		LD $mem_bunny_direction, A
@@ -54,6 +59,73 @@ Move_Bunny:
 		LD $mem_bunny_flags, A
 		JP =.Skip_turn
 	.Freeze_shiver.end:
+
+	.Poison_effect:
+		LD A, $mem_bunny_status
+		CP $08
+		JR NZ, =.Poison_effect.end
+		LD A, $f6
+		LD $mem_bunny_status_tile, A
+		LD A, $mem_moving_animation_step
+		CP $0c
+		JR NZ, =.Poison_effect.end
+
+		LD A, $mem_bunny_status_clear_turn_counter
+		DEC A
+		CP $00
+		LD $mem_bunny_status_clear_turn_counter, A
+		JR Z, =.Unpoison
+
+		CALL =RNG_Step
+		AND $07
+		CP $00
+		JR Z, =.Unpoison
+
+		CALL =RNG_Step
+		AND $01
+		CP $00
+		JR Z, =.Poison_effect.end
+
+		PUSH BC
+		LD A, $mem_moving_animation_step
+		LD B, A
+		LD A, $1f
+		SUB B
+		LD $mem_blinking_animation_counter, A
+		LD A, $mem_bunny_flags
+		SET 3, A
+		LD $mem_bunny_flags, A
+		POP BC
+
+		LD A, $mem_bunny_health
+		SUB $01
+		JR C, =.Poison_effect.health_underflow_fix
+		DAA
+		LD $mem_bunny_health, A
+		JR =.Poison_effect.Skip_health_underflow_fix
+		.Poison_effect.health_underflow_fix:
+		LD A, $00
+		LD $mem_bunny_health, A
+		.Poison_effect.Skip_health_underflow_fix:
+
+		PUSH BC
+		LD A, $mem_bunny_predicted_x
+		LD B, A
+		LD A, $mem_bunny_predicted_y
+		LD C, A
+		LD A, $04
+		PUSH DE
+		LD E, $20
+		LD D, $00
+		CALL =Try_Launch_Animation
+		POP DE
+		POP BC
+		JR =.Poison_effect.end
+
+		.Unpoison:
+		LD A, $00
+		LD $mem_bunny_status, A
+	.Poison_effect.end:
 
 	.Should_turn_be_skipped:
 		LD A, $mem_bunny_status

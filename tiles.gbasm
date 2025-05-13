@@ -21,12 +21,12 @@ Load_Tile:
 
 	LD HL, $8f00
 	LD DE, =Small_sprites
-	LD BC, $0050
+	LD BC, $0070
 	CALL =memcpy
 
 	LD HL, $8620
 	LD DE, =Animation_Sprites_Data
-	LD BC, $0060
+	LD BC, $00a0
 	CALL =memcpy
 	RET
 

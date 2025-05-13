@@ -166,3 +166,79 @@ Entity_list:
 		.DB 0b00
 
 		.PADTO =.QuestGoalBunny+8
+
+	.Bug:
+		; Sprite address
+		.DB =OBJ_Tile_Image_Data.Bug
+
+		; Turn Jump Table index
+		.DB $09
+
+		; Interaction Jump Table index
+		.DB $01
+
+		; Starting health
+		.DB $01
+
+		; Starting status
+		.DB $00
+
+		; Starting mana
+		.DB $05
+
+		; Spawning rate (2 lsb)
+		.DB 0b11
+
+		.PADTO =.Bug+8
+
+Turn_Jump_table:
+	; 00
+	RET
+	NOP
+	NOP
+	NOP
+
+	; 01
+	JP =Move_Bunny
+	NOP
+
+	; 02
+	JP =Fox_Turn
+	NOP
+
+	; 03
+	JP =Cat_Turn
+	NOP
+
+	; 04
+	JP =Penguin_Turn
+	NOP
+
+	; 05
+	JP =QuestGoal_Turn
+	NOP
+
+	; 06
+	JP =Fimsh_Turn
+	NOP
+
+	; 07
+	JP =Mouse_Turn
+	NOP
+
+	; 08
+	JP =Frog_Turn
+	NOP
+
+	; 09
+	JP =Bug_Turn
+	NOP
+
+.INCLUDE "entity/bunny.gbasm"
+.INCLUDE "entity/fox.gbasm"
+.INCLUDE "entity/cat.gbasm"
+.INCLUDE "entity/mouse.gbasm"
+.INCLUDE "entity/penguin.gbasm"
+.INCLUDE "entity/fimsh.gbasm"
+.INCLUDE "entity/frog.gbasm"
+.INCLUDE "entity/bug.gbasm"

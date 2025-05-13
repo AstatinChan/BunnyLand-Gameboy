@@ -1,4 +1,4 @@
-Freeze_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Direction to face in E (or 0 if not)
+Poison_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Direction to face in E (or 0 if not)
 	LD E, $00
 
 	LD A, L
@@ -10,7 +10,7 @@ Freeze_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). D
 	RET Z
 	JP =Check_player_next_to
 
-Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
+Poison_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD A, D
 	AND $f0
 	SWAP A
@@ -56,25 +56,17 @@ Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	POP BC
 	RET Z
 
-	LD A, $01
+	LD A, $08
 	LD $mem_bunny_status, A
-	LD A, $02
-	LD $mem_bunny_flags, A
-	LD A, $mem_bunny_direction
-	RES 3, A
-	LD $mem_bunny_direction, A
-	LD A, $00
-	LD $mem_bunny_animation, A
-	LD A, $mem_bunny_x
-	LD $mem_bunny_predicted_x, A
-	LD A, $mem_bunny_y
-	LD $mem_bunny_predicted_y, A
 
-	LD A, $00
-	LD $mem_entity_being_attacked_low, A
-
-	LD A, $04
+	LD A, $0a
 	LD $mem_bunny_status_clear_turn_counter, A
+
+	LD A, L
+	AND $f0
+	ADD $07
+	LD L, A
+	SET 2, (HL)
 
 	LD A, L
 	AND $f0

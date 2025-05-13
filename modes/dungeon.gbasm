@@ -168,6 +168,9 @@ Dungeon_VBLANK_Entrypoint:
 	CALL =Display_Animation_List
 	CALL =Display_Entities
 
+	LD A, $mem_bunny_status_tile
+	LD ($9d6f), A
+
 	LD A, $mem_loop_frame_timer
 	INC A
 	LD $mem_loop_frame_timer, A

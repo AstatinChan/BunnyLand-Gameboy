@@ -140,6 +140,11 @@ Animation_Jump_table:
 	JP =Laser_Animation
 	NOP
 
+	; 04
+	JP =Bubbles_Animation
+	NOP
+
 .INCLUDE "animations/sparkles.gbasm"
 .INCLUDE "animations/rotatingball.gbasm"
 .INCLUDE "animations/laser.gbasm"
+.INCLUDE "animations/bubbles.gbasm"

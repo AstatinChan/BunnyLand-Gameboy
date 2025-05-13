@@ -29,6 +29,7 @@
 ; frame 5: entity collision map is being updated
 ; frame 8: attack is executed on the enemies if it was predicted in frame "-1"
 ; frame 9: entity collision map is being updated (again)
+; frame 12: poison effect thingy
 ; frame 15: movement is ended and coordinates are updated
 
 .DEFINE mem_bunny_sprite ($cb00)
@@ -150,6 +151,8 @@
 .DEFINE mem_entity_spawning_pattern ($c04d)
 .DEFINE mem_floor_count_bin ($c04e)
 
+.DEFINE mem_bunny_status_tile ($c04f)
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 
@@ -252,7 +255,7 @@
 ;	flags: u8
 ;		bit 0: speed 2x
 ;		bit 1: shadow mode
-;		bit 2: end of turn attack mode
+;		bit 2: end of turn effect (attack mode for fox, die for bug)
 ;		bit 3: blinking mode
 ;	status: u8
 ;	; bit 0: whether or not turns should be skipped
@@ -260,6 +263,7 @@
 ;	; 01: freeze
 ;	; 02: invincible
 ;	; 04: end of freeze
+;	; 08: poison
 ;	mana: u8
 ;	animation: u8
 ;		 animations:
@@ -282,6 +286,15 @@
 .DEFINE enum_direction_right $02
 .DEFINE enum_direction_up $03
 .DEFINE enum_direction_down $04
+
+.DEFINE entity_fox_index $00
+.DEFINE entity_frog_index $01
+.DEFINE entity_cat_index $02
+.DEFINE entity_penguin_index $03
+.DEFINE entity_mouse_index $04
+.DEFINE entity_fimsh_index $05
+.DEFINE entity_questgoalbunny_index $06
+.DEFINE entity_bug_index $07
 
 .DEFINE palette_normal $e4
 .DEFINE palette_black $ff

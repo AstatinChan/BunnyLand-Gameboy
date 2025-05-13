@@ -42,7 +42,7 @@ Penguin_Turn:
 	LD A, (HL+)
 	LD D, A
 
-	.ENTITY_HEALTH_CHECK =.Skip_turn =Cat_Drop
+	.ENTITY_HEALTH_CHECK =.Skip_turn =Penguin_Drop
 	.ENTITY_FREEZE_SHIVER =.Skip_turn
 	.ENTITY_STATUS_SKIP_TURN =.Skip_turn
 

@@ -1,0 +1,101 @@
+Bubbles_Animation:
+	INC HL
+
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_x
+	LD B, A
+	SUB $82
+	CP D
+	RET NC
+	ADD $0e
+	CP D
+	RET C
+	LD A, D
+	SUB $80
+	SUB B
+	AND $0f
+	SWAP A
+	LD B, A
+
+
+	LD A, (HL+)
+	ADD $80
+	LD D, A
+	LD A, $mem_viewport_y
+	LD C, A
+	SUB $82
+	CP D
+	RET NC
+	ADD $0d
+	CP D
+	RET C
+	LD A, D
+	SUB $80
+	SUB C
+	AND $0f
+	SWAP A
+	ADD $06
+	LD C, A
+
+	LD E, (HL)
+	DEC E
+	XOR A
+	CP E
+	JP Z, =End_animation
+	LD (HL), E
+	LD A, $20
+	SUB E
+	LD E, A
+
+	.ADD_MOVING_ANIMATION_OFFSET
+
+	PUSH HL
+	LD HL, $mem_oam_buffer
+	LD A, $mem_oam_buffer_low
+	LD L, A
+
+	LD D, E
+	SRA D
+	LD A, C
+	SUB D
+	ADD $0c
+	LD (HL+), A
+	LD A, B
+	LD (HL+), A
+	LD A, E
+	SRA A
+	SRA A
+	AND $02
+	ADD $vram_animation_index
+	ADD $06 ; bubbles
+
+	LD (HL+), A
+	LD A, $00
+	LD (HL+), A
+
+	SRA D
+	LD A, C
+	SUB D
+	ADD $08
+	LD (HL+), A
+	LD A, B
+	ADD $08
+	LD (HL+), A
+	LD A, E
+	SRA A
+	SRA A
+	AND $02
+	ADD $vram_animation_index
+	ADD $06 ; bubbles
+
+	LD (HL+), A
+	LD A, $00
+	LD (HL+), A
+
+	LD A, L
+	LD $mem_oam_buffer_low, A
+
+	POP HL
+	RET
