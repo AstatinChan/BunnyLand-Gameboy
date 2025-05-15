@@ -36,9 +36,12 @@ Canceled_Attack:
 	ADD $13
 	LD L, A
 	Reset_Entities_Animations.loop:
-		LD A, (HL)
-		AND $07
-		LD (HL), A
+		RES 3, (HL)
+		LD A, L
+		AND $f0
+		ADD $0a
+		LD L, A
+		LD (HL), $00
 		Reset_Entities_Animations.loop.next:
 		LD A, L
 		AND $f0

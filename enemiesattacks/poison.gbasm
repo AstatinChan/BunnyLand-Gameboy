@@ -56,6 +56,10 @@ Poison_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	POP BC
 	RET Z
 
+	LD A, $mem_bunny_flags
+	CP $00
+	RET NZ
+
 	LD A, $08
 	LD $mem_bunny_status, A
 

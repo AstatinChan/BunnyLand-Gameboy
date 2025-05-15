@@ -38,6 +38,10 @@ Open_Dialogue:
 			LD (HL), $enum_direction_up
 			JR =.Check_end
 	.Check_end:
+	LD A, (HL)
+	SWAP A
+	OR (HL)
+	LD (HL), A
 
 	.START_SCRIPT =Demo_quest_bunny
 
@@ -78,19 +82,7 @@ QuestGoal_Turn:
 		CALL =Walking.Random_walker
 	.Start_action_or_movement.end:
 
-	.End_movement:
-		LD A, $mem_moving_animation_step
-		CP $0f
-		JP NZ, =.End_movement.end
-		LD A, D
-		AND $07
-		BIT 3, D
-		LD D, A
-		JR Z, =.End_movement.end
-		LD A, $01
-		.ADD_A_TO_DIRECTION_BC
-
-	.End_movement.end:
+	CALL =Entity_End_movement
 
 	.Skip_Turn:
 	LD A, L

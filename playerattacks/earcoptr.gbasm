@@ -1,24 +1,13 @@
 Earcoptr_Attack_Loading_VBlank:
+	RET
+
+Earcoptr_Attack_Loading_Regular:
 	LD A, $mem_loading_step
 	INC A
 	AND $1f
 	LD $mem_loading_step, A
 	CP $00
-	RET NZ
-
-	LD A, $enum_dungeon_mode
-	LD $mem_current_mode, A
-	LD $mem_requested_mode, A
-	CALL =Update_VBlank_Handler
-	LD A, $mem_map_loading_flags
-	SET 3, A
-	LD $mem_map_loading_flags, A
-	RET
-
-Earcoptr_Attack_Loading_Regular:
-	LD A, $mem_loading_step
-	CP $00
-	RET Z
+	JR Z, =.end_attack
 	CP $11
 	RET C
 
@@ -73,6 +62,18 @@ Earcoptr_Attack_Loading_Regular:
 	SUB $01
 	RET C
 	LD (HL), A
+
+	RET
+
+	.end_attack:
+	LD A, $enum_dungeon_mode
+	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
+	CALL =Update_VBlank_Handler
+
+	LD A, $mem_map_loading_flags
+	SET 3, A
+	LD $mem_map_loading_flags, A
 
 	RET
 

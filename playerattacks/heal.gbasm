@@ -1,5 +1,7 @@
 Heal_Attack:
 	LD A, $mem_bunny_health
+	CP $20
+	JP Z, =Canceled_Attack
 	ADD $03
 	DAA
 	CP $20

@@ -1,3 +1,20 @@
+.MACRODEF INVERT_AXIS
+	PUSH AF
+	LD A, $tmp_var_3
+	CP $00
+	JR Z, =$skip_invert_axis
+	LD A, B
+	LD B, C
+	LD C, A
+	LD A, D
+	DEC A
+	XOR $02
+	INC A
+	LD D, A
+	$skip_invert_axis:
+	POP AF
+.END
+
 Walking: ; entity XY in BC, Breaks E, Direction result in D
 	; Is Bunny close enough to follow
 	LD A, $mem_bunny_x
@@ -41,20 +58,18 @@ Walking: ; entity XY in BC, Breaks E, Direction result in D
 	AND $02
 	LD $tmp_var_3, A
 
+	.INVERT_AXIS
+
+	LD A, $tmp_var_3
 	CP $00
-	JR Z, =.skip_invert_axis
+	JR Z, =.skip_invert_target_axis
 
 	LD A, $mem_bunny_predicted_y
 	LD $tmp_var_1, A
 
 	LD A, $mem_bunny_predicted_x
 	LD $tmp_var_2, A
-
-	LD E, B
-	LD B, C
-	LD C, E
-
-	.skip_invert_axis:
+	.skip_invert_target_axis:
 
 	; Choose direction
 	LD A, B
@@ -74,17 +89,15 @@ Walking: ; entity XY in BC, Breaks E, Direction result in D
 
 	.Check_Horizontal_Collision:
 	LD E, A
-	DEC E
-	LD A, $tmp_var_3
-	XOR E
-	INC E
-	INC A
 	OR $08
 	PUSH BC
+	PUSH DE
 	LD D, A
+	.INVERT_AXIS
 	LD A, $01
 	.ADD_A_TO_DIRECTION_BC
 	CALL =Is_Collisionable
+	POP DE
 	POP BC
 	CP $00
 	LD A, E
@@ -110,8 +123,6 @@ Walking: ; entity XY in BC, Breaks E, Direction result in D
 
 	DEC A
 	LD E, A
-	LD A, $tmp_var_3
-	XOR E
 	INC A
 	OR $08
 	LD D, A
@@ -119,13 +130,8 @@ Walking: ; entity XY in BC, Breaks E, Direction result in D
 	; Check collision
 
 	.No_movement:
-	LD A, $tmp_var_3
-	CP $00
-	JR Z, =.skip_invert_axis2
-	LD E, B
-	LD B, C
-	LD C, E
-	.skip_invert_axis2:
+
+	.INVERT_AXIS
 
 	LD A, D
 	AND $07

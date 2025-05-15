@@ -191,6 +191,8 @@ Move_Bunny:
 		LD A, D
 
 		LD $mem_bunny_direction, A
+		LD A, $00
+		LD $mem_bunny_animation, A
 
 		BIT 3, D
 		JR Z, =.Start_action_or_movement.end
@@ -240,7 +242,11 @@ Move_Bunny:
 		LD A, (HL)
 		DEC A
 		DAA
-		LD (HL+), A
+		JR C, =.skip_update_health
+		LD (HL), A
+
+		.skip_update_health:
+		INC HL
 
 		SET 3, (HL)
 		LD A, $24
@@ -451,7 +457,7 @@ Center_viewport_around_entity: ; Entity pointer in HL
 	LD B, A
 
 	LD A, (HL)
-	SUB $04
+	SUB $05
 	LD $mem_viewport_y, A
 
 	LD A, (HL+)
@@ -480,7 +486,7 @@ Center_viewport_around_entity: ; Entity pointer in HL
 	LD A, C
 	SWAP A
 	AND $f0
-	SUB $38
+	SUB $48
 	LD C, A
 
 	LD A, E
