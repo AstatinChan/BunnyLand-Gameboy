@@ -5,6 +5,8 @@ Bugs:
  x - Path finding in tunnel
   - Object loading after being in view
   - Kill before or after attack ?
+  - Object sprite sometimes not disappear when picked up
+  - Enemies never unfreeze
  x - Bugs health underflow when attacked
 
 Accessibility issues:
