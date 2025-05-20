@@ -74,7 +74,9 @@ Dialogue_script_instruction_Jump_Table:
 		CALL =Print_str
 		POP HL
 
-		LD A, $05
+		LD A, $mem_display_flag
+		AND $40 ; Keeping the object ones
+		OR $05
 		LD $mem_display_flag, A
 
 		RET
@@ -110,7 +112,9 @@ Dialogue_script_instruction_Jump_Table:
 		CALL =Print_str
 		POP HL
 
-		LD A, $07
+		LD A, $mem_display_flag
+		AND $40 ; Keeping the object ones
+		OR $07
 		LD $mem_display_flag, A
 
 		RET
@@ -156,7 +160,9 @@ Dialogue_script_instruction_Jump_Table:
 		CALL =Print_str
 		POP HL
 
-		LD A, $07
+		LD A, $mem_display_flag
+		AND $40 ; Keeping the object ones
+		OR $07
 		LD $mem_display_flag, A
 
 		RET

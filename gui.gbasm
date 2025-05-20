@@ -1,5 +1,7 @@
 .MACRODEF CLOSE_DIALOGUE
-	LD A, $04
+	LD A, $mem_display_flag
+	AND $60
+	OR $04
 	LD $mem_display_flag, A
 
 	LD HL, $dialogue_first_line
@@ -333,7 +335,9 @@ Open_dialogue_on_dungeon_menu_mode:
 	LD A, $mem_display_flag
 	BIT 0, A
 	RET NZ
-	LD A, $0d
+	LD A, $mem_display_flag
+	AND $40 ; Keeping object additional tile
+	OR $0d
 	LD $mem_display_flag, A
 
 	RET

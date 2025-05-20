@@ -45,7 +45,6 @@ Bug_Turn:
 	LD L, A
 	LD (HL), $05
 	LD A, (HL)
-	DBG
 	.attack_end:
 
 	.Mid_movement:

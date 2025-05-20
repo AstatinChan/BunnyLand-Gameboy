@@ -269,6 +269,7 @@ Load_Additional_Block:
 	LD $mem_additional_loading_block_position_1, A
 	LD A, $mem_prepared_block_position_2
 	LD $mem_additional_loading_block_position_2, A
+
 	RET
 
 Display_Prepared_Blocks:
