@@ -3,10 +3,10 @@ Bugs:
  x - Heal at max should cancel
  x - Off screen lasers
  x - Path finding in tunnel
-  - Object loading after being in view
+ ? - Object loading after being in view
   - Kill before or after attack ?
-  - Object sprite sometimes not disappear when picked up
-  - Enemies never unfreeze
+ x - Object sprite sometimes not disappear when picked up
+ x - Enemies never unfreeze
  x - Bugs health underflow when attacked
 
 Accessibility issues:
