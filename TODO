@@ -1,23 +1,14 @@
 Bugs:
- x - Cancel attack breaks enemy facing direction
- x - Heal at max should cancel
- x - Off screen lasers
- x - Path finding in tunnel
  ? - Object loading after being in view
-  - Kill before or after attack ?
- x - Object sprite sometimes not disappear when picked up
- x - Enemies never unfreeze
- x - Bugs health underflow when attacked
+ ? - Kill before or after attack
 
 Accessibility issues:
   -> freeze/earcopter attack patterns are not obvious (either needs to be shown on map or add select menu with infos if not possible + tutorial to explain the existence of select menu ?)
   -> There is no indicator that the max health is 20
-  -> B + arrow is not obvious (tutorial ?)
-  -> when stairs spawn in the same room as the bunny, it's not obvious that it's not the stairs we just came from
+ ? -> B + arrow is not obvious (tutorial ?)
+ x -> when stairs spawn in the same room as the bunny, it's not obvious that it's not the stairs we just came from
 
 Need to be refactored:
-  -> main is messy and unreadable
-  -> rework mode checks (heatlh update should happen on both dungeon and dead mode)
   -> general structure is messy (why is Update_Animation_Step in entity/action.gbasm ?? What is even entity/action.gbasm supposed to be ??)
   -> split fox turn into multiple subfunction that could be reused in other enemies turns functions
   -> create an enemy turns thingy directory, move attacks inside of entity/enemies (both enemiesattacks and playerattacks)
@@ -37,7 +28,7 @@ x -> Spawn enemies in far away rooms when less than X enemies on the map. (Maybe
 
 x -> Add objects to heal
 
-  -> Add objects get back limited use attacks/learn new attacks
+x -> Add objects get back limited use attacks/learn new attacks
 
 x -> Add attacks for the foxes
 
@@ -46,23 +37,45 @@ x -> Add other types of enemies
   -> Add more enemies & enemy behaviours:
 x	* Fox with distance limited attack and close unlimited attack
 x	* Penguin freezing and fleeing when the player is frozen
-	* Mouse weaker and only close attacks but can move 2x faster
+x	* Mouse weaker and only close attacks but can move 2x faster
 x	* Cats being normal (only close attacks)
-	* Fimsh being super rare have a bunch of HP, not do anything but drop super cool objects
+	* Fimsh
+x		* being super rare (have a bunch of HP), not do anything
+		* but drop super cool objects
 	* Owls heal the enemies around (different pathfinding where it tries to stay 1 block away from the bnuy?) + cooldown
-	* Bugs move 2x faster and sacrifice themselves to give the bunny a status (poisoned & taking damages/slower and skipping one of 2 turns)
-	* Frogs: ?
+x	* Bugs move 2x faster and sacrifice themselves to give the bunny a status (poisoned & taking damages/slower and skipping one of 2 turns)
+x	* Frogs: Can grab bunny to them
 
-  -> Have some enemies drop items
+x -> Have some enemies drop items
 
 x -> Add floor count + a kind of goal (rescuing another bunny/getting a rare item ?)
 
+  -> Music (https://github.com/tildearrow/furnace/)
+
 DEMO
+
+
 
   -> Allow enemy to join your team after beating/with an item/after completing a quest
 
-  -> Get a safe place (not procedurally generated) with friends where we can get quests and choose to explore dungeons
+  -> Get a safe place (not procedurally generated) with friends where we can get quests and choose to explore dungeons. (Firecamp with friends around)
+		-> Thing for going on adventures
+		-> Place where you sleep (firecamp)
+		-> Save feature
 
-  -> Find a way to control the difficulty level so its easier at the start and harder at the end.
+x -> Find a way to control the difficulty level so its easier at the start and harder at the end.
 
-  -> (For far future, maybe make a story)
+  -> We meet a human
+	-> human is stuck in a world with only animals and has been there for a long time
+	-> human likes to go help animals in need (rescue team?)
+	-> we make a team with human (we are only two at the beginning, but story quests will introduce new characters)
+	-> but when speaking to human, it is apparent that human is missing home, but gave up on it a long time ago
+	-> someone is kidnapped, we go to rescue them but the kidnappers have setup a trap and human realises it and "sacrifices themselves" to make sure we are surviving
+	-> Everyone is teaming up to go rescue human from a seemingly hopeless situation
+	-> We manage after of danger and effort to rescue human
+	-> Human realises that they became nihilistic and in wanting to save others, forgot to save themselves and actually really miss home and want now to find their way out
+	-> human stop giving up
+	-> A thing that was barely relevant during the human rescue mission is actually a first small hint to their way back home
+	-> things happening
+	-> Human finally find their way home and go back in an emotional goodbye
+	-> end
