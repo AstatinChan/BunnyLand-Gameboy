@@ -1,3 +1,4 @@
+; THIS FILE IS GENERATED AUTOMATICALLY, DO NOT CHANGE
 GUI_Border_Data:
 	.DB $ff, $00, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 0x10
 	.DB $00, $00, $1f, $1f, $3f, $20, $70, $40, $60, $40, $60, $40, $60, $40, $60, $40 ; 0x11

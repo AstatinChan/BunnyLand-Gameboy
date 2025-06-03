@@ -16,6 +16,8 @@
 .DEFINE VRAM_start $8000
 .DEFINE OAM_start $FE00
 
+.DEFINE VRAM_tilemap_1 $9800
+
 .DEFINE dungeon_generation_step $20
 .DEFINE intial_duplication_probablity $01
 
@@ -49,7 +51,7 @@
 .DEFINE mem_rng_state_2 ($c00b) ; 2 bytes
 
 .DEFINE mem_map_loading_flags ($c00c)
-; bit 0: if the object should be reloaded (scroll or first load)
+; bit 0: scroll or first load (object loading and load map)
 ; bit 1: has a movement ended (objects interaction should be checked, entities should update their positions)
 ; bit 2: if the prepared block should be updated at the next frame
 ; bit 3: animation step is going up (?)

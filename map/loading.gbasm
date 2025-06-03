@@ -14,8 +14,8 @@ Load_Prepared_Map:
 			LD A, C
 			CALL =Load_Block
 			LD A, $mem_prepared_block_position_1
-			SUB $98
-			ADD $c4
+			SUB high($VRAM_tilemap_1)
+			ADD high($mem_map_loading_buffer)
 			LD $mem_prepared_block_position_1, A
 			CALL =Display_Main_Prepared_Block
 
@@ -159,7 +159,7 @@ Construct_Tile_Address: ; Construct Tile Map address from A and B in DE
 	OR E
 	LD E, A
  	LD A, D
-	OR $98
+	OR high($VRAM_tilemap_1)
 	LD D, A
 
 	POP BC
@@ -302,8 +302,6 @@ Display_Main_Prepared_Block:
 	PUSH AF
 	PUSH BC
 	PUSH DE
-
-
 
 	LD A, $mem_prepared_block_position_1
 	LD D, A

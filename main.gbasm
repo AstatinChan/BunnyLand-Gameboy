@@ -121,7 +121,7 @@ Entrypoint:
 
 	CALL =Load_Tile
 
-	JP =New_Dungeon
+	JP =Map_Loading
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"
@@ -149,3 +149,4 @@ Entrypoint:
 .INCLUDE "tileset.gbasm"
 .INCLUDE "text.gbasm"
 .INCLUDE "dialogues/dialogues.gbasm"
+.INCLUDE "map/maps.gbasm"

@@ -3,9 +3,9 @@
 ; When stat out of vblank interrupt -> context switch back to generation
 
 .MACRODEF ENABLE_MODE_2_INTERRUPT
-	LD A, low(=Dungeon_generation_Out_Of_VBlank)
+	LD A, low(=Map_Loading_Out_Of_VBlank)
 	LD ($mem_stat_jump_destination), A
-	LD A, high(=Dungeon_generation_Out_Of_VBlank)
+	LD A, high(=Map_Loading_Out_Of_VBlank)
 	LD ($mem_stat_jump_destination+1), A
 	.RESET_INTERRUPTS
 	LD A, $20
@@ -21,7 +21,7 @@
 	LD $reg_interrupt_enable, A
 .END
 
-New_Dungeon:
+Map_Loading:
 	LD SP, $fffe
 
 	LD A, $00
@@ -50,6 +50,10 @@ New_Dungeon:
 
 	CALL =Reset_Map
 
+	LD HL, $mem_dungeon_map
+	LD BC, $0080
+	LD DE, =_map_Test
+	CALL =memcpy
 
 	LD HL, =Dungeon
 	CALL =Load_Dungeon_Spawn_patterns
@@ -57,9 +61,18 @@ New_Dungeon:
 	LD $mem_loaded_special_entity_index, A
 
 	CALL =Reload_EP_Cost
-	CALL =Dungeon_Generation
-	CALL =Initialize_Entities
-	CALL =Initialize_Objects
+	LD B, $0f
+	LD C, $0f
+	CALL =Initialize_Bunny
+	CALL =Reset_viewport_thingies
+
+	LD A, $mem_map_loading_flags
+	OR $01
+	LD $mem_map_loading_flags, A
+
+	LD HL, $mem_object_list
+	LD BC, $0080
+	CALL =bff
 
 	; Reset animations
 	LD HL, $mem_animation_list
@@ -100,7 +113,7 @@ New_Dungeon:
 
 	CALL =VBlank_Wait
 
-Dungeon_generation_VBlank:
+Map_Loading_VBlank:
 	.ENABLE_MODE_2_INTERRUPT
 	EI
 
@@ -150,9 +163,9 @@ Dungeon_generation_VBlank:
 	HALT
 	JP =.Wait_for_Interrupt.loop
 
-Dungeon_generation_Out_Of_VBlank:
+Map_Loading_Out_Of_VBlank:
 	PUSH AF
-	CALL =VBlank_Wait	
+	CALL =VBlank_Wait
 	.ENABLE_MODE_2_INTERRUPT
 	.RESET_INTERRUPTS
 	POP AF

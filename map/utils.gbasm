@@ -27,3 +27,44 @@ Pick_Random_Room_Avoid_A: ; input A = room to avoid (or FF if none), output A = 
 	POP BC
 	RET
 
+Pick_Room_Position_Avoid_A:; input A = room to avoid (or FF if none), output BC = XY position
+	CALL =Pick_Random_Room_Avoid_A
+Pick_Room_position: ; input A = room to spawn in, output BC = XY position
+	PUSH HL
+	PUSH DE
+	SLA A
+	SLA A
+	ADD low($mem_room_list)
+	LD C, A
+
+	LD B, high($mem_room_list)
+
+	; X
+	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
+
+	LD H, A
+
+	INC BC
+
+	; Y
+	LD A, (BC)
+	LD D, A
+	INC BC
+	LD A, (BC)
+	INC A
+	CALL =RNG_Bound
+	ADD D
+	LD L, A
+
+	LD B, H
+	LD C, L
+
+	POP DE
+	POP HL
+	RET

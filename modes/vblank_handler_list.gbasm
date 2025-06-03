@@ -29,7 +29,11 @@ VBlank_Handler_List:
 	; 3 (new dungeon)
 	.DB =New_Dungeon
 
+	; 4 (pregenerated map loading)
+	.DB =Map_Loading
+
 .INCLUDE "modes/dialoguemenu.gbasm"
 .INCLUDE "modes/dungeon.gbasm"
 .INCLUDE "modes/loading.gbasm"
 .INCLUDE "modes/dungeongeneration.gbasm"
+.INCLUDE "modes/maploading.gbasm"
