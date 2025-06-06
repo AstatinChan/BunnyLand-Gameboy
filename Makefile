@@ -26,6 +26,16 @@ build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbas
 	mkdir -p build
 	gbasm $< $@ > build/main.sym
 
+build/tileset-dump.rom: scripts/tileset-dump.gbasm
+	mkdir -p build
+	gbasm $< $@ > /dev/null
+
+build/tileset-dump.rom.vram.dump: build/tileset-dump.rom
+	gb --skip-bootrom --stop-dump-state $<
+
+build/tileset.png: build/tileset-dump.rom.vram.dump scripts/extract-vram-tileset.py
+	python scripts/extract-vram-tileset.py $< $@
+
 run: build/main.rom
 	mkdir -p recordings
 	gb $< --record-input "./recordings/$(shell date -Iseconds).record"

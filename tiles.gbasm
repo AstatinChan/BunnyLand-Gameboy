@@ -1,32 +1,32 @@
 Load_Tile:
 	LD HL, $8020
 	LD DE, =OBJ_Tile_Image_Data.Bunny
-	LD BC, $00c0
+	LD BC, =OBJ_Tile_Image_Data.Bunny.end-=OBJ_Tile_Image_Data.Bunny
 	CALL =memcpy
 
 	LD HL, $8800
 	LD DE, =Font_Data
-	LD BC, $3a0
+	LD BC, =Font_Data.end-=Font_Data
 	CALL =memcpy
 
 	LD HL, $9100
 	LD DE, =GUI_Border_Data
-	LD BC, $00d0
+	LD BC, =GUI_Border_Data.end-=GUI_Border_Data
 	CALL =memcpy
 
 	LD HL, $9200
 	LD DE, =BG_Tile_Image_Data
-	LD BC, $0500
+	LD BC, =BG_Tile_Image_Data.end-=BG_Tile_Image_Data
 	CALL =memcpy
 
 	LD HL, $8f00
 	LD DE, =Small_sprites
-	LD BC, $0070
+	LD BC, =Small_sprites.end-=Small_sprites
 	CALL =memcpy
 
 	LD HL, $8620
 	LD DE, =Animation_Sprites_Data
-	LD BC, $00a0
+	LD BC, =Animation_Sprites_Data.end-=Animation_Sprites_Data
 	CALL =memcpy
 	RET
 
