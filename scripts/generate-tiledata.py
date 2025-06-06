@@ -3,9 +3,9 @@ import parse_sprite_png
 
 sprite_idx = 0x0
 
-def get_sprite_png_parse_output(png, tallmode=False, sprite_1bpp_mode=False):
+def get_sprite_png_parse_output(png, tallmode=False, sprite_1bpp_mode=False, sprite_8x8=False):
     global sprite_idx
-    result = parse_sprite_png.parseSprite(png, sprite_8x16=tallmode, sprite_1bpp=sprite_1bpp_mode).split("\n")
+    result = parse_sprite_png.parseSprite(png, sprite_8x16=tallmode, sprite_8x8=sprite_8x8, sprite_1bpp=sprite_1bpp_mode).split("\n")
     for r in result:
         if r.startswith(".DB"):
             print("\t{} ; 0x{:02x}".format(r, sprite_idx))
@@ -19,7 +19,11 @@ print("GUI_Border_Data.end:")
 sprite_idx = 0x20
 print("BG_Tile_Image_Data:")
 print("\n\t; Trees")
-get_sprite_png_parse_output("./sprites/bg/tree-tileset.png")
+get_sprite_png_parse_output("./sprites/bg/tree-tileset.png", sprite_8x8=True)
+print("BG_Tile_Image_Data.end:")
+
+sprite_idx = 0x60
+print("OBJ_Tile_Image_Data:")
 print("\n\t; Stairs")
 get_sprite_png_parse_output("./sprites/bg/stairs.png")
 print("\n\t; Carrot")
@@ -28,7 +32,7 @@ print("\n\t; Leaf")
 get_sprite_png_parse_output("./sprites/bg/leaf.png")
 print("\n\t; Box")
 get_sprite_png_parse_output("./sprites/bg/box.png")
-print("BG_Tile_Image_Data.end:")
+print("OBJ_Tile_Image_Data.end:")
 
 sprite_idx = 0xf0
 print("Small_sprites:")
@@ -54,7 +58,7 @@ get_sprite_png_parse_output("./sprites/font.png")
 print("\nFont_Data.end:")
 
 sprite_idx = 0x02
-print("\nOBJ_Tile_Image_Data:")
+print("\nEntity_Tile_Image_Data:")
 print("\n.Bunny:")
 print("\n\t; Bunny side")
 get_sprite_png_parse_output("./sprites/bunny/bunny-side.png", tallmode=True)
@@ -135,7 +139,7 @@ get_sprite_png_parse_output("./sprites/frog/back.png", tallmode=True)
 print("\n\t; Frog front")
 get_sprite_png_parse_output("./sprites/frog/front.png", tallmode=True)
 print("\n.Frog.end:")
-print("\nOBJ_Tile_Image_Data.end:")
+print("\nEntity_Tile_Image_Data.end:")
 
 sprite_idx = 0x60
 print("\nAnimation_Sprites_Data:")

@@ -1,7 +1,7 @@
 Load_Tile:
 	LD HL, $8020
-	LD DE, =OBJ_Tile_Image_Data.Bunny
-	LD BC, =OBJ_Tile_Image_Data.Bunny.end-=OBJ_Tile_Image_Data.Bunny
+	LD DE, =Entity_Tile_Image_Data.Bunny
+	LD BC, =Entity_Tile_Image_Data.Bunny.end-=Entity_Tile_Image_Data.Bunny
 	CALL =memcpy
 
 	LD HL, $8800
@@ -17,6 +17,11 @@ Load_Tile:
 	LD HL, $9200
 	LD DE, =BG_Tile_Image_Data
 	LD BC, =BG_Tile_Image_Data.end-=BG_Tile_Image_Data
+	CALL =memcpy
+
+	LD HL, $9600
+	LD DE, =OBJ_Tile_Image_Data
+	LD BC, =OBJ_Tile_Image_Data.end-=OBJ_Tile_Image_Data
 	CALL =memcpy
 
 	LD HL, $8f00

@@ -1,7 +1,7 @@
 Entity_list:
 	.Fox:
 		; Sprite address
-		.DB =OBJ_Tile_Image_Data.Fox
+		.DB =Entity_Tile_Image_Data.Fox
 
 		; Turn Jump Table index
 		.DB $02
@@ -25,7 +25,7 @@ Entity_list:
 
 	.Frog:
 		; Sprite address
-		.DB =OBJ_Tile_Image_Data.Frog
+		.DB =Entity_Tile_Image_Data.Frog
 
 		; Turn Jump Table index
 		.DB $08
@@ -49,7 +49,7 @@ Entity_list:
 
 	.Cat:
 		; Sprite address
-		.DB =OBJ_Tile_Image_Data.Cat
+		.DB =Entity_Tile_Image_Data.Cat
 
 		; Turn Jump Table index
 		.DB $03
@@ -73,7 +73,7 @@ Entity_list:
 
 	.Penguin:
 		; Sprite address
-		.DB =OBJ_Tile_Image_Data.Penguin
+		.DB =Entity_Tile_Image_Data.Penguin
 
 		; Turn Jump Table index
 		.DB $04
@@ -97,7 +97,7 @@ Entity_list:
 
 	.Mouse:
 		; Sprite address
-		.DB =OBJ_Tile_Image_Data.Mouse
+		.DB =Entity_Tile_Image_Data.Mouse
 
 		; Turn Jump Table index
 		.DB $07
@@ -121,7 +121,7 @@ Entity_list:
 
 	.Fimsh:
 		; Sprite address
-		.DB =OBJ_Tile_Image_Data.Fimsh
+		.DB =Entity_Tile_Image_Data.Fimsh
 
 		; Turn Jump Table index
 		.DB $06
@@ -145,7 +145,7 @@ Entity_list:
 
 	.QuestGoalBunny:
 		; Sprite address
-		.DB =OBJ_Tile_Image_Data.Bunny
+		.DB =Entity_Tile_Image_Data.Bunny
 
 		; Turn Jump Table index
 		.DB $05
@@ -169,7 +169,7 @@ Entity_list:
 
 	.Bug:
 		; Sprite address
-		.DB =OBJ_Tile_Image_Data.Bug
+		.DB =Entity_Tile_Image_Data.Bug
 
 		; Turn Jump Table index
 		.DB $09
