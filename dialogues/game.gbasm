@@ -1,0 +1,26 @@
+Fimsh_Dialogue_Script:
+	.TEXT =fimsh_eegg_1t =fimsh_eegg_1b
+	.TEXT =fimsh_eegg_2t =Empty
+	.TEXT =fimsh_eegg_3t =fimsh_eegg_3b
+	.TEXT =fimsh_eegg_4t =Empty
+	.END
+
+Learn_Attack_Dialogue_Script:
+	.TEXT =New_attack_1t =New_attack_1b
+	.TEXTB_INDIRECT $mem_learn_attack_attack_name_ptr =Double_Exclamation
+	.LEARN_ATTACK_RET
+
+Learn_Attack_Not_Enough_Slot_Dialogue_Script:
+	.TEXT =No_attslot_1t =No_attslot_1b
+	.TEXTB_INDIRECT $mem_learn_attack_attack_name_ptr =Double_Exclamation
+	.TEXT =No_attslot_3t =No_attslot_3b
+	.TEXT =No_attslot_4t =Empty
+	.LEARN_ATTACK_RET
+
+Learn_Attack_Duplicate_Dialogue_Script:
+	.TEXT =dup_attack_1t =dup_attack_1b
+	.TEXTB_INDIRECT $mem_learn_attack_attack_name_ptr =Double_Exclamation
+	.TEXT =dup_attack_3t =dup_attack_3b
+	.TEXT =dup_attack_4t =Empty
+	.LEARN_ATTACK_RET
+

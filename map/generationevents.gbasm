@@ -21,8 +21,8 @@ Generation_Event_Execution:
 
 		.skip:
 		LD A, L
-		AND $fc
-		ADD $04
+		AND $f8
+		ADD $08
 		LD L, A
 		CP $00
 		JR NZ, =.loop
@@ -50,6 +50,8 @@ Generation_Event_Jump_Table:
 	LD A, $enum_dungeon_dialogue_mode
 	LD $mem_requested_mode, A
 
+	LD A, (HL+)
+	LD $mem_dialogue_script_bank, A
 	LD A, (HL+)
 	LD ($mem_dialogue_script_program_counter), A
 	LD A, (HL)
@@ -79,10 +81,15 @@ Init_DemoQuest_Event:
 	INC HL
 	LD (HL), $01 ; jump table dialogue script
 	INC HL
-	LD (HL), high(=Demo_quest_init)
+	LD (HL), bank(=Demo_quest_init)
 	INC HL
-	LD (HL), low(=Demo_quest_init)
+	LD (HL), high(ptr(=Demo_quest_init))
+	INC HL
+	LD (HL), low(ptr(=Demo_quest_init))
+	INC HL
 
+	INC HL
+	INC HL
 	INC HL
 
 	LD (HL), $10 ; floor
@@ -93,6 +100,10 @@ Init_DemoQuest_Event:
 	INC HL
 
 	INC HL
+	INC HL
+	INC HL
+	INC HL
+	INC HL
 
 	LD (HL), $10 ; floor
 	INC HL
@@ -101,13 +112,20 @@ Init_DemoQuest_Event:
 	INC HL
 
 	INC HL
+	INC HL
+	INC HL
+	INC HL
+	INC HL
 
 	LD (HL), $10 ; floor
 	INC HL
 	LD (HL), $01 ; jump table dialogue script
 	INC HL
-	LD (HL), high(=Demo_quest_floor_reach)
+	LD (HL), bank(=Demo_quest_floor_reach)
 	INC HL
-	LD (HL), low(=Demo_quest_floor_reach)
+	LD (HL), high(ptr(=Demo_quest_floor_reach))
+	INC HL
+	LD (HL), low(ptr(=Demo_quest_floor_reach))
 
+AAAAAAAAA:
 	RET

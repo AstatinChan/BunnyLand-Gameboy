@@ -12,6 +12,7 @@
 .DEFINE reg_window_y ($4a)
 .DEFINE reg_window_x ($4b)
 .DEFINE reg_interrupt_enable ($ff)
+.DEFINE reg_rom_bank ($2000)
 
 .DEFINE VRAM_start $8000
 .DEFINE OAM_start $FE00
@@ -20,6 +21,8 @@
 
 .DEFINE dungeon_generation_step $20
 .DEFINE intial_duplication_probablity $01
+
+.DEFINE entity_sprite_data_bank $01
 
 .DEFINE mem_button_direction ($c002)
 .DEFINE mem_button_action ($c003)
@@ -133,7 +136,7 @@
 
 .DEFINE mem_floor_count ($c03c)
 
-.DEFINE mem_loop_frame_timer ($c03d)
+.DEFINE mem_dialogue_script_bank ($c03d)
 
 .DEFINE mem_dialogue_script_program_counter $c03e ; takes c03e and c03f
 
@@ -147,13 +150,16 @@
 .DEFINE mem_number_of_attacks ($c047)
 .DEFINE mem_cursor_max_position ($c048)
 
-.DEFINE mem_learn_attack_dialogue_ret_ptr $c049 ; Takes $c049 and $c04a
-.DEFINE mem_learn_attack_attack_name_ptr $c04b ; Takes $c04b and $c04c
+.DEFINE mem_learn_attack_dialogue_ret_ptr $c049 ; Takes $c049 and $c04b (bank + ptr)
+.DEFINE mem_learn_attack_attack_name_ptr $c04c ; Takes $c04c and $c04e (bank + ptr)
 
-.DEFINE mem_entity_spawning_pattern ($c04d)
-.DEFINE mem_floor_count_bin ($c04e)
+.DEFINE mem_loop_frame_timer ($c04f)
 
-.DEFINE mem_bunny_status_tile ($c04f)
+.DEFINE mem_bunny_status_tile ($c050)
+
+.DEFINE mem_floor_count_bin ($c051)
+
+.DEFINE mem_entity_spawning_pattern ($c052)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
@@ -196,20 +202,6 @@
 ;	y: u8,
 ;	interaction_jump_table_index: u8
 ; 	_padding: u32
-; }
-
-.DEFINE mem_dungeon_generation_events $c9c0 ; Takes the memory from c9c0 to c9ff (16 events)
-; struct events {
-;	floor_idx: u8,
-;
-;	dungeon_gen_event_jump_table_index: u8
-;		00: Nothing
-;		01: Start dialogue at the beggining
-;		02: Spawn a special entity (should not be used twice on the same floor
-;
-;	free_parameters: (u16)
-;		01: Dialogue script address
-;		02: Entity template index (u8 + padding8)
 ; }
 
 .DEFINE mem_oam_buffer $ca00 ; Until $ca9f
@@ -282,6 +274,23 @@
 ;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)
 ; }
 
+.DEFINE mem_dungeon_generation_events $cc80 ; Takes the memory from cc80 to ccff (16 events)
+; struct events {
+;	floor_idx: u8,
+;
+;	dungeon_gen_event_jump_table_index: u8
+;		00: Nothing
+;		01: Start dialogue at the beggining
+;		02: Spawn a special entity (should not be used twice on the same floor
+;		03: Remove stairs
+;
+;	free_parameters: (u24)
+;		01: Dialogue script address (bank + address)
+;		02: Entity template index (u8 + padding16)
+
+;	_padding: u24
+; }
+
 .DEFINE dbg_var ($dfff)
 
 .DEFINE enum_direction_left $01
@@ -319,13 +328,15 @@
 
 ; HIGH_RAM:
 ;
-; 80-85 ; Free to use as temporary variables
-.DEFINE tmp_var_1 ($80)
-.DEFINE tmp_var_2 ($81)
-.DEFINE tmp_var_3 ($82)
-.DEFINE tmp_var_4 ($83)
-.DEFINE tmp_var_5 ($84)
-.DEFINE tmp_var_6 ($85)
+.DEFINE saved_rom_bank ($80)
+
+; 81-86 ; Free to use as temporary variables
+.DEFINE tmp_var_1 ($81)
+.DEFINE tmp_var_2 ($82)
+.DEFINE tmp_var_3 ($83)
+.DEFINE tmp_var_4 ($84)
+.DEFINE tmp_var_5 ($85)
+.DEFINE tmp_var_6 ($86)
 
 ; 86-90 ; OAM_DMA_Transfer_routine
 .DEFINE OAM_DMA_Transfer_routine $ff86

@@ -1,0 +1,261 @@
+Dialogue_script_step:
+	.ASSERT bank(.) $00
+
+	LD A, $mem_dialogue_script_bank
+	.CHANGE_BANK_TO_A
+	LD A, ($mem_dialogue_script_program_counter)
+	LD H, A
+	LD A, ($mem_dialogue_script_program_counter+1)
+	LD L, A
+
+	.next:
+	LD A, (HL+)
+
+	LD BC, =Dialogue_script_instruction_Jump_Table
+
+	.JUMP_TABLE
+
+	LD A, H
+	LD ($mem_dialogue_script_program_counter), A
+	LD A, L
+	LD ($mem_dialogue_script_program_counter+1), A
+
+	RET
+
+Dialogue_script_instruction_Jump_Table:
+	; 00
+	JP =Exit_Menu
+	NOP
+
+	; 01
+	JP =.Text
+	NOP
+
+	; 02
+	JP =.TextB
+	NOP
+
+	; 03
+	JP =.Learn_Attack
+	NOP
+
+	; 04
+	JP =.TextB_Indirect
+	NOP
+
+	; 05
+	JP =.Learn_Attack_Return
+	NOP
+
+	.Text:
+		PUSH HL
+		LD HL, $dialogue_first_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_first_line
+		CALL =Print_str
+		POP HL
+
+		PUSH HL
+		LD HL, $dialogue_third_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_third_line
+		CALL =Print_str
+		POP HL
+
+		LD A, $mem_display_flag
+		AND $40 ; Keeping the object ones
+		OR $05
+		LD $mem_display_flag, A
+
+		RET
+
+	.TextB:
+		PUSH HL
+		LD HL, $dialogue_first_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_first_line
+		CALL =Print_str
+		POP HL
+
+		PUSH HL
+		LD HL, $dialogue_third_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_third_line
+		CALL =Print_str
+		POP HL
+
+		LD A, $mem_display_flag
+		AND $40 ; Keeping the object ones
+		OR $07
+		LD $mem_display_flag, A
+
+		RET
+
+	.TextB_Indirect:
+		PUSH HL
+		LD HL, $dialogue_first_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+
+		LD A, $saved_rom_bank
+		LD $tmp_var_1, A
+
+		LD A, (BC)
+		.CHANGE_BANK_TO_A
+		INC BC
+
+		PUSH DE
+		LD A, (BC)
+		LD D, A
+		INC BC
+		LD A, (BC)
+		LD E, A
+		LD B, D
+		LD C, E
+		POP DE
+
+		PUSH HL
+		LD HL, $dialogue_first_line
+		CALL =Print_str
+		POP HL
+
+		LD A, $tmp_var_1
+		.CHANGE_BANK_TO_A
+
+		PUSH HL
+		LD HL, $dialogue_third_line
+		LD BC, $12
+		CALL =bzero
+		POP HL
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		PUSH HL
+		LD HL, $dialogue_third_line
+		CALL =Print_str
+		POP HL
+
+		LD A, $mem_display_flag
+		AND $40 ; Keeping the object ones
+		OR $07
+		LD $mem_display_flag, A
+
+		RET
+
+	.Learn_Attack:
+		LD A, (HL+)
+		LD E, A
+
+		LD B, $00
+		LD C, A
+		SLA C
+		RR B
+		SLA C
+		RR B
+		SLA C
+		RR B
+		LD A, C
+		ADD low(=Attack_List)
+		LD C, A
+		LD A, B
+		ADC high(=Attack_List)
+		LD B, A
+
+		; TODO: FIX BANK SHENANIGANS
+
+		LD A, (BC)
+		LD ($mem_learn_attack_attack_name_ptr), A
+		INC BC
+		LD A, (BC)
+		LD ($mem_learn_attack_attack_name_ptr+1), A
+		INC BC
+		LD A, (BC)
+		LD ($mem_learn_attack_attack_name_ptr+2), A
+
+		LD A, $mem_dialogue_script_bank
+		LD ($mem_learn_attack_dialogue_ret_ptr), A
+		LD A, H
+		LD ($mem_learn_attack_dialogue_ret_ptr+1), A
+		LD A, L
+		LD ($mem_learn_attack_dialogue_ret_ptr+2), A
+
+		CALL =Check_attack_already_learnt
+		CP $01
+		JR Z, =.Learn_Attack.Duplicate
+
+		LD A, $mem_number_of_attacks
+		CP $04
+		JR NC, =.Learn_Attack.Not_enough_slot
+
+		.Learn_Attack.Success:
+			LD A, $mem_number_of_attacks
+			LD HL, $mem_bunny_attacks
+			ADD L
+			LD L, A
+			LD (HL), E
+			LD A, $mem_number_of_attacks
+			INC A
+			LD $mem_number_of_attacks, A
+
+			LD HL, ptr(=Learn_Attack_Dialogue_Script)
+			.LOAD_BANK_OF =Learn_Attack_Dialogue_Script
+			JP =Dialogue_script_step.next
+
+		.Learn_Attack.Not_enough_slot:
+			LD HL, ptr(=Learn_Attack_Not_Enough_Slot_Dialogue_Script)
+			.LOAD_BANK_OF =Learn_Attack_Not_Enough_Slot_Dialogue_Script
+			JP =Dialogue_script_step.next
+
+		.Learn_Attack.Duplicate:
+			LD HL, ptr(=Learn_Attack_Duplicate_Dialogue_Script)
+			.LOAD_BANK_OF =Learn_Attack_Duplicate_Dialogue_Script
+			JP =Dialogue_script_step.next
+
+	.Learn_Attack_Return:
+		LD A, ($mem_learn_attack_dialogue_ret_ptr)
+		.CHANGE_BANK_TO_A
+		LD A, ($mem_learn_attack_dialogue_ret_ptr+1)
+		LD H, A
+		LD A, ($mem_learn_attack_dialogue_ret_ptr+2)
+		LD L, A
+		JP =Dialogue_script_step.next

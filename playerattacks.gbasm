@@ -111,10 +111,12 @@ Attack_List:
 	; 00
 	.Empty:
 		; Attack menu name string
-		.DB =Empty
+		.DB bank(=Empty)
+		.DB ptr(=Empty)
 
 		; Attack function
-		.DB =Empty_Attack
+		.ASSERT bank(=Empty_Attack) $00
+		.DB ptr(=Empty_Attack)
 
 		; Energy point cost
 		.DB $00
@@ -124,10 +126,12 @@ Attack_List:
 	; 01
 	.Hop:
 		; Attack menu name string
-		.DB =Hop_Attack_Menu_Txt
+		.DB bank(=Hop_Attack_Menu_Txt)
+		.DB ptr(=Hop_Attack_Menu_Txt)
 
 		; Attack function
-		.DB =Hop_Attack
+		.ASSERT bank(=Hop_Attack) $00
+		.DB ptr(=Hop_Attack)
 
 		; Energy point cost
 		.DB $01
@@ -137,10 +141,12 @@ Attack_List:
 	; 02
 	.Heal:
 		; Attack menu name string
-		.DB =Heal_Attack_Menu_Txt
+		.DB bank(=Heal_Attack_Menu_Txt)
+		.DB ptr(=Heal_Attack_Menu_Txt)
 
 		;Attack function
-		.DB =Heal_Attack
+		.ASSERT bank(=Heal_Attack) $00
+		.DB ptr(=Heal_Attack)
 
 		; Energy point cost
 		.DB $05
@@ -150,10 +156,12 @@ Attack_List:
 	; 03
 	.Freeze:
 		; Attack menu name string
-		.DB =Freeze_Attack_Menu_Txt
+		.DB bank(=Freeze_Attack_Menu_Txt)
+		.DB ptr(=Freeze_Attack_Menu_Txt)
 
 		; Attack function
-		.DB =Freeze_Attack
+		.ASSERT bank(=Freeze_Attack) $00
+		.DB ptr(=Freeze_Attack)
 
 		; Energy point cost
 		.DB $05
@@ -163,10 +171,12 @@ Attack_List:
 	; 04
 	.Earcoptr:
 		; Attack menu name string
-		.DB =Earcoptr_Attack_Menu_Txt
+		.DB bank(=Earcoptr_Attack_Menu_Txt)
+		.DB ptr(=Earcoptr_Attack_Menu_Txt)
 
 		; Attack function
-		.DB =Earcoptr_Attack
+		.ASSERT bank(=Earcoptr_Attack) $00
+		.DB ptr(=Earcoptr_Attack)
 
 		; Energy point cost
 		.DB $04

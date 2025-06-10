@@ -1,41 +1,45 @@
 Load_Tile:
+	.LOAD_BANK_OF =Entity_Tile_Image_Data
+
 	LD HL, $8020
-	LD DE, =Entity_Tile_Image_Data.Bunny
+	LD DE, ptr(=Entity_Tile_Image_Data.Bunny)
 	LD BC, =Entity_Tile_Image_Data.Bunny.end-=Entity_Tile_Image_Data.Bunny
 	CALL =memcpy
 
 	LD HL, $8800
-	LD DE, =Font_Data
+	LD DE, ptr(=Font_Data)
 	LD BC, =Font_Data.end-=Font_Data
 	CALL =memcpy
 
 	LD HL, $9100
-	LD DE, =GUI_Border_Data
+	LD DE, ptr(=GUI_Border_Data)
 	LD BC, =GUI_Border_Data.end-=GUI_Border_Data
 	CALL =memcpy
 
 	LD HL, $9200
-	LD DE, =BG_Tile_Image_Data
+	LD DE, ptr(=BG_Tile_Image_Data)
 	LD BC, =BG_Tile_Image_Data.end-=BG_Tile_Image_Data
 	CALL =memcpy
 
 	LD HL, $9600
-	LD DE, =OBJ_Tile_Image_Data
+	LD DE, ptr(=OBJ_Tile_Image_Data)
 	LD BC, =OBJ_Tile_Image_Data.end-=OBJ_Tile_Image_Data
 	CALL =memcpy
 
 	LD HL, $8f00
-	LD DE, =Small_sprites
+	LD DE, ptr(=Small_sprites)
 	LD BC, =Small_sprites.end-=Small_sprites
 	CALL =memcpy
 
 	LD HL, $8620
-	LD DE, =Animation_Sprites_Data
+	LD DE, ptr(=Animation_Sprites_Data)
 	LD BC, =Animation_Sprites_Data.end-=Animation_Sprites_Data
 	CALL =memcpy
 	RET
 
 Reload_Entities_Tile_Data:
+	LD A, $entity_sprite_data_bank
+	.CHANGE_BANK_TO_A
 	LD HL, $mem_loaded_enemies_indices
 	LD E, $03
 	.loop:
@@ -65,7 +69,7 @@ Reload_Entities_Tile_Data:
 		LD L, A
 		LD A, H
 		AND $0f
-		OR $80
+		OR high($VRAM_start)
 		LD H, A
 
 		LD A, (BC)
@@ -74,10 +78,8 @@ Reload_Entities_Tile_Data:
 		LD A, (BC)
 		LD E, A
 
-		LD B, B
 		LD BC, $00c0
 		CALL =memcpy
-		LD B, B
 
 		POP DE
 		POP HL

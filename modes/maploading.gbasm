@@ -32,7 +32,8 @@ Map_Loading:
 	LD A, $00
 	LD $mem_display_flag, A
 
-	LD HL, =Dungeon
+	LD A, bank(=Dungeon)
+	LD HL, ptr(=Dungeon)
 	CALL =Load_Dungeon_Txt
 
 	LD A, $f4
@@ -50,12 +51,14 @@ Map_Loading:
 
 	CALL =Reset_Map
 
+	.LOAD_BANK_OF =_map_Test
 	LD HL, $mem_dungeon_map
 	LD BC, $0080
-	LD DE, =_map_Test
+	LD DE, ptr(=_map_Test)
 	CALL =memcpy
 
-	LD HL, =Dungeon
+	LD A, bank(=Dungeon)
+	LD HL, ptr(=Dungeon)
 	CALL =Load_Dungeon_Spawn_patterns
 	LD A, $entity_questgoalbunny_index
 	LD $mem_loaded_special_entity_index, A
@@ -64,7 +67,9 @@ Map_Loading:
 	LD B, $0f
 	LD C, $0f
 	CALL =Initialize_Bunny
-	CALL =Reset_viewport_thingies
+
+	LD HL, $mem_entities_list
+	CALL =Center_viewport_around_entity
 
 	LD A, $mem_map_loading_flags
 	OR $01

@@ -64,6 +64,9 @@ Init_Attack_Menu:
 		ADC D
 		LD H, A
 
+		LD A, (HL+)
+		.CHANGE_BANK_TO_A
+
 		; Printing txt into dialogue buffer
 		LD A, (HL+)
 		LD B, A
@@ -222,7 +225,7 @@ Reload_EP_Cost:
 	LD H, A
 
 	LD A, L
-	ADD $04
+	ADD $05
 	LD L, A
 	LD A, H
 	ADC $00

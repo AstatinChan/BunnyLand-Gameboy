@@ -36,29 +36,7 @@ Initialize_Entities:
 	LD A, $tmp_var_1
 	LD $mem_bunny_current_room_idx, A
 
-	CALL =Reset_Entities_Collision_Map
-
-Reset_viewport_thingies:
-	LD A, $mem_bunny_x
-	SUB $05
-	LD $mem_viewport_x, A
-
-	LD A, $mem_bunny_y
-	SUB $04
-	LD $mem_viewport_y, A
-
-	LD A, $mem_viewport_x
-	SWAP A
-	AND $f0
-	OR $08
-	LD $mem_prepared_viewport_x, A
-
-	LD A, $mem_viewport_y
-	SWAP A
-	AND $f0
-	OR $08
-	LD $mem_prepared_viewport_y, A
-
+	JP =Reset_Entities_Collision_Map
 	RET
 
 Initialize_Bunny_Random_room:
@@ -158,10 +136,8 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 
 	POP BC
 
-	INC HL
-
 	; Direction
-	LD A, $03
+	LD A, $33
 	LD (HL+), A
 
 	LD A, E

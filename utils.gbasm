@@ -292,3 +292,23 @@ VBlank_Wait:
 	.End:
 	POP AF
 	RET
+
+.MACRODEF CHANGE_BANK_TO_A
+	LD $reg_rom_bank, A
+	LD $saved_rom_bank, A
+.END
+
+.MACRODEF LOAD_BANK_OF =addr
+	.ASSERT bank(.) $00
+	LD A, bank(=addr)
+	.CHANGE_BANK_TO_A
+.END
+
+.MACRODEF BANK_CALL =addr
+	.ASSERT bank(.) $00
+	PUSH AF
+	LD A, bank(=addr)
+	.CHANGE_BANK_TO_A
+	POP AF
+	CALL ptr(=addr)
+.END

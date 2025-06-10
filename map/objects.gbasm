@@ -324,7 +324,7 @@ Earcopter_Attack_Box_Action:
 Fimsh_Attack_Box_Action:
 	LD (HL), $00
 
-	.START_SCRIPT =.Script
+	.START_SCRIPT =Fimsh_Dialogue_Script
 
 	LD A, $enum_dungeon_dialogue_mode
 	LD $mem_requested_mode, A
@@ -338,15 +338,7 @@ Fimsh_Attack_Box_Action:
 	SET 5, A
 	RES 3, A
 	LD $mem_map_loading_flags, A
-
 	RET
-
-	.Script:
-	.TEXT =fimsh_eegg_1t =fimsh_eegg_1b
-	.TEXT =fimsh_eegg_2t =Empty
-	.TEXT =fimsh_eegg_3t =fimsh_eegg_3b
-	.TEXT =fimsh_eegg_4t =Empty
-	.END
 
 Restore_EP_Action:
 	LD A, $mem_bunny_mana

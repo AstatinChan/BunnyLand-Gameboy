@@ -121,11 +121,11 @@ Entrypoint:
 
 	CALL =Load_Tile
 
-	JP =Map_Loading
+	JP =New_Dungeon
 
+.INCLUDE "utils.gbasm"
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"
-.INCLUDE "utils.gbasm"
 .INCLUDE "dialogues/utils.gbasm"
 .INCLUDE "buttons.gbasm"
 .INCLUDE "map/utils.gbasm"
@@ -133,7 +133,6 @@ Entrypoint:
 .INCLUDE "map/generation.gbasm"
 .INCLUDE "map/objects.gbasm"
 .INCLUDE "map/generationevents.gbasm"
-.INCLUDE "map/dungeons.gbasm"
 .INCLUDE "gui.gbasm"
 .INCLUDE "modes/vblank_handler_list.gbasm"
 .INCLUDE "entity/utils.gbasm"
@@ -146,7 +145,12 @@ Entrypoint:
 .INCLUDE "animation.gbasm"
 .INCLUDE "playerattacks.gbasm"
 .INCLUDE "enemiesattacks.gbasm"
+.INCLUDE "dialogues/functions.gbasm"
+.INCLUDE "map/loaddungeon.gbasm"
+
+.PADTO $4000
 .INCLUDE "tileset.gbasm"
 .INCLUDE "text.gbasm"
 .INCLUDE "dialogues/dialogues.gbasm"
 .INCLUDE "map/maps.gbasm"
+.INCLUDE "map/dungeons.gbasm"

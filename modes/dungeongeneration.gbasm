@@ -32,7 +32,8 @@ New_Dungeon:
 	LD A, $00
 	LD $mem_display_flag, A
 
-	LD HL, =Dungeon
+	LD A, bank(=Dungeon)
+	LD HL, ptr(=Dungeon)
 	CALL =Load_Dungeon_Txt
 
 	LD A, $f4
@@ -51,7 +52,8 @@ New_Dungeon:
 	CALL =Reset_Map
 
 
-	LD HL, =Dungeon
+	LD A, bank(=Dungeon)
+	LD HL, ptr(=Dungeon)
 	CALL =Load_Dungeon_Spawn_patterns
 	LD A, $entity_questgoalbunny_index
 	LD $mem_loaded_special_entity_index, A
@@ -96,6 +98,8 @@ New_Dungeon:
 
 	CALL =Generation_Event_Execution
 
+	LD HL, $mem_entities_list
+	CALL =Center_viewport_around_entity
 	CALL =Load_Prepared_Map
 
 	CALL =VBlank_Wait
