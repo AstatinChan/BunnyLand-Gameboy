@@ -1,0 +1,81 @@
+Load_ROM_Block: ; X in A, Y in B
+	PUSH BC
+	PUSH AF
+
+	CP $20
+	JP NC, =Load_Block_From_Solid.After_AF_BC_Push
+
+	PUSH BC
+	LD C, A
+	LD A, B
+	CP $20
+	LD A, C
+	POP BC
+	JP NC, =Load_Block_From_Solid.After_AF_BC_Push
+
+	PUSH DE
+	PUSH HL
+
+	LD C, A
+
+
+	CALL =Construct_Tile_Address
+
+	LD A, $mem_map_loading_flags
+	SET 2, A
+	LD $mem_map_loading_flags, A
+
+	LD A, ($mem_rom_tilemap_addr+1)
+	LD H, A
+	LD A, ($mem_rom_tilemap_addr+2)
+	LD L, A
+	LD A, ($mem_rom_tilemap_addr)
+	.CHANGE_BANK_TO_A
+
+	SLA C
+	SLA B
+	LD A, $00
+	SRA B
+	RR A
+	SRA B
+	RR A
+	OR C
+	LD C, A
+
+	DBG
+
+	LD A, L
+	ADD C
+	LD L, A
+	LD A, H
+	ADC B
+	LD H, A
+
+	LD A, D
+	LD ($mem_prepared_block_position), A
+	LD A, E
+	LD ($mem_prepared_block_position+1), A
+
+	LD A, (HL+)
+	LD ($mem_prepared_block_tile), A
+	LD A, (HL)
+	LD ($mem_prepared_block_tile+1), A
+
+	LD A, L
+	DEC A
+	ADD $40
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+
+	LD A, (HL+)
+	LD ($mem_prepared_block_tile+2), A
+	LD A, (HL)
+	LD ($mem_prepared_block_tile+3), A
+
+	POP HL
+	POP DE
+	POP AF
+	POP BC
+	RET

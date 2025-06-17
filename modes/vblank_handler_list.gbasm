@@ -26,8 +26,8 @@ VBlank_Handler_List:
 	; 2 (loading, animation)
 	.DB =Loading_VBLANK_Entrypoint
 
-	; 3 (new dungeon)
-	.DB =New_Dungeon
+	; 3 (new floor)
+	.DB =New_Floor
 
 	; 4 (pregenerated map loading)
 	.DB =Map_Loading

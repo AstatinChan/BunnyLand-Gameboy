@@ -312,3 +312,21 @@ VBlank_Wait:
 	POP AF
 	CALL ptr(=addr)
 .END
+
+.MACRODEF COPY_4BYTES dest src
+	LD A, ($src)
+	LD ($dest), A
+	LD A, ($src+1)
+	LD ($dest+1), A
+	LD A, ($src+2)
+	LD ($dest+2), A
+	LD A, ($src+3)
+	LD ($dest+3), A
+.END
+
+.MACRODEF COPY_2BYTES dest src
+	LD A, ($src)
+	LD ($dest), A
+	LD A, ($src+1)
+	LD ($dest+1), A
+.END

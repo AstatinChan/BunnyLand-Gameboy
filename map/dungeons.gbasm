@@ -1,1 +1,41 @@
+; struct dungeon
+; {
+; 	name: *char (u24=bank+ptr),
+; 	flags: 0b000mTSFM,
+; 		M = whether or not this dungeon has a pregenerated tilemap (0 means that it's randomly generated)
+; 		F = whether or not the floors are counted
+; 		S = whether or not enemies can spawn
+; 		T = whether or not there is a top bar shown
+; 		m = whether or not you can open the attack menu
+; 	tilemap: ptr (u24=bank+ptr)
+; 	generation_event_size: u8 (size of the generation_eents_structure
+; 	generation_events: [x]struct (8 bytes) {
+; 		...see definitions
+; 	}
+; 	max_floor: u8
+; 	inverted_max_floor: u8 (1/max_floor)
+; 	spawning_pattern: [8]struct (5 bytes){
+; 		entities_idx: [4]u8
+; 		spawn_frequencies: u8
+; }
+
+.MACRODEF GEN_EVENT_DIALOGUE floor =dialogue
+	$start:
+	.DB low($floor), $01
+	.DB bank(=dialogue), high(ptr(=dialogue)), low(ptr(=dialogue))
+	.PADTO =$start+8
+.END
+
+.MACRODEF GEN_EVENT_SPECIAL_ENTITY floor entity_idx
+	$start:
+	.DB low($floor), $02, low($entity_idx)
+	.PADTO =$start+8
+.END
+
+.MACRODEF GEN_EVENT_REMOVE_STAIRS floor
+	$start:
+	.DB low($floor), $03
+	.PADTO =$start+8
+.END
+
 .INCLUDE "map/dungeons/morningforest.gbasm"

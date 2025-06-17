@@ -22,6 +22,30 @@
 .END
 
 New_Dungeon:
+	LD A, $20
+	LD $mem_bunny_health, A
+	LD A, $30
+	LD $mem_bunny_mana, A
+	LD A, $01
+	LD $mem_floor_count, A
+	LD A, $00
+	LD $mem_floor_count_bin, A
+
+	LD A, ($mem_dungeon+1)
+	LD H, A
+	LD A, ($mem_dungeon+2)
+	LD L, A
+	LD A, ($mem_dungeon)
+	CALL =Load_Dungeon_Txt
+
+	LD A, ($mem_dungeon+1)
+	LD H, A
+	LD A, ($mem_dungeon+2)
+	LD L, A
+	LD A, ($mem_dungeon)
+	CALL =Load_Generation_Events
+
+New_Floor:
 	LD SP, $fffe
 
 	LD A, $00
@@ -31,10 +55,6 @@ New_Dungeon:
 
 	LD A, $00
 	LD $mem_display_flag, A
-
-	LD A, bank(=Dungeon)
-	LD HL, ptr(=Dungeon)
-	CALL =Load_Dungeon_Txt
 
 	LD A, $f4
 	LD ($9ecb), A
@@ -51,9 +71,11 @@ New_Dungeon:
 
 	CALL =Reset_Map
 
-
-	LD A, bank(=Dungeon)
-	LD HL, ptr(=Dungeon)
+	LD A, ($mem_dungeon+1)
+	LD H, A
+	LD A, ($mem_dungeon+2)
+	LD L, A
+	LD A, ($mem_dungeon)
 	CALL =Load_Dungeon_Spawn_patterns
 	LD A, $entity_questgoalbunny_index
 	LD $mem_loaded_special_entity_index, A

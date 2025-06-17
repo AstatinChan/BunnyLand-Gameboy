@@ -32,8 +32,11 @@ Map_Loading:
 	LD A, $00
 	LD $mem_display_flag, A
 
-	LD A, bank(=Dungeon)
-	LD HL, ptr(=Dungeon)
+	LD A, ($mem_dungeon+1)
+	LD H, A
+	LD A, ($mem_dungeon+2)
+	LD L, A
+	LD A, ($mem_dungeon)
 	CALL =Load_Dungeon_Txt
 
 	LD A, $f4
@@ -57,8 +60,11 @@ Map_Loading:
 	LD DE, ptr(=_map_Test)
 	CALL =memcpy
 
-	LD A, bank(=Dungeon)
-	LD HL, ptr(=Dungeon)
+	LD A, ($mem_dungeon+1)
+	LD H, A
+	LD A, ($mem_dungeon+2)
+	LD L, A
+	LD A, ($mem_dungeon)
 	CALL =Load_Dungeon_Spawn_patterns
 	LD A, $entity_questgoalbunny_index
 	LD $mem_loaded_special_entity_index, A

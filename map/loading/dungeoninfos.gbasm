@@ -2,9 +2,13 @@ Load_Dungeon_Txt: ; pointer to Dungeon struct in HL, bank in A
 	.CHANGE_BANK_TO_A
 
 	LD A, (HL+)
+	LD E, A
+	LD A, (HL+)
 	LD B, A
 	LD A, (HL+)
 	LD C, A
+	LD A, E
+	.CHANGE_BANK_TO_A
 
 	PUSH BC
 	LD H, B
@@ -30,8 +34,22 @@ Load_Dungeon_Txt: ; pointer to Dungeon struct in HL, bank in A
 
 Load_Dungeon_Spawn_patterns: ; pointer to Dungeon struct in HL bank in A
 	.CHANGE_BANK_TO_A
-	INC HL
-	INC HL
+	LD A, L
+	ADD $07
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+
+	LD A, (HL+)
+	LD B, A
+	LD A, L
+	ADD B
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+
 	INC HL
 
 	; TODO FIX THE THING WHEN THERE'S MORE THAN 256/7 FLOORS
@@ -84,5 +102,31 @@ Load_Dungeon_Spawn_patterns: ; pointer to Dungeon struct in HL bank in A
 
 	LD A, (HL)
 	LD $mem_entity_spawning_pattern, A
+
+	RET
+
+Load_Generation_Events: ; bank in A, dungeon ptr in HL
+	.CHANGE_BANK_TO_A
+	LD A, L
+	ADD $07
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+	LD B, $00
+	LD C, (HL)
+	INC HL
+	LD D, H
+	LD E, L
+	LD HL, $mem_dungeon_generation_events
+	CALL =memcpy
+
+	LD A, C
+	CPL
+	INC A
+	ADD $80
+	LD C, A
+
+	CALL =bzero
 
 	RET

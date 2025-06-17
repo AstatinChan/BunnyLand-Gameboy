@@ -98,14 +98,6 @@
 
 Entrypoint:
 	CALL =Initialize_RNG
-	LD A, $20
-	LD $mem_bunny_health, A
-	LD A, $30
-	LD $mem_bunny_mana, A
-	LD A, $01
-	LD $mem_floor_count, A
-	LD A, $00
-	LD $mem_floor_count_bin, A
 
 	LD HL, $mem_bunny_attacks
 	LD A, $01
@@ -117,7 +109,13 @@ Entrypoint:
 	LD A, $01
 	LD $mem_number_of_attacks, A
 
-	CALL =Init_DemoQuest_Event
+	LD A, bank(=Morning_Forest)
+	LD ($mem_dungeon), A
+	LD HL, ptr(=Morning_Forest)
+	LD A, H
+	LD ($mem_dungeon+1), A
+	LD A, L
+	LD ($mem_dungeon+2), A
 
 	CALL =Load_Tile
 
@@ -129,7 +127,8 @@ Entrypoint:
 .INCLUDE "dialogues/utils.gbasm"
 .INCLUDE "buttons.gbasm"
 .INCLUDE "map/utils.gbasm"
-.INCLUDE "map/loading.gbasm"
+.INCLUDE "map/loading/dungeontiles.gbasm"
+.INCLUDE "map/loading/romtiles.gbasm"
 .INCLUDE "map/generation.gbasm"
 .INCLUDE "map/objects.gbasm"
 .INCLUDE "map/generationevents.gbasm"
@@ -146,7 +145,7 @@ Entrypoint:
 .INCLUDE "playerattacks.gbasm"
 .INCLUDE "enemiesattacks.gbasm"
 .INCLUDE "dialogues/functions.gbasm"
-.INCLUDE "map/loaddungeon.gbasm"
+.INCLUDE "map/loading/dungeoninfos.gbasm"
 
 .PADTO $4000
 .INCLUDE "tileset.gbasm"

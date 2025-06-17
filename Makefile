@@ -22,7 +22,7 @@ build/main.rom: build/main.rom.unsigned
 	cp build/main.rom.unsigned build/main.rom
 	python scripts/set_checksums.py build/main.rom
 
-build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm)
+build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm) $(wildcard ./**/**/*.gbasm)
 	mkdir -p build
 	gbasm $< $@ > build/main.sym
 

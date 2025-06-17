@@ -13,10 +13,10 @@ Load_Prepared_Map:
 		.For_X:
 			LD A, C
 			CALL =Load_Block
-			LD A, $mem_prepared_block_position_1
+			LD A, ($mem_prepared_block_position)
 			SUB high($VRAM_tilemap_1)
 			ADD high($mem_map_loading_buffer)
-			LD $mem_prepared_block_position_1, A
+			LD ($mem_prepared_block_position), A
 			CALL =Display_Main_Prepared_Block
 
 			INC C
@@ -68,7 +68,6 @@ Load_Next_Block_Row: ; (+1/-1 direction in B, block number (between 0-f) in C
 	RET
 
 Load_Next_Block_Column: ; (+1/-1 direction in B), block number (between 0-f) in C
-
 	PUSH AF
 	PUSH BC
 	PUSH DE
@@ -116,7 +115,7 @@ Prepare_Scrolling_Map:
 	AND $07
 	DEC A
 	AND $01
-	SLA A
+	ADD A
 	DEC A
 	LD B, A
 	LD A, $mem_bunny_direction
@@ -155,7 +154,7 @@ Construct_Tile_Address: ; Construct Tile Map address from A and B in DE
 	RL D
 	SLA E
 	RL D
-	SLA A
+	ADD A
 	OR E
 	LD E, A
  	LD A, D
@@ -167,9 +166,12 @@ Construct_Tile_Address: ; Construct Tile Map address from A and B in DE
 
 	RET
 
-Load_Block: ; X in A, Y in B
+Load_Block:
+Load_Block_From_Solid: ; X in A, Y in B
 	PUSH BC
 	PUSH AF
+	.After_AF_BC_Push:
+
 	PUSH DE
 
 	CALL =Construct_Tile_Address
@@ -213,8 +215,6 @@ Load_Block: ; X in A, Y in B
 	OR C
 	LD C, A
 
-	INC C
-
 	LD A, $mem_map_loading_flags
 	SET 2, A
 	LD $mem_map_loading_flags, A
@@ -223,9 +223,9 @@ Load_Block: ; X in A, Y in B
 	POP DE
 
 	LD A, D
-	LD $mem_prepared_block_position_1, A
+	LD ($mem_prepared_block_position), A
 	LD A, E
-	LD $mem_prepared_block_position_2, A
+	LD ($mem_prepared_block_position+1), A
 
 	POP AF
 
@@ -235,13 +235,52 @@ Load_Block: ; X in A, Y in B
 	JR Z, =Load_Block.Empty
 	Load_Block.Solid:
 		LD A, C
-		LD $mem_prepared_block_tile, A
+		AND 0b0101
+		SRA A
+		RRA
+		RLCA
+		ADD $20
+
+		LD ($mem_prepared_block_tile), A
+
+		LD A, C
+		AND 0b0110
+		SRA A
+		ADD $24
+
+		LD ($mem_prepared_block_tile+1), A
+
+		LD A, C
+		AND 0b1001
+		SRA A
+		RRA
+		RLCA
+		SRA A
+		RRA
+		RLCA
+		ADD $28
+
+		LD ($mem_prepared_block_tile+2), A
+
+		LD A, C
+		AND 0b1010
+		SRA A
+		RRA
+		RRA
+		RLCA
+		ADD $2c
+
+		LD ($mem_prepared_block_tile+3), A
+
 
 		JR =Load_Block.End
 
 	Load_Block.Empty:
 		LD A, $00
-		LD $mem_prepared_block_tile, A
+		LD ($mem_prepared_block_tile), A
+		LD ($mem_prepared_block_tile+1), A
+		LD ($mem_prepared_block_tile+2), A
+		LD ($mem_prepared_block_tile+3), A
 
 	Load_Block.End:
 
@@ -258,12 +297,11 @@ Load_Additional_Block:
 	LD B, A
 	LD A, $mem_additional_loading_block_x
 	CALL =Load_Block
-	LD A, $mem_prepared_block_tile
-	LD $mem_additional_loading_block_tile, A
-	LD A, $mem_prepared_block_position_1
-	LD $mem_additional_loading_block_position_1, A
-	LD A, $mem_prepared_block_position_2
-	LD $mem_additional_loading_block_position_2, A
+	.COPY_4BYTES $mem_additional_loading_block_tile, $mem_prepared_block_tile
+	LD A, ($mem_prepared_block_position)
+	LD ($mem_additional_loading_block_position), A
+	LD A, ($mem_prepared_block_position+1)
+	LD ($mem_additional_loading_block_position+1), A
 
 	RET
 
@@ -285,12 +323,12 @@ Display_Prepared_Blocks:
 	RES 6, A
 	LD $mem_display_flag, A
 
-	LD A, $mem_additional_loading_block_tile
-	LD $mem_prepared_block_tile, A
-	LD A, $mem_additional_loading_block_position_1
-	LD $mem_prepared_block_position_1, A
-	LD A, $mem_additional_loading_block_position_2
-	LD $mem_prepared_block_position_2, A
+	.COPY_4BYTES $mem_prepared_block_tile, $mem_additional_loading_block_tile
+
+	LD A, ($mem_additional_loading_block_position)
+	LD ($mem_prepared_block_position), A
+	LD A, ($mem_additional_loading_block_position+1)
+	LD ($mem_prepared_block_position+1), A
 	JP =Display_Main_Prepared_Block
 
 Display_Main_Prepared_Block:
@@ -298,92 +336,28 @@ Display_Main_Prepared_Block:
 	PUSH BC
 	PUSH DE
 
-	LD A, $mem_prepared_block_position_1
+	LD A, ($mem_prepared_block_position)
 	LD D, A
 
-	LD A, $mem_prepared_block_position_2
+	LD A, ($mem_prepared_block_position+1)
 	LD E, A
 
-	LD A, $mem_prepared_block_tile
-	CP $00
-	JR Z, =.Empty
+	LD A, ($mem_prepared_block_tile)
+	LD (DE), A
+
+	INC E
+	LD A, ($mem_prepared_block_tile+1)
+	LD (DE), A
+
+	LD A, E
+	OR $20
 	DEC A
-	LD C, A
-
-	AND 0b0101
-	SCF
-	CCF
-	RR A
-	RR A
-	RLC A
-	ADD $20
-
-	LD (DE), A
-
-	LD A, E
-	OR $20
 	LD E, A
-
-	LD A, C
-	AND 0b1001
-	SCF
-	CCF
-	RR A
-	RR A
-	RLC A
-	SCF
-	CCF
-	RR A
-	RR A
-	RLC A
-	ADD $28
+	LD A, ($mem_prepared_block_tile+2)
 	LD (DE), A
 
 	INC E
-
-	LD A, C
-	AND 0b1010
-	SRA A
-	RR A
-	RR A
-	RLC A
-	ADD $2c
-
-	LD (DE), A
-
-	LD A, E
-	AND $DF
-	LD E, A
-
-	LD A, C
-	AND 0b0110
-	SRA A
-	ADD $24
-
-	LD (DE), A
-
-	.End:
-
-	POP DE
-	POP BC
-	POP AF
-	RET
-
-	.Empty:
-	XOR A
-	LD (DE), A
-	LD A, E
-	OR $20
-	LD E, A
-	XOR A
-	LD (DE), A
-	INC E
-	XOR A
-	LD (DE), A
-	LD A, E
-	AND $DF
-	LD E, A
-	XOR A
+	LD A, ($mem_prepared_block_tile+3)
 	LD (DE), A
 
 	POP DE

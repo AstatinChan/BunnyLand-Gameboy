@@ -1,6 +1,23 @@
-Dungeon:
-	.name: .DB =Dungeon_Name_1_Txt
+Morning_Forest:
+	.name:
+		.DB bank(=Dungeon_Name_1_Txt)
+		.DB ptr(=Dungeon_Name_1_Txt)
+
+	.flag: .DB 0b00011110
+
+	.tilemap_padding: .PADTO =.tilemap_padding+3
+
+	.generation_events.size:
+		.DB low(=.generation_events.end-=.generation_events)
+	.generation_events:
+		.GEN_EVENT_DIALOGUE $01 =Demo_quest_init
+		.GEN_EVENT_DIALOGUE $10 =Demo_quest_floor_reach
+		.GEN_EVENT_SPECIAL_ENTITY $10 $06
+		.GEN_EVENT_REMOVE_STAIRS $10
+	.generation_events.end:
+
 	.max_floor: .DB 0x0a, inv(0x0a)
+
 	.spawning_patterns:
 		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
 		.DB $entity_cat_index, $entity_cat_index, $entity_penguin_index, $entity_fimsh_index, 0b00100011
@@ -10,3 +27,5 @@ Dungeon:
 		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00011111
 		.DB $entity_fox_index, $entity_bug_index, $entity_penguin_index, $entity_fimsh_index, 0b00011111
 		.DB $entity_fox_index, $entity_mouse_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+
+.ASSERT bank(=Morning_Forest) bank(.)

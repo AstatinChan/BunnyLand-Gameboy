@@ -23,8 +23,7 @@ RNG_Step:
 	LD E, A
 
 	; state << 7
-	SCF
-	CCF
+	AND A
 	LD A, $mem_rng_state_2
 	LD B, A
 	LD A, $mem_rng_state_1

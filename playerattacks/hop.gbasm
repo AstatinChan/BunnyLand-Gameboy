@@ -38,12 +38,8 @@ Hop_Attack_Loading_VBlank:
 
 	CALL =Display_Main_Prepared_Block
 
-	LD A, $mem_prepared_loading_block_tile
-	LD $mem_prepared_block_tile, A
-	LD A, $mem_prepared_loading_block_position_1
-	LD $mem_prepared_block_position_1, A
-	LD A, $mem_prepared_loading_block_position_2
-	LD $mem_prepared_block_position_2, A
+	.COPY_4BYTES $mem_prepared_block_tile, $mem_prepared_loading_block_tile
+	.COPY_2BYTES $mem_prepared_block_position, $mem_prepared_loading_block_position
 
 	LD A, $mem_map_loading_flags
 	SET 2, A
@@ -121,12 +117,8 @@ Hop_Attack_Loading_Regular:
 	RET NZ
 	CALL =Preload_Map_Hop
 
-	LD A, $mem_prepared_block_tile
-	LD $mem_prepared_loading_block_tile, A
-	LD A, $mem_prepared_block_position_1
-	LD $mem_prepared_loading_block_position_1, A
-	LD A, $mem_prepared_block_position_2
-	LD $mem_prepared_loading_block_position_2, A
+	.COPY_4BYTES $mem_prepared_loading_block_tile, $mem_prepared_block_tile
+	.COPY_2BYTES $mem_prepared_loading_block_position, $mem_prepared_block_position
 
 	LD A, $mem_bunny_direction
 	SWAP A

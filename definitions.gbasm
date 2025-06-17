@@ -61,9 +61,10 @@
 ; bit 4: animation step should start to go up on next frame
 ; bit 5: if entity collision map should be updated
 
-.DEFINE mem_prepared_block_tile ($c00d)
-.DEFINE mem_prepared_block_position_1 ($c00e)
-.DEFINE mem_prepared_block_position_2 ($c00f)
+.DEFINE mem_number_of_attacks ($c00d)
+.DEFINE mem_entity_being_attacked_low ($c00e)
+
+; FREE SPACE POGPOGPOG $c00f
 
 .DEFINE mem_object_load_counter ($c010)
 .DEFINE mem_prepared_viewport_x ($c011)
@@ -100,9 +101,7 @@
 .DEFINE mem_last_button_action ($c020)
 .DEFINE mem_loading_step ($c021)
 
-.DEFINE mem_prepared_loading_block_tile ($c022)
-.DEFINE mem_prepared_loading_block_position_1 ($c023)
-.DEFINE mem_prepared_loading_block_position_2 ($c024)
+.DEFINE mem_rom_tilemap_addr $c022 ; Takes $c022 to $c024 (bank + ptr)
 
 .DEFINE mem_loading_mode_vblank_func_pointer_high ($c025)
 .DEFINE mem_loading_mode_vblank_func_pointer_low ($c026)
@@ -128,38 +127,46 @@
 
 .DEFINE mem_blinking_animation_counter ($c036)
 
-.DEFINE mem_additional_loading_block_x ($c037)
-.DEFINE mem_additional_loading_block_y ($c038)
-.DEFINE mem_additional_loading_block_tile ($c039)
-.DEFINE mem_additional_loading_block_position_1 ($c03a)
-.DEFINE mem_additional_loading_block_position_2 ($c03b)
+.DEFINE mem_entity_spawning_pattern ($c037)
+
+; 38-3a
+.DEFINE mem_dialogue_script_bank ($c038)
+
+.DEFINE mem_dialogue_script_program_counter $c039 ; takes c039 and c03a
+
+.DEFINE mem_floor_count_bin ($c03b)
 
 .DEFINE mem_floor_count ($c03c)
 
-.DEFINE mem_dialogue_script_bank ($c03d)
+.DEFINE mem_loop_frame_timer ($c03d)
 
-.DEFINE mem_dialogue_script_program_counter $c03e ; takes c03e and c03f
+.DEFINE mem_bunny_status_tile ($c03e)
 
-.DEFINE mem_entity_being_attacked_low ($c040)
+.DEFINE mem_cursor_max_position ($c03f)
 
-.DEFINE mem_vblank_jump_instruction $c041 ; takes from c041 to c043
-.DEFINE mem_vblank_jump_destination $c042 ; takes from c042 to c043
-.DEFINE mem_stat_jump_instruction $c044 ; takes from c044 to c046
-.DEFINE mem_stat_jump_destination $c045 ; takes from c045 to c046
+.DEFINE mem_vblank_jump_instruction $c040 ; takes from c040 to c042
+.DEFINE mem_vblank_jump_destination $c041 ; takes from c041 to c042
+.DEFINE mem_stat_jump_instruction $c043 ; takes from c043 to c045
+.DEFINE mem_stat_jump_destination $c044 ; takes from c044 to c045
 
-.DEFINE mem_number_of_attacks ($c047)
-.DEFINE mem_cursor_max_position ($c048)
 
-.DEFINE mem_learn_attack_dialogue_ret_ptr $c049 ; Takes $c049 and $c04b (bank + ptr)
-.DEFINE mem_learn_attack_attack_name_ptr $c04c ; Takes $c04c and $c04e (bank + ptr)
+.DEFINE mem_learn_attack_dialogue_ret_ptr $c046 ; Takes $c046 to $c048 (bank + ptr)
+.DEFINE mem_learn_attack_attack_name_ptr $c049 ; Takes $c049 to $c04b (bank + ptr)
 
-.DEFINE mem_loop_frame_timer ($c04f)
+; FREE SPACE $c04c
 
-.DEFINE mem_bunny_status_tile ($c050)
+.DEFINE mem_prepared_loading_block_position $c04e ; Takes $c04e-$c04f
+.DEFINE mem_prepared_loading_block_tile $c050 ; Takes $c050-c054
 
-.DEFINE mem_floor_count_bin ($c051)
+.DEFINE mem_additional_loading_block_x ($c055)
+.DEFINE mem_additional_loading_block_y ($c056)
+.DEFINE mem_additional_loading_block_position $c057 ; Takes $c057-$c058
+.DEFINE mem_additional_loading_block_tile $c059 ; Takes $c059-$c05c
 
-.DEFINE mem_entity_spawning_pattern ($c052)
+.DEFINE mem_prepared_block_position $c05d ; Takes $c05d-$c05e
+.DEFINE mem_prepared_block_tile $c05f ; Takes $c05f-$c062
+
+.DEFINE mem_dungeon $c060 ; Takes $c060-$c062
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
