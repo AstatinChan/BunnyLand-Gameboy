@@ -166,7 +166,7 @@
 .DEFINE mem_prepared_block_position $c05d ; Takes $c05d-$c05e
 .DEFINE mem_prepared_block_tile $c05f ; Takes $c05f-$c062
 
-.DEFINE mem_dungeon $c060 ; Takes $c060-$c062
+.DEFINE mem_dungeon $c063 ; Takes $c063-$c065
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
