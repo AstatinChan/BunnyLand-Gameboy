@@ -1,3 +1,4 @@
+; THIS FILE IS GENERATED AUTOMATICALLY, DO NOT CHANGE
 Empty:
 .DB , 0xff
 Bunny_Header_Text:

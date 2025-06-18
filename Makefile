@@ -1,3 +1,6 @@
+GBASM=gbasm
+MAKESELF=makeself
+
 all: run
 
 .PHONY: clean sclean
@@ -24,17 +27,34 @@ build/main.rom: build/main.rom.unsigned
 
 build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm) $(wildcard ./**/**/*.gbasm)
 	mkdir -p build
-	gbasm $< $@ > build/main.sym
+	$(GBASM) $< $@ > build/main.sym
 
 build/tileset-dump.rom: scripts/tileset-dump.gbasm
 	mkdir -p build
-	gbasm $< $@ > /dev/null
+	$(GBASM) $< $@ > /dev/null
 
 build/tileset-dump.rom.vram.dump: build/tileset-dump.rom
 	gb --skip-bootrom --stop-dump-state $<
 
 build/tileset.png: build/tileset-dump.rom.vram.dump scripts/extract-vram-tileset.py
 	python scripts/extract-vram-tileset.py $< $@
+
+build/makeself/gb_linux-x86_64:
+	mkdir -p build/makeself
+	wget https://github.com/AstatinChan/gameboy-emulator/releases/download/latest/gb_linux-x86_64 -O $@
+	chmod +x $@
+
+build/makeself/main.rom: build/main.rom
+	mkdir -p build/makeself
+	cp $< $@
+
+build/makeself/start.sh: ./scripts/makeself-start.sh
+	mkdir -p build/makeself
+	cp $< $@
+	chmod +x $@
+
+build/game_linux_x86-64: build/makeself/start.sh build/makeself/main.rom build/makeself/gb_linux-x86_64
+	$(MAKESELF) ./build/makeself $@ "Astatin's Bunny Game" ./start.sh
 
 run: build/main.rom
 	mkdir -p recordings
@@ -51,5 +71,5 @@ clean:
 
 sclean: clean
 	rm tileset.gbasm
-	find . -name "*.gbtxt" | sed 's/\.gbtxt$/.gbasm/' | xargs rm
+	find . -name "*.gbtxt" | sed 's/\.gbtxt$$/.gbasm/' | xargs rm
 	rm map/maps/*.map.gbasm map/maps.gbasm

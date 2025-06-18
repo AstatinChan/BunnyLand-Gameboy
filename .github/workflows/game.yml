@@ -1,0 +1,40 @@
+name: Game
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download makeself
+      run: wget https://github.com/megastep/makeself/releases/download/release-2.5.0/makeself-2.5.0.run
+    - name: Extract makeself
+      run: sh ./makeself-2.5.0.run
+
+    - name: Download assembler
+      run: wget https://github.com/AstatinChan/gameboy-asm/releases/download/latest/gbasm_linux-x86_64
+    - name: Make assembler executable
+      run: chmod +x gbasm_linux-x86_64
+
+    - name: Build ROM
+      run: make GBASM=./gbasm_linux-x86_64 build/main.rom && cp build/main.rom main.gb
+    - name: Build Linux Makeself Executable
+      run: make GBASM=./gbasm_linux-x86_64 MAKESELF=./makeself-2.5.0/makeself.sh build/game_linux_x86-64 && cp build/game_linux_x86-64 .
+
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        title: "Development Build"
+        files: |
+          game_linux_x86-64
+          main.gb
