@@ -1,4 +1,6 @@
-Load_Dungeon_Txt: ; pointer to Dungeon struct in HL, bank in A
+Load_Dungeon_Infos: ; pointer to Dungeon struct in HL, bank in A
+	; Load_Dungeon_Txt
+	LD D, A
 	.CHANGE_BANK_TO_A
 
 	LD A, (HL+)
@@ -10,6 +12,7 @@ Load_Dungeon_Txt: ; pointer to Dungeon struct in HL, bank in A
 	LD A, E
 	.CHANGE_BANK_TO_A
 
+	PUSH HL
 	PUSH BC
 	LD H, B
 	LD L, C
@@ -29,6 +32,48 @@ Load_Dungeon_Txt: ; pointer to Dungeon struct in HL, bank in A
 	LD H, A
 	POP BC
 	CALL =Print_str
+	POP HL
+
+	LD A, D
+	.CHANGE_BANK_TO_A
+
+	; Load dungeon flags
+	LD A, (HL+)
+	LD $mem_dungeon_flags, A
+
+	; Load tilemap
+	LD A, (HL+)
+	LD ($mem_rom_tilemap_addr), A
+	LD ($mem_rom_collision_map_addr), A
+	LD A, (HL+)
+	LD B, A
+	LD A, (HL+)
+	LD ($mem_rom_collision_map_addr+2), A
+	ADD $80
+	LD ($mem_rom_tilemap_addr+2), A
+	LD A, B
+	LD ($mem_rom_collision_map_addr+1), A
+	ADC $00
+	LD ($mem_rom_tilemap_addr+1), A
+
+	; Load_Generation_Events
+	LD A, D
+	.CHANGE_BANK_TO_A
+	LD B, $00
+	LD C, (HL)
+	INC HL
+	LD D, H
+	LD E, L
+	LD HL, $mem_dungeon_generation_events
+	CALL =memcpy
+
+	LD A, C
+	CPL
+	INC A
+	ADD $80
+	LD C, A
+
+	CALL =bzero
 
 	RET
 
@@ -102,31 +147,5 @@ Load_Dungeon_Spawn_patterns: ; pointer to Dungeon struct in HL bank in A
 
 	LD A, (HL)
 	LD $mem_entity_spawning_pattern, A
-
-	RET
-
-Load_Generation_Events: ; bank in A, dungeon ptr in HL
-	.CHANGE_BANK_TO_A
-	LD A, L
-	ADD $07
-	LD L, A
-	LD A, H
-	ADC $00
-	LD H, A
-	LD B, $00
-	LD C, (HL)
-	INC HL
-	LD D, H
-	LD E, L
-	LD HL, $mem_dungeon_generation_events
-	CALL =memcpy
-
-	LD A, C
-	CPL
-	INC A
-	ADD $80
-	LD C, A
-
-	CALL =bzero
 
 	RET

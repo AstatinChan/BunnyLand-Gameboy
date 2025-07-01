@@ -1,9 +1,17 @@
-Load_ROM_Block: ; X in A, Y in B
+Load_Block:
 	PUSH BC
 	PUSH AF
 
+	PUSH AF
+	LD A, $mem_dungeon_flags
+	AND $01
+	JP Z, =Load_Block_From_Solid.AF_AF_BC_Push
+	POP AF
+
+	.After_AF_BC_Push:
+
 	CP $20
-	JP NC, =Load_Block_From_Solid.After_AF_BC_Push
+	JP NC, =Load_Block_From_Solid.AF_BC_Push
 
 	PUSH BC
 	LD C, A
@@ -11,13 +19,13 @@ Load_ROM_Block: ; X in A, Y in B
 	CP $20
 	LD A, C
 	POP BC
-	JP NC, =Load_Block_From_Solid.After_AF_BC_Push
+	JP NC, =Load_Block_From_Solid.AF_BC_Push
 
+Load_ROM_Block: ; X in A, Y in B
 	PUSH DE
 	PUSH HL
 
 	LD C, A
-
 
 	CALL =Construct_Tile_Address
 
@@ -41,8 +49,6 @@ Load_ROM_Block: ; X in A, Y in B
 	RR A
 	OR C
 	LD C, A
-
-	DBG
 
 	LD A, L
 	ADD C

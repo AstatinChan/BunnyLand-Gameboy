@@ -167,6 +167,9 @@
 .DEFINE mem_prepared_block_tile $c05f ; Takes $c05f-$c062
 
 .DEFINE mem_dungeon $c063 ; Takes $c063-$c065
+.DEFINE mem_dungeon_flags ($c066)
+
+.DEFINE mem_rom_collision_map_addr $c067 ; Takes $c067 to $c069 (bank + ptr)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400

@@ -36,14 +36,7 @@ New_Dungeon:
 	LD A, ($mem_dungeon+2)
 	LD L, A
 	LD A, ($mem_dungeon)
-	CALL =Load_Dungeon_Txt
-
-	LD A, ($mem_dungeon+1)
-	LD H, A
-	LD A, ($mem_dungeon+2)
-	LD L, A
-	LD A, ($mem_dungeon)
-	CALL =Load_Generation_Events
+	CALL =Load_Dungeon_Infos
 
 New_Floor:
 	LD SP, $fffe
@@ -81,9 +74,47 @@ New_Floor:
 	LD $mem_loaded_special_entity_index, A
 
 	CALL =Reload_EP_Cost
-	CALL =Dungeon_Generation
-	CALL =Initialize_Entities
-	CALL =Initialize_Objects
+
+	LD A, $mem_dungeon_flags
+	BIT 0, A
+	JR Z, =.map.generation
+
+	.map.rom_loading:
+		LD A, ($mem_rom_collision_map_addr)
+		.CHANGE_BANK_TO_A
+
+		LD A, ($mem_rom_collision_map_addr+1)
+		LD D, A
+		LD A, ($mem_rom_collision_map_addr+2)
+		LD E, A
+		LD HL, $mem_dungeon_map
+		LD BC, $0080
+		CALL =memcpy
+
+		LD B, $0f
+		LD C, $0f
+		CALL =Initialize_Bunny
+
+		LD HL, $mem_entities_list
+		CALL =Center_viewport_around_entity
+		CALL =Load_Prepared_Map
+
+		LD A, $mem_map_loading_flags
+		OR $01
+		LD $mem_map_loading_flags, A
+
+		LD HL, $mem_object_list
+		LD BC, $0080
+		CALL =bff
+
+		JR =.map.end
+
+	.map.generation:
+		CALL =Dungeon_Generation
+		CALL =Initialize_Entities
+		CALL =Initialize_Objects
+
+	.map.end:
 
 	; Reset animations
 	LD HL, $mem_animation_list
@@ -178,7 +209,7 @@ Dungeon_generation_VBlank:
 
 Dungeon_generation_Out_Of_VBlank:
 	PUSH AF
-	CALL =VBlank_Wait	
+	CALL =VBlank_Wait
 	.ENABLE_MODE_2_INTERRUPT
 	.RESET_INTERRUPTS
 	POP AF

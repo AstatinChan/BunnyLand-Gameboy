@@ -166,11 +166,10 @@ Construct_Tile_Address: ; Construct Tile Map address from A and B in DE
 
 	RET
 
-Load_Block:
 Load_Block_From_Solid: ; X in A, Y in B
-	PUSH BC
-	PUSH AF
-	.After_AF_BC_Push:
+	.AF_AF_BC_Push:
+	POP AF
+	.AF_BC_Push:
 
 	PUSH DE
 
