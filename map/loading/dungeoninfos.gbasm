@@ -24,7 +24,7 @@ Load_Dungeon_Infos: ; pointer to Dungeon struct in HL, bank in A
 	SUB B
 	SRA A
 
-	LD HL, $9e80
+	LD HL, $9ea0
 	ADD L
 	LD L, A
 	LD A, H

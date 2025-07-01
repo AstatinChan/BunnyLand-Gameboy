@@ -112,10 +112,24 @@ STAT_Entrypoint:
 
 Dungeon_VBLANK_Entrypoint:
 	.SET_WINDOW_LCDC_E
+
+	LD A, $mem_dungeon_flags
+	BIT 3, A
+	JR NZ, =.top_bar.enable
+
+	.DISABLE_TOP_BAR
+
+	LD A, $67
+	LD $reg_lyc, A
+
+	JR =.top_bar.end
+	.top_bar.enable:
+
 	.ENABLE_TOP_BAR
 
-	LD A, $palette_bold_font
-	LD $reg_bg_palette, A
+	LD A, $0a
+	LD $reg_lyc, A
+	.top_bar.end:
 
 	CALL $OAM_DMA_Transfer_routine
 
@@ -135,8 +149,6 @@ Dungeon_VBLANK_Entrypoint:
 	Skip_VBlank_Dungeon_Update:
 
 	; LYC
-	LD A, $0a
-	LD $reg_lyc, A
 	.ENABLE_LYC_INTERRUPT
 	.RESET_INTERRUPTS
 	EI

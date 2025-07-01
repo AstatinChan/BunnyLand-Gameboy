@@ -42,19 +42,37 @@ New_Floor:
 	LD SP, $fffe
 
 	LD A, $00
+	LD $mem_display_flag, A
+
+	LD A, $00
 	LD $reg_viewport_x, A
+
+	LD A, $mem_dungeon_flags
+	BIT 1, A
+	JR Z, =.floor_count.disabled
+
+	.floor_count.enabled:
+	LD A, $70
+	LD $reg_viewport_y, A
+
+	LD A, $f4
+	LD ($9eeb), A
+
+	LD HL, $9ee9
+	LD A, $mem_floor_count
+	CALL =Print_8bit
+	JR =.floor_count.end
+
+	.floor_count.disabled:
 	LD A, $68
 	LD $reg_viewport_y, A
 
 	LD A, $00
-	LD $mem_display_flag, A
+	LD ($9ee9), A
+	LD ($9eea), A
+	LD ($9eeb), A
 
-	LD A, $f4
-	LD ($9ecb), A
-
-	LD HL, $9ec9
-	LD A, $mem_floor_count
-	CALL =Print_8bit
+	.floor_count.end:
 
 	LD A, $07
 	LD $reg_bg_palette, A

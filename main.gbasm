@@ -31,6 +31,22 @@
 	LD A, $lcdc_guibg_tilemap
 	OR E
 	LD $reg_lcd_controller, A
+
+	LD A, $palette_bold_font
+	LD $reg_bg_palette, A
+.END
+
+.MACRODEF DISABLE_TOP_BAR
+	LD A, $mem_prepared_viewport_x
+	LD $reg_viewport_x, A
+	LD A, $mem_prepared_viewport_y
+	LD $reg_viewport_y, A
+	LD A, $mem_prepared_color_palette
+	LD $reg_bg_palette, A
+
+	LD A, $lcdc_mapbg_tilemap
+	OR E
+	LD $reg_lcd_controller, A
 .END
 
 .MACRODEF ENABLE_DIALOGUE

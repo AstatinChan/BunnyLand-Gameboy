@@ -26,6 +26,10 @@ Initialize_Entities:
 	LD A, $ff
 	LD $mem_bunny_current_room_idx, A
 
+	LD A, $mem_dungeon_flags
+	BIT 2, A
+	JP Z, =Reset_Entities_Collision_Map
+
 	LD A, $00
 	LD $tmp_var_3, A
 	CALL =Initialize_Enemy
@@ -37,7 +41,6 @@ Initialize_Entities:
 	LD $mem_bunny_current_room_idx, A
 
 	JP =Reset_Entities_Collision_Map
-	RET
 
 Initialize_Bunny_Random_room:
 	LD A, $ff
@@ -211,6 +214,10 @@ FindFreeEntity:
 	RET
 
 Respawn_Entities:
+	LD A, $mem_dungeon_flags
+	BIT 2, A
+	RET Z
+
 	LD A, $mem_moving_animation_step
 	CP $04
 	RET NZ

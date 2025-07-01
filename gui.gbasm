@@ -299,6 +299,9 @@ Check_dialogue_action:
 	RET
 
 Check_Open_Menu_button:
+	LD A, $mem_dungeon_flags
+	BIT 4, A
+	RET Z
 	LD A, $mem_current_mode
 	CP $enum_dungeon_mode
 	RET NZ
