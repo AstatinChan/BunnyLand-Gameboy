@@ -148,6 +148,10 @@ Move_Bunny:
 		BIT 3, A
 		JP NZ, =.Start_action_or_movement.end
 
+		LD A, $mem_requested_mode
+		CP $enum_dungeon_mode
+		JP NZ, =.Start_action_or_movement.end
+
 		LD A, $mem_bunny_direction
 		AND $70
 		LD D, A
