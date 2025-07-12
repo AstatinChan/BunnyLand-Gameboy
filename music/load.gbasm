@@ -1,0 +1,90 @@
+Load_Music:
+	.LOAD_BANK_OF =_music_Test
+
+	LD HL, ptr(=_music_Test+52)
+	LD A, L
+	ADD (HL)
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+
+	LD A, bank(=_music_Test)
+	LD ($mem_current_vgm_pc), A
+	LD A, H
+	LD ($mem_current_vgm_pc+1), A
+	LD A, L
+	LD ($mem_current_vgm_pc+2), A
+	RET
+
+Inc_HL_Fix_Bank:
+	PUSH AF
+	INC HL
+	LD A, H
+	CP $80
+	JR C, =.end
+	SUB $40
+	LD H, A
+
+	LD A, $saved_rom_bank
+	INC A
+	DBG
+	.CHANGE_BANK_TO_A
+
+	.end:
+	POP AF
+	RET
+
+Play_Music:
+	LD A, ($mem_current_vgm_pc)
+	.CHANGE_BANK_TO_A
+	LD A, ($mem_current_vgm_pc+1)
+	LD H, A
+	LD A, ($mem_current_vgm_pc+2)
+	LD L, A
+
+	.next:
+	LD A, (HL)
+	DBG
+	CALL =Inc_HL_Fix_Bank
+	CP $b3
+	JR NZ, =.set_register.end
+	.set_register:
+		LD A, (HL)
+		CALL =Inc_HL_Fix_Bank
+		ADD $10
+		LD C, A
+		LD A, (HL)
+		CALL =Inc_HL_Fix_Bank
+		LD (C), A
+		JR =.next
+	.set_register.end:
+
+	CP $66
+	JR Z, =Load_Music
+
+
+	CP $62
+	JR Z, =.panic.end
+	CP $61
+	JR NZ, =.the61thingy.end
+	.the61thingy:
+	CALL =Inc_HL_Fix_Bank
+	CALL =Inc_HL_Fix_Bank
+	JR =.panic.end
+	.the61thingy.end:
+
+	.panic:
+		LD A, $saved_rom_bank
+		DBG
+		STOP
+	.panic.end:
+
+	LD A, H
+	LD ($mem_current_vgm_pc+1), A
+	LD A, L
+	LD ($mem_current_vgm_pc+2), A
+	LD A, $saved_rom_bank
+	DBG
+	LD ($mem_current_vgm_pc), A
+	RET

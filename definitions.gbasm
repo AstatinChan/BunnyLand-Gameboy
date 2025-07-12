@@ -171,6 +171,8 @@
 
 .DEFINE mem_rom_collision_map_addr $c067 ; Takes $c067 to $c069 (bank + ptr)
 
+.DEFINE mem_current_vgm_pc $c070 ; Takes $c070 to $c072 (bank + ptr)
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 

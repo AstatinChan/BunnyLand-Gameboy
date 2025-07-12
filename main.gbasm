@@ -1,5 +1,6 @@
 .INCLUDE "definitions.gbasm"
 .INCLUDE "init.gbasm"
+.INCLUDE "utils.gbasm"
 
 .MACRODEF HBLANK_WAIT
 	LD A, $reg_lcd_controller
@@ -135,9 +136,10 @@ Entrypoint:
 
 	CALL =Load_Tile
 
+	CALL =Load_Music
+
 	JP =New_Dungeon
 
-.INCLUDE "utils.gbasm"
 .INCLUDE "tiles.gbasm"
 .INCLUDE "rng.gbasm"
 .INCLUDE "dialogues/utils.gbasm"
@@ -162,6 +164,7 @@ Entrypoint:
 .INCLUDE "enemiesattacks.gbasm"
 .INCLUDE "dialogues/functions.gbasm"
 .INCLUDE "map/loading/dungeoninfos.gbasm"
+.INCLUDE "music/load.gbasm"
 
 .PADTO $4000
 .INCLUDE "tileset.gbasm"
@@ -169,3 +172,6 @@ Entrypoint:
 .INCLUDE "dialogues/dialogues.gbasm"
 .INCLUDE "map/maps.gbasm"
 .INCLUDE "map/dungeons.gbasm"
+
+_music_Test:
+.INCLUDEBIN "music/test.vgm"

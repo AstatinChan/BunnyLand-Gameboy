@@ -187,5 +187,7 @@ Dungeon_VBLANK_Entrypoint:
 	INC A
 	LD $mem_loop_frame_timer, A
 
+	CALL =Play_Music
+
 	.ENABLE_VBLANK_INTERRUPTS
 	RETI

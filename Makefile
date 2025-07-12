@@ -25,7 +25,7 @@ build/main.rom: build/main.rom.unsigned
 	cp build/main.rom.unsigned build/main.rom
 	python scripts/set_checksums.py build/main.rom
 
-build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm) $(wildcard ./**/**/*.gbasm)
+build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm) $(wildcard ./**/**/*.gbasm) $(wildcard ./music/*.vgm)
 	mkdir -p build
 	$(GBASM) $< $@ > build/main.sym
 
@@ -58,7 +58,7 @@ build/game_linux_x86-64: build/makeself/start.sh build/makeself/main.rom build/m
 
 run: build/main.rom
 	mkdir -p recordings
-	gb $< --record-input "./recordings/$(shell date -Iseconds).record"
+	gb $< --record-input "./recordings/$(shell date -Iseconds).record" -k
 
 sameboy: build/main.rom
 	sameboy build/main.rom

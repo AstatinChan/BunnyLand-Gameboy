@@ -14,6 +14,15 @@
 	LD $reg_interrupt_enable, A
 .END
 
+.MACRODEF ENABLE_MUSIC_INTERRUPT
+	LD A, low(=Dungeon_1st_step_VBlank)
+	LD ($mem_vblank_jump_destination), A
+	LD A, high(=Dungeon_1st_step_VBlank)
+	LD ($mem_vblank_jump_destination+1), A
+	.RESET_INTERRUPTS
+	.ENABLE_VBLANK_INTERRUPTS
+.END
+
 .MACRODEF DISABLE_MODE_2_INTERRUPT
 	LD A, $00
 	LD $reg_lcd_status, A
@@ -40,6 +49,8 @@ New_Dungeon:
 
 New_Floor:
 	LD SP, $fffe
+	.ENABLE_MUSIC_INTERRUPT
+	EI
 
 	LD A, $00
 	LD $mem_display_flag, A
@@ -209,15 +220,12 @@ Dungeon_generation_VBlank:
 	LD A, $mem_floor_count
 	CALL =Print_8bit
 
-	CALL =Update_VBlank_Handler
+	CALL =Reset_Entities_Collision_Map
 
 	DI
 	.DISABLE_MODE_2_INTERRUPT
-
-	CALL =Reset_Entities_Collision_Map
-
+	CALL =Update_VBlank_Handler
 	.ENABLE_VBLANK_INTERRUPTS
-	.RESET_INTERRUPTS
 	EI
 
 	.Wait_for_Interrupt.loop:
@@ -227,8 +235,37 @@ Dungeon_generation_VBlank:
 
 Dungeon_generation_Out_Of_VBlank:
 	PUSH AF
+	PUSH BC
+	PUSH DE
+	PUSH HL
+	LD A, $saved_rom_bank
+	PUSH AF
+	CALL =Play_Music
 	CALL =VBlank_Wait
 	.ENABLE_MODE_2_INTERRUPT
 	.RESET_INTERRUPTS
+	POP AF
+	.CHANGE_BANK_TO_A
+	POP HL
+	POP DE
+	POP BC
+	POP AF
+	RETI
+
+Dungeon_1st_step_VBlank:
+	PUSH AF
+	PUSH BC
+	PUSH DE
+	PUSH HL
+	LD A, $saved_rom_bank
+	PUSH AF
+	CALL =Play_Music
+	.ENABLE_VBLANK_INTERRUPTS
+	.RESET_INTERRUPTS
+	POP AF
+	.CHANGE_BANK_TO_A
+	POP HL
+	POP DE
+	POP BC
 	POP AF
 	RETI

@@ -103,6 +103,7 @@ Entity_idx_to_entity_list_ptr: ; loaded idx in A, return in BC
 	LD A, B
 	ADC high(=Entity_list)
 	LD B, A
+	.LOAD_BANK_OF =Entity_list
 
 	POP DE
 	RET
