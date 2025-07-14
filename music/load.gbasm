@@ -17,6 +17,46 @@ Load_Music:
 	LD ($mem_current_vgm_pc+2), A
 	RET
 
+Loop_Music:
+	.LOAD_BANK_OF =_music_Test
+
+	LD HL, ptr(=_music_Test+28)
+	LD BC, ptr(=_music_Test+28)
+	LD E, bank(=_music_Test+28)
+
+	LD A, B
+	SUB $40
+	LD B, A
+
+	LD A, (HL+)
+	ADD C
+	LD C, A
+	LD A, (HL+)
+	ADC B
+	LD B, A
+	LD A, (HL+)
+	ADC E
+	LD E, A
+
+	LD A, $00
+	SLA B
+	RL A
+	ADD E
+	LD E, A
+
+	SRA B
+	LD A, $40
+	ADD B
+	LD B, A
+
+	LD A, E
+	LD ($mem_current_vgm_pc), A
+	LD A, B
+	LD ($mem_current_vgm_pc+1), A
+	LD A, C
+	LD ($mem_current_vgm_pc+2), A
+	RET
+
 Inc_HL_Fix_Bank:
 	PUSH AF
 	INC HL
@@ -28,7 +68,6 @@ Inc_HL_Fix_Bank:
 
 	LD A, $saved_rom_bank
 	INC A
-	DBG
 	.CHANGE_BANK_TO_A
 
 	.end:
@@ -45,7 +84,6 @@ Play_Music:
 
 	.next:
 	LD A, (HL)
-	DBG
 	CALL =Inc_HL_Fix_Bank
 	CP $b3
 	JR NZ, =.set_register.end
@@ -61,7 +99,7 @@ Play_Music:
 	.set_register.end:
 
 	CP $66
-	JR Z, =Load_Music
+	JP Z, =Loop_Music
 
 
 	CP $62
@@ -76,7 +114,6 @@ Play_Music:
 
 	.panic:
 		LD A, $saved_rom_bank
-		DBG
 		STOP
 	.panic.end:
 
@@ -85,6 +122,5 @@ Play_Music:
 	LD A, L
 	LD ($mem_current_vgm_pc+2), A
 	LD A, $saved_rom_bank
-	DBG
 	LD ($mem_current_vgm_pc), A
 	RET
