@@ -1,7 +1,7 @@
 Load_Music:
-	.LOAD_BANK_OF =_music_Test
+	.LOAD_BANK_OF =_music_Dungeon
 
-	LD HL, ptr(=_music_Test+52)
+	LD HL, ptr(=_music_Dungeon+52)
 	LD A, L
 	ADD (HL)
 	LD L, A
@@ -9,7 +9,7 @@ Load_Music:
 	ADC $00
 	LD H, A
 
-	LD A, bank(=_music_Test)
+	LD A, bank(=_music_Dungeon)
 	LD ($mem_current_vgm_pc), A
 	LD A, H
 	LD ($mem_current_vgm_pc+1), A
@@ -18,11 +18,11 @@ Load_Music:
 	RET
 
 Loop_Music:
-	.LOAD_BANK_OF =_music_Test
+	.LOAD_BANK_OF =_music_Dungeon
 
-	LD HL, ptr(=_music_Test+28)
-	LD BC, ptr(=_music_Test+28)
-	LD E, bank(=_music_Test+28)
+	LD HL, ptr(=_music_Dungeon+28)
+	LD BC, ptr(=_music_Dungeon+28)
+	LD E, bank(=_music_Dungeon+28)
 
 	LD A, B
 	SUB $40
@@ -113,7 +113,7 @@ Play_Music:
 	.the61thingy.end:
 
 	.panic:
-		LD A, $saved_rom_bank
+		DBG
 		STOP
 	.panic.end:
 

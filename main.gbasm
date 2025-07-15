@@ -173,5 +173,5 @@ Entrypoint:
 .INCLUDE "map/maps.gbasm"
 .INCLUDE "map/dungeons.gbasm"
 
-_music_Test:
-.INCLUDEBIN "music/test.vgm"
+_music_Dungeon:
+.INCLUDEBIN "music/morning-forest.vgm"
