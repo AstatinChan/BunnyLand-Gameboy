@@ -34,7 +34,7 @@ build/tileset-dump.rom: scripts/tileset-dump.gbasm
 	$(GBASM) $< $@ > /dev/null
 
 build/tileset-dump.rom.vram.dump: build/tileset-dump.rom
-	gb --skip-bootrom --stop-dump-state $<
+	gb --skip-bootrom --stop-dump-state --headless -s 100 -v errors $<
 
 build/tileset.png: build/tileset-dump.rom.vram.dump scripts/extract-vram-tileset.py
 	python scripts/extract-vram-tileset.py $< $@
