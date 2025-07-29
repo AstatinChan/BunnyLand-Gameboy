@@ -1,0 +1,135 @@
+Title_Screen:
+	.ASSERT bank(.) bank(=Title_Screen_Sprite_Data)
+	.ASSERT bank(.) bank(=Title_Screen_Sprite_Data.end)
+
+	LD HL, $9010
+	LD DE, ptr(=Title_Screen_Sprite_Data)
+	LD BC, $07f0
+	CALL =memcpy
+
+	LD HL, $8C00
+	LD DE, =Title_Screen_Sprite_Data+$07f0
+	LD BC, =Title_Screen_Sprite_Data.end-=Title_Screen_Sprite_Data-$07f0
+	CALL =memcpy
+
+	LD HL, $8800
+	LD DE, ptr(=Font_Data)
+	LD BC, =Font_Data.end-=Font_Data
+	CALL =memcpy
+
+	.draw_picture:
+		LD HL, $9842
+		LD C, $01
+		.draw_picture.loop16times:
+		LD B, $10
+		.draw_picture.loop:
+			LD A, C
+			LD (HL+), A
+			DEC B
+			INC C
+			LD A, C
+			CP $80
+			JR NZ, =.skip_font_skip
+			LD C, $C0
+			.skip_font_skip:
+			LD A, B
+			CP $00
+			JR NZ, =.draw_picture.loop
+		LD A, L
+		ADD $10
+		LD L, A
+		LD A, H
+		ADC $00
+		LD H, A
+		LD A, H
+		CP $99
+		JR NZ, =.draw_picture.loop16times
+		LD A, L
+		CP $A2
+		JR NZ, =.draw_picture.loop16times
+	
+
+	LD A, $00
+	LD $reg_viewport_x, A
+	LD $reg_viewport_y, A
+	LD A, $lcdc_mapbg_tilemap
+	LD $reg_lcd_controller, A
+
+	LD A, $80
+	.blink:
+		.blink.loop1:
+			CALL =Check_Frame_stuff
+			INC A
+			CP $20
+			JR NZ =.blink.loop1
+		CALL =.blink.draw_text
+		LD A, $00
+		.blink.loop2:
+			CALL =Check_Frame_stuff
+			INC A
+			CP $20
+			JR NZ =.blink.loop2
+		CALL =.blink.undraw_text
+		LD A, $00
+		JR =.blink
+
+		.blink.draw_text:
+			PUSH BC
+			LD HL, $99C4
+			LD BC, =Press_Txt
+			CALL =Print_str
+			INC HL
+			INC HL
+			LD BC, =Start_Txt
+			CALL =Print_str
+			POP BC
+			RET
+		
+		.blink.undraw_text:
+			PUSH BC
+			LD HL, $99C4
+			LD BC, $000C
+			CALL =bzero
+			POP BC
+			RET
+
+Check_Frame_stuff:
+	CALL =RNG_Step
+	CALL =Pad_Button_Check
+	PUSH AF
+	LD A, $mem_button_action
+	BIT 3, A
+	JR NZ, =Title_Screen_Start_Pressed
+
+	POP AF
+	CALL =Next_VBlank_Wait
+	RET
+
+Title_Screen_Start_Pressed:
+	LD A, $00
+	.loop:
+		CALL =Next_VBlank_Wait
+		INC A
+		CP $05
+		JR NZ =.loop
+	LD A, $reg_bg_palette
+	CP $00
+	SLA A
+	SLA A
+	LD $reg_bg_palette, A
+	JR NZ, =Title_Screen_Start_Pressed
+
+	LD A, $00
+	.loop2:
+		CALL =Next_VBlank_Wait
+		INC A
+		CP $30
+		JR NZ =.loop2
+
+	CALL =Next_VBlank_Wait
+	LD A, $00
+	LD $reg_lcd_controller, A
+
+	CALL =Load_Tile
+
+	JP =New_Dungeon

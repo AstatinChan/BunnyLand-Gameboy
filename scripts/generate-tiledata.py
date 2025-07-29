@@ -150,3 +150,8 @@ get_sprite_png_parse_output("./sprites/animations/ball.png", tallmode=True)
 get_sprite_png_parse_output("./sprites/animations/bubble1.png", tallmode=True)
 get_sprite_png_parse_output("./sprites/animations/bubble2.png", tallmode=True)
 print("\nAnimation_Sprites_Data.end:")
+
+sprite_idx = 0x01
+print("\nTitle_Screen_Sprite_Data:")
+get_sprite_png_parse_output("./sprites/gui/title-screen.png", sprite_8x8=True)
+print("\nTitle_Screen_Sprite_Data.end:")

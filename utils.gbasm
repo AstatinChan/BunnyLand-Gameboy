@@ -34,6 +34,118 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 		JR NZ =.loop
 	RET
 
+.MACRODEF HBLANK_WAIT
+	LD A, $reg_lcd_controller
+	BIT 7, A
+	JR Z, =$HBlank_Wait.End
+	$HBlank_Wait.loop:
+	LD A, $reg_lcd_status
+	AND $03
+	CP $00
+	JR NZ, =$HBlank_Wait.loop
+	$HBlank_Wait.End:
+.END
+
+.MACRODEF SET_WINDOW_LCDC_E
+	LD A, $mem_display_flag
+	BIT 3, A
+	LD E, $00
+	JR Z, =$No_Window
+	LD E, $60
+	$No_Window:
+.END
+
+.MACRODEF ENABLE_TOP_BAR
+	XOR A
+	LD $reg_viewport_x, A
+	LD A, $57
+	LD $reg_viewport_y, A
+
+	LD A, $lcdc_guibg_tilemap
+	OR E
+	LD $reg_lcd_controller, A
+
+	LD A, $palette_bold_font
+	LD $reg_bg_palette, A
+.END
+
+.MACRODEF DISABLE_TOP_BAR
+	LD A, $mem_prepared_viewport_x
+	LD $reg_viewport_x, A
+	LD A, $mem_prepared_viewport_y
+	LD $reg_viewport_y, A
+	LD A, $mem_prepared_color_palette
+	LD $reg_bg_palette, A
+
+	LD A, $lcdc_mapbg_tilemap
+	OR E
+	LD $reg_lcd_controller, A
+.END
+
+.MACRODEF ENABLE_DIALOGUE
+	.HBLANK_WAIT
+	LD A, $98
+	LD $reg_viewport_x, A
+	LD A, $b8
+	LD $reg_viewport_y, A
+
+	LD A, $lcdc_guibg_tilemap
+	OR E
+	LD $reg_lcd_controller, A
+.END
+
+.MACRODEF DISABLE_DIALOGUE
+	PUSH BC
+	LD A, $mem_prepared_viewport_x
+	LD B, A
+	LD A, $mem_prepared_viewport_y
+	LD C, A
+	.HBLANK_WAIT
+	LD A, B
+	LD $reg_viewport_x, A
+	LD A, C
+	LD $reg_viewport_y, A
+	LD A, $mem_prepared_color_palette
+	LD $reg_bg_palette, A
+	LD A, $lcdc_mapbg_tilemap
+	OR E
+	LD $reg_lcd_controller, A
+	POP BC
+.END
+
+.MACRODEF ENABLE_VBLANK_INTERRUPTS
+	LD A, $reg_interrupt_flags
+	RES 0, A
+	LD $reg_interrupt_flags, A
+	LD A, $reg_interrupt_enable
+	OR $01
+	LD $reg_interrupt_enable, A
+.END
+
+.MACRODEF RESET_INTERRUPTS
+	LD A, $00
+	LD $reg_interrupt_flags, A
+.END
+
+.MACRODEF ENABLE_LYC_INTERRUPT
+	LD A, low(=STAT_Entrypoint)
+	LD ($mem_stat_jump_destination), A
+	LD A, high(=STAT_Entrypoint)
+	LD ($mem_stat_jump_destination+1), A
+	.RESET_INTERRUPTS
+	LD A, $40
+	LD $reg_lcd_status, A
+	LD A, $02
+	LD $reg_interrupt_enable, A
+.END
+
+.MACRODEF DISABLE_LYC_INTERRUPT
+	LD A, $reg_interrupt_enable
+	RES 1, A
+	LD $reg_interrupt_enable, A
+.END
+
+
 bzero: ; dest = HL, n = BC
 	LD A, $00
 	.loop:
@@ -279,6 +391,10 @@ RRx: ; B is the number to rotate, A & 7 is how many bits to rotate it
 		SUB $04
 		RET
 
+Next_VBlank_Wait:
+	PUSH AF
+	.HBLANK_WAIT
+	POP AF
 VBlank_Wait:
 	PUSH AF
 	LD A, $reg_lcd_controller
@@ -292,6 +408,7 @@ VBlank_Wait:
 	.End:
 	POP AF
 	RET
+
 
 .MACRODEF CHANGE_BANK_TO_A
 	LD $reg_rom_bank, A
