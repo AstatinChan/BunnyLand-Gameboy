@@ -173,6 +173,20 @@
 
 .DEFINE mem_current_vgm_pc $c070 ; Takes $c070 to $c072 (bank + ptr)
 
+.DEFINE mem_current_vgm_header $c073 ; Takes $c073 to $c075 (bank + ptr)
+
+.DEFINE mem_sound_flags ($c076)
+;	bit 0 = 1 => music playing
+; 	bit 1 = 1 => sound effect playing on channel 1 (music should not use it)
+; 	bit 2 = 1 => sound effect playing on channel 2 (music should not use it)
+; 	bit 3 = 1 => sound effect playing on channel 3 (music should not use it)
+; 	bit 4 = 1 => sound effect playing on channel 4 (music should not use it)
+;	bit 5 = 1 => $mem_sound_effect_frame_count is going down
+
+.DEFINE mem_sound_effect_frame_count ($c077)
+
+.DEFINE mem_sound_effect_pc $c078 ; Takes $c078 - $c07a (bank + ptr)
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 

@@ -4,6 +4,8 @@
 
 Entrypoint:
 	CALL =Initialize_RNG
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
 
 	LD HL, $mem_bunny_attacks
 	LD A, $01
@@ -23,13 +25,13 @@ Entrypoint:
 	LD A, L
 	LD ($mem_dungeon+2), A
 
-	CALL =Load_Music
-
 	; JP =New_Dungeon
 	.LOAD_BANK_OF =Title_Screen
 	JP ptr(=Title_Screen)
 
 .INCLUDE "tiles.gbasm"
+.INCLUDE "music/load.gbasm"
+.INCLUDE "music/soundeffects.gbasm"
 .INCLUDE "rng.gbasm"
 .INCLUDE "dialogues/utils.gbasm"
 .INCLUDE "buttons.gbasm"
@@ -53,7 +55,6 @@ Entrypoint:
 .INCLUDE "enemiesattacks.gbasm"
 .INCLUDE "dialogues/functions.gbasm"
 .INCLUDE "map/loading/dungeoninfos.gbasm"
-.INCLUDE "music/load.gbasm"
 
 .PADTO $4000
 .INCLUDE "modes/titlescreen.gbasm"
@@ -62,6 +63,9 @@ Entrypoint:
 .INCLUDE "dialogues/dialogues.gbasm"
 .INCLUDE "map/maps.gbasm"
 .INCLUDE "map/dungeons.gbasm"
+.INCLUDE "music/soundeffects/click.gbasm"
 
 _music_Dungeon:
 .INCLUDEBIN "music/morning-forest.vgm"
+_music_TitleScreen:
+.INCLUDEBIN "music/title-screen.vgm"

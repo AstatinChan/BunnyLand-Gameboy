@@ -31,6 +31,9 @@
 .END
 
 New_Dungeon:
+	.LOAD_MUSIC =_music_Dungeon
+	CALL =Start_Music
+
 	LD A, $20
 	LD $mem_bunny_health, A
 	LD A, $30
@@ -222,6 +225,9 @@ Dungeon_generation_VBlank:
 
 	CALL =Reset_Entities_Collision_Map
 
+	CALL =Reset_Music_Channels
+	LD A, $01
+	LD $mem_sound_flags, A
 	DI
 	.DISABLE_MODE_2_INTERRUPT
 	CALL =Update_VBlank_Handler

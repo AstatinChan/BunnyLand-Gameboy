@@ -1,15 +1,57 @@
-Load_Music:
-	.LOAD_BANK_OF =_music_Dungeon
+.MACRODEF LOAD_MUSIC =music_addr
+	LD A, bank(=music_addr)
+	LD ($mem_current_vgm_header), A
+	LD A, high(ptr(=music_addr))
+	LD ($mem_current_vgm_header+1), A
+	LD A, low(ptr(=music_addr))
+	LD ($mem_current_vgm_header+2), A
+.END
 
-	LD HL, ptr(=_music_Dungeon+52)
+Reset_Music_Channels:
+	LD A, $00
+	LD ($11), A
+	LD ($12), A
+	LD ($13), A
+	LD ($14), A
+	LD ($16), A
+	LD ($17), A
+	LD ($18), A
+	LD ($19), A
+	LD ($1A), A
+	LD ($1B), A
+	LD ($1C), A
+	LD ($1D), A
+	LD ($1E), A
+	LD ($20), A
+	LD ($21), A
+	LD ($22), A
+	LD ($23), A
+	RET
+
+Start_Music:
+	LD A, ($mem_current_vgm_header)
+	.CHANGE_BANK_TO_A
+	LD A, ($mem_current_vgm_header+1)
+	LD H, A
+	LD A, ($mem_current_vgm_header+2)
+	LD L, A
+
+	LD A, L
+	ADD $34
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+	CALL =Fix_HL_Bank
 	LD A, L
 	ADD (HL)
 	LD L, A
 	LD A, H
 	ADC $00
 	LD H, A
+	CALL =Fix_HL_Bank
 
-	LD A, bank(=_music_Dungeon)
+	LD A, $saved_rom_bank
 	LD ($mem_current_vgm_pc), A
 	LD A, H
 	LD ($mem_current_vgm_pc+1), A
@@ -18,23 +60,39 @@ Load_Music:
 	RET
 
 Loop_Music:
-	.LOAD_BANK_OF =_music_Dungeon
+	LD A, ($mem_current_vgm_header)
+	.CHANGE_BANK_TO_A
+	LD A, ($mem_current_vgm_header+1)
+	LD H, A
+	LD A, ($mem_current_vgm_header+2)
+	LD L, A
 
-	LD HL, ptr(=_music_Dungeon+28)
-	LD BC, ptr(=_music_Dungeon+28)
-	LD E, bank(=_music_Dungeon+28)
+	LD A, L
+	ADD $1c
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+	CALL =Fix_HL_Bank
+	LD B, H
+	LD C, L
+	LD A, $saved_rom_bank
+	LD E, A
 
 	LD A, B
 	SUB $40
 	LD B, A
 
-	LD A, (HL+)
+	LD A, (HL)
+	CALL =Inc_HL_Fix_Bank
 	ADD C
 	LD C, A
-	LD A, (HL+)
+	LD A, (HL)
+	CALL =Inc_HL_Fix_Bank
 	ADC B
 	LD B, A
-	LD A, (HL+)
+	LD A, (HL)
+	CALL =Inc_HL_Fix_Bank
 	ADC E
 	LD E, A
 
@@ -60,6 +118,11 @@ Loop_Music:
 Inc_HL_Fix_Bank:
 	PUSH AF
 	INC HL
+	CALL =Fix_HL_Bank
+	POP AF
+	RET
+
+Fix_HL_Bank:
 	LD A, H
 	CP $80
 	JR C, =.end
@@ -71,10 +134,80 @@ Inc_HL_Fix_Bank:
 	.CHANGE_BANK_TO_A
 
 	.end:
-	POP AF
+	RET
+
+Check_Channel_Available:
+	; TODO: Channel panning register in $FF25 is still impacted by music
+	CP $24
+	RET NC
+
+	PUSH BC
+
+	CP $1A
+	JR NC =.channel_3_4
+	.channel_1_2:
+	CP $16
+	JR NC, =.channel_2
+
+	.channel_1:
+	LD C, A
+	LD A, $mem_sound_flags
+	BIT 1, A
+	LD A, C
+	JR Z, =.end
+	LD A, $00
+	JR =.end
+
+	.channel_2:
+	LD C, A
+	LD A, $mem_sound_flags
+	BIT 2, A
+	LD A, C
+	JR Z, =.end
+	LD A, $00
+	JR =.end
+
+	.channel_3_4:
+	CP $20
+	JR NC, =.channel_4
+
+	.channel_3:
+	LD C, A
+	LD A, $mem_sound_flags
+	BIT 3, A
+	LD A, C
+	JR Z, =.end
+	LD A, $00
+	JR =.end
+
+	.channel_4:
+	LD C, A
+	LD A, $mem_sound_flags
+	BIT 4, A
+	LD A, C
+	JR Z, =.end
+	LD A, $00
+
+	.end:
+	POP BC
 	RET
 
 Play_Music:
+	LD A, $mem_sound_flags
+	BIT 0, A
+	RET Z
+	BIT 5, A
+	JR Z, =.sound_effect_frame_count_dec_skip
+		LD A, $mem_sound_effect_frame_count
+		DEC A
+		LD $mem_sound_effect_frame_count, A
+		CP $00
+		JR NZ, =.sound_effect_frame_count_dec_skip
+
+		LD A, $mem_sound_flags
+		AND 0b11000001
+		LD $mem_sound_flags, A
+	.sound_effect_frame_count_dec_skip:
 	LD A, ($mem_current_vgm_pc)
 	.CHANGE_BANK_TO_A
 	LD A, ($mem_current_vgm_pc+1)
@@ -90,10 +223,19 @@ Play_Music:
 	.set_register:
 		LD A, (HL)
 		CALL =Inc_HL_Fix_Bank
-		ADD $10
 		LD C, A
-		LD A, (HL)
+
+		LD B, (HL)
 		CALL =Inc_HL_Fix_Bank
+
+		LD A, C
+		ADD $10
+		CALL =Check_Channel_Available
+		CP $00
+		JR Z, =.next
+		LD C, A
+
+		LD A, B
 		LD (C), A
 		JR =.next
 	.set_register.end:
@@ -113,7 +255,7 @@ Play_Music:
 	.the61thingy.end:
 
 	.panic:
-		DBG
+		LD A, $saved_rom_bank
 		STOP
 	.panic.end:
 

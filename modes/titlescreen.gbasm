@@ -2,6 +2,11 @@ Title_Screen:
 	.ASSERT bank(.) bank(=Title_Screen_Sprite_Data)
 	.ASSERT bank(.) bank(=Title_Screen_Sprite_Data.end)
 
+	.LOAD_MUSIC =_music_TitleScreen
+	.CALL_SAVE_BANK =Start_Music
+	LD A, $01
+	LD $mem_sound_flags, A
+
 	LD HL, $9010
 	LD DE, ptr(=Title_Screen_Sprite_Data)
 	LD BC, $07f0
@@ -55,19 +60,19 @@ Title_Screen:
 	LD A, $lcdc_mapbg_tilemap
 	LD $reg_lcd_controller, A
 
-	LD A, $80
+	LD A, $00
 	.blink:
 		.blink.loop1:
 			CALL =Check_Frame_stuff
 			INC A
-			CP $20
+			CP $48
 			JR NZ =.blink.loop1
 		CALL =.blink.draw_text
 		LD A, $00
 		.blink.loop2:
 			CALL =Check_Frame_stuff
 			INC A
-			CP $20
+			CP $48
 			JR NZ =.blink.loop2
 		CALL =.blink.undraw_text
 		LD A, $00
@@ -94,9 +99,16 @@ Title_Screen:
 			RET
 
 Check_Frame_stuff:
+	PUSH AF
+	PUSH BC
+	PUSH DE
+	PUSH HL
 	CALL =RNG_Step
 	CALL =Pad_Button_Check
-	PUSH AF
+	.CALL_SAVE_BANK =Play_Music
+	POP HL
+	POP DE
+	POP BC
 	LD A, $mem_button_action
 	BIT 3, A
 	JR NZ, =Title_Screen_Start_Pressed
@@ -106,6 +118,26 @@ Check_Frame_stuff:
 	RET
 
 Title_Screen_Start_Pressed:
+	LD A, $00
+	LD $mem_sound_flags, A
+	CALL =Reset_Music_Channels
+
+	; Magic sound effect stuff
+	LD A, $8f
+	LD ($26), A
+	LD A, $ee
+	LD ($25), A
+	LD A, $ff
+	LD ($24), A
+	LD A, $3f
+	LD ($20), A
+	LD A, $f2
+	LD ($21), A
+	LD A, $01
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
 	LD A, $00
 	.loop:
 		CALL =Next_VBlank_Wait

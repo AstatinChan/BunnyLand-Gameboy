@@ -409,7 +409,6 @@ VBlank_Wait:
 	POP AF
 	RET
 
-
 .MACRODEF CHANGE_BANK_TO_A
 	LD $reg_rom_bank, A
 	LD $saved_rom_bank, A
@@ -428,6 +427,21 @@ VBlank_Wait:
 	.CHANGE_BANK_TO_A
 	POP AF
 	CALL ptr(=addr)
+.END
+
+Call_Save_Bank: ; Address in DE (bank 0) ; Breaks A
+		LD A, $saved_rom_bank
+		PUSH AF
+		.CALL_DE
+		LD A, $saved_rom_bank
+		POP AF
+		.CHANGE_BANK_TO_A
+		RET
+
+.MACRODEF CALL_SAVE_BANK =addr
+	.ASSERT bank(=addr) $00
+	LD DE, ptr(=addr)
+	CALL =Call_Save_Bank
 .END
 
 .MACRODEF COPY_4BYTES dest src

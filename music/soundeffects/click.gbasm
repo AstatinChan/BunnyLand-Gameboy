@@ -1,0 +1,36 @@
+_sound_effect_Click:
+	LD A, $mem_sound_flags
+	SET 2, A
+	LD $mem_sound_flags, A
+
+	; LD A, $3f
+	LD A, $80
+	LD ($16), A
+	; LD A, $a1
+	LD A, $f3
+	LD ($17), A
+	; LD A, $16
+	LD A, $83
+	LD ($18), A
+	; LD A, $84
+	LD A, $87
+	LD ($19), A
+
+	.RET_WAIT_NEXT_FRAME
+	; .RET_WAIT_NEXT_FRAME
+	; .RET_WAIT_NEXT_FRAME
+	; .RET_WAIT_NEXT_FRAME
+
+	LD A, $08
+	LD ($17), A
+	LD A, $16
+	LD ($18), A
+	LD A, $84
+	LD ($19), A
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET

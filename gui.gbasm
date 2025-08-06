@@ -181,6 +181,8 @@ Move_dialogue_cursor:
 	CP B
 	RET Z
 
+	.SET_SOUND_EFFECT =_sound_effect_Click
+
 	DEC A
 	BIT 1, A
 	JR Z, =.Vertical_axis
@@ -258,8 +260,8 @@ Check_dialogue_action:
 	CP $00
 	RET Z
 	BIT 0, A
+	.SET_SOUND_EFFECT =_sound_effect_Click
 	JP NZ, =Dialogue_script_step
-	RET
 
 	.Dungeon_Menu:
 	LD A, $mem_button_action
@@ -273,6 +275,9 @@ Check_dialogue_action:
 	JP NZ, =Exit_Menu
 	BIT 0, A
 	RET Z
+
+	LD A, $mem_menu_cursor_position
+	LD D, A
 
 	LD A, $mem_current_focused_attack_ep_cost
 	LD B, A
@@ -290,6 +295,11 @@ Check_dialogue_action:
 	ADD L
 	LD L, A
 
+	LD A, $mem_menu_cursor_position
+	CP D
+	JR NZ, =.moved_sound_effect
+		.SET_SOUND_EFFECT =_sound_effect_Click
+	.moved_sound_effect:
 	LD A, (HL+)
 	LD D, A
 	LD A, (HL+)
@@ -345,6 +355,7 @@ Open_dialogue_on_dungeon_menu_mode:
 	AND $40 ; Keeping object additional tile
 	OR $0d
 	LD $mem_display_flag, A
+	.SET_SOUND_EFFECT =_sound_effect_Click
 
 	RET
 

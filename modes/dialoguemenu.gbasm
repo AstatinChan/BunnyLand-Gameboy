@@ -49,6 +49,7 @@ Dialogue_VBLANK_Entrypoint:
 	LD $mem_loop_frame_timer, A
 
 	CALL =Play_Music
+	CALL =Play_Sound_Effect
 
 	.ENABLE_VBLANK_INTERRUPTS
 	RETI

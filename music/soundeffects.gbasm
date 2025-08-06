@@ -1,0 +1,34 @@
+Wait_Next_Frame:
+	POP DE
+	LD A, $saved_rom_bank
+	LD ($mem_sound_effect_pc), A
+	LD A, D
+	LD ($mem_sound_effect_pc+1), A
+	LD A, E
+	LD ($mem_sound_effect_pc+2), A
+	RET
+
+.MACRODEF RET_WAIT_NEXT_FRAME
+	CALL =Wait_Next_Frame
+.END
+
+Play_Sound_Effect:
+	LD A, ($mem_sound_effect_pc)
+	CP $ff
+	RET Z
+	.CHANGE_BANK_TO_A
+	LD A, ($mem_sound_effect_pc+1)
+	LD D, A
+	LD A, ($mem_sound_effect_pc+2)
+	LD E, A
+	PUSH DE
+	RET
+
+.MACRODEF SET_SOUND_EFFECT =addr
+	LD A, bank(=addr)
+	LD ($mem_sound_effect_pc), A
+	LD A, high(ptr(=addr))
+	LD ($mem_sound_effect_pc+1), A
+	LD A, low(ptr(=addr))
+	LD ($mem_sound_effect_pc+2), A
+.END
