@@ -23,6 +23,8 @@ Heal_Attack:
 	POP DE
 	POP BC
 
+	.SET_SOUND_EFFECT =_sound_effect_Heal
+
 	LD A, $enum_dungeon_mode
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A

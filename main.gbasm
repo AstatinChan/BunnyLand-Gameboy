@@ -65,6 +65,7 @@ Entrypoint:
 .INCLUDE "map/dungeons.gbasm"
 .INCLUDE "music/soundeffects/click.gbasm"
 .INCLUDE "music/soundeffects/menu.gbasm"
+.INCLUDE "music/soundeffects/heal.gbasm"
 .INCLUDE "music/soundeffects/nextfloor.gbasm"
 
 _music_Dungeon:

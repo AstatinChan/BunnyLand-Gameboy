@@ -24,6 +24,9 @@ Load_Prepared_Map:
 			CP E
 			JR NZ, =.For_X
 
+		LD A, $mem_viewport_x
+		SUB $02
+		LD C, A
 		INC B
 		LD A, B
 		CP D
@@ -107,6 +110,9 @@ Prepare_Scrolling_Map:
 	LD A, $mem_map_loading_flags
 	BIT 0, A
 	JR Z, =Display_Scrolling_Map.End
+	RES 0, A
+	LD $mem_map_loading_flags, A
+
 
 	LD A, $mem_moving_animation_step
 	LD C, A
@@ -328,7 +334,6 @@ Display_Prepared_Blocks:
 	LD ($mem_prepared_block_position), A
 	LD A, ($mem_additional_loading_block_position+1)
 	LD ($mem_prepared_block_position+1), A
-	JP =Display_Main_Prepared_Block
 
 Display_Main_Prepared_Block:
 	PUSH AF

@@ -247,6 +247,8 @@ Heal_Action:
 	POP DE
 	POP BC
 
+	.SET_SOUND_EFFECT =_sound_effect_Heal
+
 	LD (HL), $00
 
 	RET
@@ -364,6 +366,8 @@ Restore_EP_Action:
 	POP DE
 	POP BC
 
+	.SET_SOUND_EFFECT =_sound_effect_Heal
+
 	LD (HL), $00
 
 	RET
@@ -387,6 +391,7 @@ Display_Object:
 	CP $FF
 	RET Z
 	LD C, A
+
 	CP $00
 	JR NZ, =.skip_remove_object_after_display
 	LD (HL), $FF

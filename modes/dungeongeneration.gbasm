@@ -225,6 +225,22 @@ Dungeon_generation_VBlank:
 
 	CALL =Reset_Entities_Collision_Map
 
+	LD A, $mem_loop_frame_timer
+	ADD $3c
+	LD B, A
+	.wait_1s.loop:
+		HALT
+		LD A, $mem_loop_frame_timer
+		CP B
+		JR NZ, =.wait_1s.loop
+
+	LD A, $mem_display_flag
+	RES 6, A
+	LD $mem_display_flag, A
+	LD A, $mem_map_loading_flags
+	RES 2, A
+	RES 0, A
+	LD $mem_map_loading_flags, A
 	LD A, $mem_sound_flags
 	CP $00
 	CALL Z, =Reset_Music_Channels
@@ -248,6 +264,9 @@ Dungeon_generation_Out_Of_VBlank:
 	PUSH HL
 	LD A, $saved_rom_bank
 	PUSH AF
+	LD A, $mem_loop_frame_timer
+	INC A
+	LD $mem_loop_frame_timer, A
 	CALL =Play_Music
 	CALL =VBlank_Wait
 	.ENABLE_MODE_2_INTERRUPT

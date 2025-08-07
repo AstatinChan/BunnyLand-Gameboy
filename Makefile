@@ -58,7 +58,7 @@ build/game_linux_x86-64: build/makeself/start.sh build/makeself/main.rom build/m
 
 run: build/main.rom
 	mkdir -p recordings
-	gb $< --record-input "./recordings/$(shell date -Iseconds).record" -v infos,errors,debug # ,halt_cycles
+	gb $< --record-input "./recordings/$(shell date -Iseconds).record" -v infos,errors,debug,halt_cycles
 
 sameboy: build/main.rom
 	sameboy build/main.rom

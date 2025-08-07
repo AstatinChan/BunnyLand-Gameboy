@@ -54,7 +54,7 @@
 .DEFINE mem_rng_state_2 ($c00b) ; 2 bytes
 
 .DEFINE mem_map_loading_flags ($c00c)
-; bit 0: scroll or first load (object loading and load map)
+; bit 0: scroll or first load (load map)
 ; bit 1: has a movement ended (objects interaction should be checked, entities should update their positions)
 ; bit 2: if the prepared block should be updated at the next frame
 ; bit 3: animation step is going up (?)

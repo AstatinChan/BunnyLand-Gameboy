@@ -11,6 +11,9 @@ Update_Animation_Steps:
 	BIT 3, A
 	JR Z, =.update_mode
 
+	LD A, $mem_map_loading_flags
+	SET 0, A
+	LD $mem_map_loading_flags, A
 	LD A, $mem_moving_animation_step
 	INC A
 	AND $0f
