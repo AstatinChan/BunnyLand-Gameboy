@@ -1,0 +1,23 @@
+_sound_effect_Next_Floor:
+	LD A, $mem_sound_flags
+	SET 4, A
+	LD $mem_sound_flags, A
+
+	; Magic sound effect stuff
+	LD A, $3f
+	LD ($20), A
+	LD A, $f2
+	LD ($21), A
+	LD A, $01
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
+	LD A, $mem_sound_flags
+	SET 5, A
+	LD $mem_sound_flags, A
+	LD A, $10
+	LD $mem_sound_effect_frame_count, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET

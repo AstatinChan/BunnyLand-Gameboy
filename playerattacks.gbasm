@@ -74,6 +74,8 @@ Canceled_Attack:
 	LD A, $04
 	LD $mem_bunny_animation, A
 
+	.SET_SOUND_EFFECT =_sound_effect_Move_arrow_failed
+
 	LD A, $mem_bunny_mana
 	LD B, A
 	LD A, $mem_current_focused_attack_ep_cost

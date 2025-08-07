@@ -220,6 +220,8 @@ Stairs_Action:
 	LD $mem_floor_count_bin, A
 
 	.skip_update_floor_count:
+
+	.SET_SOUND_EFFECT =_sound_effect_Next_Floor
 	RET
 
 Heal_Action:

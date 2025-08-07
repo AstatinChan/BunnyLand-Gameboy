@@ -64,6 +64,8 @@ Entrypoint:
 .INCLUDE "map/maps.gbasm"
 .INCLUDE "map/dungeons.gbasm"
 .INCLUDE "music/soundeffects/click.gbasm"
+.INCLUDE "music/soundeffects/menu.gbasm"
+.INCLUDE "music/soundeffects/nextfloor.gbasm"
 
 _music_Dungeon:
 .INCLUDEBIN "music/morning-forest.vgm"

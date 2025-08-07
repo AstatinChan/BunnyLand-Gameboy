@@ -171,6 +171,8 @@ Move_dialogue_cursor:
 	CP $enum_dungeon_menu_mode
 	RET NZ
 
+	LD A, $mem_menu_cursor_position
+	LD D, A
 	LD A, $mem_cursor_max_position
 	LD C, A
 	LD A, $mem_last_button_direction
@@ -181,15 +183,13 @@ Move_dialogue_cursor:
 	CP B
 	RET Z
 
-	.SET_SOUND_EFFECT =_sound_effect_Click
-
 	DEC A
 	BIT 1, A
 	JR Z, =.Vertical_axis
 	LD A, $mem_menu_cursor_position
 	XOR $02
 	CP C
-	JR NC, =Reload_EP_Cost
+	JR NC, =.Sound_effect
 	LD $mem_menu_cursor_position, A
 	JR =Reload_EP_Cost
 
@@ -197,8 +197,16 @@ Move_dialogue_cursor:
 	LD A, $mem_menu_cursor_position
 	XOR $01
 	CP C
-	JR NC, =Reload_EP_Cost
+	JR NC, =.Sound_effect
 	LD $mem_menu_cursor_position, A
+
+	.Sound_effect:
+	LD A, $mem_menu_cursor_position
+	CP D
+	JR NZ, =.moved_sound_effect
+	.fail_move_sound_effect:
+	.SET_SOUND_EFFECT =_sound_effect_Move_arrow_failed
+	.moved_sound_effect:
 
 Reload_EP_Cost:
 	LD A, $mem_menu_cursor_position
@@ -272,12 +280,13 @@ Check_dialogue_action:
 	CP $00
 	RET Z
 	BIT 3, A
-	JP NZ, =Exit_Menu
+	JR Z, =.test_attack_chosen
+	.SET_SOUND_EFFECT =_sound_effect_Menu_Close
+	JP =Exit_Menu
+
+	.test_attack_chosen:
 	BIT 0, A
 	RET Z
-
-	LD A, $mem_menu_cursor_position
-	LD D, A
 
 	LD A, $mem_current_focused_attack_ep_cost
 	LD B, A
@@ -295,10 +304,6 @@ Check_dialogue_action:
 	ADD L
 	LD L, A
 
-	LD A, $mem_menu_cursor_position
-	CP D
-	JR NZ, =.moved_sound_effect
-		.SET_SOUND_EFFECT =_sound_effect_Click
 	.moved_sound_effect:
 	LD A, (HL+)
 	LD D, A
@@ -355,7 +360,7 @@ Open_dialogue_on_dungeon_menu_mode:
 	AND $40 ; Keeping object additional tile
 	OR $0d
 	LD $mem_display_flag, A
-	.SET_SOUND_EFFECT =_sound_effect_Click
+	.SET_SOUND_EFFECT =_sound_effect_Menu_Open
 
 	RET
 

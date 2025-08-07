@@ -7,7 +7,7 @@ _sound_effect_Click:
 	LD A, $80
 	LD ($16), A
 	; LD A, $a1
-	LD A, $f3
+	LD A, $83
 	LD ($17), A
 	; LD A, $16
 	LD A, $83

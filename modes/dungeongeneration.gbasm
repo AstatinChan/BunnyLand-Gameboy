@@ -225,7 +225,9 @@ Dungeon_generation_VBlank:
 
 	CALL =Reset_Entities_Collision_Map
 
-	CALL =Reset_Music_Channels
+	LD A, $mem_sound_flags
+	CP $00
+	CALL Z, =Reset_Music_Channels
 	LD A, $01
 	LD $mem_sound_flags, A
 	DI

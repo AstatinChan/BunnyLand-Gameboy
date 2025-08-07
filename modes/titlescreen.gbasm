@@ -123,13 +123,6 @@ Title_Screen_Start_Pressed:
 	CALL =Reset_Music_Channels
 
 	; Magic sound effect stuff
-	LD A, $8f
-	LD ($26), A
-	LD A, $ee
-	LD ($25), A
-	LD A, $ff
-	LD ($24), A
-	LD A, $3f
 	LD ($20), A
 	LD A, $f2
 	LD ($21), A

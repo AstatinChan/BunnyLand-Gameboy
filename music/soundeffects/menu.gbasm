@@ -1,0 +1,146 @@
+_sound_effect_Menu_Open:
+	LD A, $mem_sound_flags
+	SET 2, A
+	LD $mem_sound_flags, A
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $82
+	LD ($17), A
+	LD A, $06
+	LD ($18), A
+	LD A, $87
+	LD ($19), A
+
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $82
+	LD ($17), A
+	LD A, $83
+	LD ($18), A
+	LD A, $87
+	LD ($19), A
+	
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	
+	LD A, $08
+	LD ($17), A
+	LD A, $0b
+	LD ($18), A
+	LD A, $86
+	LD ($19), A
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET
+
+_sound_effect_Menu_Close:
+	LD A, $mem_sound_flags
+	SET 2, A
+	LD $mem_sound_flags, A
+
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $82
+	LD ($17), A
+	LD A, $06
+	LD ($18), A
+	LD A, $87
+	LD ($19), A
+
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $82
+	LD ($17), A
+	LD A, $0b
+	LD ($18), A
+	LD A, $86
+	LD ($19), A
+	
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	
+	LD A, $08
+	LD ($17), A
+	LD A, $0b
+	LD ($18), A
+	LD A, $86
+	LD ($19), A
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET
+
+_sound_effect_Move_arrow_failed:
+	LD A, $mem_sound_flags
+	SET 2, A
+	LD $mem_sound_flags, A
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $52
+	LD ($17), A
+	LD A, $16
+	LD ($18), A
+	LD A, $84
+	LD ($19), A
+
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $08
+	LD ($17), A
+	LD A, $16
+	LD ($18), A
+	LD A, $84
+	LD ($19), A
+
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $52
+	LD ($17), A
+	LD A, $16
+	LD ($18), A
+	LD A, $84
+	LD ($19), A
+
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $08
+	LD ($17), A
+	LD A, $16
+	LD ($18), A
+	LD A, $84
+	LD ($19), A
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET
