@@ -92,6 +92,7 @@ Move_Bunny:
 		LD A, $1f
 		SUB B
 		LD $mem_blinking_animation_counter, A
+		.SET_SOUND_EFFECT =_sound_effect_Damage
 		LD A, $mem_bunny_flags
 		SET 3, A
 		LD $mem_bunny_flags, A
@@ -255,6 +256,7 @@ Move_Bunny:
 		SET 3, (HL)
 		LD A, $24
 		LD $mem_blinking_animation_counter, A
+		.SET_SOUND_EFFECT =_sound_effect_Damage
 
 		LD A, $00
 		LD $mem_entity_being_attacked_low, A

@@ -10,11 +10,12 @@ Entrypoint:
 	LD HL, $mem_bunny_attacks
 	LD A, $01
 	LD (HL+), A
+	LD A, $04
+	LD (HL+), A
 	XOR A
 	LD (HL+), A
 	LD (HL+), A
-	LD (HL+), A
-	LD A, $01
+	LD A, $02
 	LD $mem_number_of_attacks, A
 
 	LD A, bank(=Morning_Forest)
@@ -67,6 +68,10 @@ Entrypoint:
 .INCLUDE "music/soundeffects/menu.gbasm"
 .INCLUDE "music/soundeffects/heal.gbasm"
 .INCLUDE "music/soundeffects/nextfloor.gbasm"
+.INCLUDE "music/soundeffects/jump.gbasm"
+.INCLUDE "music/soundeffects/laser.gbasm"
+.INCLUDE "music/soundeffects/damage.gbasm"
+.INCLUDE "music/soundeffects/earcoptr.gbasm"
 
 _music_Dungeon:
 .INCLUDEBIN "music/morning-forest.vgm"

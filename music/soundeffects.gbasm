@@ -12,6 +12,18 @@ Wait_Next_Frame:
 	CALL =Wait_Next_Frame
 .END
 
+.MACRODEF RET_WAIT_NEXT_FRAME_SAVE_HL
+	LD A, H
+	LD ($mem_sound_effect_hl), A
+	LD A, L
+	LD ($mem_sound_effect_hl+1), A
+	CALL =Wait_Next_Frame
+	LD A, ($mem_sound_effect_hl)
+	LD H, A
+	LD A, ($mem_sound_effect_hl+1)
+	LD L, A
+.END
+
 Play_Sound_Effect:
 	LD A, ($mem_sound_effect_pc)
 	CP $ff

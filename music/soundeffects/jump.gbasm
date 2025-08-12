@@ -1,0 +1,48 @@
+_sound_effect_Jump_slide_data:
+	.DB $20 $86 $35 $06 $48 $06 $5b $06 $6d $06 $7e $06 $8e $06 $9e $06
+	.DB $ad $06 $bb $06 $c9 $06 $d6 $06 $e3 $06 $ef $06 $fa $06 $06 $07
+	.DB $10 $07 $1a $07 $24 $07 $2d $07 $36 $07 $3f $07 $47 $07 $4f $07
+	.DB $56 $07 $5e $07 $64 $07 $6b $07 $71 $07 $77 $07 $7d $07 $83 $07
+	.DB $88 $07 $8d $07 $92 $07 $97 $07 $9b $07 $9f $07 $a4 $07 $a7 $07
+	.DB $ab $07 $af $07 $b2 $07 $b6 $07 $b9 $07 $bc $07 $bf $07 $c1 $07
+	.DB $c4 $07 $c7 $07 $c9 $07 $cb $07 $ce $07 $d0 $07 $d2 $07 $d4 $07
+	.DB $d6 $07 $d7 $07 $d9 $07 $db $07
+_sound_effect_Jump_slide_data.end:
+
+_sound_effect_Jump:
+	LD A, $mem_sound_flags
+	SET 2, A
+	LD $mem_sound_flags, A
+
+	LD HL, =_sound_effect_Jump_slide_data
+
+	LD A, $80
+	LD ($19), A
+	LD A, $3f
+	LD ($16), A
+	LD A, $a2
+	LD ($17), A
+
+	.loop:
+		LD A, (HL+)
+		LD ($18), A
+
+		LD A, (HL+)
+		LD ($19), A
+
+		.RET_WAIT_NEXT_FRAME_SAVE_HL
+
+		LD A, H
+		CP high(=_sound_effect_Jump_slide_data.end)
+		JR NZ, =.loop
+		LD A, L
+		CP low(=_sound_effect_Jump_slide_data.end)
+		JR NZ, =.loop
+	.end:
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET

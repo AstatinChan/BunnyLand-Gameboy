@@ -1,0 +1,60 @@
+_sound_effect_Earcoptr_slide_data:
+.DB $e7, $86, $c4, $06, $9e, $06, $72, $06, $42, $06, $0b, $06, $ce, $05, $89, $05
+_sound_effect_Earcoptr_slide_data.semi:
+.DB $3b, $05, $e5, $04, $83, $04, $16, $04, $9b, $03, $12, $03, $77, $02, $c9, $01
+_sound_effect_Earcoptr_slide_data.end:
+
+_sound_effect_Earcoptr:
+	LD A, $mem_sound_flags
+	SET 2, A
+	LD $mem_sound_flags, A
+
+
+	LD A, $80
+	LD ($19), A
+
+	.MACRODEF EARCOPTER_SOUND_LOOP =start =end
+		LD HL, =start
+
+		$loop:
+			LD A, (HL+)
+			LD ($18), A
+
+			LD A, (HL+)
+			LD ($19), A
+
+			.RET_WAIT_NEXT_FRAME_SAVE_HL
+
+			LD A, H
+			CP high(=end)
+			JR NZ, =$loop
+			LD A, L
+			CP low(=end)
+			JR NZ, =$loop
+		$end:
+	.END
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $82
+	LD ($17), A
+	.EARCOPTER_SOUND_LOOP =_sound_effect_Earcoptr_slide_data, =_sound_effect_Earcoptr_slide_data.semi
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $82
+	LD ($17), A
+	.EARCOPTER_SOUND_LOOP =_sound_effect_Earcoptr_slide_data, =_sound_effect_Earcoptr_slide_data.semi
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $82
+	LD ($17), A
+	.EARCOPTER_SOUND_LOOP =_sound_effect_Earcoptr_slide_data, =_sound_effect_Earcoptr_slide_data.end
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET

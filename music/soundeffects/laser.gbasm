@@ -1,0 +1,46 @@
+_sound_effect_Laser_slide_data:
+	.DB $bc, $87, $b6, $07, $af, $07, $a7, $07, $9f, $07, $97, $07, $8d, $07, $83, $07
+	.DB $77, $07, $6b, $07, $5e, $07, $4f, $07, $3f, $07, $2d, $07, $1a, $07, $06, $07
+	.DB $ef, $06, $d6, $06, $bb, $06, $9e, $06, $7e, $06, $5b, $06, $35, $06, $0b, $06
+	.DB $de, $05, $ac, $05, $76, $05, $3b, $05, $fb, $04, $b5, $04, $69, $04, $16, $04
+	.DB $bb, $03, $58, $03, $ed, $02, $77, $02, $f7, $01, $6b, $01, $d2, $00, $2c, $00
+	.DB $01, $00
+_sound_effect_Laser_slide_data.end:
+
+_sound_effect_Laser:
+	LD A, $mem_sound_flags
+	SET 2, A
+	LD $mem_sound_flags, A
+
+	LD HL, =_sound_effect_Laser_slide_data
+
+	LD A, $80
+	LD ($19), A
+	LD A, $3f
+	LD ($16), A
+	LD A, $a2
+	LD ($17), A
+
+	.loop:
+		LD A, (HL+)
+		LD ($18), A
+
+		LD A, (HL+)
+		LD ($19), A
+
+		.RET_WAIT_NEXT_FRAME_SAVE_HL
+
+		LD A, H
+		CP high(=_sound_effect_Laser_slide_data.end)
+		JR NZ, =.loop
+		LD A, L
+		CP low(=_sound_effect_Laser_slide_data.end)
+		JR NZ, =.loop
+	.end:
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET

@@ -66,6 +66,7 @@ Basic_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD A, $1f
 	SUB B
 	LD $mem_blinking_animation_counter, A
+	.SET_SOUND_EFFECT =_sound_effect_Damage
 	POP BC
 
 	RET

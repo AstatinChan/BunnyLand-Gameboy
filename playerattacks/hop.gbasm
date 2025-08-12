@@ -97,6 +97,7 @@ Hop_Attack_Loading_Regular:
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
 	CALL =Update_VBlank_Handler
+	.SET_SOUND_EFFECT =_sound_effect_Jump
 	LD A, $mem_bunny_direction
 	OR $08
 	LD $mem_bunny_direction, A

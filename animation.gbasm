@@ -116,6 +116,7 @@ End_animation:
 
 	LD A, $1f
 	LD $mem_blinking_animation_counter, A
+	.SET_SOUND_EFFECT =_sound_effect_Damage
 
 	POP HL
 

@@ -187,6 +187,8 @@
 
 .DEFINE mem_sound_effect_pc $c078 ; Takes $c078 - $c07a (bank + ptr)
 
+.DEFINE mem_sound_effect_hl $c07b ; Takes $c07b - $c07c
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 

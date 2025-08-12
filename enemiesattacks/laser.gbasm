@@ -144,6 +144,8 @@ Apply_Prepared_Laser_Enemy_Attack: ; Entity (whatever alignment) in HL Direction
 	LD D, $10
 	CALL =Try_Launch_Animation
 
+	.SET_SOUND_EFFECT =_sound_effect_Laser
+
 	LD A, $enum_animation_wait_mode
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
