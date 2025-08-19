@@ -79,7 +79,7 @@ Dialogue_script_instruction_Jump_Table:
 		POP HL
 
 		LD A, $mem_display_flag
-		AND $40 ; Keeping the object ones
+		AND $c0 ; Keeping the object ones
 		OR $05
 		LD $mem_display_flag, A
 
@@ -117,7 +117,7 @@ Dialogue_script_instruction_Jump_Table:
 		POP HL
 
 		LD A, $mem_display_flag
-		AND $40 ; Keeping the object ones
+		AND $c0 ; Keeping the object ones
 		OR $07
 		LD $mem_display_flag, A
 
@@ -176,7 +176,7 @@ Dialogue_script_instruction_Jump_Table:
 		POP HL
 
 		LD A, $mem_display_flag
-		AND $40 ; Keeping the object ones
+		AND $c0 ; Keeping the object ones
 		OR $07
 		LD $mem_display_flag, A
 

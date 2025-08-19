@@ -10,12 +10,11 @@ Entrypoint:
 	LD HL, $mem_bunny_attacks
 	LD A, $01
 	LD (HL+), A
-	LD A, $03
-	LD (HL+), A
 	XOR A
 	LD (HL+), A
 	LD (HL+), A
-	LD A, $02
+	LD (HL+), A
+	LD A, $01
 	LD $mem_number_of_attacks, A
 
 	LD A, bank(=Morning_Forest)

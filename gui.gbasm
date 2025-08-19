@@ -268,8 +268,9 @@ Check_dialogue_action:
 	CP $00
 	RET Z
 	BIT 0, A
+	RET Z
 	.SET_SOUND_EFFECT =_sound_effect_Click
-	JP NZ, =Dialogue_script_step
+	JP =Dialogue_script_step
 
 	.Dungeon_Menu:
 	LD A, $mem_button_action
@@ -282,6 +283,7 @@ Check_dialogue_action:
 	BIT 3, A
 	JR Z, =.test_attack_chosen
 	.SET_SOUND_EFFECT =_sound_effect_Menu_Close
+	LD A, $69
 	JP =Exit_Menu
 
 	.test_attack_chosen:

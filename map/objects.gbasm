@@ -221,6 +221,26 @@ Stairs_Action:
 
 	.skip_update_floor_count:
 
+	LD A, $mem_sound_flags
+	BIT 1, A
+	CALL NZ, =Reset_Music_Channel1
+	LD A, $mem_sound_flags
+	BIT 2, A
+	CALL NZ, =Reset_Music_Channel2
+	LD A, $mem_sound_flags
+	BIT 3, A
+	CALL NZ, =Reset_Music_Channel3
+	LD A, $mem_sound_flags
+	BIT 4, A
+	CALL NZ, =Reset_Music_Channel4
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $00
+	LD $mem_sound_effect_frame_count, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	
 	.SET_SOUND_EFFECT =_sound_effect_Next_Floor
 	RET
 

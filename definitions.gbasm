@@ -78,6 +78,7 @@
 ; bit 4: if dialogue box text should be refreshed (part2)
 ; bit 5: if object display is paused
 ; bit 6: if additional tile should be loaded
+; bit 7: 1 when the dialogue box cannot be closed with start button
 
 .DEFINE mem_current_mode ($c014)
 .DEFINE mem_requested_mode ($c015)

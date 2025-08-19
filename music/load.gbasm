@@ -8,20 +8,37 @@
 .END
 
 Reset_Music_Channels:
+	CALL =Reset_Music_Channel4
+	CALL =Reset_Music_Channel3
+	CALL =Reset_Music_Channel2
+
+Reset_Music_Channel1:
 	LD A, $00
 	LD ($11), A
 	LD ($12), A
 	LD ($13), A
 	LD ($14), A
+	RET
+
+Reset_Music_Channel2:
+	LD A, $00
 	LD ($16), A
 	LD ($17), A
 	LD ($18), A
 	LD ($19), A
+	RET
+
+Reset_Music_Channel3:
+	LD A, $00
 	LD ($1A), A
 	LD ($1B), A
 	LD ($1C), A
 	LD ($1D), A
 	LD ($1E), A
+	RET
+
+Reset_Music_Channel4:
+	LD A, $00
 	LD ($20), A
 	LD ($21), A
 	LD ($22), A
