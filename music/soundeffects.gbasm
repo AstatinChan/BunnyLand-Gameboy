@@ -24,6 +24,28 @@ Wait_Next_Frame:
 	LD L, A
 .END
 
+.MACRODEF CHANNEL_2_SOUND_EFFECT_LOOP =start =end
+	LD HL, =start
+
+	$loop:
+		LD A, (HL+)
+		LD ($18), A
+
+		LD A, (HL+)
+		LD ($19), A
+
+		.RET_WAIT_NEXT_FRAME_SAVE_HL
+
+		LD A, H
+		CP high(=end)
+		JR NZ, =$loop
+		LD A, L
+		CP low(=end)
+		JR NZ, =$loop
+	$end:
+.END
+
+
 Play_Sound_Effect:
 	LD A, ($mem_sound_effect_pc)
 	CP $ff
@@ -37,10 +59,16 @@ Play_Sound_Effect:
 	RET
 
 .MACRODEF SET_SOUND_EFFECT =addr
+	PUSH AF
+	LD A, $mem_sound_flags
+	AND 0b00111110
+	JR NZ =$end
 	LD A, bank(=addr)
 	LD ($mem_sound_effect_pc), A
 	LD A, high(ptr(=addr))
 	LD ($mem_sound_effect_pc+1), A
 	LD A, low(ptr(=addr))
 	LD ($mem_sound_effect_pc+2), A
+	$end:
+	POP AF
 .END

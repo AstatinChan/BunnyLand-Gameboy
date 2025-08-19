@@ -10,7 +10,7 @@ Entrypoint:
 	LD HL, $mem_bunny_attacks
 	LD A, $01
 	LD (HL+), A
-	LD A, $04
+	LD A, $03
 	LD (HL+), A
 	XOR A
 	LD (HL+), A
@@ -72,6 +72,10 @@ Entrypoint:
 .INCLUDE "music/soundeffects/laser.gbasm"
 .INCLUDE "music/soundeffects/damage.gbasm"
 .INCLUDE "music/soundeffects/earcoptr.gbasm"
+.INCLUDE "music/soundeffects/freeze.gbasm"
+.INCLUDE "music/soundeffects/bite.gbasm"
+.INCLUDE "music/soundeffects/grab.gbasm"
+.ASSERT bank(.) $01
 
 _music_Dungeon:
 .INCLUDEBIN "music/morning-forest.vgm"

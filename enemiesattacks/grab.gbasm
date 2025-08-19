@@ -139,6 +139,8 @@ Grab_Enemy_Attack: ; Entity in HL (whatever alignment), Direction to face in E. 
 	POP BC
 	POP DE
 
+	.SET_SOUND_EFFECT =_sound_effect_Grab
+
 	LD A, L
 	AND $f0
 	ADD $09

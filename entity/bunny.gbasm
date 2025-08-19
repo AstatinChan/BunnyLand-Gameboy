@@ -63,7 +63,7 @@ Move_Bunny:
 	.Poison_effect:
 		LD A, $mem_bunny_status
 		CP $08
-		JR NZ, =.Poison_effect.end
+		JP NZ, =.Poison_effect.end
 		LD A, $f6
 		LD $mem_bunny_status_tile, A
 		LD A, $mem_moving_animation_step

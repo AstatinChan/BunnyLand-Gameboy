@@ -14,8 +14,6 @@ _sound_effect_Jump:
 	SET 2, A
 	LD $mem_sound_flags, A
 
-	LD HL, =_sound_effect_Jump_slide_data
-
 	LD A, $80
 	LD ($19), A
 	LD A, $3f
@@ -23,22 +21,7 @@ _sound_effect_Jump:
 	LD A, $a2
 	LD ($17), A
 
-	.loop:
-		LD A, (HL+)
-		LD ($18), A
-
-		LD A, (HL+)
-		LD ($19), A
-
-		.RET_WAIT_NEXT_FRAME_SAVE_HL
-
-		LD A, H
-		CP high(=_sound_effect_Jump_slide_data.end)
-		JR NZ, =.loop
-		LD A, L
-		CP low(=_sound_effect_Jump_slide_data.end)
-		JR NZ, =.loop
-	.end:
+	.CHANNEL_2_SOUND_EFFECT_LOOP =_sound_effect_Jump_slide_data =_sound_effect_Jump_slide_data.end
 
 	LD A, $mem_sound_flags
 	AND 0b11000001

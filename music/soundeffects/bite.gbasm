@@ -1,0 +1,70 @@
+_sound_effect_Bite_slide_data:
+.DB $7d, $87, $77, $07, $71, $07, $6b, $07, $64, $07, $5e, $07, $56, $07, $4f, $07
+.DB $47, $07, $3f, $07, $36, $07, $2d, $07, $24, $07
+_sound_effect_Bite_slide_data.end:
+
+_sound_effect_Bite:
+	LD A, $mem_sound_flags
+	OR 0b00010100
+	LD $mem_sound_flags, A
+
+	LD A, $3f
+	LD ($20), A
+	LD A, $42
+	LD ($21), A
+	LD A, $14
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $08
+	LD ($21), A
+	LD A, $14
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $3f
+	LD ($20), A
+	LD A, $42
+	LD ($21), A
+	LD A, $14
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $08
+	LD ($21), A
+	LD A, $14
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
+	.RET_WAIT_NEXT_FRAME
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $a2
+	LD ($17), A
+
+	.CHANNEL_2_SOUND_EFFECT_LOOP =_sound_effect_Bite_slide_data, =_sound_effect_Bite_slide_data.end
+
+	LD A, $08
+	LD ($17), A
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET

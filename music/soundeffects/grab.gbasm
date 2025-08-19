@@ -1,0 +1,23 @@
+_sound_effect_Grab_slide_data:
+.DB $a3, $86, $93, $06, $83, $06, $72, $06, $61, $06, $4e, $06, $3b, $06, $27, $06
+.DB $12, $06, $fc, $05, $e5, $05, $ce, $05, $b5, $05, $9b, $05, $80, $05, $63, $05
+.DB $46, $05
+_sound_effect_Grab_slide_data.end:
+
+_sound_effect_Grab:
+	LD A, $mem_sound_flags
+	SET 2, A
+	LD $mem_sound_flags, A
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $84
+	LD ($17), A
+	.CHANNEL_2_SOUND_EFFECT_LOOP =_sound_effect_Grab_slide_data, =_sound_effect_Grab_slide_data.end
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET

@@ -117,5 +117,6 @@ Freeze_Attack:
 	LD A, $enum_loading_mode
 	LD $mem_requested_mode, A
 
+	.SET_SOUND_EFFECT =_sound_effect_Freeze
 	.CLOSE_DIALOGUE
 	RET

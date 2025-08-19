@@ -80,6 +80,8 @@ Freeze_Enemy_Attack: ; Direction to face in E. Result in BC (XY), Direction in D
 	LD A, $04
 	LD $mem_bunny_status_clear_turn_counter, A
 
+	.SET_SOUND_EFFECT =_sound_effect_Freeze
+
 	LD A, L
 	AND $f0
 	ADD $09

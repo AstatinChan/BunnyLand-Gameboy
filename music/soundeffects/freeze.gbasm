@@ -1,0 +1,56 @@
+_sound_effect_Freeze_slide_data:
+.DB $c2, $87, $c1, $07, $c1, $07, $c1, $07, $c2, $07
+.semi:
+.DB $c1, $07, $c1, $07, $c1, $07
+.DB $c2, $07, $c2, $07, $c1, $07, $c1, $07, $c1, $07, $c2, $07, $c1, $07, $c1, $07
+.DB $c1, $07, $c2, $07, $c1, $07, $c1, $07, $c1, $07, $c2, $07, $c2, $07, $c1, $07
+.DB $c1, $07, $c1, $07, $c2, $07, $c1, $07, $c1, $07, $c1, $07, $c2, $07, $c1, $07
+.DB $c1, $07, $c1, $07, $c2, $07
+.end:
+
+_sound_effect_Freeze:
+	LD A, $mem_sound_flags
+	OR 0b00010100
+	LD $mem_sound_flags, A
+
+
+	LD A, $80
+	LD ($19), A
+	LD A, $3f
+	LD ($16), A
+	LD A, $a3
+	LD ($17), A
+
+	LD A, $3f
+	LD ($20), A
+	LD A, $52
+	LD ($21), A
+	LD A, $14
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
+	.CHANNEL_2_SOUND_EFFECT_LOOP =_sound_effect_Freeze_slide_data, =_sound_effect_Freeze_slide_data.semi
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $a3
+	LD ($17), A
+
+	LD A, $3f
+	LD ($20), A
+	LD A, $52
+	LD ($21), A
+	LD A, $14
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
+	.CHANNEL_2_SOUND_EFFECT_LOOP =_sound_effect_Freeze_slide_data, =_sound_effect_Freeze_slide_data.end
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET
