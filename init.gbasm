@@ -22,6 +22,7 @@ Header:
 .PADTO 0x0134
 
 .Title:
+	.DB $50, $79, $6f, $6e, $20, $41, $64, $76
 .PADTO 0x13f
 
 .Manufacturer_code:

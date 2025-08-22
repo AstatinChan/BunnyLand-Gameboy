@@ -52,6 +52,8 @@ _sound_effect_Bite:
 
 	.RET_WAIT_NEXT_FRAME
 
+	LD A, $80
+	LD ($19), A
 	LD A, $3f
 	LD ($16), A
 	LD A, $a2
@@ -59,7 +61,7 @@ _sound_effect_Bite:
 
 	.CHANNEL_2_SOUND_EFFECT_LOOP =_sound_effect_Bite_slide_data, =_sound_effect_Bite_slide_data.end
 
-	LD A, $08
+	LD A, $00
 	LD ($17), A
 
 	LD A, $mem_sound_flags

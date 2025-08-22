@@ -245,7 +245,7 @@ Move_Bunny:
 		LD L, A
 		LD H, high($mem_entities_list)
 		LD A, (HL)
-		DEC A
+		SUB $01
 		DAA
 		JR C, =.skip_update_health
 		LD (HL), A
