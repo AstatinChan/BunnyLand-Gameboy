@@ -44,10 +44,13 @@ Update_Animation_Steps:
 	CALL =Update_VBlank_Handler
 
 	.end:
-	LD A, $mem_bunny_health
+
+	LD A, $mem_moving_animation_step
 	CP $00
 	RET NZ
-	LD A, $mem_moving_animation_step
+	LD A, $00
+	LD $mem_bunny_animation, A
+	LD A, $mem_bunny_health
 	CP $00
 	RET NZ
 
