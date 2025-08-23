@@ -22,6 +22,9 @@ Update_Animation_Steps:
 	CP $00
 	JR NZ, =.end
 
+	LD A, $00
+	LD $mem_bunny_animation, A
+
 	LD A, $mem_map_loading_flags
 	RES 3, A
 	SET 1, A
@@ -48,8 +51,6 @@ Update_Animation_Steps:
 	LD A, $mem_moving_animation_step
 	CP $00
 	RET NZ
-	LD A, $00
-	LD $mem_bunny_animation, A
 	LD A, $mem_bunny_health
 	CP $00
 	RET NZ
