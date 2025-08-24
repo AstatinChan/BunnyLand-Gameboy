@@ -57,6 +57,8 @@ Pad_Button_Check:
 	XOR $0f
 	AND $0f
 	LD $mem_button_action, A
+	CP $0f
+	JP Z, =Start
 
 	POP BC
 	POP AF

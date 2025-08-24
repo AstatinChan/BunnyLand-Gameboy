@@ -41,6 +41,12 @@ Header:
 .Global_checksum: .DB $00, $00 ; Will be set after assembly by build scripts
 
 Initialize_RAM:
+LD SP, $fffe
+
+; LCDC
+XOR A
+LD $reg_lcd_controller, A
+
 ; Disable Interrupts
 LD A, $00
 LD $reg_interrupt_enable, A
@@ -54,10 +60,6 @@ Empty_WRAM:
 		JR NZ, =.loop
 
 	CALL =VBlank_Wait
-
-	; LCDC
-	XOR A
-	LD $reg_lcd_controller, A
 
 Empty_VRAM: ; (Clear screen)
 	LD HL, $VRAM_start ; We set the HL register to the start of VRAM
