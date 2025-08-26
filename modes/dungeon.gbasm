@@ -56,18 +56,37 @@ Update_Animation_Steps:
 	RET NZ
 
 	.Dead_mode:
+	LD A, $mem_current_mode
+	CP $enum_dead_mode
+	RET Z
 
 	LD A, $00
 	LD $mem_bunny_direction, A
 	LD A, $02
 	LD $mem_bunny_animation, A
-
+	.LOAD_MUSIC =_music_GameOver
+	CALL =Start_Music
 	LD A, $enum_dead_mode
+	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
 	CALL =Update_VBlank_Handler
 
-	.CLOSE_DIALOGUE
+	LD HL, $dialogue_first_line
+	LD BC, $36
+	CALL =bzero
 
+	LD HL, $dialogue_first_line
+	.LOAD_BANK_OF =Game_Over_1_Txt
+	LD BC, ptr(=Game_Over_1_Txt)
+	CALL =Print_str
+
+	LD HL, $dialogue_third_line
+	.LOAD_BANK_OF =Game_Over_2_Txt
+	LD BC, ptr(=Game_Over_2_Txt)
+	CALL =Print_str
+
+	LD A, 0b00100111
+	LD $mem_display_flag, A
 	RET
 
 STAT_Entrypoint:

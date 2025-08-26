@@ -101,17 +101,31 @@ Loop_Music:
 	LD B, A
 
 	LD A, (HL)
+	LD $tmp_var_1, A
 	CALL =Inc_HL_Fix_Bank
 	ADD C
 	LD C, A
 	LD A, (HL)
+	LD $tmp_var_2, A
 	CALL =Inc_HL_Fix_Bank
 	ADC B
 	LD B, A
 	LD A, (HL)
+	LD $tmp_var_3, A
 	CALL =Inc_HL_Fix_Bank
 	ADC E
 	LD E, A
+
+	LD A, $tmp_var_1
+	CP $00
+	JR NZ, =.end_check_empty
+	LD A, $tmp_var_2
+	CP $00
+	JR NZ, =.end_check_empty
+	LD A, $tmp_var_2
+	CP $00
+	JR Z, =Stop_music
+	.end_check_empty:
 
 	LD A, $00
 	SLA B
@@ -130,6 +144,24 @@ Loop_Music:
 	LD ($mem_current_vgm_pc+1), A
 	LD A, C
 	LD ($mem_current_vgm_pc+2), A
+	RET
+
+Stop_Music:
+	LD A, $mem_sound_flags
+	RES 0, A
+	LD $mem_sound_flags, A
+	LD A, $mem_sound_flags
+	BIT 1, A
+	CALL Z, =Reset_Music_Channel1
+	LD A, $mem_sound_flags
+	BIT 2, A
+	CALL Z, =Reset_Music_Channel2
+	LD A, $mem_sound_flags
+	BIT 3, A
+	CALL Z, =Reset_Music_Channel3
+	LD A, $mem_sound_flags
+	BIT 4, A
+	CALL Z, =Reset_Music_Channel4
 	RET
 
 Inc_HL_Fix_Bank:

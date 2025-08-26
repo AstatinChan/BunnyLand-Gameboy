@@ -78,18 +78,17 @@
 ; bit 4: if dialogue box text should be refreshed (part2)
 ; bit 5: if object display is paused
 ; bit 6: if additional tile should be loaded
-; bit 7: 1 when the dialogue box cannot be closed with start button
 
 .DEFINE mem_current_mode ($c014)
 .DEFINE mem_requested_mode ($c015)
 ; bit 0-3: which vblank handler group
 .DEFINE enum_dungeon_mode $00
-.DEFINE enum_dead_mode $10
 .DEFINE enum_dungeon_menu_mode $01
 .DEFINE enum_dungeon_dialogue_mode $11
 .DEFINE enum_loading_mode $02
 .DEFINE enum_animation_wait_mode $12
 .DEFINE enum_dungeon_generation_mode $03
+.DEFINE enum_dead_mode $21
 
 .DEFINE mem_menu_cursor_position ($c016)
 .DEFINE mem_last_button_direction ($c017)

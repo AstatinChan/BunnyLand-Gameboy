@@ -11,9 +11,12 @@ Entrypoint:
 	LD A, $01
 	LD (HL+), A
 	XOR A
+	;LD A, $05
+	LD (HL+), A
+	XOR A
 	LD (HL+), A
 	LD (HL+), A
-	LD (HL+), A
+	;LD A, $02
 	LD A, $01
 	LD $mem_number_of_attacks, A
 
@@ -80,3 +83,5 @@ _music_Dungeon:
 .INCLUDEBIN "music/morning-forest.vgm"
 _music_TitleScreen:
 .INCLUDEBIN "music/title-screen.vgm"
+_music_GameOver:
+.INCLUDEBIN "music/game-over.vgm"

@@ -257,7 +257,21 @@ Check_dialogue_action:
 	JR Z, =.Dungeon_Menu
 
 	CP $enum_dungeon_dialogue_mode
+	JR Z, =.Dialogue_Box
+
+	LD A, $mem_button_action
+	LD B, A
+	LD A, $mem_last_button_action
+	XOR B
+	AND B
+	CP $00
+	RET Z
+	; Wait for the music to stop to restart game when button pressed
+	LD A, $mem_sound_flags
+	BIT 0, A
 	RET NZ
+	JP =Start
+	RET
 
 	.Dialogue_Box:
 	LD A, $mem_button_action

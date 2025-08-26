@@ -2,8 +2,12 @@ Hop_Attack_Menu_Txt: Hop
 Heal_Attack_Menu_Txt: Heal
 Freeze_Attack_Menu_Txt: Freeze
 Earcoptr_Attack_Menu_Txt: Earcoptr
+Die_Attack_Menu_Txt: Die
 
 Dungeon_Name_1_Txt: Morning Forest
+
+Game_Over_1_Txt: Game Over
+Game_Over_2_Txt: You tried :3
 
 Press_Txt: Press
 Start_Txt: Start

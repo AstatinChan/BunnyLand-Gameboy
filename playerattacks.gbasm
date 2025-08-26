@@ -185,6 +185,26 @@ Attack_List:
 
 		.PADTO =.Earcoptr+8
 
+	; 05
+	.Die:
+		; Attack menu name string
+		.DB bank(=Die_Attack_Menu_Txt)
+		.DB ptr(=Die_Attack_Menu_Txt)
+
+		; Attack function
+		.ASSERT bank(=Die_Attack) $00
+		.DB ptr(=Die_Attack)
+
+		; Energy point cost
+		.DB $00
+
+		.PADTO =.Die+8
+
+Die_Attack:
+	LD A, $00
+	LD $mem_bunny_health, A
+	RET
+
 .INCLUDE "playerattacks/hop.gbasm"
 .INCLUDE "playerattacks/heal.gbasm"
 .INCLUDE "playerattacks/freeze.gbasm"
