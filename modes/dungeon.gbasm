@@ -72,7 +72,11 @@ Update_Animation_Steps:
 	CALL =Update_VBlank_Handler
 
 	LD HL, $dialogue_first_line
-	LD BC, $36
+	LD BC, $12
+	CALL =bzero
+
+	LD HL, $dialogue_third_line
+	LD BC, $12
 	CALL =bzero
 
 	LD HL, $dialogue_first_line

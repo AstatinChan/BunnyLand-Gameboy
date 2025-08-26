@@ -388,12 +388,20 @@ Dialogue_Arrow_Animation:
 	LD A, $mem_current_mode
 	CP $enum_dungeon_dialogue_mode
 	JR Z, =.dialogue
+	CP $enum_dead_mode
+	JR Z, =.dead
 
+	.not_dialogue:
 	LD A, $18
 	LD ($9d05), A
 	LD A, $14
 	LD ($9d06), A
 	RET
+
+	.dead:
+	LD A, $mem_sound_flags
+	BIT 0, A
+	JR NZ, =.not_dialogue
 
 	.dialogue:
 	LD A, $mem_loop_frame_timer
