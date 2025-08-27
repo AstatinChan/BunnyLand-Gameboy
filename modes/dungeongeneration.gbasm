@@ -145,7 +145,6 @@ New_Floor:
 		CALL =Dungeon_Generation
 		CALL =Initialize_Entities
 		CALL =Initialize_Objects
-
 	.map.end:
 
 	; Reset animations

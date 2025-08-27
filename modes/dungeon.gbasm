@@ -163,20 +163,16 @@ Dungeon_VBLANK_Entrypoint:
 
 	CALL $OAM_DMA_Transfer_routine
 
-	LD A, $mem_current_mode
-	BIT 7, A
-	JR NZ, =Skip_VBlank_Dungeon_Update
-		LD HL, $9d60
-		LD A, $mem_bunny_health
-		CALL =Print_8bit
+	LD HL, $9d60
+	LD A, $mem_bunny_health
+	CALL =Print_8bit
 
-		LD HL, $9d64
-		LD A, $mem_bunny_mana
-		CALL =Print_8bit
+	LD HL, $9d64
+	LD A, $mem_bunny_mana
+	CALL =Print_8bit
 
-		CALL =Display_Prepared_Blocks
-		CALL =Display_Object
-	Skip_VBlank_Dungeon_Update:
+	CALL =Display_Prepared_Blocks
+	CALL =Display_Object
 
 	; LYC
 	.ENABLE_LYC_INTERRUPT
@@ -192,7 +188,7 @@ Dungeon_VBLANK_Entrypoint:
 
 		CALL =Entities_Actions
 		CALL =Object_Interactions_Check
-		CALL =Respawn_Entities
+		CALL =Maybe_Respawn_Entity
 		CALL =Prepare_Scrolling_Map
 
 	Skip_Dungeon_Update:

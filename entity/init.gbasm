@@ -32,11 +32,11 @@ Initialize_Entities:
 
 	LD A, $00
 	LD $tmp_var_3, A
-	CALL =Initialize_Enemy
-	CALL =Initialize_Enemy
-	CALL =Initialize_Enemy
-	CALL =Initialize_Enemy
-	CALL =Initialize_Enemy
+	CALL =Spawn_Entity
+	CALL =Spawn_Entity
+	CALL =Spawn_Entity
+	CALL =Spawn_Entity
+	CALL =Spawn_Entity
 	LD A, $tmp_var_1
 	LD $mem_bunny_current_room_idx, A
 
@@ -137,8 +137,6 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 
 	CALL =Carve_Entity_Collision_Map
 
-	POP BC
-
 	; Direction
 	LD A, $33
 	LD (HL+), A
@@ -213,26 +211,27 @@ FindFreeEntity:
 		JR NZ, =FindFreeEntity.loop
 	RET
 
-Respawn_Entities:
-	LD A, $mem_dungeon_flags
-	BIT 2, A
-	RET Z
-
+Maybe_Respawn_Entity:
 	LD A, $mem_moving_animation_step
 	CP $04
+	RET NZ
+
+	CALL =RNG_Step
+	AND $07
+	CP $00
 	RET NZ
 
 	LD A, $mem_enemies_alive_count
 	CP $05
 	RET NC
 
+Spawn_Entity:
+	LD A, $mem_dungeon_flags
+	BIT 2, A
+	RET Z
+
 	LD A, $00
 	LD $tmp_var_3, A
-
-	CALL =RNG_Step
-	AND $07
-	CP $00
-	RET NZ
 
 	CALL =FindFreeEntity
 

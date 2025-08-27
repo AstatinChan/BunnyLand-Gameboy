@@ -18,11 +18,24 @@ Dialogue_VBLANK_Entrypoint:
 	LD $reg_lyc, A
 	.top_bar.end:
 
-	CALL $OAM_DMA_Transfer_routine
+	LD A, $mem_current_mode
+	CP $enum_dead_mode
+	JR NZ, =.update_health_mana.end
+		LD HL, $9d60
+		LD A, $mem_bunny_health
+		CALL =Print_8bit
+
+		LD HL, $9d64
+		LD A, $mem_bunny_mana
+		CALL =Print_8bit
+	.update_health_mana.end:
+
 
 	CALL =Dialogue_Arrow_Animation
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
+
+	CALL $OAM_DMA_Transfer_routine
 
 	; LYC
 	LD A, $0a
