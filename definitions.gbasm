@@ -346,6 +346,7 @@
 
 .DEFINE lcdc_guibg_tilemap $8d
 .DEFINE lcdc_mapbg_tilemap $87
+.DEFINE lcdc_titlescreen $85
 
 .DEFINE vram_entity_index $02
 .DEFINE vram_animation_index $62

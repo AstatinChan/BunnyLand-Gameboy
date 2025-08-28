@@ -57,7 +57,7 @@ Title_Screen:
 	LD A, $00
 	LD $reg_viewport_x, A
 	LD $reg_viewport_y, A
-	LD A, $lcdc_mapbg_tilemap
+	LD A, $lcdc_titlescreen
 	LD $reg_lcd_controller, A
 
 	LD A, $00
