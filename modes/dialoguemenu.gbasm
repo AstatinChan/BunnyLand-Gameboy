@@ -61,7 +61,24 @@ Dialogue_VBLANK_Entrypoint:
 	INC A
 	LD $mem_loop_frame_timer, A
 
+	LD A, $mem_sound_flags
+	BIT 6, A
+	JR Z, =.Music_Play
+	LD A, $mem_display_flag
+	BIT 2, A
+	JR NZ, =.Sound_Effects_Play
+	BIT 4, A
+	JR NZ, =.Sound_Effects_Play
+	LD A, $mem_sound_flags
+	RES 6, A
+	SET 0, A
+	LD $mem_sound_flags, A
+	CALL =Start_Music
+	JR =.Sound_Effects_Play
+
+	.Music_Play:
 	CALL =Play_Music
+	.Sound_Effects_Play:
 	CALL =Play_Sound_Effect
 
 	.ENABLE_VBLANK_INTERRUPTS

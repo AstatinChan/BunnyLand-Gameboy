@@ -27,7 +27,8 @@
 .DEFINE mem_button_direction ($c002)
 .DEFINE mem_button_action ($c003)
 .DEFINE mem_moving_animation_step ($c004)
-; frame 0: movement can be initiated when with button actions
+; frame 0: movement can be initiated when with button actions/most turn enemies AI are computed here
+; frame 1: dead mode applied if animation_step going up (with the bzero/memcpy for dialogue text)
 ; frame 2: applying bunny attack damages
 ; frame 3: checking entities health and death if 0
 ; frame 4: new entity spawn
@@ -182,6 +183,7 @@
 ; 	bit 3 = 1 => sound effect playing on channel 3 (music should not use it)
 ; 	bit 4 = 1 => sound effect playing on channel 4 (music should not use it)
 ;	bit 5 = 1 => $mem_sound_effect_frame_count is going down
+;	bit 6 = 1 => Start_Music call is requested
 
 .DEFINE mem_sound_effect_frame_count ($c077)
 

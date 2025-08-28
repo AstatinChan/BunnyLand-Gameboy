@@ -268,7 +268,7 @@ Check_dialogue_action:
 	RET Z
 	; Wait for the music to stop to restart game when button pressed
 	LD A, $mem_sound_flags
-	BIT 0, A
+	AND 0b01000001
 	RET NZ
 	JP =Start
 	RET
@@ -400,7 +400,7 @@ Dialogue_Arrow_Animation:
 
 	.dead:
 	LD A, $mem_sound_flags
-	BIT 0, A
+	AND 0b01000001
 	JR NZ, =.not_dialogue
 
 	.dialogue:
