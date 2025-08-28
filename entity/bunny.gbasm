@@ -9,6 +9,18 @@ Move_Bunny:
 	LD A, $00
 	LD $mem_bunny_status_tile, A
 
+	.Reset_Blinking_flag:
+		LD A, $mem_map_loading_flags
+		BIT 3, A
+		JR Z, =.Reset_Blinking_flag.end
+		LD A, $mem_moving_animation_step
+		CP $00
+		JR NZ, =.Reset_Blinking_flag.end
+		LD A, $mem_bunny_flags
+		RES 3, A
+		LD $mem_bunny_flags, A
+	.Reset_Blinking_flag.end:
+
 	.Finish_unfreeze:
 		LD A, $mem_moving_animation_step
 		CP $00
@@ -215,18 +227,6 @@ Move_Bunny:
 		SET 3, A
 		LD $mem_map_loading_flags, A
 	.Start_action_or_movement.end:
-
-	.Reset_Blinking_flag:
-		LD A, $mem_map_loading_flags
-		BIT 3, A
-		JR Z, =.Reset_Blinking_flag.end
-		LD A, $mem_moving_animation_step
-		CP $00
-		JR NZ, =.Reset_Blinking_flag.end
-		LD A, $mem_bunny_flags
-		RES 3, A
-		LD $mem_bunny_flags, A
-	.Reset_Blinking_flag.end:
 
 	.Delayed_Attack:
 		LD A, $mem_moving_animation_step

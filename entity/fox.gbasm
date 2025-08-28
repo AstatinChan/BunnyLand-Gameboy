@@ -42,11 +42,11 @@ Fox_Turn:
 	LD A, (HL+)
 	LD D, A
 
+	.RESET_BLINKING_MODE
+
 	.ENTITY_HEALTH_CHECK =.Skip_turn =Fox_Drop
 	.ENTITY_FREEZE_SHIVER =.Skip_turn
 	.ENTITY_STATUS_SKIP_TURN =.Skip_turn
-
-	.RESET_BLINKING_MODE
 
 	.ENTITY_TRY_ATTACK =Laser_sight_check =Laser_Prepare_Attack =.attack_end
 	.ENTITY_TRY_ATTACK =Check_player_next_to =Basic_Enemy_Attack =.attack_end
