@@ -64,11 +64,10 @@ Load_ROM_Block: ; X in A, Y in B
 
 	LD A, (HL+)
 	LD ($mem_prepared_block_tile), A
-	LD A, (HL)
+	LD A, (HL-)
 	LD ($mem_prepared_block_tile+1), A
 
 	LD A, L
-	DEC A
 	ADD $40
 	LD L, A
 	LD A, H
