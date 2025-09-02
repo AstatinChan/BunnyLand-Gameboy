@@ -6,9 +6,10 @@ Morning_Forest:
 	.flag: .DB 0b00011110
 
 	.tilemap_padding:
-		.DB bank(=_map_Test)
-		.DB ptr(=_map_Test)
-		; .PADTO =.tilemap_padding+3
+		.PADTO =.tilemap_padding+3
+
+	.custom_function:
+		.PADTO =.custom_function+3
 
 	.generation_events.size:
 		.DB low(=.generation_events.end-=.generation_events)

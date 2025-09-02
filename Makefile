@@ -29,14 +29,14 @@ build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbas
 	mkdir -p build
 	$(GBASM) $< $@ > build/main.sym
 
-build/tileset-dump.rom: scripts/tileset-dump.gbasm
+build/tileset-dump.rom: scripts/tileset-dump.gbasm tileset.gbasm tiles.gbasm
 	mkdir -p build
 	$(GBASM) $< $@ > /dev/null
 
 build/tileset-dump.rom.vram.dump: build/tileset-dump.rom
 	gb --skip-bootrom --stop-dump-state --headless -s 100 -v errors $<
 
-build/tileset.png: build/tileset-dump.rom.vram.dump scripts/extract-vram-tileset.py
+build/tileset.png: build/tileset-dump.rom.vram.dump scripts/extract-vram-tileset.py tileset.gbasm tiles.gbasm
 	python scripts/extract-vram-tileset.py $< $@
 
 build/makeself/gb_linux-x86_64:

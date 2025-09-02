@@ -20,9 +20,9 @@ Entrypoint:
 	LD A, $01
 	LD $mem_number_of_attacks, A
 
-	LD A, bank(=Morning_Forest)
+	LD A, bank(=Camp_Site)
 	LD ($mem_dungeon), A
-	LD HL, ptr(=Morning_Forest)
+	LD HL, ptr(=Camp_Site)
 	LD A, H
 	LD ($mem_dungeon+1), A
 	LD A, L

@@ -20,6 +20,16 @@ sprite_idx = 0x20
 print("BG_Tile_Image_Data:")
 print("\n\t; Trees")
 get_sprite_png_parse_output("./sprites/bg/tree-tileset.png", sprite_8x8=True)
+print("\n\t; Campfire")
+get_sprite_png_parse_output("./sprites/bg/firecamp1.png")
+get_sprite_png_parse_output("./sprites/bg/firecamp2.png")
+print("\n\t; Logs")
+get_sprite_png_parse_output("./sprites/bg/log1.png")
+get_sprite_png_parse_output("./sprites/bg/log2.png")
+print("\n\t; Arrow up")
+get_sprite_png_parse_output("./sprites/bg/arrow-up.png", sprite_8x8=True)
+print("\n\t; Tree Entrance")
+get_sprite_png_parse_output("./sprites/bg/forest-entrance.png", sprite_8x8=True)
 print("BG_Tile_Image_Data.end:")
 
 sprite_idx = 0x60

@@ -429,6 +429,12 @@ VBlank_Wait:
 	CALL ptr(=addr)
 .END
 
+.MACRODEF BANK_CALL_A_DE
+	.ASSERT bank(.) $00
+	.CHANGE_BANK_TO_A
+	.CALL_DE
+.END
+
 Call_Save_Bank: ; Address in DE (bank 0) ; Breaks A
 		LD A, $saved_rom_bank
 		PUSH AF

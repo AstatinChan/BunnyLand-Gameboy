@@ -1,0 +1,59 @@
+Camp_Site:
+	.name:
+		.DB bank(=Campsite_Txt)
+		.DB ptr(=Campsite_Txt)
+
+	.flag: .DB 0b00100001
+
+	.tilemap_padding:
+		.DB bank(=_map_Test)
+		.DB ptr(=_map_Test)
+
+	.custom_function:
+		.DB bank(=Camp_Site_Fire_Animation)
+		.DB ptr(=Camp_Site_Fire_Animation)
+
+	.generation_events.size:
+		.DB low(=.generation_events.end-=.generation_events)
+
+	.generation_events:
+		.GEN_EVENT_REMOVE_STAIRS $01
+	.generation_events.end:
+
+	.max_floor: .DB 0x01, inv(0x01)
+
+Camp_Site_Fire_Animation:
+	LD HL, $981e
+	LD A, (HL)
+	AND 0b11111011
+	CP $30
+	RET NZ
+
+	LD A, $mem_loop_frame_timer
+	AND $07
+	RET NZ
+
+	LD A, (HL)
+	XOR $04
+	LD (HL+), A
+	LD A, (HL)
+	XOR $04
+	LD (HL), A
+
+	LD A, L
+	ADD $1f
+	LD L, A
+	LD A, H
+	ADC $00
+	LD H, A
+
+	LD A, (HL)
+	XOR $04
+	LD (HL+), A
+	LD A, (HL)
+	XOR $04
+	LD (HL), A
+
+	RET
+
+.ASSERT bank(=Camp_Site) bank(.)

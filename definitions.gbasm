@@ -191,6 +191,8 @@
 
 .DEFINE mem_sound_effect_hl $c07b ; Takes $c07b - $c07c
 
+.DEFINE mem_dungeon_custom_vblank_function $c07d ; Takes $c07d - $c07f (bank + ptr)
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 

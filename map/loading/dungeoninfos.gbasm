@@ -56,6 +56,14 @@ Load_Dungeon_Infos: ; pointer to Dungeon struct in HL, bank in A
 	ADC $00
 	LD ($mem_rom_tilemap_addr+1), A
 
+	; Load custom function
+	LD A, (HL+)
+	LD ($mem_dungeon_custom_vblank_function), A
+	LD A, (HL+)
+	LD ($mem_dungeon_custom_vblank_function+1), A
+	LD A, (HL+)
+	LD ($mem_dungeon_custom_vblank_function+2), A
+
 	; Load_Generation_Events
 	LD A, D
 	.CHANGE_BANK_TO_A
@@ -78,9 +86,12 @@ Load_Dungeon_Infos: ; pointer to Dungeon struct in HL, bank in A
 	RET
 
 Load_Dungeon_Spawn_patterns: ; pointer to Dungeon struct in HL bank in A
+	LD A, $mem_dungeon_flags
+	BIT 2, A
+	RET Z
 	.CHANGE_BANK_TO_A
 	LD A, L
-	ADD $07
+	ADD $0a
 	LD L, A
 	LD A, H
 	ADC $00

@@ -1,13 +1,15 @@
 ; struct dungeon
 ; {
 ; 	name: *char (u24=bank+ptr),
-; 	flags: 0b000mTSFM,
+; 	flags: 0b00CmTSFM,
 ; 		M = whether or not this dungeon has a pregenerated tilemap (0 means that it's randomly generated)
 ; 		F = whether or not the floors are counted
 ; 		S = whether or not enemies can spawn
 ; 		T = whether or not there is a top bar shown
 ; 		m = whether or not you can open the attack menu
+;		C = whether or not there is a custom function to be executed every frame
 ; 	tilemap: ptr (u24=bank+ptr)
+;	custom_function: ptr (u24=bank+ptr)
 ; 	generation_event_size: u8 (size of the generation_eents_structure
 ; 	generation_events: [x]struct (8 bytes) {
 ; 		...see definitions
@@ -17,6 +19,7 @@
 ; 	spawning_pattern: [8]struct (5 bytes){
 ; 		entities_idx: [4]u8
 ; 		spawn_frequencies: u8
+;	}
 ; }
 
 .MACRODEF GEN_EVENT_DIALOGUE floor =dialogue
@@ -39,3 +42,4 @@
 .END
 
 .INCLUDE "map/dungeons/morningforest.gbasm"
+.INCLUDE "map/dungeons/campsite.gbasm"
