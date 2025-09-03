@@ -28,7 +28,6 @@ rom_file.close()
 
 rom_file = open(rom_filename, 'a+b')
 
-
 rom_file.write(bytes(bytearray([0]*missing)))
 
 rom_file.close()

@@ -1,3 +1,7 @@
 build/
 recordings/
 scripts/__pycache__/
+*.record
+*.state
+*.hex
+logs
