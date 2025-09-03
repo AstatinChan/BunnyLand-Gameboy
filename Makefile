@@ -24,6 +24,7 @@ map/maps.gbasm: $(subst .ldtk,.map.gbasm,$(wildcard ./map/maps/*.ldtk))
 build/main.rom: build/main.rom.unsigned
 	cp build/main.rom.unsigned build/main.rom
 	python scripts/set_checksums.py build/main.rom
+	python scripts/round-rom-size.py build/main.rom
 
 build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm) $(wildcard ./**/**/*.gbasm) $(wildcard ./music/*.vgm)
 	mkdir -p build

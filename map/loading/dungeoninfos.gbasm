@@ -86,10 +86,10 @@ Load_Dungeon_Infos: ; pointer to Dungeon struct in HL, bank in A
 	RET
 
 Load_Dungeon_Spawn_patterns: ; pointer to Dungeon struct in HL bank in A
+	.CHANGE_BANK_TO_A
 	LD A, $mem_dungeon_flags
 	BIT 2, A
 	RET Z
-	.CHANGE_BANK_TO_A
 	LD A, L
 	ADD $0a
 	LD L, A

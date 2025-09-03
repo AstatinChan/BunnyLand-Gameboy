@@ -32,7 +32,7 @@ Header:
 .Licensee_code_new: .DB $00, $00
 .SGB_Flag: .DB $00
 .MBC: .DB $01
-.ROM_size: .DB $08
+.ROM_size: .DB $00 ; Will be set after assembly by build scripts
 .RAM_size: .DB $00 ; The .sav cartridge kind of ram
 .Destination_code: .DB $01 ; Overseas
 .Licensee_code_old: .DB $00
