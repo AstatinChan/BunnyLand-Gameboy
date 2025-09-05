@@ -1,5 +1,5 @@
 Demo_quest_bunny:
-.TEXTB =Bunny_Header_Text =Dialogue_1_1b
+.TEXTB =Human_Header_Text =Dialogue_1_1b
 .TEXT =Dialogue_1_2t =Empty
 .TEXT =Dialogue_1_3t =Dialogue_1_3b
 .TEXT =Dialogue_1_4t =Empty

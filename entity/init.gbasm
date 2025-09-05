@@ -97,15 +97,23 @@ Initialize_Enemy: ; HL => pointer to entity struct
 	RET Z
 	ADD $03
 
-Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1 in $tmp_var_3 if should retry if collsion (could potentially fail multiple time/infinite loop)
+Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index,
+	; $tmp_var_3:
+	; = 01 => if should retry if collsion (could potentially fail multiple time/infinite loop)
+	; = x2 => use BC as XY, and high nibble as direction
 	LD E, A
 	SLA A
 	SLA A
-	LD B, A
+	LD D, A
 	SLA A
-	ADD B
+	ADD D
 	INC A
 	LD (HL), A
+
+	LD A, $tmp_var_3
+	AND $0f
+	CP $02
+	JR Z, =.XY_BC
 
 	LD A, $mem_bunny_current_room_idx
 	CALL =Pick_Room_position_Avoid_A
@@ -118,7 +126,6 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 	XOR A
 	LD (HL), A
 
-
 	LD A, $tmp_var_3
 	CP $01
 
@@ -129,6 +136,7 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 
 	.no_collision:
 
+	.XY_BC:
 	INC HL
 	LD (HL), B
 	INC HL
@@ -138,7 +146,20 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index, 1
 	CALL =Carve_Entity_Collision_Map
 
 	; Direction
-	LD A, $33
+
+	LD A, $tmp_var_3
+	AND $0f
+	CP $02
+	LD A, $44
+	JR NZ, =.set_direction
+	LD A, $tmp_var_3
+	AND $f0
+	DBG
+	LD D, A
+	SWAP A
+	OR D
+
+	.set_direction:
 	LD (HL+), A
 
 	LD A, E

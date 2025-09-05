@@ -5,7 +5,7 @@ Camp_Site:
 
 	.flag: .DB 0b00100001
 
-	.tilemap_padding:
+	.tilemap:
 		.DB bank(=_map_Test)
 		.DB ptr(=_map_Test)
 
@@ -13,10 +13,12 @@ Camp_Site:
 		.DB bank(=Camp_Site_Fire_Animation)
 		.DB ptr(=Camp_Site_Fire_Animation)
 
-	.generation_events.size:
+	.generation_events.size_padding:
 		.DB low(=.generation_events.end-=.generation_events)
 
 	.generation_events:
+		.GEN_EVENT_LOAD_ENTITY $01 $05 $08
+		.GEN_EVENT_SPAWN_LOADED_ENTITY_XY $01 $05 $11 $10 $01
 		.GEN_EVENT_REMOVE_STAIRS $01
 	.generation_events.end:
 

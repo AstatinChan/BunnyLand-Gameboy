@@ -159,6 +159,15 @@ get_sprite_png_parse_output("./sprites/frog/back.png", tallmode=True)
 print("\n\t; Frog front")
 get_sprite_png_parse_output("./sprites/frog/front.png", tallmode=True)
 print("\n.Frog.end:")
+
+print("\n.Human:")
+print("\n\t; Human side")
+get_sprite_png_parse_output("./sprites/human/side.png", tallmode=True)
+print("\n\t; Human back")
+get_sprite_png_parse_output("./sprites/human/back.png", tallmode=True)
+print("\n\t; Human front")
+get_sprite_png_parse_output("./sprites/human/front.png", tallmode=True)
+print("\n.Human.end:")
 print("\nEntity_Tile_Image_Data.end:")
 
 sprite_idx = 0x60

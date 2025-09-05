@@ -23,9 +23,6 @@ Entity_list:
 		; Starting mana
 		.DB $05
 
-		; Spawning rate (2 lsb)
-		.DB 0b10
-
 		.PADTO =.Fox+8
 
 	.Frog:
@@ -46,9 +43,6 @@ Entity_list:
 
 		; Starting mana
 		.DB $05
-
-		; Spawning rate (2 lsb)
-		.DB 0b01
 
 		.PADTO =.Frog+8
 
@@ -71,9 +65,6 @@ Entity_list:
 		; Starting mana
 		.DB $00
 
-		; Spawning rate (2 lsb)
-		.DB 0b11
-
 		.PADTO =.Cat+8
 
 	.Penguin:
@@ -94,9 +85,6 @@ Entity_list:
 
 		; Starting mana
 		.DB $05
-
-		; Spawning rate (2 lsb)
-		.DB 0b11
 
 		.PADTO =.Penguin+8
 
@@ -119,9 +107,6 @@ Entity_list:
 		; Starting mana
 		.DB $00
 
-		; Spawning rate (2 lsb)
-		.DB 0b10
-
 		.PADTO =.Mouse+8
 
 	.Fimsh:
@@ -143,14 +128,11 @@ Entity_list:
 		; Starting mana
 		.DB $00
 
-		; Spawning rate (2 lsb)
-		.DB 0b11
-
 		.PADTO =.Fimsh+8
 
-	.QuestGoalBunny:
+	.Human:
 		; Sprite address
-		.SPRITE =Entity_Tile_Image_Data.Bunny
+		.SPRITE =Entity_Tile_Image_Data.Human
 
 		; Turn Jump Table index
 		.DB $05
@@ -167,10 +149,7 @@ Entity_list:
 		; Starting mana
 		.DB $00
 
-		; Spawning rate (2 lsb)
-		.DB 0b00
-
-		.PADTO =.QuestGoalBunny+8
+		.PADTO =.Human+8
 
 	.Bug:
 		; Sprite address
@@ -191,10 +170,28 @@ Entity_list:
 		; Starting mana
 		.DB $05
 
-		; Spawning rate (2 lsb)
-		.DB 0b11
-
 		.PADTO =.Bug+8
+
+	.Static_Human:
+		; Sprite address
+		.SPRITE =Entity_Tile_Image_Data.Human
+
+		; Turn Jump Table index
+		.DB $0a
+
+		; Interaction Jump Table index
+		.DB $02
+
+		; Starting health
+		.DB $00
+
+		; Starting status
+		.DB $02
+
+		; Starting mana
+		.DB $00
+
+		.PADTO =.Static_Human+8
 
 Turn_Jump_table:
 	; 00
@@ -237,6 +234,10 @@ Turn_Jump_table:
 
 	; 09
 	JP =Bug_Turn
+	NOP
+
+	; 0a
+	JP =Static_Human_Turn
 	NOP
 
 .INCLUDE "entity/bunny.gbasm"

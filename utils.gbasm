@@ -41,7 +41,6 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 	$HBlank_Wait.loop:
 	LD A, $reg_lcd_status
 	AND $03
-	CP $00
 	JR NZ, =$HBlank_Wait.loop
 	$HBlank_Wait.End:
 .END
@@ -187,15 +186,13 @@ bff: ; dest = HL, n = BC
 .END
 
 .MACRODEF JUMP_TABLE ; Jump table pointer in BC, index in A, also overwrites DE
-	LD E, A
 	LD D, $00
 
-	SLA E
+	ADD A
 	RL D
-	SLA E
+	ADD A
 	RL D
 
-	LD A, E
 	ADD C
 	LD E, A
 	LD A, D
@@ -371,7 +368,7 @@ RRx: ; B is the number to rotate, A & 7 is how many bits to rotate it
 
 	CP $04
 	CALL NC, =.swap
-	CP $00
+	AND A
 	RET Z
 
 	RRC B

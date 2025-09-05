@@ -30,14 +30,29 @@
 .END
 
 .MACRODEF GEN_EVENT_SPECIAL_ENTITY floor entity_idx
-	$start:
-	.DB low($floor), $02, low($entity_idx)
-	.PADTO =$start+8
+	$load:
+	.DB low($floor), $03, $07, low($entity_idx)
+	.PADTO =$load+8
+	$spawn:
+	.DB low($floor), $04, $07
+	.PADTO =$spawn+8
+.END
+
+.MACRODEF GEN_EVENT_LOAD_ENTITY floor loaded_entity_idx entity_idx
+	$load:
+	.DB low($floor), $03, low($loaded_entity_idx), low($entity_idx)
+	.PADTO =$load+8
+.END
+
+.MACRODEF GEN_EVENT_SPAWN_LOADED_ENTITY_XY floor loaded_entity_idx arg_x arg_y arg_d
+	$spawn:
+	.DB low($floor), $05, low($loaded_entity_idx), low($arg_x), low($arg_y), low($arg_d)
+	.PADTO =$spawn+8
 .END
 
 .MACRODEF GEN_EVENT_REMOVE_STAIRS floor
 	$start:
-	.DB low($floor), $03
+	.DB low($floor), $02
 	.PADTO =$start+8
 .END
 

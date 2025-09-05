@@ -99,3 +99,19 @@ QuestGoal_Turn:
 	POP BC
 	POP HL
 	RET
+
+Static_Human_Turn:
+	LD A, $mem_map_loading_flags
+	BIT 3, A
+	RET Z
+
+	INC HL
+	INC HL
+	INC HL
+
+	LD (HL), $11
+
+	DEC HL
+	DEC HL
+	DEC HL
+	RET

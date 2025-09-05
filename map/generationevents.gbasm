@@ -4,7 +4,7 @@ Generation_Event_Execution:
 	LD HL, $mem_dungeon_generation_events
 	.loop:
 		LD A, (HL+)
-		CP $00
+		AND A
 		JR Z, =.skip
 		CP D
 		JR NZ, =.skip
@@ -24,7 +24,7 @@ Generation_Event_Execution:
 		AND $f8
 		ADD $08
 		LD L, A
-		CP $00
+		AND A
 		JR NZ, =.loop
 	RET
 
@@ -40,11 +40,20 @@ Generation_Event_Jump_Table:
 	NOP
 
 	; 02
-	JP =.Entity
+	JP =.Remove_Stairs
 	NOP
 
 	; 03
-	JP =.Remove_Stairs
+	JP =.Load_Entity
+	NOP
+
+	; 04
+	JP =.Entity_Random_Room
+	NOP
+
+	; 05
+	JP =.Entity_XY
+	NOP
 
 	.Dialogue_Script:
 	LD A, $enum_dungeon_dialogue_mode
@@ -58,18 +67,42 @@ Generation_Event_Jump_Table:
 	LD ($mem_dialogue_script_program_counter+1), A
 	JP =Dialogue_script_step
 
-	.Entity:
-	LD A, (HL)
-	LD $mem_loaded_special_entity_index, A
+	.Load_Entity:
+		LD A, (HL+)
+		LD E, A
+		LD D, $00
+		LD A, (HL)
+		LD HL, $mem_loaded_entities_indices
+		ADD HL, DE
+		LD (HL), A
+		RET
 
-	CALL =FindFreeEntity
-	LD A, $01
-	LD $tmp_var_3, A
-	LD A, $07
-	CALL =Initialize_Entity
-	RET
+	.Entity_Random_Room:
+		LD A, $01
+		LD $tmp_var_3, A
+
+		LD D, (HL)
+		CALL =FindFreeEntity
+		LD A, D
+		JP =Initialize_Entity
+
+	.Entity_XY:
+		LD A, (HL+)
+		LD D, A
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		LD A, (HL)
+		DBG
+		SWAP A
+		OR $02
+		LD $tmp_var_3, A
+		CALL =FindFreeEntity
+		LD A, D
+		JP =Initialize_Entity
 
 	.Remove_Stairs:
-	LD HL, $mem_object_list
-	LD (HL), $00
+		LD HL, $mem_object_list
+		LD (HL), $00
 	RET
