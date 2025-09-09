@@ -33,3 +33,4 @@ VBlank_Handler_List:
 .INCLUDE "modes/dungeon.gbasm"
 .INCLUDE "modes/loading.gbasm"
 .INCLUDE "modes/dungeongeneration.gbasm"
+.INCLUDE "modes/bigmenu.gbasm"

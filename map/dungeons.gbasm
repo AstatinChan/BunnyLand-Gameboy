@@ -29,24 +29,30 @@
 	.PADTO =$start+8
 .END
 
-.MACRODEF GEN_EVENT_SPECIAL_ENTITY floor entity_idx
+.MACRODEF GEN_EVENT_SPECIAL_ENTITY floor entity_instance_idx entity_blueprint_idx
 	$load:
-	.DB low($floor), $03, $07, low($entity_idx)
+	.DB low($floor), $03, $07, low($entity_blueprint_idx)
 	.PADTO =$load+8
 	$spawn:
-	.DB low($floor), $04, $07
+	.DB low($floor), $04, low($entity_instance_idx), $07
 	.PADTO =$spawn+8
 .END
 
-.MACRODEF GEN_EVENT_LOAD_ENTITY floor loaded_entity_idx entity_idx
+.MACRODEF GEN_EVENT_LOAD_ENTITY floor loaded_entity_idx entity_blueprint_idx
 	$load:
-	.DB low($floor), $03, low($loaded_entity_idx), low($entity_idx)
+	.DB low($floor), $03, low($loaded_entity_idx), low($entity_blueprint_idx)
 	.PADTO =$load+8
 .END
 
-.MACRODEF GEN_EVENT_SPAWN_LOADED_ENTITY_XY floor loaded_entity_idx arg_x arg_y arg_d
+.MACRODEF GEN_EVENT_SPAWN_LOADED_ENTITY_XY floor entity_instance_idx loaded_entity_idx arg_x arg_y arg_d
 	$spawn:
-	.DB low($floor), $05, low($loaded_entity_idx), low($arg_x), low($arg_y), low($arg_d)
+	.DB low($floor), $05, low($entity_instance_idx), low($loaded_entity_idx), low($arg_x), low($arg_y), low($arg_d)
+	.PADTO =$spawn+8
+.END
+
+.MACRODEF GEN_EVENT_ENTITY_SET_DIALOGUE floor entity_instance_idx =dialogue_ptr
+	$spawn:
+		.DB low($floor), $06, low($entity_instance_idx), bank(=dialogue_ptr), high(ptr(=dialogue_ptr)), low(ptr(=dialogue_ptr))
 	.PADTO =$spawn+8
 .END
 

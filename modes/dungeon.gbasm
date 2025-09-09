@@ -116,7 +116,7 @@ STAT_Entrypoint:
 	CP $67
 	JR Z, =.Start_dialogue
 	.Thin_font:
-	LD A, $palette_thin_font
+	LD A, $mem_gui_text_thin_palette
 	LD $reg_bg_palette, A
 	JR =.skip_dialogue
 
@@ -128,7 +128,7 @@ STAT_Entrypoint:
 	LD A, $mem_display_flag
 	BIT 1, A
 	JR Z, =.Thin_font
-	LD A, $palette_bold_font
+	LD A, $mem_gui_text_bold_palette
 	LD $reg_bg_palette, A
 	LD A, $77
 	LD $reg_lyc, A

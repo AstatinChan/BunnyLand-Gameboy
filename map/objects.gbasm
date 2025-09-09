@@ -154,7 +154,7 @@ Check_other_object_collision: ; Object in HL (with only sprite x & y set), will 
 
 Spawn_stairs:
 	LD A, $60
-	LD E, $01
+	LD E, $08
 	JP =Spawn_object_in_random_room_avoid_bunny
 
 Spawn_carrot:
@@ -200,6 +200,10 @@ Object_Interaction_Jump_table:
 
 	; 07
 	JP =Fimsh_Attack_Box_Action
+	NOP
+
+	; 08
+	JP =Open_Big_Menu
 	NOP
 
 Stairs_Action:

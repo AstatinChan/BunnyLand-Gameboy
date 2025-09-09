@@ -16,7 +16,8 @@ Morning_Forest:
 	.generation_events:
 		.GEN_EVENT_DIALOGUE $01 =Demo_quest_init
 		.GEN_EVENT_DIALOGUE $10 =Demo_quest_floor_reach
-		.GEN_EVENT_SPECIAL_ENTITY $10 $06
+		.GEN_EVENT_SPECIAL_ENTITY $10 $0f $06
+		.GEN_EVENT_ENTITY_SET_DIALOGUE $10 $0f =Demo_quest_bunny
 		.GEN_EVENT_REMOVE_STAIRS $10
 	.generation_events.end:
 

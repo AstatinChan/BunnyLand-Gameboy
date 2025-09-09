@@ -83,6 +83,12 @@ Empty_VRAM: ; (Clear screen)
 	LD A, $obj_palette_frozen
 	LD $reg_obj1_palette, A
 
+	; Saved thin/bold palette
+	LD A, $palette_bold_font
+	LD $mem_gui_text_bold_palette, A
+	LD A, $palette_thin_font
+	LD $mem_gui_text_thin_palette, A
+
 	; Interrupt jmp instruction
 	LD A, $c3 ; Unconditional imm16 jump
 	LD ($mem_vblank_jump_instruction), A

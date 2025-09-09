@@ -2,7 +2,7 @@ Loading_VBLANK_Entrypoint:
 	.SET_WINDOW_LCDC_E
 	.ENABLE_TOP_BAR
 
-	LD A, $palette_bold_font
+	LD A, $mem_gui_text_bold_palette
 	LD $reg_bg_palette, A
 
 	CALL $OAM_DMA_Transfer_routine

@@ -64,7 +64,7 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 	OR E
 	LD $reg_lcd_controller, A
 
-	LD A, $palette_bold_font
+	LD A, $mem_gui_text_bold_palette
 	LD $reg_bg_palette, A
 .END
 

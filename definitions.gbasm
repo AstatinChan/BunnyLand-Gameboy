@@ -193,6 +193,9 @@
 
 .DEFINE mem_dungeon_custom_vblank_function $c07d ; Takes $c07d - $c07f (bank + ptr)
 
+.DEFINE mem_gui_text_bold_palette ($c080)
+.DEFINE mem_gui_text_thin_palette ($c081)
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 
@@ -300,7 +303,8 @@
 ;			shaking = 4
 ;			doubleseed = 5
 ;			slide (forcing no hops on move) = 6
-;	_padding: u40
+;	dialogue_ptr: u24 (bank+ptr)
+;	_padding: u16
 ;
 ;	# SANTA CHRISTMAS LIST PLEASE #
 ;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)

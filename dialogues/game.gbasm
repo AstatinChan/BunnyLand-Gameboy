@@ -24,3 +24,9 @@ Learn_Attack_Duplicate_Dialogue_Script:
 	.TEXT =dup_attack_4t =Empty
 	.LEARN_ATTACK_RET
 
+Placeholder_Dialogue_Script:
+	.TEXTB =Placeholder_1t =Empty
+	.TEXT =Placeholder_2t =Placeholder_2b
+	.TEXT =Placeholder_3t =Empty
+	.TEXT =Placeholder_4t =Placeholder_4b
+	.END

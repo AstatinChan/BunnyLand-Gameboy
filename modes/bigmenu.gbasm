@@ -1,0 +1,38 @@
+Open_Big_Menu_Loading_VBlank:
+	LD A, $mem_prepared_color_palette
+	RR A
+	OR 0b11000000
+	LD $mem_prepared_color_palette, A
+	LD A, $reg_obj0_palette
+	RR A
+	OR 0b11000000
+	LD $reg_obj0_palette, A
+	LD A, $mem_gui_text_bold_palette
+	RR A
+	OR 0b11000000
+	LD $mem_gui_text_bold_palette, A
+	LD A, $mem_gui_text_thin_palette
+	RR A
+	OR 0b11000000
+	LD $mem_gui_text_thin_palette, A
+	RET
+
+Open_Big_Menu_Loading_Regular:
+	RET
+
+Open_Big_Menu:
+	LD BC, =Open_Big_Menu_Loading_VBlank
+	LD A, B
+	LD $mem_loading_mode_vblank_func_pointer_high, A
+	LD A, C
+	LD $mem_loading_mode_vblank_func_pointer_low, A
+
+	LD BC, =Open_Big_Menu_Loading_Regular
+	LD A, B
+	LD $mem_loading_mode_regular_func_pointer_high, A
+	LD A, C
+	LD $mem_loading_mode_regular_func_pointer_low, A
+
+	LD A, $enum_loading_mode
+	LD $mem_requested_mode, A
+	RET
