@@ -1,21 +1,247 @@
 Open_Big_Menu_Loading_VBlank:
+	LD A, $mem_big_menu_loading_flag
+	AND $01
+	JR NZ, =Load_Big_Menu
+
+	; Fading Out Animation
+	LD B, $ff
 	LD A, $mem_prepared_color_palette
 	RR A
 	OR 0b11000000
 	LD $mem_prepared_color_palette, A
+	AND B
+	LD B, A
+
 	LD A, $reg_obj0_palette
 	RR A
 	OR 0b11000000
 	LD $reg_obj0_palette, A
+	AND B
+	LD B, A
+
 	LD A, $mem_gui_text_bold_palette
 	RR A
 	OR 0b11000000
 	LD $mem_gui_text_bold_palette, A
+	AND B
+	LD B, A
+
 	LD A, $mem_gui_text_thin_palette
 	RR A
 	OR 0b11000000
 	LD $mem_gui_text_thin_palette, A
+	AND B
+
+	CP $ff
+	RET NZ
+
+	LD A, $mem_big_menu_loading_flag
+	OR $01
+	LD $mem_big_menu_loading_flag, A
+
 	RET
+
+Load_Big_Menu:
+	LD A, $reg_lcd_controller
+	RES 7, A
+	LD $reg_lcd_controller, A
+
+	LD A, $palette_thin_font
+	LD $reg_bg_palette, A
+
+	LD A, $00
+	LD $reg_viewport_x, A
+	LD $reg_viewport_y, A
+
+	LD HL, $9800
+	LD C, $00
+	.set_tilemap_row_loop:
+		LD A, C
+		CP $00
+		JR Z, =.frame_tileline_start
+		CP $0f
+		JR Z, =.frame_tileline_start
+		CP $0e
+		JR Z, =.frame_tileline_end
+		CP $11
+		JR Z, =.frame_tileline_end
+
+		JR =.frame_tileline_middle
+		.set_tile:
+		LD (HL), B
+		INC HL
+		LD A, L
+		AND $1f
+		CP $14
+		JR NZ, =.set_tilemap_row_loop
+		INC C
+		LD A, C
+		CP $12
+		JR NZ, =.set_tilemap_row_loop
+
+	LD A, $1c
+	LD ($9803), A
+	LD A, $1d
+	LD ($9804), A
+	LD A, $1e
+	LD ($99c3), A
+	LD A, $1f
+	LD ($99c4), A
+
+	CALL =.Display_Menu_Entries
+
+	LD HL, $9a02
+	.LOAD_BANK_OF =Dungeon_Selection_Txt
+	LD BC, ptr(=Dungeon_Selection_Txt)
+	CALL =Print_str
+
+	LD A, $lcdc_bigmenu_tilemap
+	LD $reg_lcd_controller, A
+
+	JR .
+
+	RET
+
+	.frame_tileline_end:
+		LD A, L
+		AND $1f
+		CP $00
+		JR Z, =.last_line_start
+		CP $13
+		JR Z, =.last_line_end
+		LD B, $17
+		JR =.set_tile
+
+		.last_line_start:
+		LD B, $11
+		JR =.set_tile
+
+		.last_line_end:
+		LD B, $13
+		JR =.set_tile
+
+	.frame_tileline_start:
+		LD A, L
+		AND $1f
+		CP $00
+		JR Z, =.first_line_start
+		CP $13
+		JR Z, =.first_line_end
+		LD B, $16
+		JR =.set_tile
+
+		.first_line_start:
+		LD B, $10
+		JR =.set_tile
+
+		.first_line_end:
+		LD B, $12
+		JR =.set_tile
+
+	.frame_tileline_middle:
+		LD A, L
+		AND $1f
+		CP $00
+		JR Z, =.middle_line_start
+		CP $13
+		JR Z, =.middle_line_end
+		LD B, $00
+		JR =.set_tile
+
+		.middle_line_start:
+		LD B, $14
+		JR =.set_tile
+
+		.middle_line_end:
+		LD B, $15
+		JP =.set_tile
+
+	.Display_Menu_Entries:
+		LD A, ($mem_bigmenu_entries+1)
+		LD H, A
+		LD A, ($mem_bigmenu_entries+2)
+		LD L, A
+		LD A, ($mem_bigmenu_entries)
+		.CHANGE_BANK_TO_A
+
+		LD B, $00
+		LD A, $mem_bigmenu_entries_scroll
+		LD C, A
+
+		SLA C
+		RL B
+		SLA C
+		RL B
+		SLA C
+		RL B
+
+		LD A, C
+		ADD L
+		LD L, A
+		LD A, B
+		ADC H
+		LD H, A
+
+		LD D, $00
+
+		.display_entries_lines_loop:
+			LD A, (HL+)
+			LD E, A
+			LD A, (HL+)
+			LD B, A
+			LD A, (HL+)
+			LD C, A
+
+			PUSH HL
+			LD H, $00
+			LD L, D
+			SLA L
+			RL H
+			SLA L
+			RL H
+			SLA L
+			RL H
+			SLA L
+			RL H
+			SLA L
+			RL H
+			SLA L
+			RL H
+			LD A, L
+			ADD $42
+			LD L, A
+			LD A, H
+			ADC $98
+			LD H, A
+			DBG
+
+			LD A, E
+			.CHANGE_BANK_TO_A
+			CALL =Print_str
+			POP HL
+
+			LD A, ($mem_bigmenu_entries)
+			.CHANGE_BANK_TO_A
+
+			INC HL
+			INC HL
+			INC HL
+			INC HL
+			INC HL
+			INC D
+			LD A, D
+			CP $06
+			JR NZ, =.display_entries_lines_loop
+
+		RET
+
+
+; Menu choices struct $ff terminated array of:
+; struct menu_entry (8 bytes) {
+; 	name: u24 (bank+ptr)
+;	function: u24 (bank+ptr)
+;	padding/args: u16
+; } (NO CROSS BANK ARRAY)
 
 Open_Big_Menu_Loading_Regular:
 	RET

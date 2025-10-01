@@ -121,7 +121,7 @@ Generation_Head_Explosion:
 	ADD $06
 	LD B, A
 	SRA A
-	XOR $ff
+	CPL
 	INC A
 	ADD E
 	CALL =Enforce_Map_Bounds
@@ -143,7 +143,7 @@ Generation_Head_Explosion:
 	ADD $06
 	LD C, A
 	SRA A
-	XOR $ff
+	CPL
 	INC A
 	ADD D
 	CALL =Enforce_Map_Bounds

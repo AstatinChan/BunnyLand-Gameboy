@@ -24,7 +24,7 @@ Display_Entities:
 	LD L, A
 
 	LD A, $mem_oam_buffer_low
-	XOR $ff
+	CPL
 	INC A
 	ADD C
 	LD C, A
@@ -141,7 +141,7 @@ Display_Entity:
 		.Action_Animation.Step2:
 			SUB $04
 			SLA A
-			XOR $ff
+			CPL
 			INC A
 			ADD $10
 

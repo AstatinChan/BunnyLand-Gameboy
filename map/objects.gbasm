@@ -202,10 +202,6 @@ Object_Interaction_Jump_table:
 	JP =Fimsh_Attack_Box_Action
 	NOP
 
-	; 08
-	JP =Open_Big_Menu
-	NOP
-
 Stairs_Action:
 	LD A, $enum_dungeon_generation_mode
 	LD $mem_current_mode, A

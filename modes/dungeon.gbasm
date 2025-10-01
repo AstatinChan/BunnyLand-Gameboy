@@ -101,7 +101,7 @@ Update_Animation_Steps:
 	LD BC, ptr(=Game_Over_2_Txt)
 	CALL =Print_str
 
-	LD A, 0b00100111
+	LD A, 0b10100111
 	LD $mem_display_flag, A
 	RET
 
@@ -156,6 +156,10 @@ Dungeon_VBLANK_Entrypoint:
 	.SET_WINDOW_LCDC_E
 
 	LD A, $mem_dungeon_flags
+	LD B, A
+	LD A, $mem_display_flag
+	SWAP A
+	AND B
 	BIT 3, A
 	JR NZ, =.top_bar.enable
 

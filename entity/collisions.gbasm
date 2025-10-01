@@ -75,7 +75,7 @@ Is_Collisionable: ; XY in BC, Result A
 	OR C
 	LD C, A
 	LD A, (BC)
-	XOR $ff ; 1 in the dungeon map means walkable, 1 in the entity map means unwalkable, we need to invert it.
+	CPL ; 1 in the dungeon map means walkable, 1 in the entity map means unwalkable, we need to invert it.
 	LD B, A
 	POP AF
 	AND B

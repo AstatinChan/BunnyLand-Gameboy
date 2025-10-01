@@ -1,6 +1,11 @@
 Dialogue_VBLANK_Entrypoint:
 	.SET_WINDOW_LCDC_E
+
 	LD A, $mem_dungeon_flags
+	LD B, A
+	LD A, $mem_display_flag
+	SWAP A
+	AND B
 	BIT 3, A
 	JR NZ, =.top_bar.enable
 

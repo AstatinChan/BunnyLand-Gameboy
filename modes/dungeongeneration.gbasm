@@ -158,8 +158,8 @@ New_Floor:
 	CALL =bzero
 
 	LD A, $00
-	LD $mem_display_flag, A
 	LD $mem_moving_animation_step, A
+	LD $mem_display_flag, A
 	LD $mem_animation_wait_frames, A
 	LD $mem_blinking_animation_counter, A
 
@@ -235,6 +235,7 @@ Dungeon_generation_VBlank:
 
 	LD A, $mem_display_flag
 	RES 6, A
+	SET 7, A
 	LD $mem_display_flag, A
 	LD A, $mem_map_loading_flags
 	RES 2, A

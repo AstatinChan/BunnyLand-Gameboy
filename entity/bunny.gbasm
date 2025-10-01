@@ -454,6 +454,10 @@ Move_Bunny:
 	RET
 
 Center_viewport_around_entity: ; Entity pointer in HL
+	LD A, $mem_display_flag_2
+	AND $01
+	RET NZ
+
 	INC HL
 	LD A, (HL)
 	SUB $05

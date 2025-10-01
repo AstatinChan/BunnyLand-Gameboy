@@ -5,7 +5,14 @@ Earcoptr_Attack_Menu_Txt: Earcoptr
 Die_Attack_Menu_Txt: Die
 
 Campsite_Txt: Basecamp
+Dungeon_Name_0_Txt: Sandcastle
 Dungeon_Name_1_Txt: Morning Forest
+Dungeon_Name_2_Txt: The shore
+Dungeon_Name_3_Txt: Nerd city
+Dungeon_Name_4_Txt: Mount doom
+Dungeon_Name_5_Txt: Noname valley
+
+Dungeon_Selection_Txt: Where to go ?
 
 Game_Over_1_Txt: Game Over
 Game_Over_2_Txt: You tried :3

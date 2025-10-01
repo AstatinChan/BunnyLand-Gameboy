@@ -11,14 +11,21 @@ Entrypoint:
 	LD A, $01
 	LD (HL+), A
 	XOR A
-	;LD A, $05
+	LD A, $06
 	LD (HL+), A
 	XOR A
 	LD (HL+), A
 	LD (HL+), A
-	;LD A, $02
 	LD A, $01
+	LD A, $02
 	LD $mem_number_of_attacks, A
+
+	LD A, bank(=Menu_entries_test)
+	LD ($mem_bigmenu_entries), A
+	LD A, high(ptr(=Menu_entries_test))
+	LD ($mem_bigmenu_entries+1), A
+	LD A, low(ptr(=Menu_entries_test))
+	LD ($mem_bigmenu_entries+2), A
 
 	LD A, bank(=Morning_Forest)
 	LD ($mem_dungeon), A
@@ -85,3 +92,43 @@ _music_TitleScreen:
 .INCLUDEBIN "music/title-screen.vgm"
 _music_GameOver:
 .INCLUDEBIN "music/game-over.vgm"
+
+Menu_entries_test:
+	.Dungeon0:
+		.DB bank(=Dungeon_Name_0_Txt)
+		.DB ptr(=Dungeon_Name_0_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon0+8
+	.Dungeon1:
+		.DB bank(=Dungeon_Name_1_Txt)
+		.DB ptr(=Dungeon_Name_1_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon1+8
+	.Dungeon2:
+		.DB bank(=Dungeon_Name_2_Txt)
+		.DB ptr(=Dungeon_Name_2_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon2+8
+	.Dungeon3:
+		.DB bank(=Dungeon_Name_3_Txt)
+		.DB ptr(=Dungeon_Name_3_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon3+8
+	.Dungeon4:
+		.DB bank(=Dungeon_Name_4_Txt)
+		.DB ptr(=Dungeon_Name_4_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon4+8
+	.Dungeon5:
+		.DB bank(=Dungeon_Name_5_Txt)
+		.DB ptr(=Dungeon_Name_5_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon5+8
+	.ASSERT bank(.) bank(=Menu_entries_test)
+	.DB $ff

@@ -189,11 +189,11 @@ Dialogue_script_instruction_Jump_Table:
 		LD B, $00
 		LD C, A
 		SLA C
-		RR B
+		RL B
 		SLA C
-		RR B
+		RL B
 		SLA C
-		RR B
+		RL B
 		LD A, C
 		ADD low(=Attack_List)
 		LD C, A

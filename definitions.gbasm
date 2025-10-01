@@ -65,7 +65,8 @@
 .DEFINE mem_number_of_attacks ($c00d)
 .DEFINE mem_entity_being_attacked_low ($c00e)
 
-; FREE SPACE POGPOGPOG $c00f
+.DEFINE mem_big_menu_loading_flag ($c00f)
+; bit 0: screen fade out animation finished
 
 .DEFINE mem_object_load_counter ($c010)
 .DEFINE mem_prepared_viewport_x ($c011)
@@ -79,6 +80,7 @@
 ; bit 4: if dialogue box text should be refreshed (part2)
 ; bit 5: if object display is paused
 ; bit 6: if additional tile should be loaded
+; bit 7: if topbar enabled
 
 .DEFINE mem_current_mode ($c014)
 .DEFINE mem_requested_mode ($c015)
@@ -154,7 +156,9 @@
 .DEFINE mem_learn_attack_dialogue_ret_ptr $c046 ; Takes $c046 to $c048 (bank + ptr)
 .DEFINE mem_learn_attack_attack_name_ptr $c049 ; Takes $c049 to $c04b (bank + ptr)
 
-; FREE SPACE $c04c
+.DEFINE mem_display_flag_2 ($c04c)
+; bit 0: if 1 => disabling center viewport around bunny
+; bit 1: if 1 => entities display disabled
 
 .DEFINE mem_prepared_loading_block_position $c04e ; Takes $c04e-$c04f
 .DEFINE mem_prepared_loading_block_tile $c050 ; Takes $c050-c054
@@ -195,6 +199,9 @@
 
 .DEFINE mem_gui_text_bold_palette ($c080)
 .DEFINE mem_gui_text_thin_palette ($c081)
+
+.DEFINE mem_bigmenu_entries $c082 ; Takes $c082 - $c084 (bank+ptr)
+.DEFINE mem_bigmenu_entries_scroll ($c085)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
@@ -354,6 +361,7 @@
 
 .DEFINE lcdc_guibg_tilemap $8d
 .DEFINE lcdc_mapbg_tilemap $87
+.DEFINE lcdc_bigmenu_tilemap $85
 .DEFINE lcdc_titlescreen $85
 
 .DEFINE vram_entity_index $02

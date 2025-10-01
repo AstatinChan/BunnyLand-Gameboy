@@ -78,6 +78,11 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 
 	LD A, $lcdc_mapbg_tilemap
 	OR E
+	LD E, A
+	LD A, $mem_display_flag_2
+	AND $02
+	CPL
+	AND E
 	LD $reg_lcd_controller, A
 .END
 
@@ -108,6 +113,11 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 	LD $reg_bg_palette, A
 	LD A, $lcdc_mapbg_tilemap
 	OR E
+	LD B, A
+	LD A, $mem_display_flag_2
+	AND $02
+	CPL
+	AND B
 	LD $reg_lcd_controller, A
 	POP BC
 .END
@@ -172,7 +182,7 @@ bff: ; dest = HL, n = BC
 .MACRODEF ABS
 	BIT 7, A
 	JR Z, =$end
-	XOR $ff
+	CPL
 	INC A
 	$end:
 .END

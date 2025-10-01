@@ -102,7 +102,7 @@ Initialize_Window_GUI:
 	LD $reg_window_x, A
 	LD HL, $9d80
 	.top_bar_loop:
-		LD A, $10
+		LD A, $0f
 		LD (HL+), A
 
 		LD A, L

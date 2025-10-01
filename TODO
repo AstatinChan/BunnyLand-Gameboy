@@ -1,6 +1,7 @@
 Bugs:
  ? - Object loading after being in view
  ? - Kill before or after attack
+   - Able to move after hoping on stairs (or maybe caused by the tests I'm doing with changing the stairs action function idk)
 
 Accessibility issues:
   -> freeze/earcopter attack patterns are not obvious (either needs to be shown on map or add select menu with infos if not possible + tutorial to explain the existence of select menu ?)

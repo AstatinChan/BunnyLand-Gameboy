@@ -1,6 +1,6 @@
 .MACRODEF CLOSE_DIALOGUE
 	LD A, $mem_display_flag
-	AND $60
+	AND $e0
 	OR $04
 	LD $mem_display_flag, A
 
@@ -373,7 +373,7 @@ Open_dialogue_on_dungeon_menu_mode:
 	BIT 0, A
 	RET NZ
 	LD A, $mem_display_flag
-	AND $40 ; Keeping object additional tile
+	AND $c0 ; Keeping object additional tile
 	OR $0d
 	LD $mem_display_flag, A
 	.SET_SOUND_EFFECT =_sound_effect_Menu_Open
@@ -392,9 +392,9 @@ Dialogue_Arrow_Animation:
 	JR Z, =.dead
 
 	.not_dialogue:
-	LD A, $18
+	LD A, $17
 	LD ($9d05), A
-	LD A, $14
+	LD A, $13
 	LD ($9d06), A
 	RET
 
@@ -416,15 +416,15 @@ Dialogue_Arrow_Animation:
 	JR C, =.down
 
 	.normal:
-	LD A, $19
+	LD A, $18
 	LD ($9d05), A
-	LD A, $1a
+	LD A, $19
 	LD ($9d06), A
 	RET
 
 	.down:
-	LD A, $1b
+	LD A, $1a
 	LD ($9d05), A
-	LD A, $1c
+	LD A, $1b
 	LD ($9d06), A
 	RET

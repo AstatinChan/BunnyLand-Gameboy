@@ -12,7 +12,7 @@
 
 	$left:
 		POP AF
-		XOR $ff
+		CPL
 		INC A
 		ADD B
 		LD B, A
@@ -28,7 +28,7 @@
 
 	$up:
 		POP AF
-		XOR $ff
+		CPL	
 		INC A
 		ADD C
 		LD C, A
