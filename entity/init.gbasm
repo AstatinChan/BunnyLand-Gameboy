@@ -164,6 +164,7 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index,
 
 	LD A, E
 	CALL =Entity_idx_to_entity_list_ptr
+	.LOAD_BANK_OF =Entity_list
 	INC BC
 	INC BC
 
@@ -302,16 +303,3 @@ Enemy_idx_to_spawn: ; Return in A, ff if no entity to be spawned
 
 	POP BC
 	RET
-
-.MACRODEF GET_ENTITY_IDX_SPAWN_RATE idx ; breaks BC & A
-	LD A, low($idx)
-	CALL =Entity_idx_to_entity_list_ptr
-	LD A, C
-	ADD $07
-	LD C, A
-	LD A, B
-	ADC $00
-	LD B, A
-	LD A, (BC)
-	AND $03
-.END

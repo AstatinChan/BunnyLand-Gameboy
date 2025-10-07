@@ -128,7 +128,7 @@ New_Floor:
 		CALL =Initialize_Bunny
 
 		LD HL, $mem_entities_list
-		CALL =Center_viewport_around_entity
+		.BANK_CALL =Center_viewport_around_entity
 		CALL =Load_Prepared_Map
 
 		LD A, $mem_map_loading_flags
@@ -183,7 +183,7 @@ New_Floor:
 	CALL =Generation_Event_Execution
 
 	LD HL, $mem_entities_list
-	CALL =Center_viewport_around_entity
+	.BANK_CALL =Center_viewport_around_entity
 	CALL =Load_Prepared_Map
 
 	CALL =VBlank_Wait
@@ -250,12 +250,12 @@ Dungeon_generation_VBlank:
 	.DISABLE_MODE_2_INTERRUPT
 	CALL =Update_VBlank_Handler
 	.ENABLE_VBLANK_INTERRUPTS
+
 	EI
 
-	.Wait_for_Interrupt.loop:
-	LD A, $reg_lcd_status
+	Wait_for_Interrupt.loop:
 	HALT
-	JP =.Wait_for_Interrupt.loop
+	JP =Wait_for_Interrupt.loop
 
 Dungeon_generation_Out_Of_VBlank:
 	PUSH AF

@@ -38,8 +38,6 @@ Load_Tile:
 	RET
 
 Reload_Entities_Tile_Data:
-	LD A, $entity_sprite_data_bank
-	.CHANGE_BANK_TO_A
 	LD HL, $mem_loaded_enemies_indices
 	LD E, $03
 	.loop:
@@ -47,11 +45,12 @@ Reload_Entities_Tile_Data:
 		SLA A
 		SLA A
 		SLA A
-		ADD low(=Entity_list)
+		ADD low(ptr(=Entity_list))
 		LD C, A
-		LD A, high(=Entity_list)
+		LD A, high(ptr(=Entity_list))
 		ADC $00
 		LD B, A
+		.LOAD_BANK_OF =Entity_list
 
 		PUSH HL
 		PUSH DE
@@ -77,6 +76,9 @@ Reload_Entities_Tile_Data:
 		INC BC
 		LD A, (BC)
 		LD E, A
+
+		LD A, $entity_sprite_data_bank
+		.CHANGE_BANK_TO_A
 
 		LD BC, $00c0
 		CALL =memcpy

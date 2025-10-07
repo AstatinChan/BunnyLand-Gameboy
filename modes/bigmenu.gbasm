@@ -1,8 +1,10 @@
 Open_Big_Menu_Loading_VBlank:
-	LD A, $mem_big_menu_loading_flag
+	LD A, $mem_bigmenu_loading_flag
 	AND $01
-	JR NZ, =Load_Big_Menu
+	JR Z, =Big_Menu_Opening_Fade_out
+	JR =Load_Big_Menu
 
+Big_Menu_Opening_Fade_out:
 	; Fading Out Animation
 	LD B, $ff
 	LD A, $mem_prepared_color_palette
@@ -35,9 +37,9 @@ Open_Big_Menu_Loading_VBlank:
 	CP $ff
 	RET NZ
 
-	LD A, $mem_big_menu_loading_flag
+	LD A, $mem_bigmenu_loading_flag
 	OR $01
-	LD $mem_big_menu_loading_flag, A
+	LD $mem_bigmenu_loading_flag, A
 
 	RET
 
@@ -66,7 +68,7 @@ Load_Big_Menu:
 		CP $11
 		JR Z, =.frame_tileline_end
 
-		JR =.frame_tileline_middle
+		JP =.frame_tileline_middle
 		.set_tile:
 		LD (HL), B
 		INC HL
@@ -79,6 +81,8 @@ Load_Big_Menu:
 		CP $12
 		JR NZ, =.set_tilemap_row_loop
 
+
+	; Up and Down arrows
 	LD A, $1c
 	LD ($9803), A
 	LD A, $1d
@@ -91,15 +95,24 @@ Load_Big_Menu:
 	CALL =.Display_Menu_Entries
 
 	LD HL, $9a02
-	.LOAD_BANK_OF =Dungeon_Selection_Txt
-	LD BC, ptr(=Dungeon_Selection_Txt)
+	.LOAD_BANK_OF =Dungeon_Selection_Bottom_Txt
+	LD BC, ptr(=Dungeon_Selection_Bottom_Txt)
 	CALL =Print_str
 
 	LD A, $lcdc_bigmenu_tilemap
 	LD $reg_lcd_controller, A
 
-	JR .
+	LD A, $00
+	LD $mem_bigmenu_cursor_position, A
+	CALL =Change_Big_Menu_Cursor_Position
 
+	LD A, $enum_bigmenu_mode
+	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
+	CALL =Update_VBlank_Handler
+
+	EI
+	JP =Wait_for_Interrupt.loop
 	RET
 
 	.frame_tileline_end:
@@ -128,15 +141,15 @@ Load_Big_Menu:
 		CP $13
 		JR Z, =.first_line_end
 		LD B, $16
-		JR =.set_tile
+		JP =.set_tile
 
 		.first_line_start:
 		LD B, $10
-		JR =.set_tile
+		JP =.set_tile
 
 		.first_line_end:
 		LD B, $12
-		JR =.set_tile
+		JP =.set_tile
 
 	.frame_tileline_middle:
 		LD A, L
@@ -146,11 +159,11 @@ Load_Big_Menu:
 		CP $13
 		JR Z, =.middle_line_end
 		LD B, $00
-		JR =.set_tile
+		JP =.set_tile
 
 		.middle_line_start:
 		LD B, $14
-		JR =.set_tile
+		JP =.set_tile
 
 		.middle_line_end:
 		LD B, $15
@@ -213,7 +226,6 @@ Load_Big_Menu:
 			LD A, H
 			ADC $98
 			LD H, A
-			DBG
 
 			LD A, E
 			.CHANGE_BANK_TO_A
@@ -235,6 +247,73 @@ Load_Big_Menu:
 
 		RET
 
+Change_Big_Menu_Cursor_Position: ; ONLY DURING VBLANK, takes new cursor position in A, breaks C and HL
+		LD C, A
+		LD A, $mem_bigmenu_cursor_position
+		CALL =.HL_from_cursor_position
+		LD (HL), $00
+		LD A, C
+		LD $mem_bigmenu_cursor_position, A
+		CALL =.HL_from_cursor_position
+		LD (HL), $f2
+		RET
+
+		.HL_from_cursor_position:
+			; Shift left by 6
+			LD H, A
+			SRL H
+			SRL H
+			AND 0b11
+			SWAP A
+			CP A
+			DBG
+			RLA
+			RLA
+			DBG
+			ADD $41
+			LD L, A
+			LD A, H
+			ADC $98
+			LD H, A
+			RET
+
+Big_Menu_Check_Cursor_Move:
+	LD A, $mem_button_direction
+	CP $00
+	RET Z
+	LD C, A
+	LD A, $mem_last_button_direction
+	CP C
+	RET Z
+	LD A, C
+	CP $enum_direction_down
+	JR Z, =.down
+	CP $enum_direction_up
+	JR Z, =.up
+	RET
+
+	.down:
+		LD A, $mem_bigmenu_cursor_position
+		CP $05
+		RET Z
+		INC A
+		JR =Change_Big_Menu_Cursor_Position
+
+	.up:
+		LD A, $mem_bigmenu_cursor_position
+		CP $00
+		RET Z
+		DEC A
+		JR =Change_Big_Menu_Cursor_Position
+
+Big_Menu_VBLANK_Entrypoint:
+	CALL =Pad_Button_Check
+	CALL =Play_Music
+	CALL =Play_Sound_Effect
+	CALL =Big_Menu_Check_Cursor_Move
+
+	.ENABLE_VBLANK_INTERRUPTS
+	RETI
 
 ; Menu choices struct $ff terminated array of:
 ; struct menu_entry (8 bytes) {
@@ -258,6 +337,9 @@ Open_Big_Menu:
 	LD $mem_loading_mode_regular_func_pointer_high, A
 	LD A, C
 	LD $mem_loading_mode_regular_func_pointer_low, A
+
+	LD A, $00
+	LD $mem_bigmenu_entries_scroll, A
 
 	LD A, $enum_loading_mode
 	LD $mem_requested_mode, A

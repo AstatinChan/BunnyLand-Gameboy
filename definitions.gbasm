@@ -65,8 +65,9 @@
 .DEFINE mem_number_of_attacks ($c00d)
 .DEFINE mem_entity_being_attacked_low ($c00e)
 
-.DEFINE mem_big_menu_loading_flag ($c00f)
+.DEFINE mem_bigmenu_loading_flag ($c00f)
 ; bit 0: screen fade out animation finished
+; bit 1: menu loading finished
 
 .DEFINE mem_object_load_counter ($c010)
 .DEFINE mem_prepared_viewport_x ($c011)
@@ -92,6 +93,7 @@
 .DEFINE enum_animation_wait_mode $12
 .DEFINE enum_dungeon_generation_mode $03
 .DEFINE enum_dead_mode $21
+.DEFINE enum_bigmenu_mode $04
 
 .DEFINE mem_menu_cursor_position ($c016)
 .DEFINE mem_last_button_direction ($c017)
@@ -202,6 +204,8 @@
 
 .DEFINE mem_bigmenu_entries $c082 ; Takes $c082 - $c084 (bank+ptr)
 .DEFINE mem_bigmenu_entries_scroll ($c085)
+
+.DEFINE mem_bigmenu_cursor_position ($c086)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400

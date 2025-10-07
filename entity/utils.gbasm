@@ -81,7 +81,7 @@ Get_Position_After_Move: ; entity (whatever alignement) in HL, direction to test
 	POP HL
 	RET
 
-Entity_idx_to_entity_list_ptr: ; loaded idx in A, return in BC
+Entity_idx_to_entity_list_ptr: ; loaded idx in A, return in BC (ALSO NEEDS TO CHANGE BANK TO bank(=Entity_list))
 	PUSH DE
 
 	LD D, high($mem_loaded_entities_indices)
@@ -98,12 +98,11 @@ Entity_idx_to_entity_list_ptr: ; loaded idx in A, return in BC
 	SLA C
 	RL B
 	LD A, C
-	ADD low(=Entity_list)
+	ADD low(ptr(=Entity_list))
 	LD C, A
 	LD A, B
-	ADC high(=Entity_list)
+	ADC high(ptr(=Entity_list))
 	LD B, A
-	.LOAD_BANK_OF =Entity_list
 
 	POP DE
 	RET

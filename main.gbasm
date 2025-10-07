@@ -55,8 +55,6 @@ Entrypoint:
 .INCLUDE "modes/vblank_handler_list.gbasm"
 .INCLUDE "entity/utils.gbasm"
 .INCLUDE "entity/init.gbasm"
-.INCLUDE "entity/list.gbasm"
-.INCLUDE "entity/questgoal.gbasm"
 .INCLUDE "entity/actions.gbasm"
 .INCLUDE "entity/collisions.gbasm"
 .INCLUDE "entity/display.gbasm"
@@ -66,6 +64,7 @@ Entrypoint:
 .INCLUDE "dialogues/functions.gbasm"
 .INCLUDE "map/loading/dungeoninfos.gbasm"
 
+.ASSERT bank(.) $00
 .PADTO $4000
 .INCLUDE "modes/titlescreen.gbasm"
 .INCLUDE "tileset.gbasm"
@@ -73,6 +72,10 @@ Entrypoint:
 .INCLUDE "dialogues/dialogues.gbasm"
 .INCLUDE "map/maps.gbasm"
 .INCLUDE "map/dungeons.gbasm"
+.INCLUDE "entity/list.gbasm"
+.INCLUDE "entity/questgoal.gbasm"
+
+.PADTO $8000
 .INCLUDE "music/soundeffects/click.gbasm"
 .INCLUDE "music/soundeffects/menu.gbasm"
 .INCLUDE "music/soundeffects/heal.gbasm"
@@ -84,7 +87,7 @@ Entrypoint:
 .INCLUDE "music/soundeffects/freeze.gbasm"
 .INCLUDE "music/soundeffects/bite.gbasm"
 .INCLUDE "music/soundeffects/grab.gbasm"
-.ASSERT bank(.) $01
+.ASSERT bank(.) $02
 
 _music_Dungeon:
 .INCLUDEBIN "music/morning-forest.vgm"

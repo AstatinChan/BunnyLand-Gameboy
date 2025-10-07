@@ -29,6 +29,9 @@ VBlank_Handler_List:
 	; 3 (new floor)
 	.DB =New_Floor
 
+	; 4 (big menu)
+	.DB =Big_Menu_VBLANK_Entrypoint
+
 .INCLUDE "modes/dialoguemenu.gbasm"
 .INCLUDE "modes/dungeon.gbasm"
 .INCLUDE "modes/loading.gbasm"

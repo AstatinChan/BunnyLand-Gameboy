@@ -48,7 +48,8 @@ Entity_Action:
 	AND $f0
 	LD L, A
 
-	LD BC, =Turn_Jump_table
+	LD BC, ptr(=Turn_Jump_table)
+	.LOAD_BANK_OF =Turn_Jump_table
 	LD A, E
 
 	.JUMP_TABLE
@@ -76,8 +77,12 @@ Interaction_Jump_table:
 	NOP
 
 	; 02
-	JP =Open_Dialogue
+	JP =.Open_Dialogue
 	NOP
+
+	.Open_Dialogue:
+	.LOAD_BANK_OF =Open_Dialogue
+	JP ptr(=Open_Dialogue)
 
 Enemy_Interaction:
 	LD A, L
