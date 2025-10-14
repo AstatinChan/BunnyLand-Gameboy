@@ -2,7 +2,7 @@ Open_Big_Menu_Loading_VBlank:
 	LD A, $mem_bigmenu_loading_flag
 	AND $01
 	JR Z, =Big_Menu_Opening_Fade_out
-	JR =Load_Big_Menu
+	JP =Load_Big_Menu
 
 Big_Menu_Opening_Fade_out:
 	; Fading Out Animation
@@ -43,6 +43,74 @@ Big_Menu_Opening_Fade_out:
 
 	RET
 
+Set_bigmenu_window_tilemap_row: ; row in HL
+	.bottom:
+		LD A, $11
+		JR =.write_row
+	.top:
+		LD A, $10
+	.write_row:
+		LD (HL+), A
+		ADD $06
+		LD (HL+), A
+		LD (HL+), A
+		LD (HL+), A
+		LD (HL+), A
+		LD (HL+), A
+		SUB $04
+		LD (HL+), A
+		LD BC, $19
+		ADD HL, BC
+		RET
+
+	.middle:
+		LD A, $14
+		LD (HL+), A
+		XOR A
+		LD (HL+), A
+		LD (HL+), A
+		LD (HL+), A
+		LD (HL+), A
+		LD (HL+), A
+		LD A, $15
+		LD (HL+), A
+		LD BC, $19
+		ADD HL, BC
+		RET
+
+Load_Big_Menu_Window:
+	LD HL, $9800
+	CALL =Set_bigmenu_window_tilemap_row.top
+	CALL =Set_bigmenu_window_tilemap_row.middle
+	CALL =Set_bigmenu_window_tilemap_row.middle
+	CALL =Set_bigmenu_window_tilemap_row.middle
+	CALL =Set_bigmenu_window_tilemap_row.bottom
+	CALL =Set_bigmenu_window_tilemap_row.top
+	LD A, $16
+	LD ($98a0), A
+	CALL =Set_bigmenu_window_tilemap_row.middle
+	LD A, $00
+	LD ($98c0), A
+	CALL =Set_bigmenu_window_tilemap_row.bottom
+	LD A, $17
+	LD ($98e0), A
+
+	LD HL, $9821
+	LD A, $f2
+	LD (HL+), A
+	LD A, $a2
+	LD (HL+), A
+	LD A, $8e
+	LD (HL+), A
+	LD A, $9c
+	LD (HL+), A
+	LD HL, $9862
+	LD A, $97
+	LD (HL+), A
+	LD A, $98
+	LD (HL+), A
+	RET
+
 Load_Big_Menu:
 	LD A, $reg_lcd_controller
 	RES 7, A
@@ -51,18 +119,21 @@ Load_Big_Menu:
 	LD A, $palette_thin_font
 	LD $reg_bg_palette, A
 
-	LD A, $00
+	LD A, $38
 	LD $reg_viewport_x, A
+	LD A, $28
 	LD $reg_viewport_y, A
+	LD A, $50
+	LD $reg_window_y, A
 
-	LD HL, $9800
+	LD HL, $98A7
 	LD C, $00
 	.set_tilemap_row_loop:
 		LD A, C
 		CP $00
-		JR Z, =.frame_tileline_start
+		JP Z, =.frame_tileline_start
 		CP $0f
-		JR Z, =.frame_tileline_start
+		JP Z, =.frame_tileline_start
 		CP $0e
 		JR Z, =.frame_tileline_end
 		CP $11
@@ -74,27 +145,40 @@ Load_Big_Menu:
 		INC HL
 		LD A, L
 		AND $1f
-		CP $14
+		CP $1b
 		JR NZ, =.set_tilemap_row_loop
 		INC C
 		LD A, C
 		CP $12
 		JR NZ, =.set_tilemap_row_loop
 
-
-	; Up and Down arrows
-	LD A, $1c
-	LD ($9803), A
-	LD A, $1d
-	LD ($9804), A
-	LD A, $1e
-	LD ($99c3), A
-	LD A, $1f
-	LD ($99c4), A
+	CALL =Load_Big_Menu_Window
 
 	CALL =.Display_Menu_Entries
 
-	LD HL, $9a02
+	; Up and Down arrows
+	LD A, $mem_bigmenu_entries_scroll
+	AND A
+	JR Z, =.skip_up_arrow
+
+	LD A, $1c
+	LD ($98aa), A
+	LD A, $1d
+	LD ($98ab), A
+	.skip_up_arrow:
+
+	LD A, $mem_bigmenu_cursor_max
+	CP $07
+	JR NZ, =.skip_down_arrow
+
+	LD A, $1e
+	LD ($9a6a), A
+	LD A, $1f
+	LD ($9a6b), A
+	.skip_down_arrow:
+
+
+	LD HL, $9aa9
 	.LOAD_BANK_OF =Dungeon_Selection_Bottom_Txt
 	LD BC, ptr(=Dungeon_Selection_Bottom_Txt)
 	CALL =Print_str
@@ -118,9 +202,9 @@ Load_Big_Menu:
 	.frame_tileline_end:
 		LD A, L
 		AND $1f
-		CP $00
+		CP $07
 		JR Z, =.last_line_start
-		CP $13
+		CP $1a
 		JR Z, =.last_line_end
 		LD B, $17
 		JR =.set_tile
@@ -136,9 +220,9 @@ Load_Big_Menu:
 	.frame_tileline_start:
 		LD A, L
 		AND $1f
-		CP $00
+		CP $07
 		JR Z, =.first_line_start
-		CP $13
+		CP $1a
 		JR Z, =.first_line_end
 		LD B, $16
 		JP =.set_tile
@@ -154,9 +238,9 @@ Load_Big_Menu:
 	.frame_tileline_middle:
 		LD A, L
 		AND $1f
-		CP $00
+		CP $07
 		JR Z, =.middle_line_start
-		CP $13
+		CP $1a
 		JR Z, =.middle_line_end
 		LD B, $00
 		JP =.set_tile
@@ -171,79 +255,71 @@ Load_Big_Menu:
 
 	.Display_Menu_Entries:
 		LD A, ($mem_bigmenu_entries+1)
-		LD H, A
+		LD B, A
 		LD A, ($mem_bigmenu_entries+2)
-		LD L, A
+		LD C, A
 		LD A, ($mem_bigmenu_entries)
 		.CHANGE_BANK_TO_A
 
-		LD B, $00
+		LD H, $00
 		LD A, $mem_bigmenu_entries_scroll
-		LD C, A
-
-		SLA C
-		RL B
-		SLA C
-		RL B
-		SLA C
-		RL B
-
-		LD A, C
-		ADD L
 		LD L, A
-		LD A, B
-		ADC H
-		LD H, A
+
+		ADD HL, HL
+		ADD HL, HL
+		ADD HL, HL
+
+		ADD HL, BC
 
 		LD D, $00
 
-		.display_entries_lines_loop:
+		.display_entries_lines.loop:
 			LD A, (HL+)
 			LD E, A
+			DBG
+			INC A
+			JR Z, =.display_entries_lines.end
 			LD A, (HL+)
 			LD B, A
 			LD A, (HL+)
 			LD C, A
 
+			LD A, E
+			.CHANGE_BANK_TO_A
+
 			PUSH HL
 			LD H, $00
 			LD L, D
-			SLA L
-			RL H
-			SLA L
-			RL H
-			SLA L
-			RL H
-			SLA L
-			RL H
-			SLA L
-			RL H
-			SLA L
-			RL H
-			LD A, L
-			ADD $42
-			LD L, A
-			LD A, H
-			ADC $98
-			LD H, A
+			SWAP L
+			ADD HL, HL
+			ADD HL, HL
 
-			LD A, E
-			.CHANGE_BANK_TO_A
+			LD A, D
+			LD DE, $98e9
+			ADD HL, DE
+			LD D, A
+
 			CALL =Print_str
 			POP HL
 
 			LD A, ($mem_bigmenu_entries)
 			.CHANGE_BANK_TO_A
 
-			INC HL
-			INC HL
-			INC HL
-			INC HL
-			INC HL
+			LD BC, $05
+			ADD HL, BC
 			INC D
 			LD A, D
 			CP $06
-			JR NZ, =.display_entries_lines_loop
+			JR NZ, =.display_entries_lines.loop
+
+			LD A, (HL)
+			INC A
+			JR Z, =.display_entries_lines.end
+			INC D
+
+		.display_entries_lines.end:
+		LD A, D
+		LD $mem_bigmenu_cursor_max, A
 
 		RET
 
@@ -266,11 +342,9 @@ Change_Big_Menu_Cursor_Position: ; ONLY DURING VBLANK, takes new cursor position
 			AND 0b11
 			SWAP A
 			CP A
-			DBG
 			RLA
 			RLA
-			DBG
-			ADD $41
+			ADD $e8
 			LD L, A
 			LD A, H
 			ADC $98
@@ -278,6 +352,7 @@ Change_Big_Menu_Cursor_Position: ; ONLY DURING VBLANK, takes new cursor position
 			RET
 
 Big_Menu_Check_Cursor_Move:
+	.main:
 	LD A, $mem_button_direction
 	CP $00
 	RET Z
@@ -293,24 +368,140 @@ Big_Menu_Check_Cursor_Move:
 	RET
 
 	.down:
+		LD A, $mem_bigmenu_loading_flag
+		AND $20
+		JR NZ, =.confirm_window
+
+		LD A, $mem_bigmenu_cursor_max
+		LD C, A
 		LD A, $mem_bigmenu_cursor_position
-		CP $05
-		RET Z
 		INC A
+		CP $06
+		RET Z
+		CP C
+		RET Z
 		JR =Change_Big_Menu_Cursor_Position
 
 	.up:
+		LD A, $mem_bigmenu_loading_flag
+		AND $20
+		JR NZ, =.confirm_window
+
 		LD A, $mem_bigmenu_cursor_position
 		CP $00
 		RET Z
 		DEC A
 		JR =Change_Big_Menu_Cursor_Position
 
+	.confirm_window:
+		LD A, $mem_bigmenu_loading_flag
+		XOR $40
+		LD $mem_bigmenu_loading_flag, A
+		AND $40
+
+		LD HL, $9821
+		OR L
+		LD L, A
+		LD (HL), $f2
+		XOR $40
+		LD L, A
+		LD (HL), $00
+		RET
+
+Big_Menu_Check_Confirm:
+	LD A, $mem_button_action
+	LD C, A
+	LD A, $mem_last_button_action
+	XOR C
+	AND C
+	BIT 0, A
+	JR NZ, =.confirm
+	BIT 1, A
+	JR NZ, =.cancel
+	RET
+
+	.confirm:
+	LD A, $mem_bigmenu_loading_flag
+	BIT 5, A
+	JR NZ, =.choose_confirm_option
+	OR $20
+	LD $mem_bigmenu_loading_flag, A
+	LD A, $reg_lcd_controller
+	OR $20
+	LD $reg_lcd_controller, A
+	LD HL, $9aa9
+	.LOAD_BANK_OF =Dungeon_Selection_Confirm_Bottom_Txt
+	LD BC, ptr(=Dungeon_Selection_Confirm_Bottom_Txt)
+	CALL =Print_str
+	LD A, $00
+	LD (HL+), A
+	LD (HL+), A
+	LD (HL+), A
+	RET
+
+	.choose_confirm_option:
+	LD A, $mem_bigmenu_loading_flag
+	BIT 6, A
+	JR NZ, =.cancel
+
+	LD H, $00
+	LD A, $mem_bigmenu_entries_scroll
+	LD L, A
+	LD A, $mem_bigmenu_cursor_position
+	ADD L
+	LD L, A
+
+	ADD HL, HL
+	ADD HL, HL
+	ADD HL, HL
+
+	LD A, ($mem_bigmenu_entries+1)
+	LD B, A
+	LD A, ($mem_bigmenu_entries+2)
+	LD C, A
+	LD A, ($mem_bigmenu_entries)
+	.CHANGE_BANK_TO_A
+
+	ADD HL, BC
+
+	LD BC, $07
+	ADD HL, BC
+
+	LD E, (HL)
+	DEC HL
+	LD D, (HL)
+	DEC HL
+
+	LD C, (HL)
+	DEC HL
+	LD B, (HL)
+	DEC HL
+
+	LD A, (HL)
+	.CHANGE_BANK_TO_A
+	LD H, B
+	LD L, C
+
+	JP HL
+
+	.cancel:
+	LD A, $mem_bigmenu_loading_flag
+	RES 5, A
+	LD $mem_bigmenu_loading_flag, A
+	LD A, $reg_lcd_controller
+	RES 5, A
+	LD $reg_lcd_controller, A
+	LD HL, $9aa9
+	.LOAD_BANK_OF =Dungeon_Selection_Bottom_Txt
+	LD BC, ptr(=Dungeon_Selection_Bottom_Txt)
+	JP =Print_str
+
 Big_Menu_VBLANK_Entrypoint:
 	CALL =Pad_Button_Check
 	CALL =Play_Music
 	CALL =Play_Sound_Effect
 	CALL =Big_Menu_Check_Cursor_Move
+	CALL =Big_Menu_Check_Confirm
 
 	.ENABLE_VBLANK_INTERRUPTS
 	RETI

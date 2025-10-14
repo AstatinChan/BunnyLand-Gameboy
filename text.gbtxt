@@ -12,7 +12,8 @@ Dungeon_Name_3_Txt: Nerd city
 Dungeon_Name_4_Txt: Mount doom
 Dungeon_Name_5_Txt: Noname valley
 
-Dungeon_Selection_Bottom_Txt: Where to go ?
+Dungeon_Selection_Bottom_Txt: Where to go?
+Dungeon_Selection_Confirm_Bottom_Txt: Confirm?
 
 Game_Over_1_Txt: Game Over
 Game_Over_2_Txt: You tried :3

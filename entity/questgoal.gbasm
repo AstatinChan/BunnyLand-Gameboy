@@ -49,13 +49,10 @@ Open_Dialogue:
 	LD L, A
 
 	LD A, (HL+)
-	DBG
 	LD $mem_dialogue_script_bank, A
 	LD A, (HL+)
-	DBG
 	LD ($mem_dialogue_script_program_counter), A
 	LD A, (HL)
-	DBG
 	LD ($mem_dialogue_script_program_counter+1), A
 	CALL =Dialogue_script_step
 

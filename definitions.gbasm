@@ -68,6 +68,8 @@
 .DEFINE mem_bigmenu_loading_flag ($c00f)
 ; bit 0: screen fade out animation finished
 ; bit 1: menu loading finished
+; bit 5: confirm window open
+; bit 6: confirm cursor position
 
 .DEFINE mem_object_load_counter ($c010)
 .DEFINE mem_prepared_viewport_x ($c011)
@@ -206,6 +208,8 @@
 .DEFINE mem_bigmenu_entries_scroll ($c085)
 
 .DEFINE mem_bigmenu_cursor_position ($c086)
+
+.DEFINE mem_bigmenu_cursor_max ($c087)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400

@@ -96,6 +96,12 @@ _music_TitleScreen:
 _music_GameOver:
 .INCLUDEBIN "music/game-over.vgm"
 
+Menu_Test_Function:
+	LD A, $69
+	DBG
+	RET
+
+
 Menu_entries_test:
 	.Dungeon0:
 		.DB bank(=Dungeon_Name_0_Txt)
@@ -106,8 +112,8 @@ Menu_entries_test:
 	.Dungeon1:
 		.DB bank(=Dungeon_Name_1_Txt)
 		.DB ptr(=Dungeon_Name_1_Txt)
-		.DB bank(=Nothing)
-		.DB ptr(=Nothing)
+		.DB bank(=Menu_Test_Function)
+		.DB ptr(=Menu_Test_Function)
 		.PADTO =.Dungeon1+8
 	.Dungeon2:
 		.DB bank(=Dungeon_Name_2_Txt)
@@ -133,5 +139,12 @@ Menu_entries_test:
 		.DB bank(=Nothing)
 		.DB ptr(=Nothing)
 		.PADTO =.Dungeon5+8
+	.Dungeon6:
+		.DB bank(=Dungeon_Name_5_Txt)
+		.DB ptr(=Dungeon_Name_5_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon6+8
+
 	.ASSERT bank(.) bank(=Menu_entries_test)
 	.DB $ff

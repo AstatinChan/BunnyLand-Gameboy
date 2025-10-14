@@ -51,6 +51,10 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 	LD E, $00
 	JR Z, =$No_Window
 	LD E, $60
+	LD A, $48
+	LD $reg_window_y, A
+	LD A, $6f
+	LD $reg_window_x, A
 	$No_Window:
 .END
 
@@ -419,6 +423,16 @@ VBlank_Wait:
 .MACRODEF CHANGE_BANK_TO_A
 	LD $reg_rom_bank, A
 	LD $saved_rom_bank, A
+.END
+
+.MACRODEF PUSH_BANK
+	LD A, $saved_rom_bank
+	PUSH AF
+.END
+
+.MACRODEF POP_BANK
+	POP AF
+	.CHANGE_BANK_TO_A
 .END
 
 .MACRODEF LOAD_BANK_OF =addr

@@ -96,10 +96,6 @@ Empty_VRAM: ; (Clear screen)
 
 
 Initialize_Window_GUI:
-	LD A, $48
-	LD $reg_window_y, A
-	LD A, $6f
-	LD $reg_window_x, A
 	LD HL, $9d80
 	.top_bar_loop:
 		LD A, $0f

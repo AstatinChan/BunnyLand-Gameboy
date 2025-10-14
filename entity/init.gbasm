@@ -154,7 +154,6 @@ Initialize_Entity: ; HL => pointer to entity struct, A => entity loaded index,
 	JR NZ, =.set_direction
 	LD A, $tmp_var_3
 	AND $f0
-	DBG
 	LD D, A
 	SWAP A
 	OR D
