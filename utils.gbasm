@@ -140,10 +140,10 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 	LD $reg_interrupt_flags, A
 .END
 
-.MACRODEF ENABLE_LYC_INTERRUPT
-	LD A, low(=STAT_Entrypoint)
+.MACRODEF ENABLE_LYC_INTERRUPT =Entrypoint
+	LD A, low(=Entrypoint)
 	LD ($mem_stat_jump_destination), A
-	LD A, high(=STAT_Entrypoint)
+	LD A, high(=Entrypoint)
 	LD ($mem_stat_jump_destination+1), A
 	.RESET_INTERRUPTS
 	LD A, $40

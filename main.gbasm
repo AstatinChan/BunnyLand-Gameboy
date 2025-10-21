@@ -101,7 +101,6 @@ Menu_Test_Function:
 	DBG
 	RET
 
-
 Menu_entries_test:
 	.Dungeon0:
 		.DB bank(=Dungeon_Name_0_Txt)
@@ -140,11 +139,53 @@ Menu_entries_test:
 		.DB ptr(=Nothing)
 		.PADTO =.Dungeon5+8
 	.Dungeon6:
+		.DB bank(=Dungeon_Name_6_Txt)
+		.DB ptr(=Dungeon_Name_6_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon6+8
+	.Dungeon7:
+		.DB bank(=Dungeon_Name_7_Txt)
+		.DB ptr(=Dungeon_Name_7_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon7+8
+	.Dungeon8:
+		.DB bank(=Dungeon_Name_8_Txt)
+		.DB ptr(=Dungeon_Name_8_Txt)
+		.DB bank(=Menu_Test_Function)
+		.DB ptr(=Menu_Test_Function)
+		.PADTO =.Dungeon8+8
+	.Dungeon9:
+		.DB bank(=Dungeon_Name_2_Txt)
+		.DB ptr(=Dungeon_Name_2_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon9+8
+	.Dungeon10:
+		.DB bank(=Dungeon_Name_3_Txt)
+		.DB ptr(=Dungeon_Name_3_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon10+8
+	.Dungeon11:
+		.DB bank(=Dungeon_Name_4_Txt)
+		.DB ptr(=Dungeon_Name_4_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon11+8
+	.Dungeon12:
 		.DB bank(=Dungeon_Name_5_Txt)
 		.DB ptr(=Dungeon_Name_5_Txt)
 		.DB bank(=Nothing)
 		.DB ptr(=Nothing)
-		.PADTO =.Dungeon6+8
+		.PADTO =.Dungeon12+8
+	.Dungeon13:
+		.DB bank(=Dungeon_Name_6_Txt)
+		.DB ptr(=Dungeon_Name_6_Txt)
+		.DB bank(=Nothing)
+		.DB ptr(=Nothing)
+		.PADTO =.Dungeon13+8
 
 	.ASSERT bank(.) bank(=Menu_entries_test)
 	.DB $ff

@@ -105,7 +105,7 @@ Load_Big_Menu_Window:
 	LD A, $9c
 	LD (HL+), A
 	LD HL, $9862
-	LD A, $97
+LD A, $97
 	LD (HL+), A
 	LD A, $98
 	LD (HL+), A
@@ -121,22 +121,22 @@ Load_Big_Menu:
 
 	LD A, $38
 	LD $reg_viewport_x, A
-	LD A, $28
+	LD A, $00
 	LD $reg_viewport_y, A
 	LD A, $50
 	LD $reg_window_y, A
 
-	LD HL, $98A7
+	LD HL, $9807
 	LD C, $00
 	.set_tilemap_row_loop:
 		LD A, C
 		CP $00
 		JP Z, =.frame_tileline_start
-		CP $0f
+		CP $03
 		JP Z, =.frame_tileline_start
-		CP $0e
+		CP $02
 		JR Z, =.frame_tileline_end
-		CP $11
+		CP $05
 		JR Z, =.frame_tileline_end
 
 		JP =.frame_tileline_middle
@@ -149,7 +149,7 @@ Load_Big_Menu:
 		JR NZ, =.set_tilemap_row_loop
 		INC C
 		LD A, C
-		CP $12
+		CP $16
 		JR NZ, =.set_tilemap_row_loop
 
 	CALL =Load_Big_Menu_Window
@@ -162,9 +162,9 @@ Load_Big_Menu:
 	JR Z, =.skip_up_arrow
 
 	LD A, $1c
-	LD ($98aa), A
+	LD ($980a), A
 	LD A, $1d
-	LD ($98ab), A
+	LD ($980b), A
 	.skip_up_arrow:
 
 	LD A, $mem_bigmenu_cursor_max
@@ -172,13 +172,13 @@ Load_Big_Menu:
 	JR NZ, =.skip_down_arrow
 
 	LD A, $1e
-	LD ($9a6a), A
+	LD ($984a), A
 	LD A, $1f
-	LD ($9a6b), A
+	LD ($984b), A
 	.skip_down_arrow:
 
 
-	LD HL, $9aa9
+	LD HL, $9889
 	.LOAD_BANK_OF =Dungeon_Selection_Bottom_Txt
 	LD BC, ptr(=Dungeon_Selection_Bottom_Txt)
 	CALL =Print_str
@@ -276,7 +276,6 @@ Load_Big_Menu:
 		.display_entries_lines.loop:
 			LD A, (HL+)
 			LD E, A
-			DBG
 			INC A
 			JR Z, =.display_entries_lines.end
 			LD A, (HL+)
@@ -309,13 +308,12 @@ Load_Big_Menu:
 			ADD HL, BC
 			INC D
 			LD A, D
-			CP $06
+			CP $07
 			JR NZ, =.display_entries_lines.loop
 
 			LD A, (HL)
 			INC A
 			JR Z, =.display_entries_lines.end
-			INC D
 
 		.display_entries_lines.end:
 		LD A, D
@@ -351,6 +349,65 @@ Change_Big_Menu_Cursor_Position: ; ONLY DURING VBLANK, takes new cursor position
 			LD H, A
 			RET
 
+Load_Next_Entry:
+	LD A, $mem_bigmenu_entries_scroll
+	ADD $06
+	AND $07
+	LD H, $00
+	LD L, A
+	ADD HL, HL
+	ADD HL, HL
+	ADD HL, HL
+	ADD HL, HL
+	ADD HL, HL
+	ADD HL, HL
+	LD BC, $98e9
+	ADD HL, BC
+	LD A, $mem_bigmenu_entries_scroll
+	ADD $06
+
+Load_Entry:
+; HL = memory_position_shenanigan_thingy
+; A = scroll position of the entry
+; BREAKS BC
+	PUSH HL
+
+	LD L, A
+	LD H, $00
+
+	ADD HL, HL
+	ADD HL, HL
+	ADD HL, HL
+
+	LD A, ($mem_bigmenu_entries+1)
+	LD B, A
+	LD A, ($mem_bigmenu_entries+2)
+	LD C, A
+	ADD HL, BC
+
+	LD A, ($mem_bigmenu_entries)
+	.CHANGE_BANK_TO_A
+
+	LD A, (HL)
+	CP $ff
+	JR Z, =.no_more_entries
+
+	INC HL
+	LD B, (HL)
+	INC HL
+	LD C, (HL)
+
+	.CHANGE_BANK_TO_A
+
+	POP HL
+
+	JP =Print_str
+	
+	.no_more_entries:
+	LD A, $06
+	LD $mem_bigmenu_cursor_max, A
+	RET
+
 Big_Menu_Check_Cursor_Move:
 	.main:
 	LD A, $mem_button_direction
@@ -375,12 +432,32 @@ Big_Menu_Check_Cursor_Move:
 		LD A, $mem_bigmenu_cursor_max
 		LD C, A
 		LD A, $mem_bigmenu_cursor_position
+		LD B, A
+		LD A, $mem_bigmenu_entries_scroll
+		CPL
 		INC A
-		CP $06
-		RET Z
+		INC B
+		ADD B
+		AND $07
 		CP C
 		RET Z
-		JR =Change_Big_Menu_Cursor_Position
+		CP $06
+		CALL Z, =.scroll_down
+		LD A, B
+		JP =Change_Big_Menu_Cursor_Position
+
+		.scroll_down:
+		LD A, $mem_bigmenu_entries_scroll
+		INC A
+		LD $mem_bigmenu_entries_scroll, A
+		PUSH BC
+		CALL =Load_Next_Entry
+		POP BC
+		LD A, B
+		CP $08
+		RET NZ
+		LD B, $00
+		RET
 
 	.up:
 		LD A, $mem_bigmenu_loading_flag
@@ -391,7 +468,7 @@ Big_Menu_Check_Cursor_Move:
 		CP $00
 		RET Z
 		DEC A
-		JR =Change_Big_Menu_Cursor_Position
+		JP =Change_Big_Menu_Cursor_Position
 
 	.confirm_window:
 		LD A, $mem_bigmenu_loading_flag
@@ -429,7 +506,7 @@ Big_Menu_Check_Confirm:
 	LD A, $reg_lcd_controller
 	OR $20
 	LD $reg_lcd_controller, A
-	LD HL, $9aa9
+	LD HL, $9889
 	.LOAD_BANK_OF =Dungeon_Selection_Confirm_Bottom_Txt
 	LD BC, ptr(=Dungeon_Selection_Confirm_Bottom_Txt)
 	CALL =Print_str
@@ -491,19 +568,77 @@ Big_Menu_Check_Confirm:
 	LD A, $reg_lcd_controller
 	RES 5, A
 	LD $reg_lcd_controller, A
-	LD HL, $9aa9
+	LD HL, $9889
 	.LOAD_BANK_OF =Dungeon_Selection_Bottom_Txt
 	LD BC, ptr(=Dungeon_Selection_Bottom_Txt)
 	JP =Print_str
 
 Big_Menu_VBLANK_Entrypoint:
+	LD A, $00
+	LD $reg_viewport_y, A
+	LD A, $07
+	LD $reg_lyc, A
+	.ENABLE_LYC_INTERRUPT =Big_Menu_STAT_Entrypoint
+	.RESET_INTERRUPTS
+	EI
+
 	CALL =Pad_Button_Check
-	CALL =Play_Music
-	CALL =Play_Sound_Effect
 	CALL =Big_Menu_Check_Cursor_Move
 	CALL =Big_Menu_Check_Confirm
 
+	CALL =Play_Sound_Effect
+	CALL =Play_Music
 	.ENABLE_VBLANK_INTERRUPTS
+	RETI
+
+Big_Menu_STAT_Entrypoint:
+	PUSH AF
+	LD A, $reg_ly
+	LD A, $reg_lyc
+	CP $07
+	JR Z, =.choices_start
+	CP $67
+	JR Z, =.choices_end
+	.HBLANK_WAIT
+	LD A, $reg_lyc
+	CPL
+	INC A
+	ADD $2f
+	LD $reg_viewport_y, A
+	LD A, $67
+	LD $reg_lyc, A
+	POP AF
+	RETI
+
+	.choices_start:
+	.HBLANK_WAIT
+	LD A, $mem_bigmenu_entries_scroll
+	SWAP A
+	AND $70
+	ADD $28
+	LD $reg_viewport_y, A
+	LD A, $67
+	LD $reg_lyc, A
+	LD A, $mem_bigmenu_entries_scroll
+	AND $07
+	CP $03
+	JR C, =.skip_set_choices_wrap_around
+	LD A, $mem_bigmenu_entries_scroll
+	SWAP A
+	AND $70
+	CPL
+	INC A
+	ADD $87
+	LD $reg_lyc, A
+	.skip_set_choices_wrap_around:
+	POP AF
+	RETI
+
+	.choices_end:
+	.HBLANK_WAIT
+	LD A, $a0
+	LD $reg_viewport_y, A
+	POP AF
 	RETI
 
 ; Menu choices struct $ff terminated array of:

@@ -45,7 +45,7 @@ Dialogue_VBLANK_Entrypoint:
 	; LYC
 	LD A, $0a
 	LD $reg_lyc, A
-	.ENABLE_LYC_INTERRUPT
+	.ENABLE_LYC_INTERRUPT =Dungeon_STAT_Entrypoint
 	.RESET_INTERRUPTS
 	EI
 

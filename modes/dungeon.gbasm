@@ -105,7 +105,7 @@ Update_Animation_Steps:
 	LD $mem_display_flag, A
 	RET
 
-STAT_Entrypoint:
+Dungeon_STAT_Entrypoint:
 	PUSH AF
 	PUSH DE
 	.SET_WINDOW_LCDC_E
@@ -201,7 +201,7 @@ Dungeon_VBLANK_Entrypoint:
 	.skip_custom_function:
 
 	; LYC
-	.ENABLE_LYC_INTERRUPT
+	.ENABLE_LYC_INTERRUPT =Dungeon_STAT_Entrypoint
 	.RESET_INTERRUPTS
 	EI
 
