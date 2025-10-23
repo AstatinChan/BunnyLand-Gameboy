@@ -189,6 +189,7 @@ New_Floor:
 	CALL =VBlank_Wait
 
 Dungeon_generation_VBlank:
+	LD SP, $fffe
 	.ENABLE_MODE_2_INTERRUPT
 	EI
 

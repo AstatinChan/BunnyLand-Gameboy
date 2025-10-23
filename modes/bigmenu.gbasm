@@ -182,7 +182,6 @@ Load_Big_Menu:
 	LD ($984b), A
 	.skip_down_arrow:
 
-
 	LD HL, $9889
 	.LOAD_BANK_OF =Dungeon_Selection_Bottom_Txt
 	LD BC, ptr(=Dungeon_Selection_Bottom_Txt)
@@ -202,6 +201,7 @@ Load_Big_Menu:
 	DI
 	.DISABLE_MODE_2_INTERRUPT
 	CALL =Update_VBlank_Handler
+	.ENABLE_LYC_INTERRUPT =Big_Menu_STAT_Entrypoint
 	.ENABLE_VBLANK_INTERRUPTS
 	.RESET_INTERRUPTS
 
@@ -264,39 +264,11 @@ Load_Big_Menu:
 		JP =.set_tile
 
 	.Display_Menu_Entries:
-		LD A, ($mem_bigmenu_entries+1)
-		LD B, A
-		LD A, ($mem_bigmenu_entries+2)
-		LD C, A
-		LD A, ($mem_bigmenu_entries)
-		.CHANGE_BANK_TO_A
-
-		LD H, $00
-		LD A, $mem_bigmenu_entries_scroll
-		LD L, A
-
-		ADD HL, HL
-		ADD HL, HL
-		ADD HL, HL
-
-		ADD HL, BC
-
+		LD A, $07
+		LD $mem_bigmenu_cursor_max, A
 		LD D, $00
 
 		.display_entries_lines.loop:
-			LD A, (HL+)
-			LD E, A
-			INC A
-			JR Z, =.display_entries_lines.end
-			LD A, (HL+)
-			LD B, A
-			LD A, (HL+)
-			LD C, A
-
-			LD A, E
-			.CHANGE_BANK_TO_A
-
-			PUSH HL
 			LD H, $00
 			LD L, D
 			SWAP L
@@ -308,14 +280,12 @@ Load_Big_Menu:
 			ADD HL, DE
 			LD D, A
 
-			CALL =Print_str
-			POP HL
+			CALL =Load_Entry
 
-			LD A, ($mem_bigmenu_entries)
-			.CHANGE_BANK_TO_A
+			LD A, $mem_bigmenu_cursor_max
+			CP $06
+			JR Z, =.display_entries_lines.end
 
-			LD BC, $05
-			ADD HL, BC
 			INC D
 			LD A, D
 			CP $07
@@ -676,15 +646,12 @@ Big_Menu_Check_Confirm:
 	JP =Print_str
 
 Big_Menu_VBLANK_Entrypoint:
+	LD A, $reg_interrupt_enable
+	AND $fe
+	LD $reg_interrupt_enable, A
+	EI
 	LD A, $palette_thin_font
 	LD $reg_bg_palette, A
-	XOR A
-	LD $reg_viewport_y, A
-	LD A, $07
-	LD $reg_lyc, A
-	.ENABLE_LYC_INTERRUPT =Big_Menu_STAT_Entrypoint
-	.RESET_INTERRUPTS
-	EI
 
 	CALL =Pad_Button_Check
 	CALL =Big_Menu_Check_Cursor_Move
@@ -693,12 +660,17 @@ Big_Menu_VBLANK_Entrypoint:
 	CALL =Play_Music
 	CALL =Play_Sound_Effect
 	.ENABLE_VBLANK_INTERRUPTS
+	LD A, $reg_lcd_status
+	AND $03
 	RETI
 
 Big_Menu_STAT_Entrypoint:
 	PUSH AF
 	LD A, $reg_ly
 	LD A, $reg_lyc
+	LD B, B
+	CP $90
+	JR Z, =.new_frame
 	CP $07
 	JR Z, =.choices_start
 	CP $67
@@ -742,6 +714,16 @@ Big_Menu_STAT_Entrypoint:
 	.HBLANK_WAIT
 	LD A, $a0
 	LD $reg_viewport_y, A
+	LD A, $90
+	LD $reg_lyc, A
+	POP AF
+	RETI
+
+	.new_frame:
+	XOR A
+	LD $reg_viewport_y, A
+	LD A, $07
+	LD $reg_lyc, A
 	POP AF
 	RETI
 
