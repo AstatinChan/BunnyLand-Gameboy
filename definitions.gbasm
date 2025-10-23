@@ -61,6 +61,7 @@
 ; bit 3: animation step is going up (?)
 ; bit 4: animation step should start to go up on next frame
 ; bit 5: if entity collision map should be updated
+; bit 6: during dungeon generation vblank, whether or not it should skip the wait 1s thingy
 
 .DEFINE mem_number_of_attacks ($c00d)
 .DEFINE mem_entity_being_attacked_low ($c00e)

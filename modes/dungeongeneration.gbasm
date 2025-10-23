@@ -14,10 +14,10 @@
 	LD $reg_interrupt_enable, A
 .END
 
-.MACRODEF ENABLE_MUSIC_INTERRUPT
-	LD A, low(=Dungeon_1st_step_VBlank)
+.MACRODEF SET_VBLANK_INTERRUPT =interrupt
+	LD A, low(=interrupt)
 	LD ($mem_vblank_jump_destination), A
-	LD A, high(=Dungeon_1st_step_VBlank)
+	LD A, high(=interrupt)
 	LD ($mem_vblank_jump_destination+1), A
 	.RESET_INTERRUPTS
 	.ENABLE_VBLANK_INTERRUPTS
@@ -52,7 +52,7 @@ New_Dungeon:
 
 New_Floor:
 	LD SP, $fffe
-	.ENABLE_MUSIC_INTERRUPT
+	.SET_VBLANK_INTERRUPT =Music_Interrupt
 	EI
 
 	LD A, $00
@@ -223,6 +223,10 @@ Dungeon_generation_VBlank:
 	CALL =Print_8bit
 
 	CALL =Reset_Entities_Collision_Map
+	
+	LD A, $mem_map_loading_flags
+	BIT 6, A
+	JR NZ, =.wait_1s.end
 
 	LD A, $mem_loop_frame_timer
 	ADD $3c
@@ -232,6 +236,11 @@ Dungeon_generation_VBlank:
 		LD A, $mem_loop_frame_timer
 		CP B
 		JR NZ, =.wait_1s.loop
+	.wait_1s.end:
+
+	LD A, $mem_map_loading_flags
+	RES 6, A
+	LD $mem_map_loading_flags, A
 
 	LD A, $mem_display_flag
 	RES 6, A
@@ -246,6 +255,26 @@ Dungeon_generation_VBlank:
 	CALL Z, =Reset_Music_Channels
 	LD A, $01
 	LD $mem_sound_flags, A
+
+	; BG Palette
+	LD A, $palette_normal
+	LD $reg_bg_palette, A
+	LD $mem_prepared_color_palette, A
+
+	; OBJ0 Palette
+	LD A, $obj_palette_normal
+	LD $reg_obj0_palette, A
+
+	; OBJ1 Palette (frozen, shadow)
+	LD A, $obj_palette_frozen
+	LD $reg_obj1_palette, A
+
+	; Saved thin/bold palette
+	LD A, $palette_bold_font
+	LD $mem_gui_text_bold_palette, A
+	LD A, $palette_thin_font
+	LD $mem_gui_text_thin_palette, A
+
 	DI
 	.DISABLE_MODE_2_INTERRUPT
 	CALL =Update_VBlank_Handler
@@ -268,6 +297,7 @@ Dungeon_generation_Out_Of_VBlank:
 	INC A
 	LD $mem_loop_frame_timer, A
 	CALL =Play_Music
+	CALL =Play_Sound_Effect
 	CALL =VBlank_Wait
 	.ENABLE_MODE_2_INTERRUPT
 	.RESET_INTERRUPTS
@@ -279,7 +309,7 @@ Dungeon_generation_Out_Of_VBlank:
 	POP AF
 	RETI
 
-Dungeon_1st_step_VBlank:
+Music_Interrupt:
 	PUSH AF
 	PUSH BC
 	PUSH DE
@@ -287,6 +317,7 @@ Dungeon_1st_step_VBlank:
 	LD A, $saved_rom_bank
 	PUSH AF
 	CALL =Play_Music
+	CALL =Play_Sound_Effect
 	.ENABLE_VBLANK_INTERRUPTS
 	.RESET_INTERRUPTS
 	POP AF

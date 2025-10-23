@@ -1,40 +1,48 @@
 Open_Big_Menu_Loading_VBlank:
 	LD A, $mem_bigmenu_loading_flag
 	AND $01
-	JR Z, =Big_Menu_Opening_Fade_out
+	JR Z, =Big_Menu_Fade_out
 	JP =Load_Big_Menu
 
-Big_Menu_Opening_Fade_out:
+Big_Menu_Fade_out:
 	; Fading Out Animation
-	LD B, $ff
+	LD B, $00
 	LD A, $mem_prepared_color_palette
-	RR A
-	OR 0b11000000
+	SLA A
+	SLA A
 	LD $mem_prepared_color_palette, A
-	AND B
+	OR B
+	LD B, A
+
+	LD A, $reg_obj1_palette
+	SLA A
+	SLA A
+	LD $reg_obj1_palette, A
+	OR B
 	LD B, A
 
 	LD A, $reg_obj0_palette
-	RR A
-	OR 0b11000000
+	SLA A
+	SLA A
 	LD $reg_obj0_palette, A
-	AND B
+	OR B
 	LD B, A
 
 	LD A, $mem_gui_text_bold_palette
-	RR A
-	OR 0b11000000
+	SLA A
+	SLA A
 	LD $mem_gui_text_bold_palette, A
-	AND B
+	OR B
 	LD B, A
 
 	LD A, $mem_gui_text_thin_palette
-	RR A
-	OR 0b11000000
+	SLA A
+	SLA A
+	LD $reg_bg_palette, A
 	LD $mem_gui_text_thin_palette, A
-	AND B
+	OR B
 
-	CP $ff
+	CP $00
 	RET NZ
 
 	LD A, $mem_bigmenu_loading_flag
@@ -89,7 +97,7 @@ Load_Big_Menu_Window:
 	LD A, $16
 	LD ($98a0), A
 	CALL =Set_bigmenu_window_tilemap_row.middle
-	LD A, $00
+	XOR A
 	LD ($98c0), A
 	CALL =Set_bigmenu_window_tilemap_row.bottom
 	LD A, $17
@@ -105,23 +113,20 @@ Load_Big_Menu_Window:
 	LD A, $9c
 	LD (HL+), A
 	LD HL, $9862
-LD A, $97
+	LD A, $97
 	LD (HL+), A
 	LD A, $98
 	LD (HL+), A
 	RET
 
 Load_Big_Menu:
-	LD A, $reg_lcd_controller
-	RES 7, A
-	LD $reg_lcd_controller, A
-
-	LD A, $palette_thin_font
-	LD $reg_bg_palette, A
+	DI
+	.ENABLE_MODE_2_INTERRUPT
+	EI
 
 	LD A, $38
 	LD $reg_viewport_x, A
-	LD A, $00
+	XOR A
 	LD $reg_viewport_y, A
 	LD A, $50
 	LD $reg_window_y, A
@@ -135,9 +140,9 @@ Load_Big_Menu:
 		CP $03
 		JP Z, =.frame_tileline_start
 		CP $02
-		JR Z, =.frame_tileline_end
+		JP Z, =.frame_tileline_end
 		CP $05
-		JR Z, =.frame_tileline_end
+		JP Z, =.frame_tileline_end
 
 		JP =.frame_tileline_middle
 		.set_tile:
@@ -186,14 +191,19 @@ Load_Big_Menu:
 	LD A, $lcdc_bigmenu_tilemap
 	LD $reg_lcd_controller, A
 
-	LD A, $00
+	XOR A
 	LD $mem_bigmenu_cursor_position, A
 	CALL =Change_Big_Menu_Cursor_Position
 
 	LD A, $enum_bigmenu_mode
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
+
+	DI
+	.DISABLE_MODE_2_INTERRUPT
 	CALL =Update_VBlank_Handler
+	.ENABLE_VBLANK_INTERRUPTS
+	.RESET_INTERRUPTS
 
 	EI
 	JP =Wait_for_Interrupt.loop
@@ -207,15 +217,15 @@ Load_Big_Menu:
 		CP $1a
 		JR Z, =.last_line_end
 		LD B, $17
-		JR =.set_tile
+		JP =.set_tile
 
 		.last_line_start:
 		LD B, $11
-		JR =.set_tile
+		JP =.set_tile
 
 		.last_line_end:
 		LD B, $13
-		JR =.set_tile
+		JP =.set_tile
 
 	.frame_tileline_start:
 		LD A, L
@@ -476,12 +486,17 @@ Big_Menu_Check_Cursor_Move:
 		ADD B
 		AND $07
 		CP C
-		RET Z
+		JR Z, =.cancel_move_cursor
 		CP $06
 		CALL Z, =.scroll_down
 		LD A, B
 		AND $07
+		.SET_SOUND_EFFECT =_sound_effect_Click
 		JP =Change_Big_Menu_Cursor_Position
+
+		.cancel_move_cursor:
+		.SET_SOUND_EFFECT =_sound_effect_Move_arrow_failed
+		RET
 
 		.scroll_down:
 		LD A, $mem_bigmenu_entries_scroll
@@ -518,11 +533,11 @@ Big_Menu_Check_Cursor_Move:
 		LD A, B
 		DEC A
 		AND $07
+		.SET_SOUND_EFFECT =_sound_effect_Click
 		JP =Change_Big_Menu_Cursor_Position
 
 		.scroll_up:
 			LD A, $mem_bigmenu_entries_scroll
-			DBG
 			CP $00
 			JR Z, =.up.skip_cursor_position_change
 
@@ -548,9 +563,10 @@ Big_Menu_Check_Cursor_Move:
 			RET
 			.up.skip_cursor_position_change:
 			ADD SP, $02
-			RET
+			JP =.cancel_move_cursor
 
 	.confirm_window:
+		.SET_SOUND_EFFECT =_sound_effect_Click
 		LD A, $mem_bigmenu_loading_flag
 		XOR $40
 		LD $mem_bigmenu_loading_flag, A
@@ -578,6 +594,7 @@ Big_Menu_Check_Confirm:
 	RET
 
 	.confirm:
+	.SET_SOUND_EFFECT =_sound_effect_Click
 	LD A, $mem_bigmenu_loading_flag
 	BIT 5, A
 	JR NZ, =.choose_confirm_option
@@ -590,7 +607,7 @@ Big_Menu_Check_Confirm:
 	.LOAD_BANK_OF =Dungeon_Selection_Confirm_Bottom_Txt
 	LD BC, ptr(=Dungeon_Selection_Confirm_Bottom_Txt)
 	CALL =Print_str
-	LD A, $00
+	XOR A
 	LD (HL+), A
 	LD (HL+), A
 	LD (HL+), A
@@ -644,7 +661,10 @@ Big_Menu_Check_Confirm:
 	JP HL
 
 	.cancel:
+	.SET_SOUND_EFFECT =_sound_effect_Menu_Close
 	LD A, $mem_bigmenu_loading_flag
+	BIT 5, A
+	JP Z, =Load_Back_Dungeon
 	RES 5, A
 	LD $mem_bigmenu_loading_flag, A
 	LD A, $reg_lcd_controller
@@ -656,7 +676,9 @@ Big_Menu_Check_Confirm:
 	JP =Print_str
 
 Big_Menu_VBLANK_Entrypoint:
-	LD A, $00
+	LD A, $palette_thin_font
+	LD $reg_bg_palette, A
+	XOR A
 	LD $reg_viewport_y, A
 	LD A, $07
 	LD $reg_lyc, A
@@ -668,8 +690,8 @@ Big_Menu_VBLANK_Entrypoint:
 	CALL =Big_Menu_Check_Cursor_Move
 	CALL =Big_Menu_Check_Confirm
 
-	CALL =Play_Sound_Effect
 	CALL =Play_Music
+	CALL =Play_Sound_Effect
 	.ENABLE_VBLANK_INTERRUPTS
 	RETI
 
@@ -730,25 +752,75 @@ Big_Menu_STAT_Entrypoint:
 ;	padding/args: u16
 ; } (NO CROSS BANK ARRAY)
 
-Open_Big_Menu_Loading_Regular:
-	RET
-
 Open_Big_Menu:
+	.SET_SOUND_EFFECT =_sound_effect_Menu_Open
 	LD BC, =Open_Big_Menu_Loading_VBlank
 	LD A, B
 	LD $mem_loading_mode_vblank_func_pointer_high, A
 	LD A, C
 	LD $mem_loading_mode_vblank_func_pointer_low, A
 
-	LD BC, =Open_Big_Menu_Loading_Regular
+	LD BC, =Nothing
 	LD A, B
 	LD $mem_loading_mode_regular_func_pointer_high, A
 	LD A, C
 	LD $mem_loading_mode_regular_func_pointer_low, A
 
-	LD A, $00
+	XOR A
 	LD $mem_bigmenu_entries_scroll, A
 
 	LD A, $enum_loading_mode
 	LD $mem_requested_mode, A
 	RET
+
+Close_Big_Menu_Fade_Out_Interrupt:
+	PUSH AF
+	PUSH BC
+	PUSH DE
+	PUSH HL
+	LD A, $saved_rom_bank
+	PUSH AF
+	CALL =Big_Menu_Fade_out
+	CALL =Play_Music
+	CALL =Play_Sound_Effect
+	.ENABLE_VBLANK_INTERRUPTS
+	.RESET_INTERRUPTS
+	POP AF
+	.CHANGE_BANK_TO_A
+	POP HL
+	POP DE
+	POP BC
+	POP AF
+	RETI
+
+Load_Back_Dungeon:
+	DI
+	.SET_VBLANK_INTERRUPT =Close_Big_Menu_Fade_Out_Interrupt
+	EI
+
+	XOR A
+	LD $mem_bigmenu_entries_scroll, A
+	LD $mem_bigmenu_cursor_max, A
+	LD $mem_bigmenu_cursor_position, A
+
+	LD A, $enum_dungeon_mode
+	LD $mem_current_mode, A
+	LD $mem_requested_mode, A
+
+	LD HL, $mem_entities_list
+	.BANK_CALL =Center_viewport_around_entity
+	CALL =Load_Prepared_Map
+	LD A, $mem_prepared_viewport_x
+	LD $reg_viewport_x, A
+	LD A, $mem_prepared_viewport_y
+	LD $reg_viewport_y, A
+
+	.CLOSE_DIALOGUE
+
+	LD A, $mem_map_loading_flags
+	SET 6, A
+	LD $mem_map_loading_flags, A
+	DI
+	XOR A
+	LD $mem_bigmenu_loading_flag, A
+	JP =Dungeon_generation_VBlank
