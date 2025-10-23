@@ -11,13 +11,10 @@ Entrypoint:
 	LD A, $01
 	LD (HL+), A
 	XOR A
-	LD A, $06
 	LD (HL+), A
-	XOR A
 	LD (HL+), A
 	LD (HL+), A
 	LD A, $01
-	LD A, $02
 	LD $mem_number_of_attacks, A
 
 	LD A, bank(=Menu_entries_test)
