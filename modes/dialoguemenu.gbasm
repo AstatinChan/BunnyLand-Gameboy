@@ -40,6 +40,17 @@ Dialogue_VBLANK_Entrypoint:
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
 
+	LD A, $mem_dungeon_flags
+	BIT 5, A
+	JR Z, =.skip_custom_function
+		LD A, ($mem_dungeon_custom_vblank_function+1)
+		LD D, A
+		LD A, ($mem_dungeon_custom_vblank_function+2)
+		LD E, A
+		LD A, ($mem_dungeon_custom_vblank_function)
+		.BANK_CALL_A_DE
+	.skip_custom_function:
+
 	CALL $OAM_DMA_Transfer_routine
 
 	; LYC

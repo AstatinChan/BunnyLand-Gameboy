@@ -49,7 +49,14 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Learn_Attack_Return
 	NOP
 
+	; 06
+	JP =.Wait
+	NOP
+
 	.Text:
+		LD A, $enum_dungeon_dialogue_mode
+		LD $mem_requested_mode, A
+
 		PUSH HL
 		LD HL, $dialogue_first_line
 		LD BC, $12
@@ -88,6 +95,9 @@ Dialogue_script_instruction_Jump_Table:
 		RET
 
 	.TextB:
+		LD A, $enum_dungeon_dialogue_mode
+		LD $mem_requested_mode, A
+
 		PUSH HL
 		LD HL, $dialogue_first_line
 		LD BC, $12
@@ -126,6 +136,9 @@ Dialogue_script_instruction_Jump_Table:
 		RET
 
 	.TextB_Indirect:
+		LD A, $enum_dungeon_dialogue_mode
+		LD $mem_requested_mode, A
+
 		PUSH HL
 		LD HL, $dialogue_first_line
 		LD BC, $12
@@ -265,3 +278,15 @@ Dialogue_script_instruction_Jump_Table:
 		LD L, A
 		ADD SP, 2
 		JP =Dialogue_script_step.next
+
+	.Wait:
+		LD A, $enum_animation_wait_mode
+		LD $mem_requested_mode, A
+
+		LD A, (HL+)
+		LD $mem_animation_wait_frames, A
+
+		LD A, $mem_map_loading_flags
+		SET 7, A
+		LD $mem_map_loading_flags, A
+		RET

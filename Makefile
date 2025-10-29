@@ -26,7 +26,7 @@ build/main.rom: build/main.rom.unsigned
 	python scripts/round-rom-size.py build/main.rom
 	python scripts/set_checksums.py build/main.rom
 
-build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm dialogues/text.gbasm map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm) $(wildcard ./**/**/*.gbasm) $(wildcard ./music/*.vgm)
+build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm $(subst .gbtxt,.gbasm,$(wildcard ./**/*.gbtxt)) map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm) $(wildcard ./**/**/*.gbasm) $(wildcard ./music/*.vgm)
 	mkdir -p build
 	$(GBASM) $< $@ > build/main.sym
 

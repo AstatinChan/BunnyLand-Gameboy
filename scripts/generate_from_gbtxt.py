@@ -15,6 +15,8 @@ def ascii_to_gbtext_format(c):
             return ord(c) - ord('0') + 0x80
         case c if c <= 'Z' and c >= 'A':
             return ord(c) - ord('A') + 0x80 + 10
+        case '*':
+            return 0xba
         case ':':
             return 0xaa
         case '"':

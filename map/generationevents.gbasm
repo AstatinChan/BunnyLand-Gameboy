@@ -63,9 +63,6 @@ Generation_Event_Jump_Table:
 	JP =.Object_XY
 
 	.Dialogue_Script:
-		LD A, $enum_dungeon_dialogue_mode
-		LD $mem_requested_mode, A
-
 		LD A, (HL+)
 		LD $mem_dialogue_script_bank, A
 		LD A, (HL+)
@@ -147,8 +144,6 @@ Generation_Event_Jump_Table:
 		LD C, A
 
 		CALL =Find_Free_Object_slot
-
-		DBG
 
 		LD A, D
 		LD (HL+), A 

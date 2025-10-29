@@ -1,9 +1,38 @@
 Loading_VBLANK_Entrypoint:
 	.SET_WINDOW_LCDC_E
+
+	LD A, $mem_dungeon_flags
+	LD B, A
+	LD A, $mem_display_flag
+	SWAP A
+	AND B
+	BIT 3, A
+	JR NZ, =.top_bar.enable
+
+	.DISABLE_TOP_BAR
+
+	LD A, $67
+	LD $reg_lyc, A
+
+	JR =.top_bar.end
+	.top_bar.enable:
+
 	.ENABLE_TOP_BAR
 
-	LD A, $mem_gui_text_bold_palette
-	LD $reg_bg_palette, A
+	LD A, $0a
+	LD $reg_lyc, A
+	.top_bar.end:
+
+	LD A, $mem_dungeon_flags
+	BIT 5, A
+	JR Z, =.skip_custom_function
+		LD A, ($mem_dungeon_custom_vblank_function+1)
+		LD D, A
+		LD A, ($mem_dungeon_custom_vblank_function+2)
+		LD E, A
+		LD A, ($mem_dungeon_custom_vblank_function)
+		.BANK_CALL_A_DE
+	.skip_custom_function:
 
 	CALL $OAM_DMA_Transfer_routine
 	CALL =Loading_Mode_VBlank

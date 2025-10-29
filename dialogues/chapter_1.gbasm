@@ -1,0 +1,15 @@
+.INCLUDE "dialogues/chapter_1_text.gbasm"
+
+CH1_D1:
+	.WAIT $b4
+	.TEXTB =Thoughts_Header_Text =CH1_D1_L1
+	.TEXT =CH1_D1_L2 =CH1_D1_L3
+	.TEXT =CH1_D1_L4 =CH1_D1_L5
+	.TEXTB =CH1_D1_L6 =Empty
+	.TEXT =CH1_D1_L7 =CH1_D1_L8
+	.TEXTB =CH1_D1_L9 =Empty
+	.TEXT =CH1_D1_L10 =CH1_D1_L11
+	.TEXT =CH1_D1_L12 =Empty
+	.TEXT =CH1_D1_L13 =CH1_D1_L14
+	.FADEOUT_DARK
+.END
