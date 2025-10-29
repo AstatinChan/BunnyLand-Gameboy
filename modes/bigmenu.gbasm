@@ -666,9 +666,7 @@ Big_Menu_VBLANK_Entrypoint:
 
 Big_Menu_STAT_Entrypoint:
 	PUSH AF
-	LD A, $reg_ly
 	LD A, $reg_lyc
-	LD B, B
 	CP $90
 	JR Z, =.new_frame
 	CP $07
