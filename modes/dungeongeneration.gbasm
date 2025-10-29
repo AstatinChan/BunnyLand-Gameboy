@@ -57,6 +57,7 @@ New_Floor:
 
 	LD A, $00
 	LD $mem_display_flag, A
+	LD $mem_map_loading_flags, A
 
 	LD A, $00
 	LD $reg_viewport_x, A

@@ -29,7 +29,7 @@ Generation_Event_Execution:
 	RET
 
 Generation_Event_Jump_Table:
-; 00
+	; 00
 	RET
 	NOP
 	NOP
@@ -58,6 +58,9 @@ Generation_Event_Jump_Table:
 	; 06
 	JP =.Set_Dialogue_Ptr
 	NOP
+
+	; 07
+	JP =.Object_XY
 
 	.Dialogue_Script:
 		LD A, $enum_dungeon_dialogue_mode
@@ -131,6 +134,31 @@ Generation_Event_Jump_Table:
 		INC DE
 		LD A, (HL)
 		LD (DE), A
+		RET
+	
+	.Object_XY:
+		LD A, (HL+)
+		LD D, A
+		LD A, (HL+)
+		LD E, A
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+
+		CALL =Find_Free_Object_slot
+
+		DBG
+
+		LD A, D
+		LD (HL+), A 
+		LD A, B
+		LD (HL+), A 
+		LD A, C
+		LD (HL+), A 
+		LD A, E
+		LD (HL+), A 
+
 		RET
 
 	.Remove_Stairs:

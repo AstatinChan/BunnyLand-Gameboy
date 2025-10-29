@@ -335,6 +335,10 @@
 ;		01: Start dialogue at the beggining
 ;		02: Spawn a special entity (should not be used twice on the same floor
 ;		03: Remove stairs
+;		04: Entity random room
+;		05: Entity fixed XY position
+;		06: Set entity dialogue ptr
+;		07: Object fixed XY position
 ;
 ;	free_parameters: (u24)
 ;		01: Dialogue script address (bank + address)

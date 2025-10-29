@@ -21,6 +21,7 @@ Camp_Site:
 		.GEN_EVENT_SPAWN_LOADED_ENTITY_XY $01 $01 $05 $11 $10 $01
 		.GEN_EVENT_ENTITY_SET_DIALOGUE $01 $01 =Placeholder_Dialogue_Script
 		.GEN_EVENT_REMOVE_STAIRS $01
+		.GEN_EVENT_OBJECT_XY $01 $fe $08 $0f $05
 	.generation_events.end:
 
 	.max_floor: .DB 0x01, inv(0x01)

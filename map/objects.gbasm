@@ -154,7 +154,7 @@ Check_other_object_collision: ; Object in HL (with only sprite x & y set), will 
 
 Spawn_stairs:
 	LD A, $60
-	LD E, $08
+	LD E, $01
 	JP =Spawn_object_in_random_room_avoid_bunny
 
 Spawn_carrot:
@@ -201,6 +201,26 @@ Object_Interaction_Jump_table:
 	; 07
 	JP =Fimsh_Attack_Box_Action
 	NOP
+
+	; 08
+	JP =Load_Dungeon_Selection_Menu_Action
+	NOP
+
+Load_Dungeon_Selection_Menu_Action:
+	LD A, bank(=Menu_entries_test)
+	LD ($mem_bigmenu_entries), A
+	LD A, high(ptr(=Menu_entries_test))
+	LD ($mem_bigmenu_entries+1), A
+	LD A, low(ptr(=Menu_entries_test))
+	LD ($mem_bigmenu_entries+2), A
+
+	LD A, $4c
+	LD $mem_bunny_direction, A
+	LD A, $mem_map_loading_flags
+	SET 4, A
+	LD $mem_map_loading_flags, A
+
+	JP =Open_Big_Menu
 
 Stairs_Action:
 	LD A, $enum_dungeon_generation_mode
@@ -409,6 +429,8 @@ Display_Object:
 
 	LD A, (HL)
 	CP $FF
+	RET Z
+	CP $FE
 	RET Z
 	LD C, A
 

@@ -130,6 +130,8 @@ Load_Big_Menu:
 	LD $reg_viewport_y, A
 	LD A, $50
 	LD $reg_window_y, A
+	LD A, $6f
+	LD $reg_window_x, A
 
 	LD HL, $9807
 	LD C, $00

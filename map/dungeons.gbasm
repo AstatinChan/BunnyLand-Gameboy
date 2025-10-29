@@ -62,5 +62,26 @@
 	.PADTO =$start+8
 .END
 
+.MACRODEF GEN_EVENT_OBJECT_XY floor tile_idx action_idx arg_x arg_y
+	$start:
+	.DB low($floor), $07, low($tile_idx), low($action_idx), low($arg_x), low($arg_y)
+	.PADTO =$start+8
+.END
+
+Dungeon_List:
 .INCLUDE "map/dungeons/morningforest.gbasm"
 .INCLUDE "map/dungeons/campsite.gbasm"
+.ASSERT bank(.) bank(=Dungeon_List)
+
+Load_Dungeon:
+	DI
+	LD A, $00
+	LD $reg_interrupt_enable, A
+	LD A, bank(=Dungeon_List)
+	LD ($mem_dungeon), A
+	LD A, D
+	LD ($mem_dungeon+1), A
+	LD A, E
+	LD ($mem_dungeon+2), A
+	JP =New_Dungeon
+

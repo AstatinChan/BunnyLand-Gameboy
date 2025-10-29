@@ -17,22 +17,14 @@ Entrypoint:
 	LD A, $01
 	LD $mem_number_of_attacks, A
 
-	LD A, bank(=Menu_entries_test)
-	LD ($mem_bigmenu_entries), A
-	LD A, high(ptr(=Menu_entries_test))
-	LD ($mem_bigmenu_entries+1), A
-	LD A, low(ptr(=Menu_entries_test))
-	LD ($mem_bigmenu_entries+2), A
-
-	LD A, bank(=Morning_Forest)
+	LD A, bank(=Camp_Site)
 	LD ($mem_dungeon), A
-	LD HL, ptr(=Morning_Forest)
+	LD HL, ptr(=Camp_Site)
 	LD A, H
 	LD ($mem_dungeon+1), A
 	LD A, L
 	LD ($mem_dungeon+2), A
 
-	; JP =New_Dungeon
 	.LOAD_BANK_OF =Title_Screen
 	JP ptr(=Title_Screen)
 
@@ -94,108 +86,16 @@ _music_GameOver:
 .INCLUDEBIN "music/game-over.vgm"
 
 Menu_Test_Function:
-	LD A, $69
 	RET
 
 Menu_entries_test:
-	.Dungeon0:
-		.DB bank(=Dungeon_Name_0_Txt)
-		.DB ptr(=Dungeon_Name_0_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0000
-		.PADTO =.Dungeon0+8
-	.Dungeon1:
+	.Morning_Forest:
 		.DB bank(=Dungeon_Name_1_Txt)
 		.DB ptr(=Dungeon_Name_1_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0001
-		.PADTO =.Dungeon1+8
-	.Dungeon2:
-		.DB bank(=Dungeon_Name_2_Txt)
-		.DB ptr(=Dungeon_Name_2_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0002
-		.PADTO =.Dungeon2+8
-	.Dungeon3:
-		.DB bank(=Dungeon_Name_3_Txt)
-		.DB ptr(=Dungeon_Name_3_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0003
-		.PADTO =.Dungeon3+8
-	.Dungeon4:
-		.DB bank(=Dungeon_Name_4_Txt)
-		.DB ptr(=Dungeon_Name_4_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0004
-		.PADTO =.Dungeon4+8
-	.Dungeon5:
-		.DB bank(=Dungeon_Name_5_Txt)
-		.DB ptr(=Dungeon_Name_5_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0005
-		.PADTO =.Dungeon5+8
-	.Dungeon6:
-		.DB bank(=Dungeon_Name_6_Txt)
-		.DB ptr(=Dungeon_Name_6_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0006
-		.PADTO =.Dungeon6+8
-	.Dungeon7:
-		.DB bank(=Dungeon_Name_7_Txt)
-		.DB ptr(=Dungeon_Name_7_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0007
-		.PADTO =.Dungeon7+8
-	.Dungeon8:
-		.DB bank(=Dungeon_Name_8_Txt)
-		.DB ptr(=Dungeon_Name_8_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0008
-		.PADTO =.Dungeon8+8
-	.Dungeon9:
-		.DB bank(=Dungeon_Name_2_Txt)
-		.DB ptr(=Dungeon_Name_2_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0009
-		.PADTO =.Dungeon9+8
-	.Dungeon10:
-		.DB bank(=Dungeon_Name_3_Txt)
-		.DB ptr(=Dungeon_Name_3_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0010
-		.PADTO =.Dungeon10+8
-	.Dungeon11:
-		.DB bank(=Dungeon_Name_4_Txt)
-		.DB ptr(=Dungeon_Name_4_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0011
-		.PADTO =.Dungeon11+8
-	.Dungeon12:
-		.DB bank(=Dungeon_Name_5_Txt)
-		.DB ptr(=Dungeon_Name_5_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0012
-		.PADTO =.Dungeon12+8
-	.Dungeon13:
-		.DB bank(=Dungeon_Name_6_Txt)
-		.DB ptr(=Dungeon_Name_6_Txt)
-		.DB bank(=Menu_Test_Function)
-		.DB ptr(=Menu_Test_Function)
-		.DB $0013
-		.PADTO =.Dungeon13+8
+		.DB bank(=Load_Dungeon)
+		.DB ptr(=Load_Dungeon)
+		.DB ptr(=Morning_Forest)
+		.PADTO =.Morning_Forest+8
 
-	.ASSERT bank(.) bank(=Menu_entries_test)
 	.DB $ff
+	.ASSERT bank(.) bank(=Menu_entries_test)
