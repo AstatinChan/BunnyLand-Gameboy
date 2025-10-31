@@ -53,6 +53,26 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Wait
 	NOP
 
+	; 07
+	JP =.Fadeout_Dark
+	NOP
+
+	; 08
+	JP =.Fadein_Dark
+	NOP
+
+	; 09
+	JP =.Close_Dialogue
+	NOP
+
+	; 0A
+	JP =.Set_mem
+	NOP
+
+	; 0B
+	JP =.Go_to_Dungeon
+	NOP
+
 	.Text:
 		LD A, $enum_dungeon_dialogue_mode
 		LD $mem_requested_mode, A
@@ -290,3 +310,91 @@ Dialogue_script_instruction_Jump_Table:
 		SET 7, A
 		LD $mem_map_loading_flags, A
 		RET
+
+	.Fadeout_Dark:
+		LD A, high(=Fade_out_Loading_VBlank)
+		LD $mem_loading_mode_vblank_func_pointer_high, A
+		LD A, low(=Fade_out_Loading_VBlank)
+		LD $mem_loading_mode_vblank_func_pointer_low, A
+		LD A, high(=Nothing)
+		LD $mem_loading_mode_regular_func_pointer_high, A
+		LD A, low(=Nothing)
+		LD $mem_loading_mode_regular_func_pointer_low, A
+
+		LD A, $enum_loading_mode
+		LD $mem_requested_mode, A
+
+		LD A, $mem_map_loading_flags
+		SET 7, A
+		LD $mem_map_loading_flags, A
+
+		RET
+
+	.Close_Dialogue:
+		PUSH HL
+		.CLOSE_DIALOGUE
+		POP HL
+		ADD SP, 2
+		JP =Dialogue_script_step.next
+
+	.Fadein_Dark:
+		LD A, high(=Fade_in_Loading_VBlank)
+		LD $mem_loading_mode_vblank_func_pointer_high, A
+		LD A, low(=Fade_in_Loading_VBlank)
+		LD $mem_loading_mode_vblank_func_pointer_low, A
+		LD A, high(=Nothing)
+		LD $mem_loading_mode_regular_func_pointer_high, A
+		LD A, low(=Nothing)
+		LD $mem_loading_mode_regular_func_pointer_low, A
+
+		LD A, $enum_loading_mode
+		LD $mem_requested_mode, A
+
+		LD A, $mem_map_loading_flags
+		SET 7, A
+		LD $mem_map_loading_flags, A
+
+		RET
+
+	.Set_mem:
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		LD A, (HL+)
+		LD (BC), A
+		ADD SP, 2
+		JP =Dialogue_script_step.next
+
+	.Go_to_Dungeon:
+		LD A, (HL+)
+		LD ($mem_dungeon), A
+		LD A, (HL+)
+		LD ($mem_dungeon+1), A
+		LD A, (HL+)
+		LD ($mem_dungeon+2), A
+
+		LD A, $mem_sound_flags
+		BIT 1, A
+		CALL NZ, =Reset_Music_Channel1
+		LD A, $mem_sound_flags
+		BIT 2, A
+		CALL NZ, =Reset_Music_Channel2
+		LD A, $mem_sound_flags
+		BIT 3, A
+		CALL NZ, =Reset_Music_Channel3
+		LD A, $mem_sound_flags
+		BIT 4, A
+		CALL NZ, =Reset_Music_Channel4
+		LD A, $mem_sound_flags
+		AND 0b11000001
+		LD $mem_sound_flags, A
+		LD A, $00
+		LD $mem_sound_effect_frame_count, A
+		LD A, $ff
+		LD ($mem_sound_effect_pc), A
+
+		.SET_SOUND_EFFECT =_sound_effect_Next_Floor
+
+		JP =New_Dungeon
+

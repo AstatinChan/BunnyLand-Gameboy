@@ -213,6 +213,10 @@
 
 .DEFINE mem_bigmenu_cursor_max ($c087)
 
+.DEFINE mem_fadein_counter ($c088)
+
+.DEFINE mem_generation_event_saved_object_index $c089
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 
@@ -253,7 +257,7 @@
 ; 	x: u8,
 ;	y: u8,
 ;	interaction_jump_table_index: u8
-; 	_padding: u32
+; 	args: u32
 ; }
 
 .DEFINE mem_oam_buffer $ca00 ; Until $ca9f
@@ -341,11 +345,9 @@
 ;		06: Set entity dialogue ptr
 ;		07: Object fixed XY position
 ;
-;	free_parameters: (u24)
+;	free_parameters: (u48)
 ;		01: Dialogue script address (bank + address)
 ;		02: Entity template index (u8 + padding16)
-
-;	_padding: u24
 ; }
 
 .DEFINE dbg_var ($dfff)

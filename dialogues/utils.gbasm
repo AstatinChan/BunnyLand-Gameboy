@@ -45,4 +45,25 @@
 .END
 
 .MACRODEF FADEOUT_DARK
+	.DB $07
+.END
+
+.MACRODEF FADEIN_DARK
+	.DB $08
+.END
+
+.MACRODEF TEXTBOX_CLOSE
+	.DB $09
+.END
+
+.MACRODEF SET_MEM addr value
+	.DB $0a
+	.DB $addr
+	.DB low($value)
+.END
+
+.MACRODEF GO_TO_DUNGEON =dungeon
+	.DB $0b
+	.DB bank(=dungeon)
+	.DB ptr(=dungeon)
 .END

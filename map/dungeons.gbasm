@@ -64,7 +64,29 @@
 
 .MACRODEF GEN_EVENT_OBJECT_XY floor tile_idx action_idx arg_x arg_y
 	$start:
+	.DB low($floor), $07, low($tile_idx), low($action_idx), low($arg_x), low($arg_y), $00, $00
+	.PADTO =$start+8
+.END
+
+.MACRODEF GEN_EVENT_OBJECT_XY_SAVE_IDX floor tile_idx action_idx arg_x arg_y mem_idx_save
+	$start:
 	.DB low($floor), $07, low($tile_idx), low($action_idx), low($arg_x), low($arg_y)
+	.DB $mem_idx_save
+	.PADTO =$start+8
+.END
+
+.MACRODEF GEN_EVENT_OBJECT_RANDOM_ROOM_SAVE_IDX floor tile_idx action_idx mem_idx_save
+$start:
+	.DB low($floor), $08, low($tile_idx), low($action_idx)
+	.DB $mem_idx_save
+	.PADTO =$start+8
+.END
+
+.MACRODEF GEN_EVENT_ADD_SAVED_OBJECT_PARAMETER floor mem_idx_save arg1 arg2 arg3 arg4
+$start:
+	.DB low($floor), $09,
+	.DB $mem_idx_save
+	.DB low($arg1), low($arg2), low($arg3), low($arg4)
 	.PADTO =$start+8
 .END
 

@@ -61,6 +61,15 @@ Generation_Event_Jump_Table:
 
 	; 07
 	JP =.Object_XY
+	NOP
+
+	; 08
+	JP =.Object_Random_Room
+	NOP
+
+	; 09
+	JP =.Add_Saved_Object_Parameter
+	NOP
 
 	.Dialogue_Script:
 		LD A, (HL+)
@@ -132,7 +141,7 @@ Generation_Event_Jump_Table:
 		LD A, (HL)
 		LD (DE), A
 		RET
-	
+
 	.Object_XY:
 		LD A, (HL+)
 		LD D, A
@@ -143,6 +152,7 @@ Generation_Event_Jump_Table:
 		LD A, (HL+)
 		LD C, A
 
+		PUSH HL
 		CALL =Find_Free_Object_slot
 
 		LD A, D
@@ -154,6 +164,79 @@ Generation_Event_Jump_Table:
 		LD A, E
 		LD (HL+), A 
 
+		LD A, L
+		SWAP A
+		RLCA
+		AND $0f
+		LD B, A
+		POP HL
+
+		LD A, (HL+)
+		LD D, A
+		CP $00
+		RET Z
+		LD A, (HL+)
+		LD E, A
+		LD A, B
+		LD (DE), A
+
+		RET
+
+	.Object_Random_Room:
+		LD A, (HL+)
+		LD D, A
+		LD A, (HL+)
+		LD E, A
+
+		PUSH HL
+		CALL =Find_Free_Object_slot
+		LD A, D
+		PUSH HL
+		CALL =Spawn_object_in_random_room_avoid_bunny
+		POP HL
+
+		LD A, L
+		SWAP A
+		RLCA
+		AND $0f
+		LD B, A
+		POP HL
+
+		LD A, (HL+)
+		LD D, A
+		CP $00
+		RET Z
+		LD A, (HL+)
+		LD E, A
+		LD A, B
+		LD (DE), A
+
+		RET
+
+	.Add_Saved_Object_Parameter:
+		LD A, (HL+)
+		LD D, A
+		LD A, (HL+)
+		LD E, A
+		LD A, (DE)
+		SWAP A
+		RRCA
+		AND $f8
+		OR $04
+		LD E, A
+		LD D, high($mem_object_list)
+
+		LD A, (HL+)
+		LD (DE), A
+		INC DE
+		LD A, (HL+)
+		LD (DE), A
+		INC DE
+		LD A, (HL+)
+		LD (DE), A
+		INC DE
+		LD A, (HL+)
+		LD (DE), A
 		RET
 
 	.Remove_Stairs:

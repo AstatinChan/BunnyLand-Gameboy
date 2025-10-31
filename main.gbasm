@@ -17,6 +17,11 @@ Entrypoint:
 	LD A, $01
 	LD $mem_number_of_attacks, A
 
+	CALL =Pad_Button_Check
+	LD A, $mem_button_action
+	BIT 2, A
+	JR NZ, =.DBG_Mode
+
 	LD A, bank(=Camp_Site)
 	LD ($mem_dungeon), A
 	LD HL, ptr(=Camp_Site)
@@ -27,6 +32,19 @@ Entrypoint:
 
 	.LOAD_BANK_OF =Title_Screen
 	JP ptr(=Title_Screen)
+
+	.DBG_Mode:
+	LD A, bank(=Morning_Forest)
+	LD ($mem_dungeon), A
+	LD HL, ptr(=Morning_Forest)
+	LD A, H
+	LD ($mem_dungeon+1), A
+	LD A, L
+	LD ($mem_dungeon+2), A
+
+	CALL =Load_Tile
+
+	JP =New_Dungeon
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "music/load.gbasm"
@@ -52,19 +70,20 @@ Entrypoint:
 .INCLUDE "enemiesattacks.gbasm"
 .INCLUDE "dialogues/functions.gbasm"
 .INCLUDE "map/loading/dungeoninfos.gbasm"
+.INCLUDE "text.gbasm"
 
 .ASSERT bank(.) $00
 .PADTO $4000
 .INCLUDE "modes/titlescreen.gbasm"
 .INCLUDE "tileset.gbasm"
-.INCLUDE "text.gbasm"
-.INCLUDE "dialogues/dialogues.gbasm"
 .INCLUDE "map/maps.gbasm"
 .INCLUDE "map/dungeons.gbasm"
 .INCLUDE "entity/list.gbasm"
 .INCLUDE "entity/questgoal.gbasm"
 
 .PADTO $8000
+.INCLUDE "dialogues/dialogues.gbasm"
+.ASSERT bank(.) $02
 .INCLUDE "music/soundeffects/click.gbasm"
 .INCLUDE "music/soundeffects/menu.gbasm"
 .INCLUDE "music/soundeffects/heal.gbasm"

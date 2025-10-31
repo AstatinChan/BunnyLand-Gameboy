@@ -14,6 +14,13 @@ Load_Dungeon_Infos: ; pointer to Dungeon struct in HL, bank in A
 
 	PUSH HL
 	PUSH BC
+
+	PUSH BC
+	LD HL, $9ea0
+	LD BC, $0014
+	CALL =bzero
+	POP BC
+
 	LD H, B
 	LD L, C
 

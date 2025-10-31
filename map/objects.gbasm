@@ -206,6 +206,10 @@ Object_Interaction_Jump_table:
 	JP =Load_Dungeon_Selection_Menu_Action
 	NOP
 
+	; 09
+	JP =Dialogue_step_Action
+	NOP
+
 Load_Dungeon_Selection_Menu_Action:
 	LD A, bank(=Menu_entries_test)
 	LD ($mem_bigmenu_entries), A
@@ -221,6 +225,20 @@ Load_Dungeon_Selection_Menu_Action:
 	LD $mem_map_loading_flags, A
 
 	JP =Open_Big_Menu
+
+Dialogue_step_Action:
+	LD (HL), $00
+	LD A, L
+	ADD $04
+	LD L, A
+	LD A, (HL+)
+	LD $mem_dialogue_script_bank, A
+	LD A, (HL+)
+	LD ($mem_dialogue_script_program_counter), A
+	LD A, (HL+)
+	LD ($mem_dialogue_script_program_counter+1), A
+
+	JP =Dialogue_script_step
 
 Stairs_Action:
 	LD A, $enum_dungeon_generation_mode
@@ -301,6 +319,7 @@ Heal_Attack_Box_Action:
 	LD A, $enum_dungeon_dialogue_mode
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
+	CALL =Update_VBlank_Handler
 	LD A, $mem_bunny_direction
 	RES 3, A
 	LD $mem_bunny_direction, A
@@ -325,6 +344,7 @@ Freeze_Attack_Box_Action:
 	LD A, $enum_dungeon_dialogue_mode
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
+	CALL =Update_VBlank_Handler
 	LD A, $mem_bunny_direction
 	RES 3, A
 	LD $mem_bunny_direction, A
@@ -349,6 +369,7 @@ Earcopter_Attack_Box_Action:
 	LD A, $enum_dungeon_dialogue_mode
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
+	CALL =Update_VBlank_Handler
 	LD A, $mem_bunny_direction
 	RES 3, A
 	LD $mem_bunny_direction, A
@@ -373,6 +394,7 @@ Fimsh_Attack_Box_Action:
 	LD A, $enum_dungeon_dialogue_mode
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
+	CALL =Update_VBlank_Handler
 	LD A, $mem_bunny_direction
 	RES 3, A
 	LD $mem_bunny_direction, A

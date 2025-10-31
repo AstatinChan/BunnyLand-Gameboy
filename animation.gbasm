@@ -152,3 +152,4 @@ Animation_Jump_table:
 .INCLUDE "animations/rotatingball.gbasm"
 .INCLUDE "animations/laser.gbasm"
 .INCLUDE "animations/bubbles.gbasm"
+.INCLUDE "animations/fadeout.gbasm

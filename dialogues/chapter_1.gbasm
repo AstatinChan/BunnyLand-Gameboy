@@ -1,7 +1,10 @@
 .INCLUDE "dialogues/chapter_1_text.gbasm"
 
 CH1_D1:
-	.WAIT $b4
+	.WAIT $1e
+	.TEXT =Dotdotdot =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $3c
 	.TEXTB =Thoughts_Header_Text =CH1_D1_L1
 	.TEXT =CH1_D1_L2 =CH1_D1_L3
 	.TEXT =CH1_D1_L4 =CH1_D1_L5
@@ -12,4 +15,32 @@ CH1_D1:
 	.TEXT =CH1_D1_L12 =Empty
 	.TEXT =CH1_D1_L13 =CH1_D1_L14
 	.FADEOUT_DARK
+	.WAIT $1e
+	.TEXTBOX_CLOSE
+	.SET_MEM &$mem_bunny_animation $02
+	.WAIT $3c
+	.TEXT =ZZZ =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $78
+	.FADEIN_DARK
+	.WAIT $3c
+	.SET_MEM &$mem_bunny_animation $00
+.END
+
+CH1_D2:
+	.TEXTB =CH1_D2_L1 =Empty
+	.TEXT =CH1_D2_L2 =CH1_D2_L3
+	.TEXT =CH1_D2_L4 =Empty
+.END
+
+CH1_D3:
+	.TEXT =CH1_D3_L1 =Empty
+	.TEXT =CH1_D3_L2 =CH1_D3_L3
+	.TEXT =CH1_D3_L4 =Dotdotdot
+	.TEXT =CH1_D3_L5 =CH1_D3_L6
+	.TEXT =CH1_D3_L7 =Empty
+	.TEXT =CH1_D3_L8 =Empty
+	.TEXT =CH1_D3_L9 =CH1_D3_L10
+	.WAIT $3c
+	.GO_TO_DUNGEON =Camp_Site
 .END

@@ -28,7 +28,7 @@ build/main.rom: build/main.rom.unsigned
 
 build/main.rom.unsigned: main.gbasm tileset.gbasm text.gbasm $(subst .gbtxt,.gbasm,$(wildcard ./**/*.gbtxt)) map/maps.gbasm $(wildcard ./*.gbasm) $(wildcard ./**/*.gbasm) $(wildcard ./**/**/*.gbasm) $(wildcard ./music/*.vgm)
 	mkdir -p build
-	$(GBASM) $< $@ > build/main.sym
+	$(GBASM) $< $@ | sort > build/main.sym
 
 build/tileset-dump.rom: scripts/tileset-dump.gbasm tileset.gbasm tiles.gbasm
 	mkdir -p build
