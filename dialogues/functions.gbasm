@@ -273,28 +273,52 @@ Dialogue_script_instruction_Jump_Table:
 			LD $mem_number_of_attacks, A
 
 			LD HL, ptr(=Learn_Attack_Dialogue_Script)
-			.LOAD_BANK_OF =Learn_Attack_Dialogue_Script
+			LD A, bank(=Learn_Attack_Dialogue_Script)
+			LD $mem_dialogue_script_bank, A
+			.CHANGE_BANK_TO_A
+			LD A, H
+			LD ($mem_dialogue_script_program_counter), A
+			LD A, L
+			LD ($mem_dialogue_script_program_counter+1), A
+
 			ADD SP, 2
 			JP =Dialogue_script_step.next
 
 		.Learn_Attack.Not_enough_slot:
 			LD HL, ptr(=Learn_Attack_Not_Enough_Slot_Dialogue_Script)
-			.LOAD_BANK_OF =Learn_Attack_Not_Enough_Slot_Dialogue_Script
+			LD A, bank(=Learn_Attack_Not_Enough_Slot_Dialogue_Script)
+			LD $mem_dialogue_script_bank, A
+			.CHANGE_BANK_TO_A
+			LD A, H
+			LD ($mem_dialogue_script_program_counter), A
+			LD A, L
+			LD ($mem_dialogue_script_program_counter+1), A
+
 			ADD SP, 2
 			JP =Dialogue_script_step.next
 
 		.Learn_Attack.Duplicate:
 			LD HL, ptr(=Learn_Attack_Duplicate_Dialogue_Script)
-			.LOAD_BANK_OF =Learn_Attack_Duplicate_Dialogue_Script
+			LD A, bank(=Learn_Attack_Duplicate_Dialogue_Script)
+			LD $mem_dialogue_script_bank, A
+			.CHANGE_BANK_TO_A
+			LD A, H
+			LD ($mem_dialogue_script_program_counter), A
+			LD A, L
+			LD ($mem_dialogue_script_program_counter+1), A
+
 			ADD SP, 2
 			JP =Dialogue_script_step.next
 
 	.Learn_Attack_Return:
 		LD A, ($mem_learn_attack_dialogue_ret_ptr)
+		LD $mem_dialogue_script_bank, A
 		.CHANGE_BANK_TO_A
 		LD A, ($mem_learn_attack_dialogue_ret_ptr+1)
+		LD ($mem_dialogue_script_program_counter), A
 		LD H, A
 		LD A, ($mem_learn_attack_dialogue_ret_ptr+2)
+		LD ($mem_dialogue_script_program_counter+1), A
 		LD L, A
 		ADD SP, 2
 		JP =Dialogue_script_step.next

@@ -31,6 +31,8 @@
 .END
 
 New_Dungeon:
+	.ENABLE_MODE_2_INTERRUPT
+	EI
 	.LOAD_MUSIC =_music_Dungeon
 	CALL =Start_Music
 
@@ -49,6 +51,8 @@ New_Dungeon:
 	LD L, A
 	LD A, ($mem_dungeon)
 	CALL =Load_Dungeon_Infos
+	DI
+	.DISABLE_MODE_2_INTERRUPT
 
 New_Floor:
 	LD SP, $fffe
