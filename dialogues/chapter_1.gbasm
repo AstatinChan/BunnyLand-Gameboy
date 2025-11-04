@@ -25,6 +25,7 @@ CH1_D1:
 	.FADEIN_DARK
 	.WAIT $3c
 	.SET_MEM &$mem_bunny_animation $00
+ 	.SET_MEM &$mem_campsite_story_state $01
 .END
 
 CH1_D2:
@@ -38,9 +39,15 @@ CH1_D3:
 	.TEXT =CH1_D3_L2 =CH1_D3_L3
 	.TEXT =CH1_D3_L4 =Dotdotdot
 	.TEXT =CH1_D3_L5 =CH1_D3_L6
+	.TEXTBOX_CLOSE
+	.WAIT $3c
 	.TEXT =CH1_D3_L7 =Empty
 	.TEXT =CH1_D3_L8 =Empty
 	.TEXT =CH1_D3_L9 =CH1_D3_L10
 	.WAIT $3c
 	.GO_TO_DUNGEON =Camp_Site
+.END
+
+CH1_D4:
+	.TEXTB =Dungeon_Name_6_Txt =Empty
 .END

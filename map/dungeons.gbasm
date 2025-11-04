@@ -90,12 +90,30 @@ $start:
 	.PADTO =$start+8
 .END
 
+.MACRODEF GEN_EVENT_DIALOGUE_JUMP_TABLE floor =table mem_table_idx
+	.ASSERT bank(.) bank(=table)
+	.DB low($floor), $0a
+	.DB ptr(=table)
+	.DB $mem_table_idx
+.END
+
 Dungeon_List:
 .INCLUDE "map/dungeons/morningforest.gbasm"
 .INCLUDE "map/dungeons/campsite.gbasm"
 .ASSERT bank(.) bank(=Dungeon_List)
 
-Load_Dungeon:
+Big_Menu_Choice_Load_Dungeon:
+	DI
+	LD A, $mem_bigmenu_loading_flag
+	RES 0, A
+	LD $mem_bigmenu_loading_flag, A
+	.SET_VBLANK_INTERRUPT =Close_Big_Menu_Fade_Out_Interrupt
+	EI
+
+	.wait_fadeout:
+	LD A, $mem_bigmenu_loading_flag
+	BIT 0, A
+	JR Z, =.wait_fadeout
 	DI
 	LD A, $00
 	LD $reg_interrupt_enable, A

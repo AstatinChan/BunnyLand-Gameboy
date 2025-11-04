@@ -3,9 +3,6 @@ Initialize_Objects:
 	OR $01
 	LD $mem_map_loading_flags, A
 	LD HL, $mem_object_list
-	LD BC, $0080
-	CALL =bff
-	LD HL, $mem_object_list
 	CALL =Spawn_stairs
 	CALL =Spawn_carrot
 	CALL =Spawn_leaf

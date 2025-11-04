@@ -217,6 +217,8 @@
 
 .DEFINE mem_generation_event_saved_object_index $c089
 
+.DEFINE mem_campsite_story_state ($c08a)
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 

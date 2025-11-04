@@ -312,6 +312,9 @@ Dungeon_Generation:
 
 	LD HL, $mem_dungeon_generation_heads
 
+	XOR A
+	LD $mem_number_of_rooms, A
+
 	.Head_explosion_loop:
 		LD B, (HL)
 		LD A, B

@@ -27,12 +27,12 @@ Morning_Forest:
 
 	.spawning_patterns:
 		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
-		.DB $entity_cat_index, $entity_cat_index, $entity_penguin_index, $entity_fimsh_index, 0b00100011
-		.DB $entity_cat_index, $entity_cat_index, $entity_fox_index, $entity_fimsh_index, 0b00100111
-		.DB $entity_fox_index, $entity_cat_index, $entity_penguin_index, $entity_fimsh_index, 0b00011101
-		.DB $entity_cat_index, $entity_cat_index, $entity_mouse_index, $entity_fimsh_index, 0b00111111
-		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00011111
-		.DB $entity_fox_index, $entity_bug_index, $entity_penguin_index, $entity_fimsh_index, 0b00011111
-		.DB $entity_fox_index, $entity_mouse_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
+		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00001011
+		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00001011
+		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
+		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
+		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
+		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
 
 .ASSERT bank(=Morning_Forest) bank(.)

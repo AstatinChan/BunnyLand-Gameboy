@@ -111,8 +111,8 @@ Menu_entries_test:
 	.Morning_Forest:
 		.DB bank(=Dungeon_Name_1_Txt)
 		.DB ptr(=Dungeon_Name_1_Txt)
-		.DB bank(=Load_Dungeon)
-		.DB ptr(=Load_Dungeon)
+		.DB bank(=Big_Menu_Choice_Load_Dungeon)
+		.DB ptr(=Big_Menu_Choice_Load_Dungeon)
 		.DB ptr(=Morning_Forest)
 		.PADTO =.Morning_Forest+8
 

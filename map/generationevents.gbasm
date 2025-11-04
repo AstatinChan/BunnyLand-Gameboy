@@ -71,6 +71,10 @@ Generation_Event_Jump_Table:
 	JP =.Add_Saved_Object_Parameter
 	NOP
 
+	; 0a
+	JP =.Dialogue_Jump_table
+	NOP
+
 	.Dialogue_Script:
 		LD A, (HL+)
 		LD $mem_dialogue_script_bank, A
@@ -243,3 +247,31 @@ Generation_Event_Jump_Table:
 		LD HL, $mem_object_list
 		LD (HL), $00
 		RET
+
+	.Dialogue_Jump_table:
+		LD A, (HL+)
+		LD D, A
+		LD A, (HL+)
+		LD E, A
+
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+
+		LD A, (BC)
+		LD H, $00
+		LD L, A
+		LD B, $00
+		LD C, A
+		ADD HL, HL
+		ADD HL, BC
+		ADD HL, DE
+
+		LD A, (HL+)
+		LD $mem_dialogue_script_bank, A
+		LD A, (HL+)
+		LD ($mem_dialogue_script_program_counter), A
+		LD A, (HL)
+		LD ($mem_dialogue_script_program_counter+1), A
+		JP =Dialogue_script_step

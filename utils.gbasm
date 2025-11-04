@@ -127,9 +127,8 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 .END
 
 .MACRODEF ENABLE_VBLANK_INTERRUPTS
-	LD A, $reg_interrupt_flags
-	RES 0, A
-	LD $reg_interrupt_flags, A
+	LD HL, $ffff
+	RES 0, (HL)
 	LD A, $reg_interrupt_enable
 	OR $01
 	LD $reg_interrupt_enable, A
@@ -421,6 +420,7 @@ VBlank_Wait:
 	RET
 
 .MACRODEF CHANGE_BANK_TO_A
+	.ASSERT bank(.) $00
 	LD $reg_rom_bank, A
 	LD $saved_rom_bank, A
 .END

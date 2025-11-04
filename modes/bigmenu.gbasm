@@ -757,6 +757,12 @@ Open_Big_Menu:
 
 Close_Big_Menu_Fade_Out_Interrupt:
 	PUSH AF
+
+	LD A, $reg_interrupt_enable
+	AND $fe
+	LD $reg_interrupt_enable, A
+	EI
+
 	PUSH BC
 	PUSH DE
 	PUSH HL
@@ -766,7 +772,6 @@ Close_Big_Menu_Fade_Out_Interrupt:
 	CALL =Play_Music
 	CALL =Play_Sound_Effect
 	.ENABLE_VBLANK_INTERRUPTS
-	.RESET_INTERRUPTS
 	POP AF
 	.CHANGE_BANK_TO_A
 	POP HL
@@ -777,6 +782,9 @@ Close_Big_Menu_Fade_Out_Interrupt:
 
 Load_Back_Dungeon:
 	DI
+	LD A, $mem_bigmenu_loading_flag
+	RES 0, A
+	LD $mem_bigmenu_loading_flag, A
 	.SET_VBLANK_INTERRUPT =Close_Big_Menu_Fade_Out_Interrupt
 	EI
 
@@ -802,6 +810,12 @@ Load_Back_Dungeon:
 	LD A, $mem_map_loading_flags
 	SET 6, A
 	LD $mem_map_loading_flags, A
+
+	.wait_fadeout:
+	LD A, $mem_bigmenu_loading_flag
+	BIT 0, A
+	JR Z, =.wait_fadeout
+
 	DI
 	XOR A
 	LD $mem_bigmenu_loading_flag, A

@@ -1,4 +1,4 @@
-; VBlank: Write loading text, then wait for generation, then loading vram stuff
+; ; VBlank: Write loading text, then wait for generation, then loading vram stuff
 ; When VBlank interrupts -> context switch
 ; When stat out of vblank interrupt -> context switch back to generation
 
@@ -19,7 +19,6 @@
 	LD ($mem_vblank_jump_destination), A
 	LD A, high(=interrupt)
 	LD ($mem_vblank_jump_destination+1), A
-	.RESET_INTERRUPTS
 	.ENABLE_VBLANK_INTERRUPTS
 .END
 
@@ -112,6 +111,15 @@ New_Floor:
 
 	CALL =Reload_EP_Cost
 
+	LD HL, $mem_object_list
+	LD BC, $0080
+	CALL =bff
+
+	; We skip the bunny so the health and mana and other stuff is not affected
+	LD HL, $mem_entities_list+0x10
+	LD BC, $00f0
+	CALL =bzero
+
 	LD A, $mem_dungeon_flags
 	BIT 0, A
 	JR Z, =.map.generation
@@ -139,11 +147,6 @@ New_Floor:
 		LD A, $mem_map_loading_flags
 		OR $01
 		LD $mem_map_loading_flags, A
-
-		LD HL, $mem_object_list
-		LD BC, $0080
-		CALL =bff
-
 		JR =.map.end
 
 	.map.generation:
@@ -229,7 +232,7 @@ Dungeon_generation_VBlank:
 	CALL =Print_8bit
 
 	CALL =Reset_Entities_Collision_Map
-	
+
 	LD A, $mem_map_loading_flags
 	BIT 6, A
 	JR NZ, =.wait_1s.end
