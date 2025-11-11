@@ -17,6 +17,13 @@ Entrypoint:
 	LD A, $01
 	LD $mem_number_of_attacks, A
 
+	LD A, bank(=Gameover_Dialogue_Script)
+	LD ($mem_gameover_dialogue_address), A
+	LD A, high(ptr(=Gameover_Dialogue_Script))
+	LD ($mem_gameover_dialogue_address+1), A
+	LD A, low(ptr(=Gameover_Dialogue_Script))
+	LD ($mem_gameover_dialogue_address+2), A
+
 	CALL =Pad_Button_Check
 	LD A, $mem_button_action
 	BIT 2, A

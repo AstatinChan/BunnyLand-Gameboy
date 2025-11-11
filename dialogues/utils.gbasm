@@ -67,3 +67,15 @@
 	.DB bank(=dungeon)
 	.DB ptr(=dungeon)
 .END
+
+.MACRODEF SET_GAMEOVER_DIALOGUE =dialogue
+	.DB $0c
+	.DB bank(=dialogue)
+	.DB ptr(=dialogue)
+.END
+
+.MACRODEF CPY_MEM dest src
+	.DB $0d
+	.DB $dest
+	.DB $src
+.END

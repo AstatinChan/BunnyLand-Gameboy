@@ -30,3 +30,16 @@ Placeholder_Dialogue_Script:
 	.TEXT =Placeholder_3t =Empty
 	.TEXT =Placeholder_4t =Placeholder_4b
 	.END
+
+Gameover_Dialogue_Script:
+	.TEXT =Game_Over_1_Txt =Empty
+	.CPY_MEM &$mem_campsite_story_state_gameover_backup &$mem_campsite_story_state
+	.SET_MEM &$mem_campsite_story_state $02
+	.GO_TO_DUNGEON =Camp_Site
+Gameover_Campsite:
+	.SET_MEM &$mem_bunny_animation $02
+	.FADEIN_DARK
+	.WAIT $3c
+	.SET_MEM &$mem_bunny_animation $00
+	.CPY_MEM &$mem_campsite_story_state &$mem_campsite_story_state_gameover_backup
+.END

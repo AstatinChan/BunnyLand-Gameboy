@@ -87,27 +87,16 @@ Update_Animation_Steps:
 	LD $mem_current_mode, A
 	CALL =Update_VBlank_Handler
 
-	LD HL, $dialogue_first_line
-	LD BC, $12
-	CALL =bzero
+	LD HL, &$mem_map_loading_flags
+	SET 3, (HL)
 
-	LD HL, $dialogue_third_line
-	LD BC, $12
-	CALL =bzero
-
-	LD HL, $dialogue_first_line
-	.LOAD_BANK_OF =Game_Over_1_Txt
-	LD BC, ptr(=Game_Over_1_Txt)
-	CALL =Print_str
-
-	LD HL, $dialogue_third_line
-	.LOAD_BANK_OF =Game_Over_2_Txt
-	LD BC, ptr(=Game_Over_2_Txt)
-	CALL =Print_str
-
-	LD A, 0b10100111
-	LD $mem_display_flag, A
-	RET
+	LD A, ($mem_gameover_dialogue_address)
+	LD $mem_dialogue_script_bank, A
+	LD A, ($mem_gameover_dialogue_address+1)
+	LD ($mem_dialogue_script_program_counter), A
+	LD A, ($mem_gameover_dialogue_address+2)
+	LD ($mem_dialogue_script_program_counter+1), A
+	JP =Dialogue_script_step
 
 Dungeon_STAT_Entrypoint:
 	PUSH AF

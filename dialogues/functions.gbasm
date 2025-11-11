@@ -73,6 +73,14 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Go_to_Dungeon
 	NOP
 
+	; 0C
+	JP =.Set_Gameover_Dialogue
+	NOP
+
+	; 0D
+	JP =.Cpy_mem
+	NOP
+
 	.Text:
 		LD A, $enum_dungeon_dialogue_mode
 		LD $mem_requested_mode, A
@@ -421,4 +429,30 @@ Dialogue_script_instruction_Jump_Table:
 		.SET_SOUND_EFFECT =_sound_effect_Next_Floor
 
 		JP =New_Dungeon
+	
+	.Set_Gameover_Dialogue:
+		LD A, (HL+)
+		LD ($mem_gameover_dialogue_address), A
+		LD A, (HL+)
+		LD ($mem_gameover_dialogue_address+1), A
+		LD A, (HL+)
+		LD ($mem_gameover_dialogue_address+2), A
+		ADD SP, 2
+		JP =Dialogue_script_step.next
 
+	.Cpy_mem:
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+
+		LD A, (HL+)
+		LD D, A
+		LD A, (HL+)
+		LD E, A
+
+		LD A, (DE)
+		LD (BC), A
+
+		ADD SP, 2
+		JP =Dialogue_script_step.next

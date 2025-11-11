@@ -93,10 +93,10 @@
 .DEFINE enum_dungeon_mode $00
 .DEFINE enum_dungeon_menu_mode $01
 .DEFINE enum_dungeon_dialogue_mode $11
+.DEFINE enum_dead_mode $21
 .DEFINE enum_loading_mode $02
 .DEFINE enum_animation_wait_mode $12
 .DEFINE enum_dungeon_generation_mode $03
-.DEFINE enum_dead_mode $21
 .DEFINE enum_bigmenu_mode $04
 
 .DEFINE mem_menu_cursor_position ($c016)
@@ -218,6 +218,10 @@
 .DEFINE mem_generation_event_saved_object_index $c089
 
 .DEFINE mem_campsite_story_state ($c08a)
+
+.DEFINE mem_gameover_dialogue_address $c08b ; Takes $c08b-$c08d
+
+.DEFINE mem_campsite_story_state_gameover_backup ($c08e)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400

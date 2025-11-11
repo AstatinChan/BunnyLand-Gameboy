@@ -25,7 +25,7 @@ CH1_D1:
 	.FADEIN_DARK
 	.WAIT $3c
 	.SET_MEM &$mem_bunny_animation $00
- 	.SET_MEM &$mem_campsite_story_state $01
+	.SET_GAMEOVER_DIALOGUE =Gameover_Dialogue_Script
 .END
 
 CH1_D2:
@@ -44,10 +44,12 @@ CH1_D3:
 	.TEXT =CH1_D3_L7 =Empty
 	.TEXT =CH1_D3_L8 =Empty
 	.TEXT =CH1_D3_L9 =CH1_D3_L10
+ 	.SET_MEM &$mem_campsite_story_state $01
 	.WAIT $3c
 	.GO_TO_DUNGEON =Camp_Site
 .END
 
 CH1_D4:
 	.TEXTB =Dungeon_Name_6_Txt =Empty
+	.GO_TO_DUNGEON =Camp_Site
 .END
