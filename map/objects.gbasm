@@ -208,11 +208,11 @@ Object_Interaction_Jump_table:
 	NOP
 
 Load_Dungeon_Selection_Menu_Action:
-	LD A, bank(=Menu_entries_test)
+	LD A, ($mem_dungeon_selection_entries_ptr)
 	LD ($mem_bigmenu_entries), A
-	LD A, high(ptr(=Menu_entries_test))
+	LD A, ($mem_dungeon_selection_entries_ptr+1)
 	LD ($mem_bigmenu_entries+1), A
-	LD A, low(ptr(=Menu_entries_test))
+	LD A, ($mem_dungeon_selection_entries_ptr+2)
 	LD ($mem_bigmenu_entries+2), A
 
 	LD A, $4c

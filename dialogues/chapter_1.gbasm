@@ -26,6 +26,7 @@ CH1_D1:
 	.WAIT $3c
 	.SET_MEM &$mem_bunny_animation $00
 	.SET_GAMEOVER_DIALOGUE =Gameover_Dialogue_Script
+	.SET_DUNGEON_SELECTION =Dungeon_list.Morning_Forest
 .END
 
 CH1_D2:
@@ -50,6 +51,35 @@ CH1_D3:
 .END
 
 CH1_D4:
-	.TEXTB =Dungeon_Name_6_Txt =Empty
-	.GO_TO_DUNGEON =Camp_Site
+	.TEXT =CH1_D4_L1 =Dotdotdot
+	.TEXTBOX_CLOSE
+	.WAIT $1e
+	.TEXT =CH1_D4_L2 =CH1_D4_L3
+	.TEXT =CH1_D4_L4 =CH1_D4_L5
+	.TEXTBOX_CLOSE
+	.WAIT $1e
+	.TEXT =CH1_D4_L6 =CH1_D4_L7
+	.TEXTB =CH1_D4_L8 =Empty
+	.TEXT =CH1_D4_L9 =CH1_D4_L10
+	.TEXTBOX_CLOSE
+	.WAIT $3c
+	.TEXT =CH1_D4_L11 =CH1_D4_L12
+	.FADEOUT_DARK
+	.WAIT $1e
+	.TEXTBOX_CLOSE
+	.SET_MEM &$mem_bunny_animation $02
+	.WAIT $3c
+	.TEXT =ZZZ =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $3c
+	.TEXT =CH1_D4_L13 =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $1e
+	.TEXT =CH1_D4_L14 =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $78
+	.FADEIN_DARK
+	.WAIT $3c
+	.SET_MEM &$mem_bunny_animation $00
+	.SET_DUNGEON_SELECTION =Dungeon_list.Lonely_Grove
 .END

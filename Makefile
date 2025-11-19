@@ -1,3 +1,5 @@
+SHELL = /bin/bash
+.SHELLFLAGS = -o pipefail -c
 GBASM=gbasm
 MAKESELF=makeself
 

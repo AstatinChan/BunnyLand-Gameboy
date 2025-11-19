@@ -97,10 +97,10 @@ $start:
 	.DB $mem_table_idx
 .END
 
-Dungeon_List:
+All_The_Dungeons:
 .INCLUDE "map/dungeons/morningforest.gbasm"
 .INCLUDE "map/dungeons/campsite.gbasm"
-.ASSERT bank(.) bank(=Dungeon_List)
+.ASSERT bank(.) bank(=All_The_Dungeons)
 
 Big_Menu_Choice_Load_Dungeon:
 	DI
@@ -115,9 +115,17 @@ Big_Menu_Choice_Load_Dungeon:
 	BIT 0, A
 	JR Z, =.wait_fadeout
 	DI
+	XOR A
+	LD $mem_bigmenu_loading_flag, A
+	LD A, $palette_normal
+	LD $mem_prepared_color_palette, A
+	LD A, $obj_palette_normal
+	LD $reg_obj0_palette, A
+	LD A, $obj_palette_frozen
+	LD $reg_obj1_palette, A
 	LD A, $00
 	LD $reg_interrupt_enable, A
-	LD A, bank(=Dungeon_List)
+	LD A, bank(=All_The_Dungeons)
 	LD ($mem_dungeon), A
 	LD A, D
 	LD ($mem_dungeon+1), A

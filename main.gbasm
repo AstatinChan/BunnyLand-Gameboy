@@ -7,6 +7,14 @@ Entrypoint:
 	LD A, $ff
 	LD ($mem_sound_effect_pc), A
 
+	; OBJ0 Palette
+	LD A, $obj_palette_normal
+	LD $reg_obj0_palette, A
+
+	; OBJ1 Palette (frozen, shadow)
+	LD A, $obj_palette_frozen
+	LD $reg_obj1_palette, A
+
 	LD HL, $mem_bunny_attacks
 	LD A, $01
 	LD (HL+), A
@@ -111,10 +119,14 @@ _music_TitleScreen:
 _music_GameOver:
 .INCLUDEBIN "music/game-over.vgm"
 
-Menu_Test_Function:
-	RET
-
-Menu_entries_test:
+Dungeon_list:
+	.Lonely_Grove:
+		.DB bank(=Dungeon_Name_2_Txt)
+		.DB ptr(=Dungeon_Name_2_Txt)
+		.DB bank(=Big_Menu_Choice_Load_Dungeon)
+		.DB ptr(=Big_Menu_Choice_Load_Dungeon)
+		.DB ptr(=Morning_Forest)
+		.PADTO =.Lonely_Grove+8
 	.Morning_Forest:
 		.DB bank(=Dungeon_Name_1_Txt)
 		.DB ptr(=Dungeon_Name_1_Txt)
@@ -124,4 +136,4 @@ Menu_entries_test:
 		.PADTO =.Morning_Forest+8
 
 	.DB $ff
-	.ASSERT bank(.) bank(=Menu_entries_test)
+	.ASSERT bank(.) bank(=Dungeon_list)

@@ -62,7 +62,8 @@
 ; bit 4: animation step should start to go up on next frame
 ; bit 5: if entity collision map should be updated
 ; bit 6: during dungeon generation vblank, whether or not it should skip the wait 1s thingy
-; bit 7: if a dialogue step should be done after (waiting) mode ends
+; bit 7: if a dialogue script is being executed
+;	-> when in animation waiting mode, step should be done after mode ends
 
 .DEFINE mem_number_of_attacks ($c00d)
 .DEFINE mem_entity_being_attacked_low ($c00e)
@@ -222,6 +223,10 @@
 .DEFINE mem_gameover_dialogue_address $c08b ; Takes $c08b-$c08d
 
 .DEFINE mem_campsite_story_state_gameover_backup ($c08e)
+
+.DEFINE mem_bg_palette_dungeon_generation_backup ($c08f)
+
+.DEFINE mem_dungeon_selection_entries_ptr $c090 ; Takes $c090-$c092
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400

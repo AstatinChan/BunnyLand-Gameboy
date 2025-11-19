@@ -79,3 +79,21 @@
 	.DB $dest
 	.DB $src
 .END
+
+.MACRODEF SET_MEM_BIT addr bit
+	.DB $0e
+	.DB $addr
+	.DB low($bit)
+.END
+
+.MACRODEF RES_MEM_BIT addr bit
+	.DB $0f
+	.DB $addr
+	.DB low($bit)
+.END
+
+.MACRODEF SET_DUNGEON_SELECTION =addr
+	.SET_MEM $mem_dungeon_selection_entries_ptr bank(=addr)
+	.SET_MEM $mem_dungeon_selection_entries_ptr+1 high(ptr(=addr))
+	.SET_MEM $mem_dungeon_selection_entries_ptr+2 low(ptr(=addr))
+.END

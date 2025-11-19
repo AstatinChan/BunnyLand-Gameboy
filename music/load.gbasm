@@ -76,7 +76,12 @@ Start_Music:
 	LD ($mem_current_vgm_pc+2), A
 	RET
 
-Loop_Music:
+Loop_Music: ; must be called by play music (stack shenanigans on delayed looping)
+	DBG
+	LD A, $mem_sound_flags
+	BIT 6, A
+	JR NZ, =.dont_loop_yet
+
 	LD A, ($mem_current_vgm_header)
 	.CHANGE_BANK_TO_A
 	LD A, ($mem_current_vgm_header+1)
@@ -145,6 +150,10 @@ Loop_Music:
 	LD A, C
 	LD ($mem_current_vgm_pc+2), A
 	RET
+
+	.dont_loop_yet:
+		ADD SP, 2
+		RET
 
 Stop_Music:
 	LD A, $mem_sound_flags
@@ -243,6 +252,8 @@ Check_Channel_Available:
 
 Play_Music:
 	LD A, $mem_sound_flags
+	BIT 6, A
+	JR NZ, =.start_new_music
 	BIT 0, A
 	RET Z
 	BIT 5, A
@@ -315,3 +326,15 @@ Play_Music:
 	LD A, $saved_rom_bank
 	LD ($mem_current_vgm_pc), A
 	RET
+
+	.start_new_music:
+
+	LD A, $mem_display_flag
+	BIT 2, A
+	RET NZ
+	BIT 4, A
+	RET NZ
+	LD HL, &$mem_sound_flags
+	RES 6, (HL)
+	SET 0, (HL)
+	JP =Start_Music

@@ -819,4 +819,10 @@ Load_Back_Dungeon:
 	DI
 	XOR A
 	LD $mem_bigmenu_loading_flag, A
+	LD A, $palette_normal
+	LD $mem_prepared_color_palette, A
+	LD A, $obj_palette_normal
+	LD $reg_obj0_palette, A
+	LD A, $obj_palette_frozen
+	LD $reg_obj1_palette, A
 	JP =Dungeon_generation_VBlank

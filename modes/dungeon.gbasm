@@ -60,35 +60,20 @@ Update_Animation_Steps:
 	RET NZ
 
 	.Dead_mode:
-	LD A, $mem_current_mode
-	CP $enum_dead_mode
-	RET Z
 	LD A, $mem_map_loading_flags
+	BIT 7, A
+	RET NZ
 	BIT 3, A
-	JR Z, =.Can_Check_Dead_mode
-	LD A, $mem_moving_animation_step
-	CP $00
-	RET Z
+	RET NZ
 
 	.Can_Check_Dead_mode:
-	LD A, $00
-	LD $mem_bunny_direction, A
-	LD A, $02
-	LD $mem_bunny_animation, A
+	; TODO make it part of dialogue script
 	.LOAD_MUSIC =_music_GameOver
 
 	LD A, $mem_sound_flags
 	AND 0b10111110
 	SET 6, A
 	LD $mem_sound_flags, A
-
-	LD A, $enum_dead_mode
-	LD $mem_requested_mode, A
-	LD $mem_current_mode, A
-	CALL =Update_VBlank_Handler
-
-	LD HL, &$mem_map_loading_flags
-	SET 3, (HL)
 
 	LD A, ($mem_gameover_dialogue_address)
 	LD $mem_dialogue_script_bank, A

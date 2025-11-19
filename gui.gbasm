@@ -258,8 +258,6 @@ Check_dialogue_action:
 
 	CP $enum_dungeon_dialogue_mode
 	JR Z, =.Dialogue_Box
-	CP $enum_dead_mode
-	JR Z, =.Dialogue_Box
 
 	LD A, $mem_button_action
 	LD B, A
@@ -389,8 +387,6 @@ Dialogue_Arrow_Animation:
 
 	LD A, $mem_current_mode
 	CP $enum_dungeon_dialogue_mode
-	JR Z, =.dialogue
-	CP $enum_dead_mode
 	JR Z, =.dialogue
 
 	.not_dialogue:

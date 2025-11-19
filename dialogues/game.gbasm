@@ -32,7 +32,17 @@ Placeholder_Dialogue_Script:
 	.END
 
 Gameover_Dialogue_Script:
+	.SET_MEM &$mem_bunny_direction $00
+	.SET_MEM &$mem_bunny_animation $02
+	.WAIT $00
+	.WAIT $b0
 	.TEXT =Game_Over_1_Txt =Empty
+	.WAIT $10
+	.FADEOUT_DARK
+	.WAIT $3c
+	.TEXTBOX_CLOSE
+	.RES_MEM_BIT &$mem_display_flag 7
+	.WAIT $3c
 	.CPY_MEM &$mem_campsite_story_state_gameover_backup &$mem_campsite_story_state
 	.SET_MEM &$mem_campsite_story_state $02
 	.GO_TO_DUNGEON =Camp_Site

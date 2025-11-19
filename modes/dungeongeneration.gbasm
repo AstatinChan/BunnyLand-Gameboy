@@ -31,9 +31,9 @@
 
 New_Dungeon:
 	.ENABLE_MODE_2_INTERRUPT
-	EI
 	.LOAD_MUSIC =_music_Dungeon
 	CALL =Start_Music
+	EI
 
 	LD A, $20
 	LD $mem_bunny_health, A
@@ -92,6 +92,8 @@ New_Floor:
 
 	.floor_count.end:
 
+	LD A, $mem_prepared_color_palette
+	LD $mem_bg_palette_dungeon_generation_backup, A
 	LD A, $07
 	LD $reg_bg_palette, A
 
@@ -266,17 +268,9 @@ Dungeon_generation_VBlank:
 	LD $mem_sound_flags, A
 
 	; BG Palette
-	LD A, $palette_normal
+	LD A, $mem_bg_palette_dungeon_generation_backup
 	LD $reg_bg_palette, A
 	LD $mem_prepared_color_palette, A
-
-	; OBJ0 Palette
-	LD A, $obj_palette_normal
-	LD $reg_obj0_palette, A
-
-	; OBJ1 Palette (frozen, shadow)
-	LD A, $obj_palette_frozen
-	LD $reg_obj1_palette, A
 
 	; Saved thin/bold palette
 	LD A, $palette_bold_font

@@ -23,18 +23,18 @@ Dialogue_VBLANK_Entrypoint:
 	LD $reg_lyc, A
 	.top_bar.end:
 
-	LD A, $mem_current_mode
-	CP $enum_dead_mode
-	JR NZ, =.update_health_mana.end
-		LD HL, $9d60
-		LD A, $mem_bunny_health
-		CALL =Print_8bit
+	; TODO
+	; LD A, $mem_current_mode
+	; CP $enum_dead_mode
+	; JR NZ, =.update_health_mana.end
+	; 	LD HL, $9d60
+	; 	LD A, $mem_bunny_health
+	; 	CALL =Print_8bit
 
-		LD HL, $9d64
-		LD A, $mem_bunny_mana
-		CALL =Print_8bit
-	.update_health_mana.end:
-
+	; 	LD HL, $9d64
+	; 	LD A, $mem_bunny_mana
+	; 	CALL =Print_8bit
+	; .update_health_mana.end:
 
 	CALL =Dialogue_Arrow_Animation
 	CALL =Copy_Dialogue_Buffer
@@ -77,24 +77,7 @@ Dialogue_VBLANK_Entrypoint:
 	INC A
 	LD $mem_loop_frame_timer, A
 
-	LD A, $mem_sound_flags
-	BIT 6, A
-	JR Z, =.Music_Play
-	LD A, $mem_display_flag
-	BIT 2, A
-	JR NZ, =.Sound_Effects_Play
-	BIT 4, A
-	JR NZ, =.Sound_Effects_Play
-	LD A, $mem_sound_flags
-	RES 6, A
-	SET 0, A
-	LD $mem_sound_flags, A
-	CALL =Start_Music
-	JR =.Sound_Effects_Play
-
-	.Music_Play:
 	CALL =Play_Music
-	.Sound_Effects_Play:
 	CALL =Play_Sound_Effect
 
 	.ENABLE_VBLANK_INTERRUPTS

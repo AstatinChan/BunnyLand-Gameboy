@@ -2,6 +2,9 @@ Dialogue_script_step:
 	.ASSERT bank(.) $00
 	.PUSH_BANK
 
+	LD HL, &$mem_map_loading_flags
+	SET 7, (HL)
+
 	LD A, $mem_dialogue_script_bank
 	.CHANGE_BANK_TO_A
 	LD A, ($mem_dialogue_script_program_counter)
@@ -26,7 +29,7 @@ Dialogue_script_step:
 
 Dialogue_script_instruction_Jump_Table:
 	; 00
-	JP =Exit_Menu
+	JP =.End
 	NOP
 
 	; 01
@@ -80,6 +83,20 @@ Dialogue_script_instruction_Jump_Table:
 	; 0D
 	JP =.Cpy_mem
 	NOP
+
+	; 0E
+	JP =.Set_mem_bit
+	NOP
+
+	; 0F
+	JP =.Res_mem_bit
+	NOP
+
+	.End:
+		LD A, $mem_map_loading_flags
+		RES 7, A
+		LD $mem_map_loading_flags, A
+		JP =Exit_Menu
 
 	.Text:
 		LD A, $enum_dungeon_dialogue_mode
@@ -426,10 +443,10 @@ Dialogue_script_instruction_Jump_Table:
 		LD A, $ff
 		LD ($mem_sound_effect_pc), A
 
-		.SET_SOUND_EFFECT =_sound_effect_Next_Floor
+		; .SET_SOUND_EFFECT =_sound_effect_Next_Floor
 
 		JP =New_Dungeon
-	
+
 	.Set_Gameover_Dialogue:
 		LD A, (HL+)
 		LD ($mem_gameover_dialogue_address), A
@@ -454,5 +471,38 @@ Dialogue_script_instruction_Jump_Table:
 		LD A, (DE)
 		LD (BC), A
 
+		ADD SP, 2
+		JP =Dialogue_script_step.next
+	
+	.Set_mem_bit:
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		LD A, (HL+)
+		LD E, A
+		LD D, $00
+		LD A, (DE)
+		LD E, A
+		LD A, (BC)
+		OR E
+		LD (BC), A
+		ADD SP, 2
+		JP =Dialogue_script_step.next
+
+	.Res_mem_bit:
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		LD A, (HL+)
+		LD E, A
+		LD D, $00
+		LD A, (DE)
+		CPL
+		LD E, A
+		LD A, (BC)
+		AND E
+		LD (BC), A
 		ADD SP, 2
 		JP =Dialogue_script_step.next
