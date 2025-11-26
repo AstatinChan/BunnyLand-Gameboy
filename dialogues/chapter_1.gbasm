@@ -1,5 +1,6 @@
 .INCLUDE "dialogues/chapter_1_text.gbasm"
 
+; Initial dialogue when bunny wants to go to morning forest
 CH1_D1:
 	.WAIT $1e
 	.TEXT =Dotdotdot =Empty
@@ -27,15 +28,21 @@ CH1_D1:
 	.SET_MEM &$mem_bunny_animation $00
 	.SET_GAMEOVER_DIALOGUE =Gameover_Dialogue_Script
 	.SET_DUNGEON_SELECTION =Dungeon_list.Morning_Forest
+	.SET_MEM &$mem_campsite_story_state $00
 .END
 
+; Morning forest floor 5 entrance, celery smell
 CH1_D2:
+	.BRANCH_MEM_BIT &$mem_ch1_states_1 0 =.SKIP
 	.TEXTB =CH1_D2_L1 =Empty
 	.TEXT =CH1_D2_L2 =CH1_D2_L3
 	.TEXT =CH1_D2_L4 =Empty
+	.SKIP:
 .END
 
+; Celery found
 CH1_D3:
+	.BRANCH_MEM_BIT &$mem_ch1_states_1 0 =.ALREADY_FOUND
 	.TEXT =CH1_D3_L1 =Empty
 	.TEXT =CH1_D3_L2 =CH1_D3_L3
 	.TEXT =CH1_D3_L4 =Dotdotdot
@@ -45,11 +52,21 @@ CH1_D3:
 	.TEXT =CH1_D3_L7 =Empty
 	.TEXT =CH1_D3_L8 =Empty
 	.TEXT =CH1_D3_L9 =CH1_D3_L10
- 	.SET_MEM &$mem_campsite_story_state $01
+	.SET_MEM &$mem_campsite_story_state $03
+	.SET_MEM_BIT &$mem_ch1_states_1 0
+	.WAIT $3c
+	.GO_TO_DUNGEON =Camp_Site
+.END
+.ALREADY_FOUND:
+	.TEXT =CH1_D3_A1 =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $3c
+	.TEXT =CH1_D3_A2 =CH1_D3_A3
 	.WAIT $3c
 	.GO_TO_DUNGEON =Camp_Site
 .END
 
+; After returning to basecamp
 CH1_D4:
 	.TEXT =CH1_D4_L1 =Dotdotdot
 	.TEXTBOX_CLOSE
@@ -82,4 +99,29 @@ CH1_D4:
 	.WAIT $3c
 	.SET_MEM &$mem_bunny_animation $00
 	.SET_DUNGEON_SELECTION =Dungeon_list.Lonely_Grove
+	.SET_MEM &$mem_campsite_story_state $00
+.END
+
+; Meeting TIN
+CH1_D5:
+	.TEXTB =Unknown_Character =CH1_D5_L1
+	.TEXT =CH1_D5_L2 =CH1_D5_L3
+	.TEXTBOX_CLOSE
+	.WAIT $3c
+	.TEXT =CH1_D5_L4 =Empty
+	.TEXT =CH1_D5_L5 =CH1_D5_L6
+	.TEXT =CH1_D5_L7 =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $3c
+	.TEXT =CH1_D5_L8 =CH1_D5_L9
+	.WAIT $3c
+	; TODO: Shaking animation
+	; TODO: Textbox closing after X amount of time
+	.TEXTB =CH1_D5_L10 =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $3c
+	; TODO: Entity turn around
+	.TEXT =CH1_D5_L11 =Empty
+	.TEXT =CH1_D5_L12 =CH1_D5_L13
+	.TEXT =CH1_D1_L14 =Empty
 .END

@@ -361,6 +361,11 @@
 ;		02: Entity template index (u8 + padding16)
 ; }
 
+; ##### STORY STATE ##### ($cd00 to $cfff)
+.DEFINE mem_campsite_story_state ($cd00)
+.DEFINE mem_ch1_states_1 ($cd01)
+	; bit 0 = golden celery found in morning forest
+
 .DEFINE dbg_var ($dfff)
 
 .DEFINE enum_direction_left $01

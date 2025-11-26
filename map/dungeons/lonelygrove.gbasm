@@ -1,7 +1,7 @@
-Morning_Forest:
+Lonely_Grove:
 	.name:
-		.DB bank(=Dungeon_Name_1_Txt)
-		.DB ptr(=Dungeon_Name_1_Txt)
+		.DB bank(=Dungeon_Name_2_Txt)
+		.DB ptr(=Dungeon_Name_2_Txt)
 
 	.flag: .DB 0b00011110
 
@@ -14,13 +14,13 @@ Morning_Forest:
 	.generation_events.size:
 		.DB low(=.generation_events.end-=.generation_events)
 	.generation_events:
-		.GEN_EVENT_DIALOGUE $05 =CH1_D2
-		.GEN_EVENT_OBJECT_RANDOM_ROOM_SAVE_IDX $05 $6C $09 $mem_generation_event_saved_object_index
-		.GEN_EVENT_ADD_SAVED_OBJECT_PARAMETER $05 $mem_generation_event_saved_object_index bank(=CH1_D3) high(ptr(=CH1_D3)) low(ptr(=CH1_D3)) $00
-		.GEN_EVENT_REMOVE_STAIRS $05
+		.GEN_EVENT_REMOVE_STAIRS $10
+
+		.GEN_EVENT_SPECIAL_ENTITY $10 $0f $06
+		.GEN_EVENT_ENTITY_SET_DIALOGUE $10 $0f =Demo_quest_bunny
 	.generation_events.end:
 
-	.max_floor: .DB 0x05, inv(0x05)
+	.max_floor: .DB 0x0a, inv(0x0a)
 
 	.spawning_patterns:
 		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
@@ -32,4 +32,4 @@ Morning_Forest:
 		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
 		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
 
-.ASSERT bank(=Morning_Forest) bank(.)
+.ASSERT bank(=Lonely_Grove) bank(.)

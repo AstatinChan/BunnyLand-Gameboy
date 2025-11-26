@@ -37,6 +37,11 @@ Entrypoint:
 	BIT 2, A
 	JR NZ, =.DBG_Mode
 
+	LD A, $02
+	LD $mem_campsite_story_state, A
+
+	.Normal_mode:
+
 	LD A, bank(=Camp_Site)
 	LD ($mem_dungeon), A
 	LD HL, ptr(=Camp_Site)
@@ -49,17 +54,11 @@ Entrypoint:
 	JP ptr(=Title_Screen)
 
 	.DBG_Mode:
-	LD A, bank(=Morning_Forest)
-	LD ($mem_dungeon), A
-	LD HL, ptr(=Morning_Forest)
-	LD A, H
-	LD ($mem_dungeon+1), A
-	LD A, L
-	LD ($mem_dungeon+2), A
-
-	CALL =Load_Tile
-
-	JP =New_Dungeon
+	LD A, $03
+	LD $mem_campsite_story_state, A
+	LD A, $01
+	LD $mem_ch1_states_1, A
+	JR =.Normal_mode
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "music/load.gbasm"
@@ -125,7 +124,7 @@ Dungeon_list:
 		.DB ptr(=Dungeon_Name_2_Txt)
 		.DB bank(=Big_Menu_Choice_Load_Dungeon)
 		.DB ptr(=Big_Menu_Choice_Load_Dungeon)
-		.DB ptr(=Morning_Forest)
+		.DB ptr(=Lonely_Grove)
 		.PADTO =.Lonely_Grove+8
 	.Morning_Forest:
 		.DB bank(=Dungeon_Name_1_Txt)

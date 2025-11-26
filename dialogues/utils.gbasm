@@ -97,3 +97,10 @@
 	.SET_MEM $mem_dungeon_selection_entries_ptr+1 high(ptr(=addr))
 	.SET_MEM $mem_dungeon_selection_entries_ptr+2 low(ptr(=addr))
 .END
+
+.MACRODEF BRANCH_MEM_BIT addr bit =branch
+	.DB $10
+	.DB $addr
+	.DB low($bit), bank(=branch)
+	.DB ptr(=branch)
+.END

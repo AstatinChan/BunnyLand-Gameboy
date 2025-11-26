@@ -1,10 +1,35 @@
 .MACRODEF LOAD_MUSIC =music_addr
+	PUSH HL
+	PUSH BC
+	LD HL, &$mem_sound_flags
+	LD A, (HL)
+	BIT 0, (HL)
+	JR Z, =$restart
+	LD A, ($mem_current_vgm_header)
+	LD B, bank(=music_addr)
+	CP B
+	JR NZ, =$restart
+	LD A, ($mem_current_vgm_header+1)
+	LD B, high(ptr(=music_addr))
+	CP B
+	JR NZ, =$restart
+	LD A, ($mem_current_vgm_header+2)
+	LD B, low(ptr(=music_addr))
+	CP B
+	JR Z, =$skip
+
+	$restart:
 	LD A, bank(=music_addr)
 	LD ($mem_current_vgm_header), A
 	LD A, high(ptr(=music_addr))
 	LD ($mem_current_vgm_header+1), A
 	LD A, low(ptr(=music_addr))
 	LD ($mem_current_vgm_header+2), A
+
+	SET 6, (HL)
+	$skip:
+	POP BC
+	POP HL
 .END
 
 Reset_Music_Channels:
@@ -77,7 +102,6 @@ Start_Music:
 	RET
 
 Loop_Music: ; must be called by play music (stack shenanigans on delayed looping)
-	DBG
 	LD A, $mem_sound_flags
 	BIT 6, A
 	JR NZ, =.dont_loop_yet
@@ -336,5 +360,4 @@ Play_Music:
 	RET NZ
 	LD HL, &$mem_sound_flags
 	RES 6, (HL)
-	SET 0, (HL)
 	JP =Start_Music

@@ -30,6 +30,10 @@ CH1_D3_L8: 	I ate it...
 CH1_D3_L9:  I should go back
 CH1_D3_L10: to the camp.
 
+CH1_D3_A1:  It's empty...
+CH1_D3_A2:  But it still
+CH1_D3_A3:  smells of celery.
+
 CH1_D4_L1:  Intense day today
 
 CH1_D4_L2:  I wish I hadn't
@@ -48,3 +52,19 @@ CH1_D4_L12: sleep first.
 CH1_D4_L13: Hmmmmm...
 CH1_D4_L14: Celery...
 
+CH1_D5_L1: 	Hi.
+CH1_D5_L2: 	Was I the one
+CH1_D5_L3: 	crying for help ?
+CH1_D5_L4: 	I'm sorry.
+CH1_D5_L5:  I'm not who you
+CH1_D5_L6:  are looking for.
+CH1_D5_L7:	I was just...
+CH1_D5_L8:  Having a walk
+CH1_D5_L9:  I guess ?...
+
+CH1_D5_L10: *BOOOOOOOM*
+
+CH1_D5_L11: What was that ?!
+CH1_D5_L12: It's coming from
+CH1_D5_L13: over there !
+CH1_D5_L14: Follow me !

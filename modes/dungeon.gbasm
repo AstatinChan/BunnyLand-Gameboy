@@ -35,7 +35,7 @@ Update_Animation_Steps:
 	LD A, $mem_current_mode
 	CP $enum_animation_wait_mode
 	JR Z, =.end
-	; We need to make sure that the mode doesn't change to a mode with objects update while a dialogue box refresh is currently being done
+	; We need to make sure that the mode doesn't change to a mode with objects update b/music/load.gbasmwhile a dialogue box refresh is currently being done
 	LD A, $mem_current_mode
 	AND $0f
 	CP $01
@@ -67,13 +67,10 @@ Update_Animation_Steps:
 	RET NZ
 
 	.Can_Check_Dead_mode:
-	; TODO make it part of dialogue script
 	.LOAD_MUSIC =_music_GameOver
 
-	LD A, $mem_sound_flags
-	AND 0b10111110
-	SET 6, A
-	LD $mem_sound_flags, A
+	LD HL, &$mem_sound_flags
+	SET 0, (HL)
 
 	LD A, ($mem_gameover_dialogue_address)
 	LD $mem_dialogue_script_bank, A

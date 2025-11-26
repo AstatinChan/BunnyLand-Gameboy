@@ -32,7 +32,6 @@
 New_Dungeon:
 	.ENABLE_MODE_2_INTERRUPT
 	.LOAD_MUSIC =_music_Dungeon
-	CALL =Start_Music
 	EI
 
 	LD A, $20
@@ -190,6 +189,7 @@ New_Floor:
 	LD $mem_oam_buffer_low, A
 	CALL =Display_Entities
 
+	LD A, $mem_campsite_story_state
 	CALL =Generation_Event_Execution
 
 	LD HL, $mem_entities_list

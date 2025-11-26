@@ -92,6 +92,10 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Res_mem_bit
 	NOP
 
+	; 10
+	JP =.Branch_mem_bit
+	NOP
+
 	.End:
 		LD A, $mem_map_loading_flags
 		RES 7, A
@@ -505,4 +509,36 @@ Dialogue_script_instruction_Jump_Table:
 		AND E
 		LD (BC), A
 		ADD SP, 2
+		JP =Dialogue_script_step.next
+
+	.Branch_mem_bit:
+		ADD SP, 2
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		LD A, (HL+)
+		LD E, A
+		LD D, $00
+		LD A, (DE)
+		LD E, A
+		LD A, (BC)
+		AND E
+		LD A, (HL+)
+		LD E, A
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		JP Z, =Dialogue_script_step.next
+
+		LD A, E
+		LD $mem_dialogue_script_bank, A
+		.CHANGE_BANK_TO_A
+		LD A, B
+		LD H, A
+		LD ($mem_dialogue_script_program_counter), A
+		LD A, C
+		LD L, A
+		LD ($mem_dialogue_script_program_counter+1), A
 		JP =Dialogue_script_step.next

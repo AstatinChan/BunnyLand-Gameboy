@@ -29,16 +29,21 @@ Camp_Site:
 
 Camp_Site_Dialogue_Jump_Table:
 	; 00
+	.DB bank(=Campsite_normal_sleep)
+	.DB ptr(=Campsite_normal_sleep)
+
+	; 01
+	.DB bank(=Gameover_Campsite)
+	.DB ptr(=Gameover_Campsite)
+
+	; 02
 	.DB bank(=CH1_D1)
 	.DB ptr(=CH1_D1)
 
-	; 01
+	; 03
 	.DB bank(=CH1_D4)
 	.DB ptr(=CH1_D4)
 
-	; 02
-	.DB bank(=Gameover_Campsite)
-	.DB ptr(=Gameover_Campsite)
 
 Camp_Site_Fire_Animation:
 	LD HL, $981e
