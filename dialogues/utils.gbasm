@@ -110,3 +110,11 @@
 	.DB $first_line
 	.DB $second_line
 .END
+
+.MACRODEF SHAKING level frames
+	.DB $12 low($level) low($frames)
+.END
+
+.MACRODEF ENTITY_TURN_AROUND entity_idx
+	.DB $13 low($entity_idx)
+.END

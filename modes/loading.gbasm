@@ -34,6 +34,9 @@ Loading_VBLANK_Entrypoint:
 		.BANK_CALL_A_DE
 	.skip_custom_function:
 
+	LD HL, $mem_entities_list
+	.BANK_CALL =Center_viewport_around_entity
+
 	CALL $OAM_DMA_Transfer_routine
 	CALL =Loading_Mode_VBlank
 	CALL =Dialogue_Arrow_Animation

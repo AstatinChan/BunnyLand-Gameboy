@@ -166,6 +166,7 @@
 .DEFINE mem_display_flag_2 ($c04c)
 ; bit 0: if 1 => disabling center viewport around bunny
 ; bit 1: if 1 => entities display disabled
+; bit 2: if 1 => entity screen position will be changed by $mem_entities_display_offset_x & $mem_entities_display_offset_y
 ; bit 3: if 1 => dialogue script executed right after dialogue box loaded (no waiting for input)
 
 .DEFINE mem_prepared_loading_block_position $c04e ; Takes $c04e-$c04f
@@ -228,6 +229,18 @@
 .DEFINE mem_bg_palette_dungeon_generation_backup ($c08f)
 
 .DEFINE mem_dungeon_selection_entries_ptr $c090 ; Takes $c090-$c092
+
+.DEFINE mem_shaking_animation_level ($c093)
+	; efaaEFAA
+	; e = enable x shaking
+	; f = frequency x (1 = high, 0 = low)
+	; a = amplitude x
+	; E = enable y shaking
+	; F = frequency y
+	; A = amplitude y
+
+.DEFINE mem_entities_display_offset_x ($c094)
+.DEFINE mem_entities_display_offset_y ($c095)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400

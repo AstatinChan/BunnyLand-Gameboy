@@ -17,7 +17,7 @@ Lonely_Grove:
 		.GEN_EVENT_REMOVE_STAIRS $10
 
 		.GEN_EVENT_SPECIAL_ENTITY $10 $0f $06
-		.GEN_EVENT_ENTITY_SET_DIALOGUE $10 $0f =Demo_quest_bunny
+		.GEN_EVENT_ENTITY_SET_DIALOGUE $10 $0f =CH1_D5
 	.generation_events.end:
 
 	.max_floor: .DB 0x0a, inv(0x0a)

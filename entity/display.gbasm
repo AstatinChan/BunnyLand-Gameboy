@@ -262,6 +262,19 @@ Display_Entity:
 		LD C, A
 	.Moving_Hops.end:
 
+	.Entity_Offset:
+		LD A, $mem_display_flag_2
+		AND $04
+		JR Z, =.Entity_Offset.end
+		LD A, $mem_entities_display_offset_y
+		ADD C
+		LD C, A
+
+		LD A, $mem_entities_display_offset_x
+		ADD B
+		LD B, A
+	.Entity_Offset.end:
+
 	LD A, D
 	SWAP A
 	AND $07

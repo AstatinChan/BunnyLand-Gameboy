@@ -125,8 +125,9 @@ Custom corridor/ kinda similar to basecamp floor with a mouse trapped at the end
 ## Battle ##
 
 TODO:
--> Dialogues that are not controlled by buttons but timer
--> shaking animation that can be started from dialogue scripts
 -> script entity movements
 -> script camera movement
 -> smoother transition between levels
+-> script music control
+-> music for campsite & boss music
+-> boom sound effect

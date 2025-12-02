@@ -3,6 +3,7 @@ Animation_Wait_Mode:
 	CP $enum_animation_wait_mode
 	RET NZ
 
+	.as_loading_regular:
 	LD A, $mem_animation_wait_frames
 	DEC A
 	LD $mem_animation_wait_frames, A
@@ -153,3 +154,4 @@ Animation_Jump_table:
 .INCLUDE "animations/laser.gbasm"
 .INCLUDE "animations/bubbles.gbasm"
 .INCLUDE "animations/fadeout.gbasm
+.INCLUDE "animations/shaking.gbasm"

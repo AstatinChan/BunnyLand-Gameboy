@@ -100,6 +100,14 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.TextB_Timer
 	NOP
 
+	; 12
+	JP =.Shaking
+	NOP
+
+	; 13
+	JP =.Entity_Turn_Around
+	NOP
+
 	.End:
 		LD A, $mem_map_loading_flags
 		RES 7, A
@@ -481,7 +489,7 @@ Dialogue_script_instruction_Jump_Table:
 
 		ADD SP, 2
 		JP =Dialogue_script_step.next
-	
+
 	.Set_mem_bit:
 		LD A, (HL+)
 		LD B, A
@@ -553,3 +561,55 @@ Dialogue_script_instruction_Jump_Table:
 		LD $mem_display_flag_2, A
 
 		JP =.TextB
+
+	.Shaking:
+		LD A, (HL+)
+		LD $mem_shaking_animation_level, A
+
+		LD A, (HL+)
+		LD $mem_animation_wait_frames, A
+
+		LD A, high(=Shaking_Loading_VBlank)
+		LD $mem_loading_mode_vblank_func_pointer_high, A
+		LD A, low(=Shaking_Loading_VBlank)
+		LD $mem_loading_mode_vblank_func_pointer_low, A
+		LD A, high(=Animation_Wait_Mode.as_loading_regular)
+		LD $mem_loading_mode_regular_func_pointer_high, A
+		LD A, low(=Animation_Wait_Mode.as_loading_regular)
+		LD $mem_loading_mode_regular_func_pointer_low, A
+
+		LD A, $enum_loading_mode
+		LD $mem_requested_mode, A
+
+		LD A, $mem_map_loading_flags
+		SET 7, A
+		LD $mem_map_loading_flags, A
+		RET
+	
+	.Entity_Turn_Around:
+		LD A, (HL+)
+		SWAP A
+		ADD $03
+		PUSH HL
+		LD L, A
+		LD H, high($mem_entities_list)
+
+		LD A, (HL)
+		DBG
+		AND $70
+		SWAP A
+		DEC A
+		XOR $01
+		INC A
+		SWAP A
+		LD B, A
+		LD A, $8f
+		AND (HL)
+		DBG
+		OR B
+		DBG
+		LD (HL), A
+
+		POP HL
+		ADD SP, 2
+		JP =Dialogue_script_step.next

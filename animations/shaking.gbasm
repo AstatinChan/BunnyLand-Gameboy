@@ -1,0 +1,69 @@
+Shaking_Loading_VBlank:
+	LD A, $mem_loading_step
+	INC A
+	LD $mem_loading_step, A
+	LD HL, &$mem_display_flag_2
+	SET 2, (HL)
+
+
+	LD A, $mem_shaking_animation_level 
+	SWAP A
+	AND $0f
+	BIT 3, A
+	RES 3, A
+	LD E, A
+	JR Z, =.skip_x_shaking
+
+	LD A, $mem_prepared_viewport_x
+	LD B, A
+	CALL =shaking
+	LD C, A
+	ADD B
+	LD $mem_prepared_viewport_x, A
+	LD A, C
+	SRA A
+	LD $mem_entities_display_offset_x, A
+	.skip_x_shaking:
+
+	LD A, $mem_shaking_animation_level 
+	AND $0f
+	BIT 3, A
+	RES 3, A
+	LD E, A
+	JR Z, =.skip_y_shaking
+
+	LD A, $mem_prepared_viewport_y
+	LD B, A
+	CALL =shaking
+	LD C, A
+	ADD B
+	LD $mem_prepared_viewport_y, A
+	LD A, C
+	LD $mem_entities_display_offset_y, A
+	.skip_y_shaking:
+
+	LD A, $mem_loading_step
+	RET
+
+shaking: ; Shaking level in E (only lowest nibble), return offset depending on mem_loading_step to A
+	LD A, $mem_loading_step
+	BIT 2, E
+	RES 2, E
+	JR NZ, =.skip_lower_frequency
+	SRA A
+	.skip_lower_frequency:
+	AND $03
+	BIT 1, A
+	RES 1, A
+	JR NZ, =.skip_invert
+	CPL
+	INC A
+	.skip_invert:
+	INC E
+	.amplitude:
+	DEC E
+	JR Z, =.amplitude_end
+	ADD A
+	JR =.amplitude
+	.amplitude_end:
+	RET

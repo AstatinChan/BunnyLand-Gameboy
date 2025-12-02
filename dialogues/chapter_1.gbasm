@@ -3,8 +3,7 @@
 ; Initial dialogue when bunny wants to go to morning forest
 CH1_D1:
 	.WAIT $1e
-	.TEXTB_TIMER =Dotdotdot =Empty
-	.WAIT $3c
+	.TEXTB =Dotdotdot =Empty
 	.TEXTBOX_CLOSE
 	.WAIT $3c
 	.TEXTB =Thoughts_Header_Text =CH1_D1_L1
@@ -115,14 +114,26 @@ CH1_D5:
 	.TEXTBOX_CLOSE
 	.WAIT $3c
 	.TEXT =CH1_D5_L8 =CH1_D5_L9
-	.WAIT $3c
-	; TODO: Shaking animation
-	; TODO: Textbox closing after X amount of time
-	.TEXTB =CH1_D5_L10 =Empty
 	.TEXTBOX_CLOSE
 	.WAIT $3c
-	; TODO: Entity turn around
+	.TEXTB_TIMER =CH1_D5_L10 =Empty
+	.SHAKING $ed $10
+	.ENTITY_TURN_AROUND $0f
+	.SHAKING $d9 $3c
+	.TEXTBOX_CLOSE
+	.SHAKING $98 $10
+	.SHAKING $80 $08
+	.WAIT $3c
+	.ENTITY_TURN_AROUND $0f
 	.TEXT =CH1_D5_L11 =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $1e
+	.ENTITY_TURN_AROUND $0f
+	.WAIT $1e
 	.TEXT =CH1_D5_L12 =CH1_D5_L13
-	.TEXT =CH1_D1_L14 =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $1e
+	.ENTITY_TURN_AROUND $0f
+	.WAIT $1e
+	.TEXT =CH1_D5_L14 =Empty
 .END
