@@ -3,7 +3,8 @@
 ; Initial dialogue when bunny wants to go to morning forest
 CH1_D1:
 	.WAIT $1e
-	.TEXT =Dotdotdot =Empty
+	.TEXTB_TIMER =Dotdotdot =Empty
+	.WAIT $3c
 	.TEXTBOX_CLOSE
 	.WAIT $3c
 	.TEXTB =Thoughts_Header_Text =CH1_D1_L1

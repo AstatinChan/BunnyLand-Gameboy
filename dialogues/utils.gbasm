@@ -104,3 +104,9 @@
 	.DB low($bit), bank(=branch)
 	.DB ptr(=branch)
 .END
+
+.MACRODEF TEXTB_TIMER first_line second_line
+	.DB $11
+	.DB $first_line
+	.DB $second_line
+.END

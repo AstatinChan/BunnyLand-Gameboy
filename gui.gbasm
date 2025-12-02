@@ -385,6 +385,9 @@ Dialogue_Arrow_Animation:
 	BIT 0, A
 	RET Z
 
+	LD A, $mem_display_flag_2
+	BIT 3, A
+	JR NZ, =.not_dialogue
 	LD A, $mem_current_mode
 	CP $enum_dungeon_dialogue_mode
 	JR Z, =.dialogue

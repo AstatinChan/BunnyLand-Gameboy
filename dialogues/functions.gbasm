@@ -96,6 +96,10 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Branch_mem_bit
 	NOP
 
+	; 11
+	JP =.TextB_Timer
+	NOP
+
 	.End:
 		LD A, $mem_map_loading_flags
 		RES 7, A
@@ -542,3 +546,10 @@ Dialogue_script_instruction_Jump_Table:
 		LD L, A
 		LD ($mem_dialogue_script_program_counter+1), A
 		JP =Dialogue_script_step.next
+
+	.TextB_Timer:
+		LD A, $mem_display_flag_2
+		OR $08
+		LD $mem_display_flag_2, A
+
+		JP =.TextB

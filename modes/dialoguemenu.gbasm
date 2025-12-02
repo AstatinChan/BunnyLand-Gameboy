@@ -40,6 +40,20 @@ Dialogue_VBLANK_Entrypoint:
 	CALL =Copy_Dialogue_Buffer
 	CALL =Display_dialogue_cursor
 
+	.automatic_dialogue_step:
+	LD A, $mem_display_flag
+	AND $14
+	LD B, A
+	LD A, $mem_display_flag_2
+	AND $08
+	OR B
+	CP $08
+	JP NZ, =.skip_automatic_dialogue_step
+		LD HL, &$mem_display_flag_2
+		RES 3, (HL)
+		CALL =Dialogue_script_step
+	.skip_automatic_dialogue_step:
+
 	LD A, $mem_dungeon_flags
 	BIT 5, A
 	JR Z, =.skip_custom_function

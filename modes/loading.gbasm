@@ -36,6 +36,7 @@ Loading_VBLANK_Entrypoint:
 
 	CALL $OAM_DMA_Transfer_routine
 	CALL =Loading_Mode_VBlank
+	CALL =Dialogue_Arrow_Animation
 
 	; LYC
 	LD A, $0a

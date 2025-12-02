@@ -123,3 +123,10 @@ Custom corridor/ kinda similar to basecamp floor with a mouse trapped at the end
 
 	TIN: There's someone over there ! We need to save them !
 ## Battle ##
+
+TODO:
+-> Dialogues that are not controlled by buttons but timer
+-> shaking animation that can be started from dialogue scripts
+-> script entity movements
+-> script camera movement
+-> smoother transition between levels

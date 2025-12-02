@@ -166,6 +166,7 @@
 .DEFINE mem_display_flag_2 ($c04c)
 ; bit 0: if 1 => disabling center viewport around bunny
 ; bit 1: if 1 => entities display disabled
+; bit 3: if 1 => dialogue script executed right after dialogue box loaded (no waiting for input)
 
 .DEFINE mem_prepared_loading_block_position $c04e ; Takes $c04e-$c04f
 .DEFINE mem_prepared_loading_block_tile $c050 ; Takes $c050-c054
