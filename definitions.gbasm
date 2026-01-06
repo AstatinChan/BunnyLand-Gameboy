@@ -197,6 +197,7 @@
 ; 	bit 4 = 1 => sound effect playing on channel 4 (music should not use it)
 ;	bit 5 = 1 => $mem_sound_effect_frame_count is going down
 ;	bit 6 = 1 => Start_Music call is requested
+;	bit 7 = 1 => Start_Music is currently ignored
 
 .DEFINE mem_sound_effect_frame_count ($c077)
 

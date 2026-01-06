@@ -1,3 +1,16 @@
+Load_Dungeon_Music: ; pointer to Dungeon struct in HL, bank in A
+	.CHANGE_BANK_TO_A
+	LD BC, $0a
+	ADD HL, BC
+	LD A, (HL+)
+	LD E, A
+	LD A, (HL+)
+	LD B, A
+	LD A, (HL+)
+	LD C, A
+	CALL =Load_Music
+	RET
+
 Load_Dungeon_Infos: ; pointer to Dungeon struct in HL, bank in A
 	; Load_Dungeon_Txt
 	LD D, A
@@ -71,6 +84,10 @@ Load_Dungeon_Infos: ; pointer to Dungeon struct in HL, bank in A
 	LD A, (HL+)
 	LD ($mem_dungeon_custom_vblank_function+2), A
 
+	INC HL
+	INC HL
+	INC HL
+
 	; Load_Generation_Events
 	LD A, D
 	.CHANGE_BANK_TO_A
@@ -99,7 +116,7 @@ Load_Dungeon_Spawn_patterns: ; pointer to Dungeon struct in HL bank in A
 	BIT 2, A
 	RET Z
 	LD A, L
-	ADD $0a
+	ADD $0d
 	LD L, A
 	LD A, H
 	ADC $00

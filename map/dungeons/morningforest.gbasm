@@ -11,6 +11,10 @@ Morning_Forest:
 	.custom_function:
 		.PADTO =.custom_function+3
 
+	.music:
+		.DB bank(=_music_Dungeon)
+		.DB ptr(=_music_Dungeon)
+
 	.generation_events.size:
 		.DB low(=.generation_events.end-=.generation_events)
 	.generation_events:

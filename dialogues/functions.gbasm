@@ -595,7 +595,6 @@ Dialogue_script_instruction_Jump_Table:
 		LD H, high($mem_entities_list)
 
 		LD A, (HL)
-		DBG
 		AND $70
 		SWAP A
 		DEC A
@@ -605,9 +604,7 @@ Dialogue_script_instruction_Jump_Table:
 		LD B, A
 		LD A, $8f
 		AND (HL)
-		DBG
 		OR B
-		DBG
 		LD (HL), A
 
 		POP HL

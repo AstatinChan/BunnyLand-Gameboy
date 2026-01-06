@@ -12,6 +12,10 @@ Camp_Site:
 	.custom_function:
 		.DB bank(=Camp_Site_Fire_Animation)
 		.DB ptr(=Camp_Site_Fire_Animation)
+	
+	.music:
+		.DB bank(=_music_BaseCamp)
+		.DB ptr(=_music_BaseCamp)
 
 	.generation_events.size_padding:
 		.DB low(=.generation_events.end-=.generation_events)

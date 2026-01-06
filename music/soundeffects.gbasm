@@ -58,6 +58,14 @@ Play_Sound_Effect:
 	PUSH DE
 	RET
 
+.MACRODEF CLEAR_SOUND_EFFECT
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+.END
+
 .MACRODEF SET_SOUND_EFFECT =addr
 	PUSH AF
 	LD A, $mem_sound_flags

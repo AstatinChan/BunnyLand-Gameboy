@@ -10,6 +10,7 @@
 ;		C = whether or not there is a custom function to be executed every frame
 ; 	tilemap: ptr (u24=bank+ptr)
 ;	custom_function: ptr (u24=bank+ptr)
+;   music: ptr (u24=bank+ptr)
 ; 	generation_event_size: u8 (size of the generation_eents_structure
 ; 	generation_events: [x]struct (8 bytes) {
 ; 		...see definitions

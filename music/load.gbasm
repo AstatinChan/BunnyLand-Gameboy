@@ -1,36 +1,43 @@
 .MACRODEF LOAD_MUSIC =music_addr
-	PUSH HL
 	PUSH BC
-	LD HL, &$mem_sound_flags
-	LD A, (HL)
-	BIT 0, (HL)
-	JR Z, =$restart
-	LD A, ($mem_current_vgm_header)
-	LD B, bank(=music_addr)
-	CP B
-	JR NZ, =$restart
-	LD A, ($mem_current_vgm_header+1)
-	LD B, high(ptr(=music_addr))
-	CP B
-	JR NZ, =$restart
-	LD A, ($mem_current_vgm_header+2)
-	LD B, low(ptr(=music_addr))
-	CP B
-	JR Z, =$skip
+	PUSH DE
+	LD E, bank(=music_addr)
+	LD BC, ptr(=music_addr)
+	CALL =Load_Music
+	POP DE
+	POP BC
+.END
 
-	$restart:
-	LD A, bank(=music_addr)
+
+Load_Music: ; Bank in E, Address in BC
+	PUSH HL
+	LD HL, &$mem_sound_flags
+	BIT 0, (HL)
+	JR Z, =.restart
+	PUSH BC
+	LD A, ($mem_current_vgm_header)
+	CP E
+	POP BC
+	JR NZ, =.restart
+	LD A, ($mem_current_vgm_header+1)
+	CP B
+	JR NZ, =.restart
+	LD A, ($mem_current_vgm_header+2)
+	CP C
+	JR Z, =.skip
+
+	.restart:
+	LD A, E
 	LD ($mem_current_vgm_header), A
-	LD A, high(ptr(=music_addr))
+	LD A, B
 	LD ($mem_current_vgm_header+1), A
-	LD A, low(ptr(=music_addr))
+	LD A, C
 	LD ($mem_current_vgm_header+2), A
 
 	SET 6, (HL)
-	$skip:
-	POP BC
+	.skip:
 	POP HL
-.END
+	RET
 
 Reset_Music_Channels:
 	CALL =Reset_Music_Channel4
@@ -352,6 +359,9 @@ Play_Music:
 	RET
 
 	.start_new_music:
+	LD HL, &$mem_sound_flags
+	BIT 7, (HL)
+	JP NZ, =Reset_Music_Channels
 
 	LD A, $mem_display_flag
 	BIT 2, A

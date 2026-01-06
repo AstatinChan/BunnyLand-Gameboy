@@ -31,7 +31,8 @@
 
 New_Dungeon:
 	.ENABLE_MODE_2_INTERRUPT
-	.LOAD_MUSIC =_music_Dungeon
+	.CLEAR_SOUND_EFFECT
+	.SET_SOUND_EFFECT =_sound_effect_Fadeout
 	EI
 
 	LD A, $20
@@ -264,7 +265,9 @@ Dungeon_generation_VBlank:
 	LD A, $mem_sound_flags
 	CP $00
 	CALL Z, =Reset_Music_Channels
-	LD A, $01
+	LD A, $mem_sound_flags
+	AND $c0
+	OR $01
 	LD $mem_sound_flags, A
 
 	; BG Palette
@@ -283,6 +286,17 @@ Dungeon_generation_VBlank:
 	CALL =Update_VBlank_Handler
 	.ENABLE_VBLANK_INTERRUPTS
 
+	LD A, $77
+	LD ($24), A
+	LD A, $8f
+	LD ($26), A
+	LD HL, &$mem_sound_flags
+	LD A, ($mem_dungeon+1)
+	LD H, A
+	LD A, ($mem_dungeon+2)
+	LD L, A
+	LD A, ($mem_dungeon)
+	CALL =Load_Dungeon_Music
 	EI
 
 	Wait_for_Interrupt.loop:

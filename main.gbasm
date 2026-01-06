@@ -109,10 +109,13 @@ Entrypoint:
 .INCLUDE "music/soundeffects/freeze.gbasm"
 .INCLUDE "music/soundeffects/bite.gbasm"
 .INCLUDE "music/soundeffects/grab.gbasm"
+.INCLUDE "music/soundeffects/fadeout.gbasm"
 .ASSERT bank(.) $02
 
 _music_Dungeon:
 .INCLUDEBIN "music/morning-forest.vgm"
+_music_BaseCamp:
+.INCLUDEBIN "music/basecamp.vgm"
 _music_TitleScreen:
 .INCLUDEBIN "music/title-screen.vgm"
 _music_GameOver:

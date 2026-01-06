@@ -566,7 +566,7 @@ Big_Menu_Check_Confirm:
 	RET
 
 	.confirm:
-	.SET_SOUND_EFFECT =_sound_effect_Click
+	; .SET_SOUND_EFFECT =_sound_effect_Click
 	LD A, $mem_bigmenu_loading_flag
 	BIT 5, A
 	JR NZ, =.choose_confirm_option
