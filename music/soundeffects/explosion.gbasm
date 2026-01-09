@@ -1,0 +1,116 @@
+_sound_effect_Explosion:
+	LD A, $mem_sound_flags
+	SET 2, A
+	SET 4, A
+	LD $mem_sound_flags, A
+
+	LD A, $3f
+	LD ($16), A
+	LD A, $f0
+	LD ($17), A
+	LD A, $c9
+	LD ($18), A
+	LD A, $81
+	LD ($19), A
+	LD A, $00
+	LD ($20), A
+	LD A, $f8
+	LD ($21), A
+	LD A, $64
+	LD ($22), A
+	LD A, $80
+	LD ($23), A
+
+	.RET_WAIT_X_NEXT_FRAME $0c
+
+	LD A, $80
+	LD ($17), A
+	LD A, $c8
+	LD ($21), A
+	LD A, $80
+	LD ($23), A
+	LD A, $81
+	LD ($19), A
+
+	.RET_WAIT_X_NEXT_FRAME $0c
+
+	LD A, $60
+	LD ($17), A
+	LD A, $88
+	LD ($21), A
+	LD A, $80
+	LD ($23), A
+	LD A, $00
+	LD ($20), A
+	LD A, $81
+	LD ($19), A
+
+	.RET_WAIT_X_NEXT_FRAME $18
+
+	LD A, $40
+	LD ($17), A
+	LD A, $48
+	LD ($21), A
+	LD A, $00
+	LD ($20), A
+	LD A, $80
+	LD ($23), A
+	LD A, $81
+	LD ($19), A
+
+	.RET_WAIT_X_NEXT_FRAME $18
+
+	LD A, $30
+	LD ($17), A
+	LD A, $38
+	LD ($21), A
+	LD A, $00
+	LD ($20), A
+	LD A, $80
+	LD ($23), A
+	LD A, $81
+	LD ($19), A
+
+	.RET_WAIT_X_NEXT_FRAME $18
+
+	LD A, $20
+	LD ($17), A
+	LD A, $28
+	LD ($21), A
+	LD A, $00
+	LD ($20), A
+	LD A, $80
+	LD ($23), A
+	LD A, $81
+	LD ($19), A
+
+	.RET_WAIT_X_NEXT_FRAME $30
+
+	LD A, $10
+	LD ($17), A
+	LD A, $18
+	LD ($21), A
+	LD A, $00
+	LD ($20), A
+	LD A, $80
+	LD ($23), A
+	LD A, $81
+	LD ($19), A
+
+	.RET_WAIT_X_NEXT_FRAME $30
+	
+	LD A, $00
+	LD ($17), A
+	LD A, $00
+	LD ($21), A
+	LD A, $00
+	LD ($20), A
+	LD A, $81
+	LD ($19), A
+
+	LD A, $mem_sound_flags
+	AND 0b11000001
+	LD $mem_sound_flags, A
+	LD A, $ff
+	LD ($mem_sound_effect_pc), A
+	RET

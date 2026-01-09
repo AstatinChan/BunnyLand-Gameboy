@@ -39,10 +39,16 @@ New_Dungeon:
 	LD $mem_bunny_health, A
 	LD A, $30
 	LD $mem_bunny_mana, A
-	LD A, $01
-	LD $mem_floor_count, A
-	LD A, $00
-	LD $mem_floor_count_bin, A
+
+	LD HL, &$mem_debug_flags
+	BIT 0, (HL)
+	JR NZ, =.skip_floor_reset
+		LD A, $01
+		LD $mem_floor_count, A
+		LD A, $00
+		LD $mem_floor_count_bin, A
+	.skip_floor_reset:
+	RES 0, (HL)
 
 	LD A, ($mem_dungeon+1)
 	LD H, A

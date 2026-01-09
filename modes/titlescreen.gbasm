@@ -113,6 +113,10 @@ Check_Frame_stuff:
 	BIT 3, A
 	JR NZ, =Title_Screen_Start_Pressed
 
+	LD A, $mem_button_action
+	BIT 2, A
+	CALL NZ, =DBG_Mode
+
 	POP AF
 	CALL =Next_VBlank_Wait
 	RET
@@ -158,3 +162,29 @@ Title_Screen_Start_Pressed:
 	CALL =Load_Tile
 
 	JP =New_Dungeon
+
+DBG_Mode:
+	LD A, bank(=Lonely_Grove)
+	LD ($mem_dungeon), A
+	LD HL, ptr(=Lonely_Grove)
+	LD A, H
+	LD ($mem_dungeon+1), A
+	LD A, L
+	LD ($mem_dungeon+2), A
+
+	LD A, $03
+	LD $mem_campsite_story_state, A
+	LD A, $01
+	LD $mem_ch1_states_1, A
+	LD A, $8d
+	LD ($9800), A
+
+	LD A, $10
+	LD $mem_floor_count, A
+	LD A, $0a
+	LD $mem_floor_count_bin, A
+
+	LD A, $01
+	LD $mem_debug_flags, A
+
+	RET

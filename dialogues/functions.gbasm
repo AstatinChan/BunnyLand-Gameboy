@@ -108,6 +108,14 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Entity_Turn_Around
 	NOP
 
+	; 14
+	JP =.Reset_Sound_Channels
+	NOP
+
+	; 15
+	JP =.Play_Sound_Effect
+	NOP
+
 	.End:
 		LD A, $mem_map_loading_flags
 		RES 7, A
@@ -608,5 +616,23 @@ Dialogue_script_instruction_Jump_Table:
 		LD (HL), A
 
 		POP HL
+		ADD SP, 2
+		JP =Dialogue_script_step.next
+	
+	.Reset_Sound_Channels:
+		CALL =Reset_Music_Channels
+		.CLEAR_SOUND_EFFECT
+		ADD SP, 2
+		JP =Dialogue_script_step.next
+	
+	.Play_Sound_Effect:
+		.CLEAR_SOUND_EFFECT
+
+		LD A, (HL+)
+		LD ($mem_sound_effect_pc), A
+		LD A, (HL+)
+		LD ($mem_sound_effect_pc+1), A
+		LD A, (HL+)
+		LD ($mem_sound_effect_pc+2), A
 		ADD SP, 2
 		JP =Dialogue_script_step.next

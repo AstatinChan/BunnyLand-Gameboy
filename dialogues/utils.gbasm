@@ -118,3 +118,13 @@
 .MACRODEF ENTITY_TURN_AROUND entity_idx
 	.DB $13 low($entity_idx)
 .END
+
+.MACRODEF RESET_SOUND_CHANNELS
+	.DB $14
+.END
+
+.MACRODEF PLAY_SOUND_EFFECT =sound_effect
+	.DB $15
+	.DB bank(=sound_effect)
+	.DB ptr(=sound_effect)
+.END

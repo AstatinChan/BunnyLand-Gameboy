@@ -32,15 +32,8 @@ Entrypoint:
 	LD A, low(ptr(=Gameover_Dialogue_Script))
 	LD ($mem_gameover_dialogue_address+2), A
 
-	CALL =Pad_Button_Check
-	LD A, $mem_button_action
-	BIT 2, A
-	JR NZ, =.DBG_Mode
-
 	LD A, $02
 	LD $mem_campsite_story_state, A
-
-	.Normal_mode:
 
 	LD A, bank(=Camp_Site)
 	LD ($mem_dungeon), A
@@ -50,15 +43,10 @@ Entrypoint:
 	LD A, L
 	LD ($mem_dungeon+2), A
 
+	.Normal_mode:
+
 	.LOAD_BANK_OF =Title_Screen
 	JP ptr(=Title_Screen)
-
-	.DBG_Mode:
-	LD A, $03
-	LD $mem_campsite_story_state, A
-	LD A, $01
-	LD $mem_ch1_states_1, A
-	JR =.Normal_mode
 
 .INCLUDE "tiles.gbasm"
 .INCLUDE "music/load.gbasm"
@@ -110,6 +98,7 @@ Entrypoint:
 .INCLUDE "music/soundeffects/bite.gbasm"
 .INCLUDE "music/soundeffects/grab.gbasm"
 .INCLUDE "music/soundeffects/fadeout.gbasm"
+.INCLUDE "music/soundeffects/explosion.gbasm"
 .ASSERT bank(.) $02
 
 _music_Dungeon:

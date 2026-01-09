@@ -242,6 +242,8 @@
 
 .DEFINE mem_entities_display_offset_x ($c094)
 .DEFINE mem_entities_display_offset_y ($c095)
+.DEFINE mem_debug_flags ($c096)
+; bit 0: skip floor reset on next new dungeon
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400

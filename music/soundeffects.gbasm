@@ -12,6 +12,17 @@ Wait_Next_Frame:
 	CALL =Wait_Next_Frame
 .END
 
+.MACRODEF RET_WAIT_X_NEXT_FRAME count
+	LD A, low($count)
+	$loop:
+	LD ($mem_sound_effect_hl), A
+	CALL =Wait_Next_Frame
+	LD A, ($mem_sound_effect_hl)
+	DEC A
+	CP $00
+	JR NZ, =$loop
+.END
+
 .MACRODEF RET_WAIT_NEXT_FRAME_SAVE_HL
 	LD A, H
 	LD ($mem_sound_effect_hl), A

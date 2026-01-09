@@ -117,6 +117,9 @@ CH1_D5:
 	.TEXTBOX_CLOSE
 	.WAIT $3c
 	.TEXTB_TIMER =CH1_D5_L10 =Empty
+	.RES_MEM_BIT &$mem_sound_flags 0
+	.RESET_SOUND_CHANNELS
+	.PLAY_SOUND_EFFECT =_sound_effect_Explosion
 	.SHAKING $ed $10
 	.ENTITY_TURN_AROUND $0f
 	.SHAKING $d9 $3c
