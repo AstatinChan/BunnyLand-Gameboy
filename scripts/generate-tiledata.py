@@ -40,6 +40,8 @@ print("\n\t; Grass")
 get_sprite_png_parse_output("./sprites/bg/grass.png", sprite_8x8=True)
 print("\n\t; Moss")
 get_sprite_png_parse_output("./sprites/bg/moss.png", sprite_8x8=True)
+print("\n\t; Holes")
+get_sprite_png_parse_output("./sprites/bg/holes.png", sprite_8x8=True)
 print("BG_Tile_Image_Data.end:")
 
 sprite_idx = 0x60

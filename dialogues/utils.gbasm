@@ -128,3 +128,7 @@
 	.DB bank(=sound_effect)
 	.DB ptr(=sound_effect)
 .END
+
+.MACRODEF NEXT_FLOOR
+	.DB $16
+.END

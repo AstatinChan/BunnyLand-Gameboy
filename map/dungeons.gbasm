@@ -92,10 +92,12 @@ $start:
 .END
 
 .MACRODEF GEN_EVENT_DIALOGUE_JUMP_TABLE floor =table mem_table_idx
-	.ASSERT bank(.) bank(=table)
+	$start:
 	.DB low($floor), $0a
+	.DB bank(=table)
 	.DB ptr(=table)
 	.DB $mem_table_idx
+	.PADTO =$start+8
 .END
 
 All_The_Dungeons:

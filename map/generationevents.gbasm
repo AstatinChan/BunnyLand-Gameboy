@@ -250,6 +250,8 @@ Generation_Event_Jump_Table:
 
 	.Dialogue_Jump_table:
 		LD A, (HL+)
+		.CHANGE_BANK_TO_A
+		LD A, (HL+)
 		LD D, A
 		LD A, (HL+)
 		LD E, A

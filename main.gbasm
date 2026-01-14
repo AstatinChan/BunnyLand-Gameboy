@@ -75,15 +75,15 @@ Entrypoint:
 .INCLUDE "text.gbasm"
 
 .ASSERT bank(.) $00
-.PADTO $4000
+.PADTO 01:4000
+.ASSERT bank(.) $01
 .INCLUDE "modes/titlescreen.gbasm"
 .INCLUDE "tileset.gbasm"
-.INCLUDE "map/maps.gbasm"
 .INCLUDE "map/dungeons.gbasm"
 .INCLUDE "entity/list.gbasm"
 .INCLUDE "entity/questgoal.gbasm"
 
-.PADTO $8000
+.PADTO 02:4000
 .INCLUDE "dialogues/dialogues.gbasm"
 .ASSERT bank(.) $02
 .INCLUDE "music/soundeffects/click.gbasm"
@@ -101,6 +101,12 @@ Entrypoint:
 .INCLUDE "music/soundeffects/explosion.gbasm"
 .ASSERT bank(.) $02
 
+.ALIGN
+.DEFINE _map_start_bank bank(.)
+.INCLUDE "map/maps.gbasm"
+.ASSERT $_map_start_bank bank(.)
+
+.ALIGN
 _music_Dungeon:
 .INCLUDEBIN "music/morning-forest.vgm"
 _music_BaseCamp:

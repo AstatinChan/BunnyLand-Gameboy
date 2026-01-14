@@ -4,8 +4,12 @@ Lonely_Grove:
 		.DB ptr(=Dungeon_Name_2_Txt)
 
 	.flag: .DB 0b00011110
+	.DEFINE _Lonely_Grove_dungeon_flag_floor_11 0b00011011
 
 	.tilemap_padding:
+		; This is not used by default but will be set when speaking to TIN on level 11
+		; .DB bank(=_map_Lonely-Grove-Floor-11)
+		; .DB ptr(=_map_Lonely-Grove-Floor-11)
 		.PADTO =.tilemap_padding+3
 
 	.custom_function:

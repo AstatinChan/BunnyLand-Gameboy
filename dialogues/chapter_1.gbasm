@@ -139,4 +139,6 @@ CH1_D5:
 	.ENTITY_TURN_AROUND $0f
 	.WAIT $1e
 	.TEXT =CH1_D5_L14 =Empty
+	.SET_MEM &$mem_dungeon_flags $_Lonely_Grove_dungeon_flag_floor_11
+	.NEXT_FLOOR
 .END

@@ -85,6 +85,16 @@ BG_Tile_Image_Data:
 	.DB $00, $00, $00, $e0, $e0, $1c, $dc, $02, $fc, $02, $f4, $0a, $fa, $01, $be, $01 ; 0x4b
 	.DB $7f, $80, $33, $40, $7f, $80, $5f, $80, $6d, $90, $3b, $40, $1f, $20, $00, $1f ; 0x4c
 	.DB $fe, $01, $76, $01, $fe, $01, $9c, $42, $f0, $0c, $e0, $10, $a0, $10, $00, $e0 ; 0x4d
+
+	; Holes
+	.DB $be, $da, $f6, $fe, $3f, $d7, $bf, $7c, $8c, $ff, $84, $ff, $bd, $c7, $c6, $ef ; 0x4e
+	.DB $3f, $27, $3c, $3f, $f8, $f7, $fa, $27, $64, $ef, $e1, $ff, $47, $f8, $cd, $fd ; 0x4f
+	.DB $07, $07, $7f, $78, $f8, $87, $80, $7f, $15, $ff, $aa, $ff, $5f, $ff, $ff, $ff ; 0x50
+	.DB $80, $80, $fe, $7e, $7f, $81, $01, $fe, $54, $ff, $aa, $ff, $fd, $ff, $ff, $ff ; 0x51
+	.DB $13, $ff, $77, $df, $37, $bf, $4f, $ff, $6f, $d7, $c3, $ee, $1f, $fb, $f2, $26 ; 0x52
+	.DB $f0, $ff, $e2, $ff, $ed, $f3, $d8, $ef, $cd, $fa, $cc, $7d, $c2, $ff, $77, $63 ; 0x53
+	.DB $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $70, $ff, $8f, $70, $70 ; 0x54
+	.DB $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $3e, $ff, $c1, $3e, $3e ; 0x55
 BG_Tile_Image_Data.end:
 OBJ_Tile_Image_Data:
 

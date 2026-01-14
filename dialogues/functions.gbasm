@@ -116,6 +116,10 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Play_Sound_Effect
 	NOP
 
+	; 16
+	JP =.Next_Floor
+	NOP
+
 	.End:
 		LD A, $mem_map_loading_flags
 		RES 7, A
@@ -636,3 +640,6 @@ Dialogue_script_instruction_Jump_Table:
 		LD ($mem_sound_effect_pc+2), A
 		ADD SP, 2
 		JP =Dialogue_script_step.next
+	
+	.Next_Floor:
+		JP =Stairs_Action
