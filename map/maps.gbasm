@@ -1,3 +1,3 @@
 ; THIS FILE IS GENERATED AUTOMATICALLY, DO NOT CHANGE
-; .INCLUDE "map/maps/lonely-grove-floor-11.map.gbasm"
+.INCLUDE "map/maps/lonely-grove-floor-11.map.gbasm"
 .INCLUDE "map/maps/test.map.gbasm"
