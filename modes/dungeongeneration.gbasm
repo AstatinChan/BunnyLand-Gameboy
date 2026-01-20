@@ -114,8 +114,6 @@ New_Floor:
 	LD L, A
 	LD A, ($mem_dungeon)
 	CALL =Load_Dungeon_Spawn_patterns
-	LD A, $entity_questgoalbunny_index
-	LD $mem_loaded_special_entity_index, A
 
 	CALL =Reload_EP_Cost
 
@@ -196,6 +194,10 @@ New_Floor:
 	LD $mem_oam_buffer_low, A
 	CALL =Display_Entities
 
+	LD HL, $dialogue_buffer
+	LD BC, $0036
+	CALL =bzero
+
 	LD A, $mem_campsite_story_state
 	CALL =Generation_Event_Execution
 
@@ -229,6 +231,13 @@ Dungeon_generation_VBlank:
 	LD HL, $fe00
 	LD BC, $00a0
 	CALL =bzero
+
+	LD HL, $dialogue_VRAM_first_line
+	LD BC, $0012
+	CALL =tilemap_bzero
+	LD HL, $dialogue_VRAM_third_line
+	LD BC, $0012
+	CALL =tilemap_bzero
 
 	LD DE, $mem_map_loading_buffer
 	LD HL, $9800

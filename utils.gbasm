@@ -34,6 +34,27 @@ tilemap_memcpy: ; src = DE, dest = HL, n = C
 		JR NZ =.loop
 	RET
 
+tilemap_bzero: ; dest = HL, n = C
+	.loop:
+		XOR A
+		LD (HL), A
+		LD A, L
+
+		INC A
+		AND $1f
+		LD B, A
+		LD A, L
+		AND $e0
+		OR B
+		LD L, A
+
+		DEC C
+		XOR A
+		CP C
+		JR NZ =.loop
+	RET
+
+
 .MACRODEF HBLANK_WAIT
 	LD A, $reg_lcd_controller
 	BIT 7, A

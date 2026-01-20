@@ -132,3 +132,9 @@
 .MACRODEF NEXT_FLOOR
 	.DB $16
 .END
+
+.MACRODEF SPAWN_LOADED_ENTITY_XY_DIRECTION entity_idx loaded_entity_idx x y direction
+	.DB $17
+	.DB low($entity_idx), low($loaded_entity_idx)
+	.DB low($x), low($y), low($direction)
+.END

@@ -120,6 +120,10 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Next_Floor
 	NOP
 
+	; 17
+	JP =.Spawn_Loaded_Entity_XY_direction
+	NOP
+
 	.End:
 		LD A, $mem_map_loading_flags
 		RES 7, A
@@ -643,3 +647,30 @@ Dialogue_script_instruction_Jump_Table:
 	
 	.Next_Floor:
 		JP =Stairs_Action
+
+	.Spawn_Loaded_Entity_XY_direction:
+		LD A, (HL+)
+		LD E, A
+		SWAP E
+
+		LD A, (HL+)
+		LD D, A
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		LD A, (HL+)
+		AND $0f
+		SWAP A
+		OR $02
+		LD $tmp_var_3, A
+		.PUSH_BANK
+		PUSH HL
+		LD H, high($mem_entities_list)
+		LD L, E
+		LD A, D
+		CALL =Initialize_Entity
+		POP HL
+		.POP_BANK
+		ADD SP, 2
+		JP =Dialogue_script_step.next

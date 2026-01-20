@@ -293,13 +293,17 @@
 
 .DEFINE dialogue_buffer $caa0 ; Until $cad6
 .DEFINE dialogue_first_line $caa0
-.DEFINE dialogue_second_line $cab2
+; .DEFINE dialogue_second_line $cab2
 .DEFINE dialogue_third_line $cac4
 
 .DEFINE dialogue_menu_choice1 $caa1
 .DEFINE dialogue_menu_choice2 $caaa
 .DEFINE dialogue_menu_choice3 $cac5
 .DEFINE dialogue_menu_choice4 $cace
+
+.DEFINE ep_cost_VRAM $9c43
+.DEFINE dialogue_VRAM_first_line $9cb4 ; until $9cc5
+.DEFINE dialogue_VRAM_third_line $9cf4 ; until $9d05
 
 .DEFINE dialogue_menu_choice1_cursor ($9cb4)
 .DEFINE dialogue_menu_choice2_cursor ($9cbd)
@@ -322,28 +326,28 @@
 
 .DEFINE mem_entities_list $cb00 ; Until cbff
 ; struct entity {
-;	sprite: u8,
-;	x: u8,
-;	y: u8,
-;	direction: u8 (facing = bit 6-4, bit 3 = is_moving, bit 2-0: direction moving),
+;	0: sprite: u8,
+;	1: x: u8,
+;	2: y: u8,
+;	3: direction: u8 (facing = bit 6-4, bit 3 = is_moving, bit 2-0: direction moving),
 ;		 0aaamddd: f = facing direction, m = is_moving, d = moving direction
-;	turn_function_jump_table_index: u8
-;	action_function_jump_table_index: u8
-;	health: u8 (DAA decimal !!)
-;	flags: u8
+;	4: turn_function_jump_table_index: u8
+;	5: action_function_jump_table_index: u8
+;	6: health: u8 (DAA decimal !!)
+;	7: flags: u8
 ;		bit 0: speed 2x
 ;		bit 1: shadow mode
 ;		bit 2: end of turn effect (attack mode for fox, die for bug)
 ;		bit 3: blinking mode
-;	status: u8
+;	8: status: u8
 ;	; bit 0: whether or not turns should be skipped
 ;	; bit 2: whether or not the status should be removed for the next turn
 ;	; 01: freeze
 ;	; 02: invincible
 ;	; 04: end of freeze
 ;	; 08: poison
-;	mana: u8
-;	animation: u8
+;	9: mana: u8
+;	a: animation: u8
 ;		 animations:
 ;			nothing = 0
 ;			action = 1
@@ -352,11 +356,12 @@
 ;			shaking = 4
 ;			doubleseed = 5
 ;			slide (forcing no hops on move) = 6
-;	dialogue_ptr: u24 (bank+ptr)
-;	_padding: u16
+;	b: dialogue_ptr: u24 (bank+ptr)
+;	e: _padding: u16
 ;
 ;	# SANTA CHRISTMAS LIST PLEASE #
 ;	health, max health, list of possible attacks, maybe remaining attacks ? AI status (blind, scared, slow, etc..)
+	; 6 7
 ; }
 
 .DEFINE mem_dungeon_generation_events $cc80 ; Takes the memory from cc80 to ccff (16 events)
@@ -396,7 +401,7 @@
 .DEFINE entity_penguin_index $03
 .DEFINE entity_mouse_index $04
 .DEFINE entity_fimsh_index $05
-.DEFINE entity_questgoalbunny_index $06
+.DEFINE entity_tin_index $06
 .DEFINE entity_bug_index $07
 
 .DEFINE palette_normal $e4

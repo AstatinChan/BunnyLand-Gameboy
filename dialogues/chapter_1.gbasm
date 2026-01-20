@@ -142,3 +142,34 @@ CH1_D5:
 	.SET_MEM &$mem_dungeon_flags $_Lonely_Grove_dungeon_flag_floor_11
 	.NEXT_FLOOR
 .END
+
+CH1_D6:
+	; Foxes
+	.SPAWN_LOADED_ENTITY_XY_DIRECTION $01 $03 $0b $0f $44
+	.SPAWN_LOADED_ENTITY_XY_DIRECTION $02 $03 $0b $11 $44
+	.SPAWN_LOADED_ENTITY_XY_DIRECTION $03 $03 $13 $0f $44
+	.SPAWN_LOADED_ENTITY_XY_DIRECTION $04 $03 $13 $11 $44
+
+	; Mouse
+	.SPAWN_LOADED_ENTITY_XY_DIRECTION $05 $04 $0f $09 $44
+	.SET_MEM $cb53 $22 ; direction looking right
+	.SET_MEM $cb54 $00 ; turn disable
+	.SET_MEM $cb55 $03 ; action open dialogue
+	.SET_MEM $cb5a $02 ; upside down
+	.SET_MEM $cb5b bank(=CH1_D8)
+	.SET_MEM $cb5c high(ptr(=CH1_D8))
+	.SET_MEM $cb5d low(ptr(=CH1_D8))
+
+	.TEXT =CH1_D7_L1 =CH1_D7_L2
+	.TEXTBOX_CLOSE
+.END
+
+CH1_D7:
+	.TEXT =CH1_D7_L1 =CH1_D7_L2
+	.TEXTBOX_CLOSE
+.END
+
+CH1_D8:
+	.TEXT =CH1_D7_L1 =CH1_D7_L2
+	.TEXTBOX_CLOSE
+.END

@@ -15,7 +15,7 @@
 
 Copy_Dialogue_Buffer:
 	LD A, $mem_current_focused_attack_ep_cost
-	LD HL, $9c43
+	LD HL, $ep_cost_VRAM
 	CALL =Print_8bit_Thin
 
 	LD A, $mem_display_flag
@@ -24,7 +24,7 @@ Copy_Dialogue_Buffer:
 	RES 2, A
 	SET 4, A
 	LD $mem_display_flag, A
-	LD HL, $9cb4
+	LD HL, $dialogue_VRAM_first_line
 	LD DE, $dialogue_first_line
 	LD C, $12
 	JP =tilemap_memcpy
@@ -35,7 +35,7 @@ Copy_Dialogue_Buffer_Part2:
 	RES 4, A
 	LD $mem_display_flag, A
 
-	LD HL, $9cf4
+	LD HL, $dialogue_VRAM_third_line
 	LD DE, $dialogue_third_line
 	LD C, $12
 	JP =tilemap_memcpy

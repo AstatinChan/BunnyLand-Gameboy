@@ -80,9 +80,17 @@ Interaction_Jump_table:
 	JP =.Open_Dialogue
 	NOP
 
+	; 03
+	JP =.Open_Dialogue_No_turning
+	NOP
+
 	.Open_Dialogue:
 	.LOAD_BANK_OF =Open_Dialogue
 	JP ptr(=Open_Dialogue)
+
+	.Open_Dialogue_No_turning:
+	.LOAD_BANK_OF =Open_Dialogue.No_turning
+	JP ptr(=Open_Dialogue.No_turning)
 
 Enemy_Interaction:
 	LD A, L

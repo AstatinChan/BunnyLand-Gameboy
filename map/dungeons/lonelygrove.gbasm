@@ -8,8 +8,8 @@ Lonely_Grove:
 
 	.tilemap_padding:
 		; This is not used by default but will be set when speaking to TIN on level 11
-		; .DB bank(=_map_Lonely-Grove-Floor-11)
-		; .DB ptr(=_map_Lonely-Grove-Floor-11)
+		.DB bank(=_map_Lonely-Grove-Floor-11)
+		.DB ptr(=_map_Lonely-Grove-Floor-11)
 		.PADTO =.tilemap_padding+3
 
 	.custom_function:
@@ -24,8 +24,16 @@ Lonely_Grove:
 	.generation_events:
 		.GEN_EVENT_REMOVE_STAIRS $10
 
-		.GEN_EVENT_SPECIAL_ENTITY $10 $0f $06
+		.GEN_EVENT_SPECIAL_ENTITY $10 $0f $entity_tin_index
 		.GEN_EVENT_ENTITY_SET_DIALOGUE $10 $0f =CH1_D5
+		.GEN_EVENT_LOAD_ENTITY $11 $07 $entity_tin_index
+		.GEN_EVENT_SPAWN_LOADED_ENTITY_XY $11 $0f $07 $10 $1e $11
+		.GEN_EVENT_MOVE_ENTITY_XY_DIRECTION $11 $00 $0f $1e $33
+		.GEN_EVENT_LOAD_ENTITY $11 $03 $entity_fox_index
+		.GEN_EVENT_LOAD_ENTITY $11 $04 $entity_mouse_index
+
+		.GEN_EVENT_ENTITY_SET_DIALOGUE $11 $0f =CH1_D7
+		.GEN_EVENT_DIALOGUE $11 =CH1_D6
 	.generation_events.end:
 
 	.max_floor: .DB 0x0a, inv(0x0a)

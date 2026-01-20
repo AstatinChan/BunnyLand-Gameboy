@@ -75,6 +75,10 @@ Generation_Event_Jump_Table:
 	JP =.Dialogue_Jump_table
 	NOP
 
+	; 0b
+	JP =.Move_Entity_XY_direction
+	NOP
+
 	.Dialogue_Script:
 		LD A, (HL+)
 		LD $mem_dialogue_script_bank, A
@@ -120,6 +124,7 @@ Generation_Event_Jump_Table:
 		LD A, (HL+)
 		LD C, A
 		LD A, (HL)
+		AND $0f
 		SWAP A
 		OR $02
 		LD $tmp_var_3, A
@@ -277,3 +282,21 @@ Generation_Event_Jump_Table:
 		LD A, (HL)
 		LD ($mem_dialogue_script_program_counter+1), A
 		JP =Dialogue_script_step
+
+	.Move_Entity_XY_direction:
+		LD D, high($mem_entities_list)
+		LD A, (HL+)
+		LD E, A
+		SWAP E
+		INC E
+		LD A, (HL+)
+		DBG
+		LD (DE), A
+		INC DE
+		LD A, (HL+)
+		LD (DE), A
+		DBG
+		INC DE
+		LD A, (HL)
+		LD (DE), A
+		RET

@@ -43,6 +43,7 @@ Open_Dialogue:
 	OR (HL)
 	LD (HL), A
 
+	.No_turning:
 	LD A, L
 	AND $f0
 	OR $0b
