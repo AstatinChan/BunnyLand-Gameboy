@@ -362,19 +362,14 @@ Display_Entity:
 Flags_From_Animation: ; Expect entity in HL (offset doesn't matter) + breaks D (but result in A)
 	LD A, L
 	AND $f0
-	OR $0a
+	OR $07
 	LD L, A
-	LD A, $02
-	CP (HL)
+	BIT 4, (HL)
 	LD D, $00
-	JR NZ, =Flags_From_Animation.Shadow_Palette
+	JR Z, =Flags_From_Animation.Shadow_Palette
 	LD D, $40
 
 	Flags_From_Animation.Shadow_Palette:
-	LD A, L
-	AND $f0
-	OR $07
-	LD L, A
 	BIT 1, (HL)
 	LD A, D
 	RET Z

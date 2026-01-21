@@ -18,14 +18,14 @@ CH1_D1:
 	.FADEOUT_DARK
 	.WAIT $1e
 	.TEXTBOX_CLOSE
-	.SET_MEM &$mem_bunny_animation $02
+	.SET_MEM_BIT &$mem_bunny_flags 4
 	.WAIT $3c
 	.TEXT =ZZZ =Empty
 	.TEXTBOX_CLOSE
 	.WAIT $78
 	.FADEIN_DARK
 	.WAIT $3c
-	.SET_MEM &$mem_bunny_animation $00
+	.RES_MEM_BIT &$mem_bunny_flags 4
 	.SET_GAMEOVER_DIALOGUE =Gameover_Dialogue_Script
 	.SET_DUNGEON_SELECTION =Dungeon_list.Morning_Forest
 	.SET_MEM &$mem_campsite_story_state $00
@@ -84,7 +84,7 @@ CH1_D4:
 	.FADEOUT_DARK
 	.WAIT $1e
 	.TEXTBOX_CLOSE
-	.SET_MEM &$mem_bunny_animation $02
+	.SET_MEM_BIT &$mem_bunny_flags 4
 	.WAIT $3c
 	.TEXT =ZZZ =Empty
 	.TEXTBOX_CLOSE
@@ -97,7 +97,7 @@ CH1_D4:
 	.WAIT $78
 	.FADEIN_DARK
 	.WAIT $3c
-	.SET_MEM &$mem_bunny_animation $00
+	.RES_MEM_BIT &$mem_bunny_flags 4
 	.SET_DUNGEON_SELECTION =Dungeon_list.Lonely_Grove
 	.SET_MEM &$mem_campsite_story_state $00
 .END
@@ -151,11 +151,12 @@ CH1_D6:
 	.SPAWN_LOADED_ENTITY_XY_DIRECTION $04 $03 $13 $11 $44
 
 	; Mouse
-	.SPAWN_LOADED_ENTITY_XY_DIRECTION $05 $04 $0f $09 $44
+	.SPAWN_LOADED_ENTITY_XY_DIRECTION $05 $01 $0f $09 $44
 	.SET_MEM $cb53 $22 ; direction looking right
 	.SET_MEM $cb54 $00 ; turn disable
 	.SET_MEM $cb55 $03 ; action open dialogue
-	.SET_MEM $cb5a $02 ; upside down
+	.SET_MEM $cb57 $10 ; upside down
+	.SET_MEM $cb58 $02 ; invincible
 	.SET_MEM $cb5b bank(=CH1_D8)
 	.SET_MEM $cb5c high(ptr(=CH1_D8))
 	.SET_MEM $cb5d low(ptr(=CH1_D8))
@@ -164,12 +165,30 @@ CH1_D6:
 	.TEXTBOX_CLOSE
 .END
 
-CH1_D7:
+CH1_D7: ; Speaking to TIN
 	.TEXT =CH1_D7_L1 =CH1_D7_L2
 	.TEXTBOX_CLOSE
 .END
 
-CH1_D8:
-	.TEXT =CH1_D7_L1 =CH1_D7_L2
+CH1_D8: ; Speaking to the mouse
+	.TEXT =Dotdotdot =Empty
 	.TEXTBOX_CLOSE
+	.BRANCH_MEM &$mem_enemies_alive_count 0 =.BossBeaten
+	.END
+
+	.BossBeaten:
+	.WAIT $1e
+	.TEXT =CH1_D8_L1 =Empty
+	.TEXTBOX_CLOSE
+	.WAIT $1e
+	.SET_MEM $cb57 $00 ; rightside up
+	.SET_MEM $cb53 $44 ; direction looking down
+	.WAIT $3c
+	.SET_MEM $cb53 $22 ; right
+	.WAIT $0c
+	.SET_MEM $cb53 $11 ; left
+	.WAIT $0c
+	.SET_MEM $cb53 $22 ; right
+	.WAIT $1e
+	.SET_MEM $cb53 $44 ; down
 .END

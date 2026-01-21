@@ -13,9 +13,6 @@ Initialize_Entities:
 
 	CALL =Initialize_Bunny_Random_room
 
-	LD A, $00
-	LD $mem_enemies_alive_count, A
-
 	LD A, $mem_bunny_current_room_idx
 	LD $tmp_var_1, A
 	LD A, $ff

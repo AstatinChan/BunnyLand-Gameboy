@@ -126,6 +126,9 @@ New_Floor:
 	LD BC, $00f0
 	CALL =bzero
 
+	LD A, $00
+	LD $mem_enemies_alive_count, A
+
 	LD A, $mem_dungeon_flags
 	BIT 0, A
 	JR Z, =.map.generation
@@ -177,11 +180,6 @@ New_Floor:
 	LD $mem_animation_wait_frames, A
 	LD $mem_blinking_animation_counter, A
 
-	LD A, $mem_bunny_x
-	LD $mem_bunny_predicted_x, A
-	LD A, $mem_bunny_y
-	LD $mem_bunny_predicted_y, A
-
 	LD A, $mem_map_loading_flags
 	RES 3, A
 	LD $mem_map_loading_flags, A
@@ -200,6 +198,11 @@ New_Floor:
 
 	LD A, $mem_campsite_story_state
 	CALL =Generation_Event_Execution
+
+	LD A, $mem_bunny_x
+	LD $mem_bunny_predicted_x, A
+	LD A, $mem_bunny_y
+	LD $mem_bunny_predicted_y, A
 
 	LD HL, $mem_entities_list
 	.BANK_CALL =Center_viewport_around_entity

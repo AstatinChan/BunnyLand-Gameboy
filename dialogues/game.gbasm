@@ -33,7 +33,8 @@ Placeholder_Dialogue_Script:
 
 Gameover_Dialogue_Script:
 	.SET_MEM &$mem_bunny_direction $00
-	.SET_MEM &$mem_bunny_animation $02
+	.SET_MEM &$mem_bunny_animation $00
+	.SET_MEM_BIT &$mem_bunny_flags 4
 	.WAIT $00
 	.WAIT $b0
 	.TEXT =Game_Over_1_Txt =Empty
@@ -47,10 +48,10 @@ Gameover_Dialogue_Script:
 	.SET_MEM &$mem_campsite_story_state $01
 	.GO_TO_DUNGEON =Camp_Site
 Gameover_Campsite:
-	.SET_MEM &$mem_bunny_animation $02
+	.SET_MEM_BIT &$mem_bunny_flags 4
 	.FADEIN_DARK
 	.WAIT $3c
-	.SET_MEM &$mem_bunny_animation $00
+	.RES_MEM_BIT &$mem_bunny_flags 4
 	.CPY_MEM &$mem_campsite_story_state &$mem_campsite_story_state_gameover_backup
 .END
 
@@ -58,11 +59,11 @@ Campsite_normal_sleep:
 	.WAIT $78
 	.FADEOUT_DARK
 	.WAIT $3c
-	.SET_MEM &$mem_bunny_animation $02
+	.SET_MEM_BIT &$mem_bunny_flags 4
 	.TEXT =ZZZ =Empty
 	.TEXTBOX_CLOSE
 	.WAIT $78
 	.FADEIN_DARK
 	.WAIT $3c
-	.SET_MEM &$mem_bunny_animation $00
+	.RES_MEM_BIT &$mem_bunny_flags 4
 .END

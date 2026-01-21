@@ -38,8 +38,8 @@ Load_Tile:
 	RET
 
 Reload_Entities_Tile_Data:
-	LD HL, $mem_loaded_enemies_indices
-	LD E, $03
+	LD HL, $mem_loaded_entities_indices+1
+	LD E, $01
 	.loop:
 		LD A, (HL)
 		SLA A

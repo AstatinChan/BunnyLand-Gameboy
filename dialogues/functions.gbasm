@@ -124,6 +124,10 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Spawn_Loaded_Entity_XY_direction
 	NOP
 
+	; 18
+	JP =.Branch_mem
+	NOP
+
 	.End:
 		LD A, $mem_map_loading_flags
 		RES 7, A
@@ -674,3 +678,36 @@ Dialogue_script_instruction_Jump_Table:
 		.POP_BANK
 		ADD SP, 2
 		JP =Dialogue_script_step.next
+
+	.Branch_mem:
+		ADD SP, 2
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		LD A, (HL+)
+		LD E, A
+		LD D, $00
+		LD A, (DE)
+		LD E, A
+		LD A, (BC)
+		CP E
+		LD A, (HL+)
+		LD E, A
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		JP Z, =Dialogue_script_step.next
+
+		LD A, E
+		LD $mem_dialogue_script_bank, A
+		.CHANGE_BANK_TO_A
+		LD A, B
+		LD H, A
+		LD ($mem_dialogue_script_program_counter), A
+		LD A, C
+		LD L, A
+		LD ($mem_dialogue_script_program_counter+1), A
+		JP =Dialogue_script_step.next
+

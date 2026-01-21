@@ -3,7 +3,6 @@ Bugs:
  ? - Kill before or after attack
    - Able to move after hoping on golden celery
    - Frogs sometimes pull to a tile with already another entity
-   - Somehow I received damages on the start of floor 11 in recording ./recordings/2026-01-20T19:10:32+01:00.record (commit: ?)
 
 Accessibility issues:
   -> freeze/earcopter attack patterns are not obvious (either needs to be shown on map or add select menu with infos if not possible + tutorial to explain the existence of select menu ?)

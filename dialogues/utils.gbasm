@@ -138,3 +138,10 @@
 	.DB low($entity_idx), low($loaded_entity_idx)
 	.DB low($x), low($y), low($direction)
 .END
+
+.MACRODEF BRANCH_MEM addr value =branch
+	.DB $18
+	.DB $addr
+	.DB low($value), bank(=branch)
+	.DB ptr(=branch)
+.END

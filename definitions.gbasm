@@ -339,6 +339,7 @@
 ;		bit 1: shadow mode
 ;		bit 2: end of turn effect (attack mode for fox, die for bug)
 ;		bit 3: blinking mode
+;		bit 4: upside down
 ;	8: status: u8
 ;	; bit 0: whether or not turns should be skipped
 ;	; bit 2: whether or not the status should be removed for the next turn
@@ -351,7 +352,6 @@
 ;		 animations:
 ;			nothing = 0
 ;			action = 1
-;			death = 2
 ;			superjump = 3
 ;			shaking = 4
 ;			doubleseed = 5
