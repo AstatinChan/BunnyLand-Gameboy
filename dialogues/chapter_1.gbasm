@@ -15,7 +15,7 @@ CH1_D1:
 	.TEXT =CH1_D1_L10 =CH1_D1_L11
 	.TEXT =CH1_D1_L12 =Empty
 	.TEXT =CH1_D1_L13 =CH1_D1_L14
-	.FADEOUT_DARK
+	.FADEOUT $14
 	.WAIT $1e
 	.TEXTBOX_CLOSE
 	.SET_MEM_BIT &$mem_bunny_flags 4
@@ -23,7 +23,7 @@ CH1_D1:
 	.TEXT =ZZZ =Empty
 	.TEXTBOX_CLOSE
 	.WAIT $78
-	.FADEIN_DARK
+	.FADEIN $14
 	.WAIT $3c
 	.RES_MEM_BIT &$mem_bunny_flags 4
 	.SET_GAMEOVER_DIALOGUE =Gameover_Dialogue_Script
@@ -81,7 +81,7 @@ CH1_D4:
 	.TEXTBOX_CLOSE
 	.WAIT $3c
 	.TEXT =CH1_D4_L11 =CH1_D4_L12
-	.FADEOUT_DARK
+	.FADEOUT $14
 	.WAIT $1e
 	.TEXTBOX_CLOSE
 	.SET_MEM_BIT &$mem_bunny_flags 4
@@ -95,7 +95,7 @@ CH1_D4:
 	.TEXT =CH1_D4_L14 =Empty
 	.TEXTBOX_CLOSE
 	.WAIT $78
-	.FADEIN_DARK
+	.FADEIN $14
 	.WAIT $3c
 	.RES_MEM_BIT &$mem_bunny_flags 4
 	.SET_DUNGEON_SELECTION =Dungeon_list.Lonely_Grove
@@ -140,10 +140,12 @@ CH1_D5:
 	.WAIT $1e
 	.TEXT =CH1_D5_L14 =Empty
 	.SET_MEM &$mem_dungeon_flags $_Lonely_Grove_dungeon_flag_floor_11
+	.FADEOUT $04
 	.NEXT_FLOOR
 .END
 
-CH1_D6:
+CH1_D6: ; Floor 11
+	.FADEIN $00
 	; Foxes
 	.SPAWN_LOADED_ENTITY_XY_DIRECTION $01 $03 $0b $0f $44
 	.SPAWN_LOADED_ENTITY_XY_DIRECTION $02 $03 $0b $11 $44
@@ -161,12 +163,45 @@ CH1_D6:
 	.SET_MEM $cb5c high(ptr(=CH1_D8))
 	.SET_MEM $cb5d low(ptr(=CH1_D8))
 
-	.TEXT =CH1_D7_L1 =CH1_D7_L2
+	.SET_MEM $cbf4 $00 ; turn disable TIN
+	.SET_MEM &$mem_bunny_direction $33 ; up
+	.SET_MEM $cbf3 $33 ; TIN up
+	.SET_MEM $cbf5 $03 ; action open dialogue (without looking at bnuy)
+
+	.WAIT $1e
+	.TEXT =CH1_D6_L1 =Empty
 	.TEXTBOX_CLOSE
+
+	.FADEOUT $04
+	.HIDE_TOPBAR
+	.WAIT $1e
+	.SET_CENTER_ENTITY $05
+	.RELOAD_DUNGEON
+	.SHOW_TOPBAR
+	.FADEIN $04
+
+	.WAIT $1e
+	.TEXT =CH1_D6_L2 =CH1_D6_L3
+	.TEXT =CH1_D6_L4 =Empty
+	.TEXTBOX_CLOSE
+
+	.FADEOUT $04
+	.HIDE_TOPBAR
+	.WAIT $1e
+	.SET_CENTER_ENTITY $00
+	.RELOAD_DUNGEON
+	.SHOW_TOPBAR
+	.FADEIN $04
+	.WAIT $1e
+	.SET_MEM $cbf3 $11
+
+	.TEXT =CH1_D6_L5 =CH1_D6_L6
+	.TEXTBOX_CLOSE
+	.SET_MEM $cbf3 $33
 .END
 
 CH1_D7: ; Speaking to TIN
-	.TEXT =CH1_D7_L1 =CH1_D7_L2
+	.TEXT =CH1_D6_L5 =CH1_D6_L6
 	.TEXTBOX_CLOSE
 .END
 
@@ -177,10 +212,26 @@ CH1_D8: ; Speaking to the mouse
 	.END
 
 	.BossBeaten:
+	.HIDE_TOPBAR
 	.WAIT $1e
 	.TEXT =CH1_D8_L1 =Empty
 	.TEXTBOX_CLOSE
 	.WAIT $1e
+
+	.FADEOUT $04
+	.WAIT $1e
+	.SET_MEM $cbf1 $10
+	.SET_MEM $cbf2 $0a
+	.SET_MEM $cb01 $0f
+	.SET_MEM $cb02 $0a
+	.SET_MEM $cb03 $33
+	.RELOAD_DUNGEON
+	.FADEIN $04
+
+	.WAIT $3c
+	.TEXTB =Tin_Header_Text =CH1_D8_L2
+	.TEXTBOX_CLOSE
+	.WAIT $3c
 	.SET_MEM $cb57 $00 ; rightside up
 	.SET_MEM $cb53 $44 ; direction looking down
 	.WAIT $3c
@@ -191,4 +242,13 @@ CH1_D8: ; Speaking to the mouse
 	.SET_MEM $cb53 $22 ; right
 	.WAIT $1e
 	.SET_MEM $cb53 $44 ; down
+	.WAIT $1e
+	.TEXTB =Unknown_Character =CH1_D8_L3
+	.TEXTBOX_CLOSE
+	.WAIT $1e
+	.TEXT =CH1_D8_L4 =CH1_D8_L5
+	.TEXT =CH1_D8_L6 =CH1_D8_L7
+	.TEXT =CH1_D8_L8 =CH1_D8_L9
+
+	.SHOW_TOPBAR
 .END

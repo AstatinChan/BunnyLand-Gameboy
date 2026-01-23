@@ -44,12 +44,14 @@
 	.DB low($frames)
 .END
 
-.MACRODEF FADEOUT_DARK
+.MACRODEF FADEOUT args
 	.DB $07
+	.DB low($args)
 .END
 
-.MACRODEF FADEIN_DARK
+.MACRODEF FADEIN args
 	.DB $08
+	.DB low($args)
 .END
 
 .MACRODEF TEXTBOX_CLOSE
@@ -144,4 +146,20 @@
 	.DB $addr
 	.DB low($value), bank(=branch)
 	.DB ptr(=branch)
+.END
+
+.MACRODEF RELOAD_DUNGEON
+	.DB $19
+.END
+
+.MACRODEF HIDE_TOPBAR
+	.RES_MEM_BIT &$mem_display_flag 7
+.END
+
+.MACRODEF SHOW_TOPBAR
+	.SET_MEM_BIT &$mem_display_flag 7
+.END
+
+.MACRODEF SET_CENTER_ENTITY entity_idx
+	.SET_MEM &$mem_center_entity $entity_idx
 .END

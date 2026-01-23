@@ -1,4 +1,3 @@
 .INCLUDE "dialogues/text.gbasm"
 .INCLUDE "dialogues/game.gbasm"
-.INCLUDE "dialogues/demo_quest.gbasm"
 .INCLUDE "dialogues/chapter_1.gbasm"

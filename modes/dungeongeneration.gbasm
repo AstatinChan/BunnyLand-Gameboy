@@ -149,8 +149,7 @@ New_Floor:
 		LD C, $0f
 		CALL =Initialize_Bunny
 
-		LD HL, $mem_entities_list
-		.BANK_CALL =Center_viewport_around_entity
+		.BANK_CALL =Center_viewport_around_center_entity
 		CALL =Load_Prepared_Map
 
 		LD A, $mem_map_loading_flags
@@ -176,9 +175,11 @@ New_Floor:
 
 	LD A, $00
 	LD $mem_moving_animation_step, A
-	LD $mem_display_flag, A
 	LD $mem_animation_wait_frames, A
 	LD $mem_blinking_animation_counter, A
+
+	LD A, $80
+	LD $mem_display_flag, A
 
 	LD A, $mem_map_loading_flags
 	RES 3, A
@@ -204,8 +205,7 @@ New_Floor:
 	LD A, $mem_bunny_y
 	LD $mem_bunny_predicted_y, A
 
-	LD HL, $mem_entities_list
-	.BANK_CALL =Center_viewport_around_entity
+	.BANK_CALL =Center_viewport_around_center_entity
 	CALL =Load_Prepared_Map
 
 	CALL =VBlank_Wait
@@ -268,13 +268,8 @@ Dungeon_generation_VBlank:
 		JR NZ, =.wait_1s.loop
 	.wait_1s.end:
 
-	LD A, $mem_map_loading_flags
-	RES 6, A
-	LD $mem_map_loading_flags, A
-
 	LD A, $mem_display_flag
 	RES 6, A
-	SET 7, A
 	LD $mem_display_flag, A
 	LD A, $mem_map_loading_flags
 	RES 2, A
@@ -315,6 +310,13 @@ Dungeon_generation_VBlank:
 	LD L, A
 	LD A, ($mem_dungeon)
 	CALL =Load_Dungeon_Music
+	LD HL, &$mem_map_loading_flags
+	BIT 7, (HL)
+	JR Z, =.skip_post_reload
+	BIT 6, (HL)
+	RES 6, (HL)
+	CALL NZ, =Dialogue_script_step
+	.skip_post_reload:
 	EI
 
 	Wait_for_Interrupt.loop:

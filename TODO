@@ -3,6 +3,7 @@ Bugs:
  ? - Kill before or after attack
    - Able to move after hoping on golden celery
    - Frogs sometimes pull to a tile with already another entity
+   - Reset to title screen on spamming A (?) while boom animation starting (recording recordings/2026-01-21T16\:40\:32+01\:00.record, commit c286a81)
 
 Accessibility issues:
   -> freeze/earcopter attack patterns are not obvious (either needs to be shown on map or add select menu with infos if not possible + tutorial to explain the existence of select menu ?)

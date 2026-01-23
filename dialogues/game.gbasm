@@ -24,13 +24,6 @@ Learn_Attack_Duplicate_Dialogue_Script:
 	.TEXT =dup_attack_4t =Empty
 	.LEARN_ATTACK_RET
 
-Placeholder_Dialogue_Script:
-	.TEXTB =Placeholder_1t =Empty
-	.TEXT =Placeholder_2t =Placeholder_2b
-	.TEXT =Placeholder_3t =Empty
-	.TEXT =Placeholder_4t =Placeholder_4b
-	.END
-
 Gameover_Dialogue_Script:
 	.SET_MEM &$mem_bunny_direction $00
 	.SET_MEM &$mem_bunny_animation $00
@@ -39,7 +32,7 @@ Gameover_Dialogue_Script:
 	.WAIT $b0
 	.TEXT =Game_Over_1_Txt =Empty
 	.WAIT $10
-	.FADEOUT_DARK
+	.FADEOUT $14
 	.WAIT $3c
 	.TEXTBOX_CLOSE
 	.RES_MEM_BIT &$mem_display_flag 7
@@ -49,7 +42,7 @@ Gameover_Dialogue_Script:
 	.GO_TO_DUNGEON =Camp_Site
 Gameover_Campsite:
 	.SET_MEM_BIT &$mem_bunny_flags 4
-	.FADEIN_DARK
+	.FADEIN $14
 	.WAIT $3c
 	.RES_MEM_BIT &$mem_bunny_flags 4
 	.CPY_MEM &$mem_campsite_story_state &$mem_campsite_story_state_gameover_backup
@@ -57,13 +50,13 @@ Gameover_Campsite:
 
 Campsite_normal_sleep:
 	.WAIT $78
-	.FADEOUT_DARK
+	.FADEOUT $14
 	.WAIT $3c
 	.SET_MEM_BIT &$mem_bunny_flags 4
 	.TEXT =ZZZ =Empty
 	.TEXTBOX_CLOSE
 	.WAIT $78
-	.FADEIN_DARK
+	.FADEIN $14
 	.WAIT $3c
 	.RES_MEM_BIT &$mem_bunny_flags 4
 .END

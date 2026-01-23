@@ -1,4 +1,19 @@
+Fadeout_Step: ; animation arguments in E, current palette in A, result in A
+	BIT 7, E
+	JR NZ, =.white
+	.dark:
+	SRA A
+	SRA A
+	OR 0b11000000
+	RET
+	.white:
+	SLA A
+	SLA A
+	RET
+
 Fade_out_Loading_VBlank:
+	LD A, $mem_fade_animation_arguments
+	LD E, A
 	LD A, $mem_animation_wait_frames
 	CP $00
 	JR Z, =.fade_out_step
@@ -7,21 +22,23 @@ Fade_out_Loading_VBlank:
 	RET
 
 	.fade_out_step:
-	LD A, $14
+	LD A, E
+	AND 0b00111111
 	LD $mem_animation_wait_frames, A
 
 	LD A, $mem_prepared_color_palette
-	SRA A
-	SRA A
-	OR 0b11000000
+	CALL =Fadeout_Step
 	LD $mem_prepared_color_palette, A
 	LD B, A
 
 	LD A, $reg_obj0_palette
-	SRA A
-	SRA A
-	OR 0b11000000
+	CALL =Fadeout_Step
 	LD $reg_obj0_palette, A
+	BIT 7, E
+	JR Z, =.test_dark
+	OR B
+	JR Z, =.end
+	.test_dark:
 	AND B
 	CP $ff
 	JR Z, =.end
@@ -39,15 +56,18 @@ Fade_out_Loading_VBlank:
 	RET
 
 Fade_in_Loading_VBlank:
+	LD A, $mem_fade_animation_arguments
+	LD E, A
 	LD A, $mem_animation_wait_frames
 	CP $00
 	JR Z, =.fade_in_step
 	DEC A
 	LD $mem_animation_wait_frames, A
 	RET
-
+	
 	.fade_in_step:
-	LD A, $14
+	LD A, E
+	AND 0b00111111
 	LD $mem_animation_wait_frames, A
 
 	LD A, $mem_fadein_counter
@@ -60,52 +80,45 @@ Fade_in_Loading_VBlank:
 	CP $03
 	JR Z, =.step3
 	JR =.step4
-
+	
 	.step1:
 	LD A, $palette_normal
-	SWAP A
-	SRA A
-	SRA A
-	OR 0b11111100
+	CALL =Fadeout_Step
+	CALL =Fadeout_Step
+	CALL =Fadeout_Step
 	LD $mem_prepared_color_palette, A
 	LD A, $obj_palette_normal
-	SWAP A
-	SRA A
-	SRA A
-	OR 0b11111100
+	CALL =Fadeout_Step
+	CALL =Fadeout_Step
+	CALL =Fadeout_Step
 	LD $reg_obj0_palette, A
 	RET
-
+	
 	.step2:
 	LD A, $palette_normal
-	SWAP A
-	OR 0b11110000
+	CALL =Fadeout_Step
+	CALL =Fadeout_Step
 	LD $mem_prepared_color_palette, A
 	LD A, $obj_palette_normal
-	SWAP A
-	OR 0b11110000
+	CALL =Fadeout_Step
+	CALL =Fadeout_Step
 	LD $reg_obj0_palette, A
 	RET
-
+	
 	.step3:
 	LD A, $palette_normal
-	SRA A
-	SRA A
-	OR 0b11000000
+	CALL =Fadeout_Step
 	LD $mem_prepared_color_palette, A
-	LD A, $obj_palette_normal
-	SRA A
-	SRA A
-	OR 0b11000000
+	CALL =Fadeout_Step
 	LD $reg_obj0_palette, A
 	RET
-
+	
 	.step4:
 	LD A, $palette_normal
 	LD $mem_prepared_color_palette, A
 	LD A, $obj_palette_normal
 	LD $reg_obj0_palette, A
-
+	
 	.end:
 	LD A, $00
 	LD $mem_fadein_counter, A
@@ -113,9 +126,8 @@ Fade_in_Loading_VBlank:
 	LD $mem_requested_mode, A
 	LD $mem_current_mode, A
 	CALL =Update_VBlank_Handler
-
+	
 	LD A, $mem_map_loading_flags
 	BIT 7, A
 	JP NZ, =Dialogue_script_step
 	RET
-

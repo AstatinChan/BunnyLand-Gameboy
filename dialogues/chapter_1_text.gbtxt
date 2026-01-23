@@ -1,4 +1,6 @@
 Thoughts_Header_Text: *Thoughts*:
+Tin_Header_Text: TIN:
+
 CH1_D1_L1:  What a tiring day
 CH1_D1_L2:  Thankfully, it
 CH1_D1_L3:  was useful.
@@ -14,12 +16,12 @@ CH1_D1_L12: But for now...
 CH1_D1_L13: It's time to
 CH1_D1_L14: sleep.
 
-CH1_D2_L1: 	Oh !
+CH1_D2_L1: 	Oh!
 CH1_D2_L2: 	The GOLDEN CELERY
 CH1_D2_L3: 	is close.
 CH1_D2_L4: 	I can smell it.
 
-CH1_D3_L1: 	Is that ?...
+CH1_D3_L1: 	Is that?...
 CH1_D3_L2: 	The GOLDEN CELERY
 CH1_D3_L3: 	???
 CH1_D3_L4: 	It smells so good
@@ -54,22 +56,34 @@ CH1_D4_L14: Celery...
 
 CH1_D5_L1: 	Hi.
 CH1_D5_L2: 	Was I the one
-CH1_D5_L3: 	crying for help ?
+CH1_D5_L3: 	crying for help?
 CH1_D5_L4: 	I'm sorry.
 CH1_D5_L5:  I'm not who you
 CH1_D5_L6:  are looking for.
 CH1_D5_L7:	I was just...
 CH1_D5_L8:  Having a walk
-CH1_D5_L9:  I guess ?...
+CH1_D5_L9:  I guess?...
 
 CH1_D5_L10: *BOOOOOOOM*
 
-CH1_D5_L11: What was that ?!
+CH1_D5_L11: What was that?!
 CH1_D5_L12: It's coming from
-CH1_D5_L13: over there !
-CH1_D5_L14: Follow me !
+CH1_D5_L13: over there!
+CH1_D5_L14: Follow me!
 
-CH1_D7_L1: Hihihi :3
-CH1_D7_L2: Dialog no writey:3
+CH1_D6_L1: Look!
+CH1_D6_L2: There's someone
+CH1_D6_L3: over there!
+CH1_D6_L4: They're in danger!
+CH1_D6_L5: We have to help
+CH1_D6_L6: them!
 
 CH1_D8_L1: Ouch...
+CH1_D8_L2: Are you okay?!
+CH1_D8_L3: I... I think so
+CH1_D8_L4: I was being chased
+CH1_D8_L5: by those foxes.
+CH1_D8_L6: I managed to get
+CH1_D8_L7: here where they
+CH1_D8_L8: couldn't follow me
+CH1_D8_L9: but I fainted

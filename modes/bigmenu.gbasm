@@ -797,8 +797,7 @@ Load_Back_Dungeon:
 	LD $mem_current_mode, A
 	LD $mem_requested_mode, A
 
-	LD HL, $mem_entities_list
-	.BANK_CALL =Center_viewport_around_entity
+	.BANK_CALL =Center_viewport_around_center_entity
 	CALL =Load_Prepared_Map
 	LD A, $mem_prepared_viewport_x
 	LD $reg_viewport_x, A

@@ -64,6 +64,7 @@
 ; bit 6: during dungeon generation vblank, whether or not it should skip the wait 1s thingy
 ; bit 7: if a dialogue script is being executed
 ;	-> when in animation waiting mode, step should be done after mode ends
+;	-> if dungeon_reload is executed (NOT NEW DUNGEON) step should be done after
 
 .DEFINE mem_number_of_attacks ($c00d)
 .DEFINE mem_entity_being_attacked_low ($c00e)
@@ -231,6 +232,7 @@
 
 .DEFINE mem_dungeon_selection_entries_ptr $c090 ; Takes $c090-$c092
 
+; We can guarantee animations will not play at the same time, thus multiple animations arguments will take the same space in memory.
 .DEFINE mem_shaking_animation_level ($c093)
 	; efaaEFAA
 	; e = enable x shaking
@@ -239,11 +241,17 @@
 	; E = enable y shaking
 	; F = frequency y
 	; A = amplitude y
+.DEFINE mem_fade_animation_arguments ($c093)
+	; c0ssssss
+	; c = colour (0 => dark, 1 => white)
+	; s = the number of frames between each of the 4 steps
 
 .DEFINE mem_entities_display_offset_x ($c094)
 .DEFINE mem_entities_display_offset_y ($c095)
 .DEFINE mem_debug_flags ($c096)
 ; bit 0: skip floor reset on next new dungeon
+
+.DEFINE mem_center_entity ($c097)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
@@ -410,13 +418,14 @@
 .DEFINE palette_bold_font $f4
 .DEFINE palette_thin_font $c4
 
-.DEFINE obj_palette_normal $d3
-.DEFINE obj_palette_frozen $ab
+.DEFINE obj_palette_normal $d0
+.DEFINE obj_palette_frozen $a8
 
 .DEFINE lcdc_guibg_tilemap $8d
 .DEFINE lcdc_mapbg_tilemap $87
 .DEFINE lcdc_bigmenu_tilemap $85
 .DEFINE lcdc_titlescreen $85
+.DEFINE lcdc_fadedout $85
 
 .DEFINE vram_entity_index $02
 .DEFINE vram_animation_index $62

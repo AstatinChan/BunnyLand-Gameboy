@@ -290,12 +290,10 @@ Generation_Event_Jump_Table:
 		SWAP E
 		INC E
 		LD A, (HL+)
-		DBG
 		LD (DE), A
 		INC DE
 		LD A, (HL+)
 		LD (DE), A
-		DBG
 		INC DE
 		LD A, (HL)
 		LD (DE), A

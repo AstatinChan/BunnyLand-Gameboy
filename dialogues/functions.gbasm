@@ -19,6 +19,8 @@ Dialogue_script_step:
 
 	.JUMP_TABLE
 
+	.Save_PC:
+
 	LD A, H
 	LD ($mem_dialogue_script_program_counter), A
 	LD A, L
@@ -57,11 +59,11 @@ Dialogue_script_instruction_Jump_Table:
 	NOP
 
 	; 07
-	JP =.Fadeout_Dark
+	JP =.Fadeout
 	NOP
 
 	; 08
-	JP =.Fadein_Dark
+	JP =.Fadein
 	NOP
 
 	; 09
@@ -126,6 +128,10 @@ Dialogue_script_instruction_Jump_Table:
 
 	; 18
 	JP =.Branch_mem
+	NOP
+
+	; 19
+	JP =.Reload_Dungeon
 	NOP
 
 	.End:
@@ -396,7 +402,7 @@ Dialogue_script_instruction_Jump_Table:
 		LD $mem_map_loading_flags, A
 		RET
 
-	.Fadeout_Dark:
+	.Fadeout:
 		LD A, high(=Fade_out_Loading_VBlank)
 		LD $mem_loading_mode_vblank_func_pointer_high, A
 		LD A, low(=Fade_out_Loading_VBlank)
@@ -405,6 +411,9 @@ Dialogue_script_instruction_Jump_Table:
 		LD $mem_loading_mode_regular_func_pointer_high, A
 		LD A, low(=Nothing)
 		LD $mem_loading_mode_regular_func_pointer_low, A
+
+		LD A, (HL+)
+		LD $mem_fade_animation_arguments, A
 
 		LD A, $enum_loading_mode
 		LD $mem_requested_mode, A
@@ -422,7 +431,7 @@ Dialogue_script_instruction_Jump_Table:
 		ADD SP, 2
 		JP =Dialogue_script_step.next
 
-	.Fadein_Dark:
+	.Fadein:
 		LD A, high(=Fade_in_Loading_VBlank)
 		LD $mem_loading_mode_vblank_func_pointer_high, A
 		LD A, low(=Fade_in_Loading_VBlank)
@@ -431,6 +440,9 @@ Dialogue_script_instruction_Jump_Table:
 		LD $mem_loading_mode_regular_func_pointer_high, A
 		LD A, low(=Nothing)
 		LD $mem_loading_mode_regular_func_pointer_low, A
+
+		LD A, (HL+)
+		LD $mem_fade_animation_arguments, A
 
 		LD A, $enum_loading_mode
 		LD $mem_requested_mode, A
@@ -687,9 +699,6 @@ Dialogue_script_instruction_Jump_Table:
 		LD C, A
 		LD A, (HL+)
 		LD E, A
-		LD D, $00
-		LD A, (DE)
-		LD E, A
 		LD A, (BC)
 		CP E
 		LD A, (HL+)
@@ -698,7 +707,7 @@ Dialogue_script_instruction_Jump_Table:
 		LD B, A
 		LD A, (HL+)
 		LD C, A
-		JP Z, =Dialogue_script_step.next
+		JP NZ, =Dialogue_script_step.next
 
 		LD A, E
 		LD $mem_dialogue_script_bank, A
@@ -710,4 +719,19 @@ Dialogue_script_instruction_Jump_Table:
 		LD L, A
 		LD ($mem_dialogue_script_program_counter+1), A
 		JP =Dialogue_script_step.next
-
+	
+	.Reload_dungeon:
+		DI
+		LD A, H
+		LD ($mem_dialogue_script_program_counter), A
+		LD A, L
+		LD ($mem_dialogue_script_program_counter+1), A
+		CALL =VBlank_Wait
+		.BANK_CALL =Center_viewport_around_center_entity
+		CALL =Load_Prepared_Map
+		LD A, $mem_map_loading_flags
+		SET 6, A
+		LD $mem_map_loading_flags, A
+		LD A, $mem_prepared_color_palette
+		LD $mem_bg_palette_dungeon_generation_backup, A
+		JP =Dungeon_generation_VBlank

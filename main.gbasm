@@ -69,7 +69,6 @@ Entrypoint:
 .INCLUDE "entity/display.gbasm"
 .INCLUDE "animation.gbasm"
 .INCLUDE "playerattacks.gbasm"
-.INCLUDE "enemiesattacks.gbasm"
 .INCLUDE "dialogues/functions.gbasm"
 .INCLUDE "map/loading/dungeoninfos.gbasm"
 .INCLUDE "text.gbasm"
@@ -81,6 +80,7 @@ Entrypoint:
 .INCLUDE "tileset.gbasm"
 .INCLUDE "map/dungeons.gbasm"
 .INCLUDE "entity/list.gbasm"
+.INCLUDE "enemiesattacks.gbasm"
 .INCLUDE "entity/questgoal.gbasm"
 
 .PADTO 02:4000
