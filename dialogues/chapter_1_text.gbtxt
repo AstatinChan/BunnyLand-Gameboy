@@ -54,6 +54,11 @@ CH1_D4_L12: sleep first.
 CH1_D4_L13: Hmmmmm...
 CH1_D4_L14: Celery...
 
+CH1_D4_1_L1: Help!
+CH1_D4_1_L2: Someone far away
+CH1_D4_1_L3: called for help.
+CH1_D4_2_L1: Heeeeeeelp!!!
+
 CH1_D5_L1: 	Hi.
 CH1_D5_L2: 	Was I the one
 CH1_D5_L3: 	crying for help?
@@ -80,10 +85,11 @@ CH1_D6_L6: them!
 
 CH1_D8_L1: Ouch...
 CH1_D8_L2: Are you okay?!
-CH1_D8_L3: I... I think so
-CH1_D8_L4: I was being chased
-CH1_D8_L5: by those foxes.
-CH1_D8_L6: I managed to get
-CH1_D8_L7: here where they
-CH1_D8_L8: couldn't follow me
-CH1_D8_L9: but I fainted
+CH1_D8_L3: I...
+CH1_D8_L4: I think so
+CH1_D8_L5: I was being chased
+CH1_D8_L6: by those foxes and
+CH1_D8_L7: suddenly the
+CH1_D8_L8: ground started
+CH1_D8_L9: shaking and I
+CH1_D8_L10: fainted.

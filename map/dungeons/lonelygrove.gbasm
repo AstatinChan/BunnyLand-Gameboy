@@ -22,6 +22,8 @@ Lonely_Grove:
 	.generation_events.size:
 		.DB low(=.generation_events.end-=.generation_events)
 	.generation_events:
+		.GEN_EVENT_DIALOGUE $03 =CH1_D4_1
+		.GEN_EVENT_DIALOGUE $07 =CH1_D4_2
 		.GEN_EVENT_REMOVE_STAIRS $10
 
 		.GEN_EVENT_SPECIAL_ENTITY $10 $0f $entity_tin_index

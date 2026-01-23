@@ -102,6 +102,17 @@ CH1_D4:
 	.SET_MEM &$mem_campsite_story_state $00
 .END
 
+CH1_D4_1:
+	.TEXTB =Unknown_Character =CH1_D4_1_L1
+	.TEXTBOX_CLOSE
+	.WAIT $1e
+	.TEXT =CH1_D4_1_L2 =CH1_D4_1_L3
+.END
+
+CH1_D4_2:
+	.TEXTB =Unknown_Character =CH1_D4_2_L1
+.END
+
 ; Meeting TIN
 CH1_D5:
 	.TEXTB =Unknown_Character =CH1_D5_L1
@@ -168,9 +179,10 @@ CH1_D6: ; Floor 11
 	.SET_MEM $cbf3 $33 ; TIN up
 	.SET_MEM $cbf5 $03 ; action open dialogue (without looking at bnuy)
 
-	.WAIT $1e
+	.WAIT $3c
 	.TEXT =CH1_D6_L1 =Empty
 	.TEXTBOX_CLOSE
+	.WAIT $1e
 
 	.FADEOUT $04
 	.HIDE_TOPBAR
@@ -232,6 +244,9 @@ CH1_D8: ; Speaking to the mouse
 	.TEXTB =Tin_Header_Text =CH1_D8_L2
 	.TEXTBOX_CLOSE
 	.WAIT $3c
+	.TEXTB =Unknown_Character =CH1_D8_L3
+	.TEXTBOX_CLOSE
+	.WAIT $3c
 	.SET_MEM $cb57 $00 ; rightside up
 	.SET_MEM $cb53 $44 ; direction looking down
 	.WAIT $3c
@@ -243,12 +258,12 @@ CH1_D8: ; Speaking to the mouse
 	.WAIT $1e
 	.SET_MEM $cb53 $44 ; down
 	.WAIT $1e
-	.TEXTB =Unknown_Character =CH1_D8_L3
+	.TEXTB =Unknown_Character =CH1_D8_L4
 	.TEXTBOX_CLOSE
 	.WAIT $1e
-	.TEXT =CH1_D8_L4 =CH1_D8_L5
-	.TEXT =CH1_D8_L6 =CH1_D8_L7
-	.TEXT =CH1_D8_L8 =CH1_D8_L9
+	.TEXT =CH1_D8_L5 =CH1_D8_L6
+	.TEXT =CH1_D8_L7 =CH1_D8_L8
+	.TEXT =CH1_D8_L9 =CH1_D8_L10
 
 	.SHOW_TOPBAR
 .END
