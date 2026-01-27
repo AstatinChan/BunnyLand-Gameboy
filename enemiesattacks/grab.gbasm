@@ -63,6 +63,7 @@ Grab_sight_check: ; BC = XY of the enemy. D = direction (must be unchanged). Dir
 	LD A, $01
 	.ADD_A_TO_DIRECTION_BC
 	CALL =Is_Collisionable
+	CALL =Carve_Entity_Collision_Map
 	POP DE
 	POP BC
 
@@ -132,10 +133,12 @@ Grab_Enemy_Attack: ; Entity in HL (whatever alignment), Direction to face in E. 
 	LD A, $mem_bunny_direction
 	AND $f0
 	OR B
+
 	LD $mem_bunny_direction, A
 	LD A, $06
 	LD $mem_bunny_animation, A
 
+	.cancel_grab_collision:
 	POP BC
 	POP DE
 

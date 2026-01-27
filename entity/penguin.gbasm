@@ -7,11 +7,19 @@ Penguin_Drop:
 
 	.drops.attack_item:
 	LD D, $6C
-	LD E, $05
+	LD E, $04
 	CALL =RNG_Step
 	AND $03
 	CP $00
+	JR NZ, =.drops.end
+	PUSH HL
 	CALL Z, =Spawn_object
+	LD A, $00
+	CP H
+	JR Z, =.skip_arg
+	LD (HL), $03
+	.skip_arg:
+	POP HL
 	JR =.drops.end
 
 	.drops.ep_regen_item:
@@ -20,7 +28,9 @@ Penguin_Drop:
 	CALL =RNG_Step
 	AND $03
 	CP $00
+	PUSH HL
 	CALL Z, =Spawn_object
+	POP HL
 
 	.drops.end:
 	POP DE

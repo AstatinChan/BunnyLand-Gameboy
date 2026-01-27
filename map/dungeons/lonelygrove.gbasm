@@ -41,6 +41,18 @@ Lonely_Grove:
 	.max_floor: .DB 0x0a, inv(0x0a)
 
 	.spawning_patterns:
+
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+		.DB $entity_cat_index, $entity_fox_index, $entity_penguin_index, $entity_fimsh_index, 0b00111111
+
 		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
 		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
 		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00001011

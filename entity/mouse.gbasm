@@ -5,7 +5,9 @@ Mouse_Drop:
 	CALL =RNG_Step
 	AND $03
 	CP $00
+	PUSH HL
 	CALL Z, =Spawn_object
+	POP HL
 	POP DE
 	RET
 

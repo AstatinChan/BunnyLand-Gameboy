@@ -1,7 +1,6 @@
 Bugs:
  ? - Object loading after being in view
  ? - Kill before or after attack
-   - Able to move after hoping on golden celery
    - Frogs sometimes pull to a tile with already another entity
    - Reset to title screen on spamming A (?) while boom animation starting (recording recordings/2026-01-21T16\:40\:32+01\:00.record, commit c286a81)
 
@@ -68,20 +67,26 @@ DEMO
 
 x -> Find a way to control the difficulty level so its easier at the start and harder at the end.
 
+
   -> We meet a human
 	-> human is stuck in a world with only animals and has been there for a long time
-	-> human likes to go help animals in need (rescue team?)
+	-> earthquakes have been happening more and more recently
+	-> human likes to go help animals in need, the earthquake have caused more and more disasters to happen overtime
 	-> we make a team with human (we are only two at the beginning, but story quests will introduce new characters)
 	-> but when speaking to human, it is apparent that human is missing home, but gave up on it a long time ago
-	-> someone is kidnapped, we go to rescue them but the kidnappers have setup a trap and human realises it and "sacrifices themselves" to make sure we are surviving
+	-> it becomes more and more obvious the earthquakes are caused by some evil person
+	-> someone is kidnapped by the evil person, we go to rescue them but the kidnappers have setup a trap and human realises it and "sacrifices themselves" to make sure we are surviving
 	-> Everyone is teaming up to go rescue human from a seemingly hopeless situation
 	-> We manage after of danger and effort to rescue human
+	-> We learn the evil person is actually not the cause of the earthquakes but trying to do something good with it and the earthquakes are natural
 	-> Human realises that they became nihilistic and in wanting to save others, forgot to save themselves and actually really miss home and want now to find their way out
+	-> all pieces get together and it somehow means the earthquakes can somehow be used to send the human back home
 	-> human stop giving up
-	-> A thing that was barely relevant during the human rescue mission is actually a first small hint to their way back home
 	-> things happening (very linearly very fast and people are excited)
 	-> Human finally find their way home and go back in an emotional goodbye
 	-> end
+
+THERE SHOULD BE SOMETHING RELATED TO EARTHQUAKES
 
 
 -> In practice:

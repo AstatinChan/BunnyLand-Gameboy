@@ -1,0 +1,44 @@
+Dbg_Dungeon:
+	.name:
+		.DB bank(=Debug_Dungeon_Txt)
+		.DB ptr(=Debug_Dungeon_Txt)
+
+	.flag: .DB 0b00011011
+
+	.tilemap_padding:
+		.DB bank(=_map_Dbg)
+		.DB ptr(=_map_Dbg)
+		.PADTO =.tilemap_padding+3
+
+	.custom_function:
+		.PADTO =.custom_function+3
+
+	.music:
+		.DB bank(=_music_Dungeon)
+		.DB ptr(=_music_Dungeon)
+
+	.generation_events.size:
+		.DB low(=.generation_events.end-=.generation_events)
+	.generation_events:
+		.GEN_EVENT_REMOVE_STAIRS $01
+
+		.GEN_EVENT_LOAD_ENTITY $01 $03 $entity_cat_index
+		.GEN_EVENT_LOAD_ENTITY $01 $04 $entity_frog_index
+		.GEN_EVENT_SPAWN_LOADED_ENTITY_XY $01 $02 $04 $0e $10 $22
+		.GEN_EVENT_SPAWN_LOADED_ENTITY_XY $01 $01 $04 $12 $10 $11
+		.GEN_EVENT_MOVE_ENTITY_XY_DIRECTION $01 $00 $10 $10 $22
+	.generation_events.end:
+
+	.max_floor: .DB 0x1, inv(0x01)
+
+	.spawning_patterns:
+		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
+		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00000010
+		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00001011
+		.DB $entity_cat_index, $entity_cat_index, $entity_cat_index, $entity_fimsh_index, 0b00001011
+		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
+		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
+		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
+		.DB $entity_cat_index, $entity_cat_index, $entity_frog_index, $entity_fimsh_index, 0b00101111
+
+.ASSERT bank(=Lonely_Grove) bank(.)

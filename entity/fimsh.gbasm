@@ -1,8 +1,15 @@
 Fimsh_Drop:
 	PUSH DE
 	LD D, $6C
-	LD E, $07
+	LD E, $09
+	PUSH HL
 	CALL =Spawn_object
+	LD A, bank(=Fimsh_Dialogue_Script)
+	LD (HL+), A
+	LD A, high(ptr(=Fimsh_Dialogue_Script))
+	LD (HL+), A
+	LD (HL), low(ptr(=Fimsh_Dialogue_Script))
+	POP HL
 	POP DE
 	RET
 

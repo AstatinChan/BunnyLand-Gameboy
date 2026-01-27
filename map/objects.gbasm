@@ -184,19 +184,25 @@ Object_Interaction_Jump_table:
 	NOP
 
 	; 04
-	JP =Heal_Attack_Box_Action
+	JP =Learn_Attack_Box_Action
 	NOP
 
-	; 05
-	JP =Freeze_Attack_Box_Action
+	; 05 FREE SPACE
+	NOP
+	NOP
+	NOP
 	NOP
 
-	; 06
-	JP =Earcopter_Attack_Box_Action
+	; 06 FREE SPACE
+	NOP
+	NOP
+	NOP
 	NOP
 
-	; 07
-	JP =Fimsh_Attack_Box_Action
+	; 07 FREE SPACE
+	NOP
+	NOP
+	NOP
 	NOP
 
 	; 08
@@ -225,6 +231,17 @@ Load_Dungeon_Selection_Menu_Action:
 
 Dialogue_step_Action:
 	LD (HL), $00
+
+	LD A, $mem_bunny_direction
+	RES 3, A
+	LD $mem_bunny_direction, A
+	LD A, $00
+	LD $mem_bunny_animation, A
+	LD A, $mem_map_loading_flags
+	SET 5, A
+	RES 3, A
+	LD $mem_map_loading_flags, A
+
 	LD A, L
 	ADD $04
 	LD L, A
@@ -308,101 +325,6 @@ Heal_Action:
 
 	RET
 
-Heal_Attack_Box_Action:
-	LD (HL), $00
-
-	.START_SCRIPT =.Script
-
-	LD A, $enum_dungeon_dialogue_mode
-	LD $mem_requested_mode, A
-	LD $mem_current_mode, A
-	CALL =Update_VBlank_Handler
-	LD A, $mem_bunny_direction
-	RES 3, A
-	LD $mem_bunny_direction, A
-	LD A, $00
-	LD $mem_bunny_animation, A
-	LD A, $mem_map_loading_flags
-	SET 5, A
-	RES 3, A
-	LD $mem_map_loading_flags, A
-
-	RET
-
-	.Script:
-	.LEARN_ATTACK $02
-	.END
-
-Freeze_Attack_Box_Action:
-	LD (HL), $00
-
-	.START_SCRIPT =.Script
-
-	LD A, $enum_dungeon_dialogue_mode
-	LD $mem_requested_mode, A
-	LD $mem_current_mode, A
-	CALL =Update_VBlank_Handler
-	LD A, $mem_bunny_direction
-	RES 3, A
-	LD $mem_bunny_direction, A
-	LD A, $00
-	LD $mem_bunny_animation, A
-	LD A, $mem_map_loading_flags
-	SET 5, A
-	RES 3, A
-	LD $mem_map_loading_flags, A
-
-	RET
-
-	.Script:
-	.LEARN_ATTACK $03
-	.END
-
-Earcopter_Attack_Box_Action:
-	LD (HL), $00
-
-	.START_SCRIPT =.Script
-
-	LD A, $enum_dungeon_dialogue_mode
-	LD $mem_requested_mode, A
-	LD $mem_current_mode, A
-	CALL =Update_VBlank_Handler
-	LD A, $mem_bunny_direction
-	RES 3, A
-	LD $mem_bunny_direction, A
-	LD A, $00
-	LD $mem_bunny_animation, A
-	LD A, $mem_map_loading_flags
-	SET 5, A
-	RES 3, A
-	LD $mem_map_loading_flags, A
-
-	RET
-
-	.Script:
-	.LEARN_ATTACK $04
-	.END
-
-Fimsh_Attack_Box_Action:
-	LD (HL), $00
-
-	.START_SCRIPT =Fimsh_Dialogue_Script
-
-	LD A, $enum_dungeon_dialogue_mode
-	LD $mem_requested_mode, A
-	LD $mem_current_mode, A
-	CALL =Update_VBlank_Handler
-	LD A, $mem_bunny_direction
-	RES 3, A
-	LD $mem_bunny_direction, A
-	LD A, $00
-	LD $mem_bunny_animation, A
-	LD A, $mem_map_loading_flags
-	SET 5, A
-	RES 3, A
-	LD $mem_map_loading_flags, A
-	RET
-
 Restore_EP_Action:
 	LD A, $mem_bunny_mana
 	ADD $05
@@ -430,6 +352,38 @@ Restore_EP_Action:
 	LD (HL), $00
 
 	RET
+
+Learn_Attack_Box_Action:
+	LD (HL), $00
+
+	LD A, $mem_bunny_direction
+	RES 3, A
+	LD $mem_bunny_direction, A
+	LD A, $00
+	LD $mem_bunny_animation, A
+	LD A, $mem_map_loading_flags
+	SET 5, A
+	RES 3, A
+	LD $mem_map_loading_flags, A
+
+	LD A, L
+	ADD $04
+	LD L, A
+	LD A, $03 ; LEARN_ATTACK
+	LD ($mem_learn_attack_script_buffer), A
+	LD A, (HL) ; Attack_IDX
+	LD ($mem_learn_attack_script_buffer+1), A
+	LD A, $00 ; End
+	LD ($mem_learn_attack_script_buffer+2), A
+
+	LD A, $00
+	LD $mem_dialogue_script_bank, A
+	LD A, high($mem_learn_attack_script_buffer)
+	LD ($mem_dialogue_script_program_counter), A
+	LD A, low($mem_learn_attack_script_buffer)
+	LD ($mem_dialogue_script_program_counter+1), A
+
+	JP =Dialogue_script_step
 
 Display_Object:
 	LD A, $mem_display_flag

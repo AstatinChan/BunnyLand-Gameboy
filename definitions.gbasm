@@ -253,6 +253,8 @@
 
 .DEFINE mem_center_entity ($c097)
 
+.DEFINE mem_learn_attack_script_buffer $c098 ; Takes from $c098-c09a
+
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400
 

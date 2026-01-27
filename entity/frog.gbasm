@@ -11,7 +11,9 @@ Frog_Drops: ; XY in (BC)
 	CALL =RNG_Step
 	AND $03
 	CP $00
+	PUSH HL
 	CALL Z, =Spawn_object
+	POP HL
 
 	.drops.end:
 	POP DE

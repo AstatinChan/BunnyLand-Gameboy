@@ -164,9 +164,9 @@ Title_Screen_Start_Pressed:
 	JP =New_Dungeon
 
 DBG_Mode:
-	LD A, bank(=Lonely_Grove)
+	LD A, bank(=Dbg_Dungeon)
 	LD ($mem_dungeon), A
-	LD HL, ptr(=Lonely_Grove)
+	LD HL, ptr(=Dbg_Dungeon)
 	LD A, H
 	LD ($mem_dungeon+1), A
 	LD A, L
@@ -179,9 +179,9 @@ DBG_Mode:
 	LD A, $8d
 	LD ($9800), A
 
-	LD A, $10
+	LD A, $01
 	LD $mem_floor_count, A
-	LD A, $0a
+	LD A, $01
 	LD $mem_floor_count_bin, A
 
 	LD A, $01

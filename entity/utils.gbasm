@@ -107,12 +107,11 @@ Entity_idx_to_entity_list_ptr: ; loaded idx in A, return in BC (ALSO NEEDS TO CH
 	POP DE
 	RET
 
-Spawn_object: ; Texture in D, XY in BC, jump table thingy in E
-	PUSH HL
+Spawn_object: ; Texture in D, XY in BC, jump table thingy in E, returns pointer to args (+4) of the object struct in HL (or $0000 if spawn was cancelled)
 	CALL =Find_Free_Object_slot
 	LD A, $80
 	CP L
-	JR Z, =.skip_spawn_loot_pop_hl
+	JR Z, =.cancel_object_spawn
 
 	LD A, D
 	LD (HL+), A
@@ -122,12 +121,13 @@ Spawn_object: ; Texture in D, XY in BC, jump table thingy in E
 	LD (HL+), A
 	CALL =Check_other_object_collision
 	CP $00
-	JR NZ, =.skip_spawn_loot_pop_hl
+	JR NZ, =.cancel_object_spawn
 	LD A, L
 	AND $f8
 	ADD $03
 	LD L, A
 	LD (HL), E
+	INC HL
 
 	; set the object load counter to the object so it doesn't take 16 frames to load it
 	LD A, L
@@ -137,9 +137,10 @@ Spawn_object: ; Texture in D, XY in BC, jump table thingy in E
 	SUB $01
 	LD $mem_object_load_counter, A
 
-	.skip_spawn_loot_pop_hl:
-	POP HL
-	.skip_spawn_loot:
+	RET
+
+	.cancel_object_spawn:
+	LD HL, $0000
 	RET
 
 .MACRODEF ENTITY_HEALTH_CHECK Skip_turn Drop_Function
@@ -162,6 +163,10 @@ Spawn_object: ; Texture in D, XY in BC, jump table thingy in E
 	LD $mem_enemies_alive_count, A
 
 	CALL $Drop_Function
+
+	LD A, $mem_map_loading_flags
+	SET 5, A
+	LD $mem_map_loading_flags, A
 
 	JP $Skip_turn
 	$end:

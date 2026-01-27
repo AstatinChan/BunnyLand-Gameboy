@@ -11,7 +11,15 @@ Cat_Drop:
 	CALL =RNG_Step
 	AND $03
 	CP $00
-	CALL Z, =Spawn_object
+	JR NZ, =.drops.end
+	PUSH HL
+	CALL =Spawn_object
+	LD A, $00
+	CP H
+	JR Z, =.skip_arg
+	LD (HL), $02
+	.skip_arg:
+	POP HL
 	JR =.drops.end
 
 	.drops.hp_regen_item:
@@ -20,7 +28,9 @@ Cat_Drop:
 	CALL =RNG_Step
 	AND $03
 	CP $00
+	PUSH HL
 	CALL Z, =Spawn_object
+	POP HL
 
 	.drops.end:
 	POP DE

@@ -111,6 +111,7 @@ All_The_Dungeons:
 .INCLUDE "map/dungeons/morningforest.gbasm"
 .INCLUDE "map/dungeons/lonelygrove.gbasm"
 .INCLUDE "map/dungeons/campsite.gbasm"
+.INCLUDE "map/dungeons/debugdungeon.gbasm"
 .ASSERT bank(.) bank(=All_The_Dungeons)
 
 Big_Menu_Choice_Load_Dungeon:
