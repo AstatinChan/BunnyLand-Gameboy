@@ -44,7 +44,7 @@ build/tileset.png: build/tileset-dump.rom.vram.dump scripts/extract-vram-tileset
 
 build/makeself/gb_linux-x86_64:
 	mkdir -p build/makeself
-	wget https://github.com/AstatinChan/gameboy-emulator/releases/download/latest/gb_linux-x86_64 -O $@
+	wget https://pellets.astatin.live/pkgs/gameboy-emulator/latest/gb_linux-x86_64 -O $@
 	chmod +x $@
 
 build/makeself/main.rom: build/main.rom

@@ -21,7 +21,7 @@ sudo apt install golang
 
 Clone the assembler:
 ```bash
-git clone https://github.com/AstatinChan/gameboy-asm.git
+git clone https://git.astatin.live/gameboy-asm.git
 cd gameboy-asm
 ```
 
@@ -37,8 +37,8 @@ sudo cp gameboy-asm /usr/local/bin/gbasm
 
 We can now download the game sources
 ```bash
-git clone https://github.com/AstatinChan/BunnyLand-Gameboy.git
-cd BunnyLand-Gameboy
+git clone http://git.astatin.live/bunny-game.git
+cd bunny-game
 ```
 
 And assemble the ROM
@@ -46,4 +46,4 @@ And assemble the ROM
 make build/main.rom
 ```
 
-The rom is inside of the build/ directory and can be played with the gameboy emulator of your choice (I also made an emulator you can use [here](https://github.com/AstatinChan/gameboy-emulator))
+The rom is inside of the build/ directory and can be played with the gameboy emulator of your choice (I also made an emulator you can use [here](https://git.astatin.live/gameboy-emulator.git/about/))
