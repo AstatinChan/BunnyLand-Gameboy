@@ -1,7 +1,6 @@
 Bugs:
  ? - Object loading after being in view
  ? - Kill before or after attack
-   - Frogs sometimes pull to a tile with already another entity
    - Reset to title screen on spamming A (?) while boom animation starting (recording recordings/2026-01-21T16\:40\:32+01\:00.record, commit c286a81)
 
 Accessibility issues:
