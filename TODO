@@ -2,6 +2,8 @@ Bugs:
  ? - Object loading after being in view
  ? - Kill before or after attack
    - Reset to title screen on spamming A (?) while boom animation starting (recording recordings/2026-01-21T16\:40\:32+01\:00.record, commit c286a81)
+   - Sometimes going out of the big menu stucks in palette dark for some reason
+   - During screen reload, the music slows down/glitches a bit
 
 Accessibility issues:
   -> freeze/earcopter attack patterns are not obvious (either needs to be shown on map or add select menu with infos if not possible + tutorial to explain the existence of select menu ?)

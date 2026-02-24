@@ -134,6 +134,10 @@ Dialogue_script_instruction_Jump_Table:
 	JP =.Reload_Dungeon
 	NOP
 
+	; 1a
+	JP =.Music_Start
+	NOP
+
 	.End:
 		LD A, $mem_map_loading_flags
 		RES 7, A
@@ -735,3 +739,17 @@ Dialogue_script_instruction_Jump_Table:
 		LD A, $mem_prepared_color_palette
 		LD $mem_bg_palette_dungeon_generation_backup, A
 		JP =Dungeon_generation_VBlank
+
+	.Music_Start:
+		LD A, (HL+)
+		LD E, A
+		LD A, (HL+)
+		LD B, A
+		LD A, (HL+)
+		LD C, A
+		CALL =Load_Music
+		LD A, $mem_sound_flags
+		OR $41
+		LD $mem_sound_flags, A
+		ADD SP, 2
+		JP =Dialogue_script_step.next

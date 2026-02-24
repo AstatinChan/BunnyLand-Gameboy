@@ -56,6 +56,8 @@ New_Dungeon:
 	LD L, A
 	LD A, ($mem_dungeon)
 	CALL =Load_Dungeon_Infos
+	LD HL, &$mem_dungeon_loading_flags
+	SET 0, (HL)
 	DI
 	.DISABLE_MODE_2_INTERRUPT
 
@@ -275,13 +277,6 @@ Dungeon_generation_VBlank:
 	RES 2, A
 	RES 0, A
 	LD $mem_map_loading_flags, A
-	LD A, $mem_sound_flags
-	CP $00
-	CALL Z, =Reset_Music_Channels
-	LD A, $mem_sound_flags
-	AND $c0
-	OR $01
-	LD $mem_sound_flags, A
 
 	; BG Palette
 	LD A, $mem_bg_palette_dungeon_generation_backup
@@ -303,13 +298,29 @@ Dungeon_generation_VBlank:
 	LD ($24), A
 	LD A, $8f
 	LD ($26), A
-	LD HL, &$mem_sound_flags
-	LD A, ($mem_dungeon+1)
-	LD H, A
-	LD A, ($mem_dungeon+2)
-	LD L, A
-	LD A, ($mem_dungeon)
-	CALL =Load_Dungeon_Music
+
+	LD A, $mem_sound_flags
+	AND $c1
+	LD $mem_sound_flags, A
+	; We load the new music only on New Dungeon
+	LD A, $mem_dungeon_loading_flags
+	AND $01
+	JR Z, =.skip_dungeon_music_reset
+		LD A, ($mem_dungeon+1)
+		LD H, A
+		LD A, ($mem_dungeon+2)
+		LD L, A
+		LD A, ($mem_dungeon)
+		CALL =Load_Dungeon_Music
+		LD A, $mem_sound_flags
+		OR $01
+		LD $mem_sound_flags, A
+	.skip_dungeon_music_reset:
+	CALL NZ, =Reset_Music_Channels
+
+	LD HL, &$mem_dungeon_loading_flags
+	RES 0, (HL)
+
 	LD HL, &$mem_map_loading_flags
 	BIT 7, (HL)
 	JR Z, =.skip_post_reload

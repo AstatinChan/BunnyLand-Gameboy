@@ -163,3 +163,9 @@
 .MACRODEF SET_CENTER_ENTITY entity_idx
 	.SET_MEM &$mem_center_entity $entity_idx
 .END
+
+.MACRODEF MUSIC_START =music
+	.DB $1a
+	.DB bank(=music)
+	.DB ptr(=music)
+.END

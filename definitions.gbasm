@@ -62,7 +62,7 @@
 ; bit 4: animation step should start to go up on next frame
 ; bit 5: if entity collision map should be updated
 ; bit 6: during dungeon generation vblank, whether or not it should skip the wait 1s thingy
-; bit 7: if a dialogue script is being executed
+; bit 7: if a dialogue script is being executed (TODO: this one could be moved to dungeon_loading_flags)
 ;	-> when in animation waiting mode, step should be done after mode ends
 ;	-> if dungeon_reload is executed (NOT NEW DUNGEON) step should be done after
 
@@ -254,6 +254,9 @@
 .DEFINE mem_center_entity ($c097)
 
 .DEFINE mem_learn_attack_script_buffer $c098 ; Takes from $c098-c09a
+
+.DEFINE mem_dungeon_loading_flags ($c09b)
+	; bit 0 => new dungeon (instead of new floor)
 
 ; ## WARNING THE SPACE BETWEEN $c400 and $c800 is used as a buffer for the loading map function during dungeon generation
 .DEFINE mem_map_loading_buffer $c400

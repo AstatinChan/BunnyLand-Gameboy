@@ -187,4 +187,11 @@ DBG_Mode:
 	LD A, $01
 	LD $mem_debug_flags, A
 
+	LD A, bank(=Dungeon_list.Lonely_Grove)
+	LD ($mem_dungeon_selection_entries_ptr), A
+	LD A, high(ptr(=Dungeon_list.Lonely_Grove))
+	LD ($mem_dungeon_selection_entries_ptr+1), A
+	LD A, low(ptr(=Dungeon_list.Lonely_Grove))
+	LD ($mem_dungeon_selection_entries_ptr+2), A
+
 	RET

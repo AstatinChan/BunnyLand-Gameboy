@@ -115,6 +115,8 @@ _music_TitleScreen:
 .INCLUDEBIN "music/title-screen.vgm"
 _music_GameOver:
 .INCLUDEBIN "music/game-over.vgm"
+_music_Boss1:
+.INCLUDEBIN "music/battle-music-1.vgm"
 
 Dungeon_list:
 	.Lonely_Grove:
