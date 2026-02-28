@@ -1,6 +1,6 @@
 # Bunnyland (temporary name)
 
-This is a gameboy game I am coding [live on twitch](https:/www.twitch.tv/astatinchan) ! Come and hang out !
+This is a gameboy game I am coding [live on twitch](https://links.astatin.live/twitch) ! Come and hang out !
 
 # How to compile
 
